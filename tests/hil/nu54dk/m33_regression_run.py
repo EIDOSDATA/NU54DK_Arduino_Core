@@ -2357,7 +2357,11 @@ def _native_revision(native: dict, family: str) -> str | None:
     if family == "diagnostic_hil":
         return native.get("source_revision")
     if family == "flat_hil":
-        return native.get("core_revision", native.get("source_revision"))
+        revision = native.get("core_revision", native.get("source_revision"))
+        if revision is not None:
+            return revision
+        identity = native.get("identity", {})
+        return identity.get("core") if isinstance(identity, dict) else None
     if family == "profile_hil":
         revisions = native.get("revisions", {})
         return revisions.get("core") if isinstance(revisions, dict) else None
@@ -2936,6 +2940,155 @@ def _validate_flat_native_raw(native: dict, native_path: Path, expected: dict,
                        "pending=0 advertising=0 cs=0"
                 for line in reflector_lines) == 1,
             "CS RAS stop/disconnect transcript denominator mismatch")
+
+
+def _validate_cs_acl_radio_risk_cycles(native: dict,
+                                       native_path: Path) -> None:
+    """! @brief CS ACL radio-risk UART를 20개 cycle로 나눠 기존 parser로 재검증합니다. """
+
+    from m33_cs_acl_radio_risk_run import (
+        ITERATION_TARGET, ROLES as RISK_ROLES, reject_faults, validate_cycle,
+    )
+
+    role_lines = {role: [] for role in RISK_ROLES}
+    for line in _native_transcript(native, native_path):
+        role, separator, payload = line.partition(": ")
+        require(separator == ": " and role in role_lines,
+                "CS ACL radio-risk transcript role prefix mismatch")
+        role_lines[role].append(payload)
+    reject_faults(role_lines)
+
+    initiator = role_lines["initiator"]
+    reflector = role_lines["reflector"]
+    initiator_stops = [
+        index for index, line in enumerate(initiator)
+        if line == "P2_STOP role=cs-initiator"
+    ]
+    reflector_stops = [
+        index for index, line in enumerate(reflector)
+        if line == "P2_STOP role=cs-reflector"
+    ]
+    require(len(initiator_stops) == 1 and len(reflector_stops) == 1,
+            "CS ACL radio-risk cleanup stop denominator mismatch")
+    initiator_stop = initiator_stops[0]
+    reflector_stop = reflector_stops[0]
+    initiator_starts = [
+        index for index, line in enumerate(initiator[:initiator_stop])
+        if line.startswith("P2_CS_RISK_ACTIVE cycle=")
+    ]
+    reflector_starts = [
+        index for index, line in enumerate(reflector[:reflector_stop])
+        if line == "CS reflector disconnected"
+    ]
+    require(len(initiator_starts) == ITERATION_TARGET and
+            len(reflector_starts) == ITERATION_TARGET,
+            "CS ACL radio-risk raw cycle denominator mismatch")
+
+    rebuilt = []
+    for offset, cycle in enumerate(range(1, ITERATION_TARGET + 1)):
+        initiator_end = (
+            initiator_starts[offset + 1]
+            if offset + 1 < ITERATION_TARGET else initiator_stop
+        )
+        reflector_end = (
+            reflector_starts[offset + 1]
+            if offset + 1 < ITERATION_TARGET else reflector_stop
+        )
+        rebuilt.append(validate_cycle({
+            "initiator": initiator[
+                initiator_starts[offset]:initiator_end
+            ],
+            "reflector": reflector[
+                reflector_starts[offset]:reflector_end
+            ],
+        }, cycle))
+    require(rebuilt == native.get("cycles"),
+            "CS ACL radio-risk typed cycle differs from UART")
+
+    initiator_cleanup = initiator[initiator_stop:]
+    reflector_cleanup = reflector[reflector_stop:]
+    require(initiator_cleanup == [
+                "P2_STOP role=cs-initiator",
+                "CS disconnect requested",
+                "CS initiator disconnected",
+            ] and reflector_cleanup == [
+                "P2_STOP role=cs-reflector",
+                "CS reflector disconnected",
+            ], "CS ACL radio-risk raw cleanup mismatch")
+
+
+def _validate_cs_acl_radio_risk_native_raw(native: dict, native_path: Path,
+                                           expected: dict,
+                                           revision: str) -> None:
+    """! @brief DRGN-29669의 source·20회 복구·정리 원시 증거를 검증합니다. """
+
+    roles = set(expected["roles"])
+    identity = native.get("identity")
+    lock = read_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
+    require(isinstance(identity, dict) and set(identity) == {
+                "core", "board", "ncs", "zephyr"
+            } and identity == {
+                "core": revision,
+                "board": lock["board"]["revision"],
+                "ncs": lock["ncs"]["revision"],
+                "zephyr": lock["zephyr"]["revision"],
+            } and native.get("source_clean") is True,
+            "CS ACL radio-risk exact source mismatch")
+    require(native.get("status") == "PASS" and
+            native.get("test_id") == "M33-REG-01:DRGN-29669" and
+            native.get("scope") ==
+            "active_cs_scan_overlap_acl_teardown_and_recovery" and
+            native.get("iterations") == expected["minimum_cycles"] and
+            native.get("allowed_failures") == 0 and
+            native.get("reason") is None and
+            native.get("not_run_is_pass") is False,
+            "CS ACL radio-risk result boundary mismatch")
+    for field in (
+            "probe_uid_sha256", "com_mapping", "image_sha256",
+            "build_records", "flash", "start", "exact_programming"):
+        value = native.get(field)
+        require(isinstance(value, dict) and set(value) == roles,
+                f"CS ACL radio-risk {field} role denominator mismatch")
+    require(all(SHA.fullmatch(value) for value in
+                native["probe_uid_sha256"].values()) and
+            all(SHA.fullmatch(value) for value in
+                native["image_sha256"].values()),
+            "CS ACL radio-risk hash identity mismatch")
+    for role in roles:
+        flash = native["flash"][role]
+        start = native["start"][role]
+        require(isinstance(flash, dict) and set(flash) == {"mode", "bytes"} and
+                str(flash["mode"]).startswith("pyocd-sector") and
+                isinstance(flash["bytes"], str) and
+                flash["bytes"].isdecimal() and int(flash["bytes"]) > 0,
+                f"CS ACL radio-risk {role} flash provenance mismatch")
+        require(isinstance(start, dict) and
+                start.get("method") == "reset-halt-drain-resume" and
+                start.get("auto_unlock") is False and
+                start.get("mass_erase_requested") is False,
+                f"CS ACL radio-risk {role} start safety mismatch")
+    require(native.get("cleanup") == {
+                "required": True,
+                "commands": {
+                    "initiator_stop": True,
+                    "initiator_disconnect": True,
+                    "reflector_stop": True,
+                },
+                "observed": {
+                    "initiator_stop": True,
+                    "initiator_disconnected": True,
+                    "reflector_stop": True,
+                    "reflector_disconnected": True,
+                },
+                "errors": [],
+                "status": "PASS",
+            } and native.get("serial_close") == {
+                "initiator_app": "PASS",
+                "initiator_aux": "PASS",
+                "reflector_app": "PASS",
+                "reflector_aux": "PASS",
+            }, "CS ACL radio-risk cleanup/serial close mismatch")
+    _validate_cs_acl_radio_risk_cycles(native, native_path)
 
 
 def _validate_diagnostic_build_raw(native: dict, native_path: Path,
@@ -3575,6 +3728,10 @@ def _validate_campaign_native_raw(native: dict, native_path: Path,
         _validate_m30_native_raw(native, native_path, expected)
     elif expected["id"] in CS_NEGATIVE_CAMPAIGNS:
         _validate_cs_negative_native_raw(native, expected)
+    elif expected["id"] == "m33_cs_acl_radio_risk":
+        _validate_cs_acl_radio_risk_native_raw(
+            native, native_path, expected, revision
+        )
     elif expected["id"] in MODERN_DIRECT_RAW_CAMPAIGNS:
         _validate_modern_direct_native_raw(native, native_path, expected)
     elif expected["id"] in MULTIPHASE_DIRECT_RAW_CAMPAIGNS:

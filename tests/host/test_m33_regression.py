@@ -3791,6 +3791,128 @@ class RegressionTests(unittest.TestCase):
                 self.assertIn(semantic, MODULE.CAMPAIGNS[campaign]["semantics"])
         self.assertEqual(24, MODULE.CAMPAIGNS["m33_diagnostics_dtm"]["minimum_cycles"])
 
+    def test_cs_acl_radio_risk_adapter_reparses_identity_cycles_and_cleanup(self):
+        """! @brief flat risk identity와 20회 UART cycle을 self-assertion 없이 재구성합니다. """
+
+        expected = MODULE.campaign_plan(
+            "families", "channel_sounding"
+        )["campaigns"][1]
+        lock = MODULE.read_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
+        cycles = []
+        transcript = []
+        for cycle in range(1, 21):
+            transcript.extend([
+                f"initiator: P2_CS_RISK_ACTIVE cycle={cycle} "
+                "radio=scan acl=connected",
+                f"initiator: P2_CS_RISK_ABORT cycle={cycle} "
+                "radio=scan acl=disconnect-requested",
+                f"initiator: P2_CS_RISK_DISCONNECTED cycle={cycle} "
+                "radio_scan=1",
+                "initiator: CS initiator disconnected",
+                "initiator: CS initiator connected; securing",
+                "initiator: CS procedures requested",
+            ])
+            cycles.append({
+                "cycle": cycle,
+                "radio_schedule": "scan",
+                "radio_active_at_disconnect_callback": True,
+                "acl_teardown": "observed_both_roles",
+                "automatic_recovery": "cs_active",
+            })
+        transcript.extend([
+            "initiator: P2_STOP role=cs-initiator",
+            "initiator: CS disconnect requested",
+            "initiator: CS initiator disconnected",
+        ])
+        for _cycle in range(1, 21):
+            transcript.extend([
+                "reflector: CS reflector disconnected",
+                "reflector: CS reflector connected",
+                "reflector: CS reflector secure L2",
+                "reflector: CS reflector config ready",
+                "reflector: CS procedures enabled",
+            ])
+        transcript.extend([
+            "reflector: P2_STOP role=cs-reflector",
+            "reflector: CS reflector disconnected",
+        ])
+        encoded = ("\n".join(transcript) + "\n").encode("ascii")
+        roles = set(expected["roles"])
+        hashes = {role: hashlib.sha256(role.encode("ascii")).hexdigest()
+                  for role in roles}
+        with tempfile.TemporaryDirectory() as temporary:
+            native_path = Path(temporary) / "risk.json"
+            native_path.with_suffix(".transcript.log").write_bytes(encoded)
+            native = {
+                "test_id": "M33-REG-01:DRGN-29669",
+                "status": "PASS",
+                "scope": "active_cs_scan_overlap_acl_teardown_and_recovery",
+                "source_clean": True,
+                "identity": {
+                    "core": REVISION,
+                    "board": lock["board"]["revision"],
+                    "ncs": lock["ncs"]["revision"],
+                    "zephyr": lock["zephyr"]["revision"],
+                },
+                "probe_uid_sha256": hashes,
+                "com_mapping": {role: {} for role in roles},
+                "image_sha256": hashes,
+                "build_records": {role: {} for role in roles},
+                "flash": {
+                    role: {"mode": "pyocd-sector", "bytes": "1"}
+                    for role in roles
+                },
+                "start": {
+                    role: {
+                        "method": "reset-halt-drain-resume",
+                        "auto_unlock": False,
+                        "mass_erase_requested": False,
+                    }
+                    for role in roles
+                },
+                "iterations": 20,
+                "cycles": cycles,
+                "cleanup": {
+                    "required": True,
+                    "commands": {
+                        "initiator_stop": True,
+                        "initiator_disconnect": True,
+                        "reflector_stop": True,
+                    },
+                    "observed": {
+                        "initiator_stop": True,
+                        "initiator_disconnected": True,
+                        "reflector_stop": True,
+                        "reflector_disconnected": True,
+                    },
+                    "errors": [],
+                    "status": "PASS",
+                },
+                "serial_close": {
+                    "initiator_app": "PASS",
+                    "initiator_aux": "PASS",
+                    "reflector_app": "PASS",
+                    "reflector_aux": "PASS",
+                },
+                "exact_programming": {role: {} for role in roles},
+                "allowed_failures": 0,
+                "reason": None,
+                "not_run_is_pass": False,
+                "transcript_sha256": hashlib.sha256(encoded).hexdigest(),
+            }
+            self.assertEqual(
+                REVISION, RUNNER._native_revision(native, "flat_hil")
+            )
+            RUNNER._validate_cs_acl_radio_risk_native_raw(
+                native, native_path, expected, REVISION
+            )
+            changed = copy.deepcopy(native)
+            changed["cycles"][0]["radio_schedule"] = "idle"
+            with self.assertRaisesRegex(ValueError, "differs from UART"):
+                RUNNER._validate_cs_acl_radio_risk_native_raw(
+                    changed, native_path, expected, REVISION
+                )
+
     def test_sdk_risks_are_split_and_condition_not_met_is_not_pass(self):
         """! @brief 결합 위험 행과 관측하지 않은 조건의 PASS 승격을 거부합니다. """
         with tempfile.TemporaryDirectory() as temporary:
