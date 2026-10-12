@@ -35,6 +35,33 @@ SECOND = MODULE.Binding(1, 1, "c" * 64, "d" * 64)
 
 class RegressionTests(unittest.TestCase):
     """! @brief Host oracle 검사는 production 구현 또는 실물 실행 PASS로 표시하지 않습니다. """
+    def test_mesh_update_direct_program_mapping_uses_signed_images(self):
+        """! @brief Mesh Update 사후 판독은 실제 program한 signed image를 선택합니다. """
+
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            roles = ("blob_client", "target_a", "target_b")
+            rows = []
+            expected_images = {}
+            for role in roles:
+                folder = base / role / "zephyr"
+                folder.mkdir(parents=True)
+                unsigned = folder / "zephyr.hex"
+                signed = folder / "zephyr.signed.hex"
+                unsigned.write_text(f"unsigned-{role}\n", encoding="ascii")
+                signed.write_text(f"signed-{role}\n", encoding="ascii")
+                rows.append({
+                    "option": f"--hex-{role.replace('_', '-')}",
+                    "values": [str(unsigned)],
+                })
+                expected_images[role] = signed.resolve()
+
+            images = RUNNER._direct_program_images(
+                {"id": "m32_mesh_update", "roles": list(roles)}, rows
+            )
+
+            self.assertEqual(expected_images, images)
+
     def test_snapshot_keeps_baseline_and_current_evidence_separate(self):
         """! @brief M28~M32 과거 PASS가 현재 33 family의 PASS가 되지 않습니다. """
         value = MODULE.snapshot()
@@ -3030,6 +3057,10 @@ class RegressionTests(unittest.TestCase):
                         target.mkdir()
                     else:
                         target.write_bytes(f"{campaign_id}:{name}".encode("ascii"))
+                if campaign_id == "m32_mesh_update":
+                    (base / "zephyr.signed.hex").write_bytes(
+                        b"m32_mesh_update:signed"
+                    )
                 if campaign_id == "m33_ecosystem":
                     fixture_boards = []
                     for role in expected["roles"]:

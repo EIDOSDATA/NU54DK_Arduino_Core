@@ -956,7 +956,10 @@ def _direct_program_images(expected: dict, rows: list[dict]) -> dict[str, Path]:
             candidates.extend(arguments.get("--hex", []))
         if len(candidates) != 1 or len(candidates[0]) != 1:
             return {}
-        images[role] = Path(candidates[0][0]).resolve()
+        image = Path(candidates[0][0]).resolve()
+        if expected["id"] == "m32_mesh_update":
+            image = image.with_name("zephyr.signed.hex")
+        images[role] = image
     return images
 
 
