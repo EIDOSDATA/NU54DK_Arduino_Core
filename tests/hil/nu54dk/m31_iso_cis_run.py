@@ -46,18 +46,46 @@ class IsoExecutionFailure(RuntimeError):
 def build_dispatch_cycle_records(nonces: list[str], measured: object) -> list[dict]:
     """! @brief strict CIS parser가 닫은 20개 nonce를 dispatcher cycle로 변환합니다. """
 
+    ## @brief empty slot 관찰값은 SDU 손실 분모가 아니며 cycle별 16-bit 누적 범위를 유지합니다.
     if len(nonces) != 20 or len(set(nonces)) != 20 or \
             getattr(measured, "cycles", 0) != 20 or \
             getattr(measured, "total_sent", 0) != 2000 or \
             not 1980 <= getattr(measured, "total_received", 0) <= 2000 or \
             getattr(measured, "minimum_received", 0) < 99 or \
-            not 0 <= getattr(measured, "invalid_or_lost", -1) <= 20:
+            not 0 <= getattr(measured, "invalid_or_lost", -1) <= 20 * 65535:
         raise IsoExecutionFailure("dispatcher CIS cycle witness mismatch")
     statuses = {token: "PASS" for token in SEMANTICS}
     return [
         {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
         for cycle, _nonce in enumerate(nonces, 1)
     ]
+
+
+def attach_dispatch_attestation(evidence: dict, nonces: list[str],
+                                measured: object, core_revision: str,
+                                exact_program: dict) -> None:
+    """! @brief dispatcher 후단 실패를 raw 저장 전 FAIL 증적으로 변환합니다. """
+
+    try:
+        cycle_records = build_dispatch_cycle_records(nonces, measured)
+        attestation = dispatch_attestation(
+            "m31_iso_cis", core_revision, 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
+    except Exception as error:
+        reason = type(error).__name__ + ": " + str(error)
+        reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
+        reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
+        evidence["status"] = "FAIL"
+        evidence["reason"] = reason
+        evidence["first_error"] = {
+            "stage": "dispatch_attestation",
+            "error_type": type(error).__name__,
+            "reason": reason,
+        }
+        return
+    evidence["dispatch_cycle_records"] = cycle_records
+    evidence["m33_dispatch_attestation"] = attestation
 
 
 def _line(port: object, deadline: float) -> str:
@@ -254,11 +282,8 @@ def execute(args: argparse.Namespace) -> dict:
         "cleanup": cleanup,
     }
     if status == "PASS" and measured is not None and exact_program is not None:
-        cycle_records = build_dispatch_cycle_records(nonces, measured)
-        evidence["dispatch_cycle_records"] = cycle_records
-        evidence["m33_dispatch_attestation"] = dispatch_attestation(
-            "m31_iso_cis", identity.core, 20, SEMANTICS, ROLES,
-            exact_program, cycle_records=cycle_records,
+        attach_dispatch_attestation(
+            evidence, nonces, measured, identity.core, exact_program,
         )
     _save(prefix, evidence, transcript)
     return evidence

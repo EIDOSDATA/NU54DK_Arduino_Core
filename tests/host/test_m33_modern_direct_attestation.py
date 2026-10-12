@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import sys
 import unittest
+from unittest.mock import patch
 
 
 HIL = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
@@ -96,6 +97,59 @@ class ModernDirectAttestationTest(unittest.TestCase):
         cis_runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
         self.assertIn("INTER_CYCLE_SETTLE_SECONDS = 1.0", cis_runner)
         self.assertIn("time.sleep(INTER_CYCLE_SETTLE_SECONDS)", cis_runner)
+
+    def test_cis_empty_slot_counter_is_not_sdu_loss_denominator(self) -> None:
+        """! @brief 유효 SDU 수와 16-bit empty slot 관찰 누적값을 분리합니다. """
+
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            total_sent=2000,
+            total_received=2000,
+            minimum_received=100,
+            invalid_or_lost=80,
+        )
+        assert_cycles(
+            self,
+            cis.build_dispatch_cycle_records(nonces, measured),
+            20,
+            cis.SEMANTICS,
+        )
+        measured.invalid_or_lost = 20 * 65535 + 1
+        with self.assertRaises(cis.IsoExecutionFailure):
+            cis.build_dispatch_cycle_records(nonces, measured)
+
+    def test_cis_dispatch_failure_remains_failed_and_preserves_save_path(self) -> None:
+        """! @brief attestation 실패를 예외 탈출 대신 redacted FAIL로 보존합니다. """
+
+        evidence = {"status": "PASS", "reason": None}
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            total_sent=2000,
+            total_received=2000,
+            minimum_received=100,
+            invalid_or_lost=80,
+        )
+        with patch.object(
+            cis,
+            "dispatch_attestation",
+            side_effect=RuntimeError("uid=secret-uid " + "a" * 40),
+        ):
+            cis.attach_dispatch_attestation(
+                evidence, nonces, measured, "b" * 40, {"exact": True}
+            )
+        self.assertEqual(evidence["status"], "FAIL")
+        self.assertEqual(evidence["first_error"]["stage"], "dispatch_attestation")
+        self.assertNotIn("secret-uid", str(evidence))
+        self.assertNotIn("a" * 40, str(evidence))
+        self.assertNotIn("dispatch_cycle_records", evidence)
+        self.assertNotIn("m33_dispatch_attestation", evidence)
+        runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
+        self.assertLess(
+            runner.index("attach_dispatch_attestation(\n            evidence"),
+            runner.index("    _save(prefix, evidence, transcript)"),
+        )
 
     def test_power_advertising_privacy_and_ead_cycles(self) -> None:
         """! @brief W04 aggregate가 내부 20 sequence를 정확히 닫는지 확인합니다. """
