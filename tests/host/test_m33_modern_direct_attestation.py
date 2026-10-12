@@ -97,6 +97,10 @@ class ModernDirectAttestationTest(unittest.TestCase):
         cis_runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
         self.assertIn("INTER_CYCLE_SETTLE_SECONDS = 1.0", cis_runner)
         self.assertIn("time.sleep(INTER_CYCLE_SETTLE_SECONDS)", cis_runner)
+        self.assertIn("flash_image_pyocd_sha256(", cis_runner)
+        self.assertIn("expected_sha256=board[\"image_sha256\"]", cis_runner)
+        self.assertIn("reset_and_halt_before_program=True", cis_runner)
+        self.assertNotIn("flash_image_pyocd(", cis_runner)
 
     def test_cis_empty_slot_counter_is_not_sdu_loss_denominator(self) -> None:
         """! @brief 유효 SDU 수와 16-bit empty slot 관찰 누적값을 분리합니다. """
