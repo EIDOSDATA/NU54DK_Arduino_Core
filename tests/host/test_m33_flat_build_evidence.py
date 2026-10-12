@@ -100,6 +100,26 @@ class FlatEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "range"):
             BAP.validate_cycle_records(changed, 20)
 
+    def test_bap_server_disconnect_binds_to_current_stop(self):
+        """! @brief 시작 전 stale 종료는 버리고 조기·중복 종료는 거부합니다. """
+
+        state = {"server_disconnected": False}
+        events = {"server": []}
+        BAP._observe_server_disconnect(state, events, False, False)
+        self.assertTrue(state["server_disconnected"])
+        self.assertEqual([], events["server"])
+
+        state["server_disconnected"] = False
+        with self.assertRaisesRegex(RuntimeError, "before client stop"):
+            BAP._observe_server_disconnect(state, events, True, False)
+
+        state["server_disconnected"] = False
+        BAP._observe_server_disconnect(state, events, True, True)
+        self.assertTrue(state["server_disconnected"])
+        self.assertEqual(["disconnected"], events["server"])
+        with self.assertRaisesRegex(RuntimeError, "duplicate"):
+            BAP._observe_server_disconnect(state, events, True, True)
+
     def cs_record(self) -> dict:
         """! @brief 100 procedure·20 restart·20 reconnect·quiesce evidence를 만듭니다. """
 

@@ -151,6 +151,19 @@ def validate_cycle_records(record: dict, cycles: int) -> None:
         raise ValueError("BAP transcript has unassigned trailing lines")
 
 
+def _observe_server_disconnect(state: dict, events: dict,
+                               streaming: bool, stop_requested: bool) -> None:
+    """! @brief 현재 streaming 종료에 속하는 server disconnect만 기록합니다. """
+
+    state["server_disconnected"] = True
+    if stop_requested:
+        if events["server"]:
+            raise RuntimeError("duplicate server disconnect after client stop")
+        events["server"].append("disconnected")
+    elif streaming:
+        raise RuntimeError("server disconnected before client stop")
+
+
 def _append_line(record: dict, role: str, line: str) -> str:
     """! @brief 주소를 제거한 bounded UART 행을 raw evidence에 추가합니다. """
 
@@ -371,8 +384,9 @@ def main() -> int:
                                     client_rx = max(client_rx, count)
                             else:
                                 if "LE Audio duplex peer disconnected" in line:
-                                    state["server_disconnected"] = True
-                                    events["server"].append("disconnected")
+                                    _observe_server_disconnect(
+                                        state, events, streaming, stop_requested
+                                    )
                                 match = SERVER_SENT.search(line)
                                 if match:
                                     server_tx = max(server_tx, int(match.group(1)))
