@@ -106,6 +106,9 @@ class M30SecureBleDfuTests(unittest.TestCase):
 
         source = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
         overlay = (HIL_TARGET / "app.overlay").read_text(encoding="utf-8")
+        boot_overlay = (HIL_TARGET / "sysbuild/mcuboot.overlay").read_text(
+            encoding="utf-8"
+        )
         central_configuration = (HIL_TARGET / "central.conf").read_text(
             encoding="utf-8"
         )
@@ -113,6 +116,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertIn("serial_baud_rate = 460800UL", source)
         self.assertIn("&uart20", overlay)
         self.assertIn("current-speed = <460800>;", overlay)
+        self.assertIn("&uart20", boot_overlay)
+        self.assertIn("current-speed = <460800>;", boot_overlay)
         self.assertIn(
             "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024",
             central_configuration,
@@ -249,6 +254,13 @@ class M30SecureBleDfuTests(unittest.TestCase):
             (app / "zephyr").mkdir(parents=True)
             (boot / "zephyr").mkdir(parents=True)
             (app / "zephyr/zephyr.dts").write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x70800 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            (boot / "zephyr/zephyr.dts").write_text(
                 "/ { chosen { zephyr,console = &uart20; }; };\n"
                 "uart20: uart@c6000 {\n"
                 "    current-speed = < 0x70800 >;\n"

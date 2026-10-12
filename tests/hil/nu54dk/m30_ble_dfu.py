@@ -495,6 +495,7 @@ def collect_peripheral_build(
     app = root / APPLICATION_DOMAIN
     boot = root / BOOT_DOMAIN
     validate_console_transport(app)
+    validate_console_transport(boot)
     require_text_tokens(
         app / "zephyr/.config",
         (
@@ -568,6 +569,7 @@ def collect_central_build(
     app = root / APPLICATION_DOMAIN
     boot = root / BOOT_DOMAIN
     validate_console_transport(app)
+    validate_console_transport(boot)
     require_text_tokens(
         app / "zephyr/.config",
         (
