@@ -123,6 +123,35 @@ class ModernDirectAttestationTest(unittest.TestCase):
         with self.assertRaises(cis.IsoExecutionFailure):
             cis.build_dispatch_cycle_records(nonces, measured)
 
+    def test_combined_empty_slot_counters_are_not_sdu_loss_denominators(self) -> None:
+        """! @brief 결합 CIS/BIS의 유효 SDU와 16-bit empty slot 누적값을 분리합니다. """
+
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            peer_sent=2000,
+            cis_received=2000,
+            bis_forwarded=2000,
+            bis_received=2000,
+            minimum_cis_received=100,
+            minimum_bis_received=100,
+            cis_empty_slots=80,
+            bis_empty_slots=40,
+        )
+        assert_cycles(
+            self,
+            combined.build_dispatch_cycle_records(nonces, measured),
+            20,
+            combined.SEMANTICS,
+        )
+        measured.cis_empty_slots = 20 * 65535 + 1
+        with self.assertRaises(combined.CombinedFailure):
+            combined.build_dispatch_cycle_records(nonces, measured)
+        measured.cis_empty_slots = 80
+        measured.bis_empty_slots = 20 * 65535 + 1
+        with self.assertRaises(combined.CombinedFailure):
+            combined.build_dispatch_cycle_records(nonces, measured)
+
     def test_cis_dispatch_failure_remains_failed_and_preserves_save_path(self) -> None:
         """! @brief attestation 실패를 예외 탈출 대신 redacted FAIL로 보존합니다. """
 

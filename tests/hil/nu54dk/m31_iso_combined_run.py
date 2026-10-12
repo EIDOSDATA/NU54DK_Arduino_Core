@@ -62,8 +62,8 @@ def build_dispatch_cycle_records(nonces: list[str], measured: object) -> list[di
             not 1980 <= getattr(measured, "bis_received", 0) <= 2000 or \
             getattr(measured, "minimum_cis_received", 0) < 99 or \
             getattr(measured, "minimum_bis_received", 0) < 99 or \
-            not 0 <= getattr(measured, "cis_empty_slots", -1) <= 20 or \
-            not 0 <= getattr(measured, "bis_empty_slots", -1) <= 20:
+            not 0 <= getattr(measured, "cis_empty_slots", -1) <= 20 * 65535 or \
+            not 0 <= getattr(measured, "bis_empty_slots", -1) <= 20 * 65535:
         raise CombinedFailure("dispatcher combined cycle witness mismatch")
     statuses = {token: "PASS" for token in SEMANTICS}
     return [
