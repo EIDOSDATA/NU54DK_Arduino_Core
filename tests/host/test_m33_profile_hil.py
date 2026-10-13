@@ -569,6 +569,10 @@ class ProfileHilTests(unittest.TestCase):
             "if (event.connection == peer && event.event == BLEEvent::connected", 1
         )[1].split("if (event.connection == peer && event.event == BLEEvent::disconnected", 1)[0]
         self.assertIn("recoverStaleBond(peer, native_cleanup_address)", client_submit)
+        self.assertIn("security_error == SecurityError::busy", client_submit)
+        self.assertIn("security_driver == -EBUSY", client_submit)
+        self.assertIn('record("PROGRESS", detail)', client_submit)
+        self.assertIn("|security_error=%u|security_driver=%d", client_submit)
 
     def test_programming_halts_target_and_binds_exact_image(self):
         """! @brief profile flash가 실행 중 target을 정지하고 exact image를 결합하는지 검사합니다. """

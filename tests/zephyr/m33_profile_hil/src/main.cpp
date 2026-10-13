@@ -1858,14 +1858,34 @@ namespace
 #endif
             if (!BLESecurity.requestSecurity(peer))
             {
+                const SecurityError security_error = BLESecurity.lastError();
+                const int security_driver = BLESecurity.lastDriverError();
+                if (security_error == SecurityError::busy && security_driver == -EBUSY)
+                {
+                    char detail[160];
+                    snprintf(detail, sizeof(detail),
+                             "|reason=security-already-pending|security_error=%u|"
+                             "security_driver=%d",
+                             static_cast<unsigned>(security_error), security_driver);
+                    record("PROGRESS", detail);
+                    return;
+                }
 #if defined(M33_PROFILE_NATIVE)
                 if (!native_cleanup_mode || !native_cleanup_peer_valid ||
                     !recoverStaleBond(peer, native_cleanup_address))
                 {
-                    fail("|reason=security-submit");
+                    char detail[160];
+                    snprintf(detail, sizeof(detail),
+                             "|reason=security-submit|security_error=%u|security_driver=%d",
+                             static_cast<unsigned>(security_error), security_driver);
+                    fail(detail);
                 }
 #else
-                fail("|reason=security-submit");
+                char detail[160];
+                snprintf(detail, sizeof(detail),
+                         "|reason=security-submit|security_error=%u|security_driver=%d",
+                         static_cast<unsigned>(security_error), security_driver);
+                fail(detail);
 #endif
             }
         }
