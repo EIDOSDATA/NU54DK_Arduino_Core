@@ -110,7 +110,7 @@ class RuntimeProducerContractTests(unittest.TestCase):
             "sdk_root": "C:/ncs/v3.4.0",
             "source_revision": "a" * 40,
         }
-        cleanup, run, export = PRODUCER.profile_commands(
+        cleanup, run, post_cleanup, export = PRODUCER.profile_commands(
             Path("C:/toolchain/python.exe"),
             source,
             profiles,
@@ -120,18 +120,30 @@ class RuntimeProducerContractTests(unittest.TestCase):
         for value in HASHES.values():
             self.assertIn(value, cleanup)
             self.assertIn(value, run)
+            self.assertIn(value, post_cleanup)
         self.assertEqual(
             cleanup[cleanup.index("--native-security-phase") + 1],
             "cleanup",
         )
         self.assertEqual(run[run.index("--native-security-phase") + 1], "fresh")
+        self.assertEqual(
+            post_cleanup[post_cleanup.index("--native-security-phase") + 1],
+            "cleanup",
+        )
+        self.assertEqual(
+            export[export.index("--evidence") + 1],
+            str(Path("C:/runtime/profile-post-fresh-cleanup.json")),
+        )
         self.assertNotIn("uid", " ".join(cleanup).casefold())
         self.assertNotIn("uid", " ".join(run).casefold())
+        self.assertNotIn("uid", " ".join(post_cleanup).casefold())
         self.assertIn("--execute", cleanup)
         self.assertIn("--execute", run)
+        self.assertIn("--execute", post_cleanup)
         self.assertNotIn("--execute", export)
         PRODUCER.ensure_safe_command(cleanup)
         PRODUCER.ensure_safe_command(run)
+        PRODUCER.ensure_safe_command(post_cleanup)
         PRODUCER.ensure_safe_command(export)
 
     def test_idle_fixture_resolves_moved_self_contained_build(self) -> None:
@@ -324,6 +336,10 @@ class RuntimeProducerContractTests(unittest.TestCase):
                 result = PRODUCER.produce(args, executor=executor)
             self.assertEqual(result["status"], "NOT_RUN")
             self.assertEqual(result["probe_sha256"], HASHES)
+            self.assertEqual(
+                result["physical_sequence"][2],
+                "profile-native-post-fresh-cleanup:current-nonce-peer-only",
+            )
             self.assertEqual(calls, [])
             runtime_python.assert_called_once_with()
             self.assertTrue((output / "runtime-producer-plan.json").is_file())

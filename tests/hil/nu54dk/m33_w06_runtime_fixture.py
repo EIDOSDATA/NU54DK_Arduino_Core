@@ -341,8 +341,8 @@ def profile_commands(
     profiles: dict[str, dict[str, Path]],
     probe_hashes: dict[str, str],
     output: Path,
-) -> tuple[list[str], list[str], list[str]]:
-    """! @brief 제한 cleanup 뒤 native fresh와 idle exporter 명령을 만듭니다. """
+) -> tuple[list[str], list[str], list[str], list[str]]:
+    """! @brief native fresh 전후 cleanup과 idle exporter 명령을 만듭니다. """
 
     mapping = (
         ("server", "client", profiles["server"]),
@@ -350,7 +350,12 @@ def profile_commands(
         ("watcher", "third", profiles["watcher"]),
     )
     commands = []
-    for phase in ("cleanup", "fresh"):
+    stages = (
+        ("cleanup", "profile-cleanup"),
+        ("fresh", "profile-fresh"),
+        ("cleanup", "profile-post-fresh-cleanup"),
+    )
+    for phase, prefix_name in stages:
         command = [
             str(python),
             "-B",
@@ -374,11 +379,11 @@ def profile_commands(
             ))
         command.extend((
             "--output-prefix",
-            str(output / f"profile-{phase}"),
+            str(output / prefix_name),
             "--execute",
         ))
         commands.append(command)
-    prefix = output / "profile-fresh"
+    prefix = output / "profile-post-fresh-cleanup"
     fixture = output / "third-idle" / "third-idle-fixture.json"
     export = [
         str(python),
@@ -391,7 +396,7 @@ def profile_commands(
         "--output",
         str(fixture),
     ]
-    return commands[0], commands[1], export
+    return commands[0], commands[1], commands[2], export
 
 
 def copy_ecosystem_inputs(
@@ -837,6 +842,7 @@ def _produce(
         "physical_sequence": [
             "profile-native-cleanup:current-nonce-peer-only",
             "profile-native-fresh:server-client-watcher",
+            "profile-native-post-fresh-cleanup:current-nonce-peer-only",
             "third-idle-read-only-export",
             "ecosystem-client:sector-program-reset-readback",
             "ecosystem-peer:sector-program-reset-readback",
@@ -905,9 +911,9 @@ def _run_fixture_cycle(
     ecosystem_inputs: dict, python: Path, timeout: int,
     executor: Callable[..., subprocess.CompletedProcess],
 ) -> None:
-    """! @brief cleanup·fresh·idle export·ecosystem의 물리 의존 순서를 보존합니다. """
+    """! @brief fresh 뒤 본드를 지우고 idle export·ecosystem 순서를 보존합니다. """
 
-    cleanup_command, run_command, export_command = profile_commands(
+    cleanup_command, run_command, post_cleanup_command, export_command = profile_commands(
         python, source, profiles, hashes, output,
     )
     run_checked(cleanup_command, timeout, executor,
@@ -934,6 +940,20 @@ def _run_fixture_cycle(
         or profile.get("revisions", {}).get("core") != source["source_revision"]
     ):
         raise RuntimeFixtureFailure("current-S native fresh profile evidence did not PASS")
+    run_checked(post_cleanup_command, timeout, executor,
+                log_root=output / "commands/post-fresh-cleanup",
+                probe_hashes=set(hashes.values()))
+    post_cleanup_evidence = output / "profile-post-fresh-cleanup.json"
+    post_cleanup = json.loads(post_cleanup_evidence.read_text(encoding="utf-8"))
+    if (
+        post_cleanup.get("status") != "PASS"
+        or post_cleanup.get("family") != "native"
+        or post_cleanup.get("native_security_phase") != "cleanup"
+        or post_cleanup.get("revisions", {}).get("core") != source["source_revision"]
+        or set(post_cleanup.get("native_cleanup", {}).get("cleaned", {}))
+           != {"server", "client"}
+    ):
+        raise RuntimeFixtureFailure("post-fresh scoped native cleanup evidence did not PASS")
     run_checked(export_command, timeout, executor,
                 log_root=output / "commands/idle-export", probe_hashes=set(hashes.values()))
     third_fixture = output / "third-idle/third-idle-fixture.json"
