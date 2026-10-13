@@ -21,7 +21,7 @@ if str(HIL) not in sys.path:
 
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     validate_build_record,
 )
@@ -629,14 +629,12 @@ def execute(args: argparse.Namespace) -> dict:
                 board["registers"] = collect_register_identity(
                     board["uid"], board["volume"]
                 )
-                mode, byte_count = flash_image_pyocd(
+                mode, byte_count = flash_image_pyocd_sha256(
                     role,
-                    board["uid"],
+                    board["probe_sha256"],
                     program_images[role],
                     120.0,
-                    hardware_reset=True,
-                    cmsis_dap_v1=False,
-                    preserve_nrf54l_access=True,
+                    reset_and_halt_before_program=True,
                 )
                 board["flash_mode"] = mode
                 board["flash_bytes"] = byte_count
