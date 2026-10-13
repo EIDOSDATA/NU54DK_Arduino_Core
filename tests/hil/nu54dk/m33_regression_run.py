@@ -1759,6 +1759,20 @@ def _validate_state_restore_receipt(path: Path, expected: dict, row: dict,
     return receipt
 
 
+def _state_restore_path(native_path: Path, campaign_id: str) -> Path:
+    """! @brief child 전용 output과 parent 복원 증거의 생성 경계를 분리합니다. """
+
+    if campaign_id == "m33_ecosystem":
+        require(native_path.name == "result.json" and
+                native_path.parent.name == "m33_ecosystem" and
+                native_path.parent.parent.name == "native",
+                "ecosystem native output layout differs")
+        return native_path.parent.with_name(
+            "m33_ecosystem.pre-run-restore"
+        ) / "result.json"
+    return native_path.with_name(f"{native_path.stem}.pre-run-restore.json")
+
+
 def _restore_campaign_state(expected: dict, row: dict, native_path: Path,
                             revision: str, root: Path = ROOT,
                             plan: dict | None = None,
@@ -1773,9 +1787,7 @@ def _restore_campaign_state(expected: dict, row: dict, native_path: Path,
             authority.active and authority.hashes == tuple(sorted(
                 plan["all_probes"].values()
             )), "active parent probe-lock authority required")
-    receipt_path = native_path.with_name(
-        f"{native_path.stem}.pre-run-restore.json"
-    )
+    receipt_path = _state_restore_path(native_path, expected["id"])
     require(not receipt_path.exists(), "pre-run state restore overwrite refused")
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     sidecars = reserve_sidecars(receipt_path, plan["roles"])
@@ -4762,9 +4774,7 @@ def _validate_completed_matrix_group(
                                 row["native_evidence"]).resolve(),
                 "completed matrix native evidence mismatch")
         if reuse is None and expected["id"] in PRE_RUN_STATE_RESTORE:
-            restore_path = native_path.with_name(
-                f"{native_path.stem}.pre-run-restore.json"
-            )
+            restore_path = _state_restore_path(native_path, expected["id"])
             _validate_state_restore_receipt(
                 restore_path, expected, row, revision, root
             )

@@ -1870,6 +1870,26 @@ class RegressionTests(unittest.TestCase):
         self.assertIn('"mass_erase": False', source)
         self.assertNotIn("chip_erase", source)
 
+    def test_ecosystem_restore_path_does_not_create_child_output(self):
+        """! @brief ecosystem parent 복원 증거가 child 전용 output 밖에 놓이는지 확인합니다. """
+
+        native = Path("root") / "native" / "m33_ecosystem" / "result.json"
+        self.assertEqual(
+            Path("root") / "native" /
+            "m33_ecosystem.pre-run-restore" / "result.json",
+            RUNNER._state_restore_path(native, "m33_ecosystem"),
+        )
+        direct = Path("root") / "native" / "m31_bap_duplex" / "result.json"
+        self.assertEqual(
+            direct.with_name("result.pre-run-restore.json"),
+            RUNNER._state_restore_path(direct, "m31_bap_duplex"),
+        )
+        with self.assertRaisesRegex(ValueError, "output layout differs"):
+            RUNNER._state_restore_path(
+                Path("root") / "native" / "wrong" / "result.json",
+                "m33_ecosystem",
+            )
+
     def test_bap_central_program_uses_normalized_application_path(self):
         """! @brief BAP dispatcher가 해시 객체의 path로 build record를 검증합니다. """
 
