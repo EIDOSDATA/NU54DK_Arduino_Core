@@ -577,6 +577,20 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn('expected_sha256=board["image_sha256"]', flash_call)
         self.assertIn("reset_and_halt_before_program=True", flash_call)
 
+    def test_stale_recovery_ignores_late_connected_event(self):
+        """! @brief stale bond disconnect 요청 뒤의 늦은 connected 이벤트가 재인증되지 않는지 검사합니다. """
+
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "tests/zephyr/m33_profile_hil/src/main.cpp").read_text(
+            encoding="utf-8"
+        )
+        connected_guard = source.split(
+            "if (event.event == BLEEvent::connected && staleRecoveryPending(event.connection))", 1
+        )[1].split("#if defined(M33_PROFILE_NATIVE)", 1)[0]
+        self.assertIn('record("PROGRESS", "|reason=stale-bond-connected-pending")',
+                      connected_guard)
+        self.assertIn("return;", connected_guard)
+
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]
         compiler = compiler_command()

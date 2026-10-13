@@ -1659,6 +1659,12 @@ namespace
                      BLEDevice.lastDriverError());
             record("PROGRESS", detail);
         }
+        /** @note stale bond 정리로 disconnect를 요청한 뒤 늦게 도착한 connected는 재인증하지 않습니다. */
+        if (event.event == BLEEvent::connected && staleRecoveryPending(event.connection))
+        {
+            record("PROGRESS", "|reason=stale-bond-connected-pending");
+            return;
+        }
 #if defined(M33_PROFILE_NATIVE)
         if (native_cleanup_mode && event.event == BLEEvent::disconnected)
         {
