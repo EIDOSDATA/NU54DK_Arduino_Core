@@ -12,6 +12,7 @@ from host_compiler import compiler_command, run_executable
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hil/nu54dk"))
 import m33_profile_run as PROFILE_RUN
 from m33_profile_run import (bms_transition, failure_details, fields, start_roles,
+                             complete_serial_line,
                              load_build_identities, validate_native_security,
                              validate_native_cleanup,
                              validate_bms_predecessor, validate_native_predecessor,
@@ -576,6 +577,21 @@ class ProfileHilTests(unittest.TestCase):
         )[1].split("readback_records, programming_receipt", 1)[0]
         self.assertIn('expected_sha256=board["image_sha256"]', flash_call)
         self.assertIn("reset_and_halt_before_program=True", flash_call)
+
+    def test_partial_serial_line_waits_for_newline(self):
+        """! @brief timeout으로 나뉜 protocol 줄을 완성 전에는 해석하지 않는지 검사합니다. """
+
+        fragment = bytearray()
+        first = (b"M33PROFILE|1|PROGRESS|role=client|nonce="
+                 b"772a37fcf72c800000196c83248d1")
+        second = (b"2d4|core=20ec25537342afcb530c38b265328875d8c5f81f"
+                  b"|reason=security-changed\r\n")
+        self.assertIsNone(complete_serial_line(fragment, first))
+        self.assertEqual(complete_serial_line(fragment, second), first + second)
+        self.assertEqual(fragment, bytearray())
+
+        with self.assertRaisesRegex(ValueError, "serial line exceeded limit"):
+            complete_serial_line(bytearray(), b"x" * 17, limit=16)
 
     def test_stale_recovery_ignores_late_connected_event(self):
         """! @brief stale bond disconnect 요청 뒤의 늦은 connected 이벤트가 재인증되지 않는지 검사합니다. """

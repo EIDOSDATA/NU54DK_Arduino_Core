@@ -48,6 +48,20 @@ class StartBarrierFailure(ValueError):
         self.stage = stage
 
 
+def complete_serial_line(fragment: bytearray, payload: bytes,
+                         limit: int = 4096) -> bytes | None:
+    """! @brief timeout으로 분할된 직렬 수신을 개행 단위로 다시 조립합니다. """
+    fragment.extend(payload)
+    newline = fragment.find(b"\n")
+    if newline < 0:
+        if len(fragment) > limit:
+            raise ValueError("serial line exceeded limit")
+        return None
+    line = bytes(fragment[:newline + 1])
+    del fragment[:newline + 1]
+    return line
+
+
 def fields(line: str) -> dict[str, str]:
     """! @brief 중복 key·과대 줄은 해석하지 않습니다. """
     if len(line) > 512:
@@ -775,6 +789,7 @@ def execute(args: argparse.Namespace) -> dict:
     nonce = hashlib.sha256(f"{time.time_ns()}:{revisions['core']}".encode()).hexdigest()[:32]
     transcript, results, stats, ends = [], {}, {}, set()
     ports = {}
+    serial_fragments = {role: bytearray() for role in ordered_roles}
     reason = None
     target_failure = None
     begins = set()
@@ -885,7 +900,12 @@ def execute(args: argparse.Namespace) -> dict:
         while True:
             payload = ports[role].readline()
             if payload:
-                line = payload.decode("ascii", errors="replace").strip()
+                complete = complete_serial_line(serial_fragments[role], payload)
+                if complete is None:
+                    if time.monotonic() >= deadline:
+                        return None
+                    continue
+                line = complete.decode("ascii", errors="replace").strip()
                 if line.startswith(PROTOCOL + "|"):
                     transcript.append(f"{role}: {line}")
                     value = fields(line)
