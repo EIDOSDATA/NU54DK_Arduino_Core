@@ -567,6 +567,16 @@ class ProfileHilTests(unittest.TestCase):
         )[1].split("if (event.connection == peer && event.event == BLEEvent::disconnected", 1)[0]
         self.assertIn("recoverStaleBond(peer, native_cleanup_address)", client_submit)
 
+    def test_programming_halts_target_and_binds_exact_image(self):
+        """! @brief profile flash가 실행 중 target을 정지하고 exact image를 결합하는지 검사합니다. """
+
+        source = Path(PROFILE_RUN.__file__).read_text(encoding="utf-8")
+        flash_call = source.split(
+            'board["flash_mode"], board["flash_bytes"] = flash_image_pyocd_sha256(', 1
+        )[1].split("readback_records, programming_receipt", 1)[0]
+        self.assertIn('expected_sha256=board["image_sha256"]', flash_call)
+        self.assertIn("reset_and_halt_before_program=True", flash_call)
+
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]
         compiler = compiler_command()

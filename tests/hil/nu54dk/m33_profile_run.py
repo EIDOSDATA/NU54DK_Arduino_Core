@@ -902,7 +902,9 @@ def execute(args: argparse.Namespace) -> dict:
                     board["probe_sha256"], board["volume"]
                 )
                 board["flash_mode"], board["flash_bytes"] = flash_image_pyocd_sha256(
-                    role, board["probe_sha256"], board["image"], 120.0
+                    role, board["probe_sha256"], board["image"], 120.0,
+                    expected_sha256=board["image_sha256"],
+                    reset_and_halt_before_program=True,
                 )
                 flash_records[role] = {"mode": board["flash_mode"],
                                        "bytes": board["flash_bytes"]}
