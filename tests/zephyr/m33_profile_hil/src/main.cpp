@@ -2099,6 +2099,8 @@ namespace
 #if defined(M33_PROFILE_NATIVE)
         constexpr char native_cleanup_command[] =
             "M33PROFILE|1|NATIVE_CLEAN|nonce=";
+        constexpr char native_primary_cleanup_command[] =
+            "M33PROFILE|1|CLEAN_PRIMARY|nonce=";
 #endif
         if (strcmp(command, "M33PROFILE|1|PROBE") == 0)
         {
@@ -2145,8 +2147,10 @@ namespace
             }
 #endif
         }
-        else if (strncmp(command, "M33PROFILE|1|CLEAN_PRIMARY|nonce=", 34U) == 0 &&
-                 strcmp(command + 34U, nonce) == 0 && identity_probe_mode &&
+        else if (strncmp(command, native_primary_cleanup_command,
+                         sizeof(native_primary_cleanup_command) - 1U) == 0 &&
+                 strcmp(command + sizeof(native_primary_cleanup_command) - 1U, nonce) == 0 &&
+                 identity_probe_mode &&
                  identity_primary_captured && identity_primary_verified &&
                  !identity_primary_cleanup_reported && !cleanup_requested)
         {

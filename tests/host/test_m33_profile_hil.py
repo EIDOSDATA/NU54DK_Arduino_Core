@@ -539,6 +539,8 @@ class ProfileHilTests(unittest.TestCase):
         scoped = source.split(
             '"M33PROFILE|1|CLEAN_PRIMARY|nonce="', 1
         )[1].split("#if !defined(M33_PROFILE_NATIVE)", 1)[0]
+        self.assertIn("sizeof(native_primary_cleanup_command) - 1U", scoped)
+        self.assertNotIn('CLEAN_PRIMARY|nonce=", 34U', source)
         self.assertIn("identity_primary_captured", scoped)
         self.assertIn("identity_primary_verified", scoped)
         self.assertIn("BLESecurity.eraseBond(identity_primary_address)", scoped)
