@@ -885,6 +885,36 @@ class IdleAuditFailure(ValueError):
         self.evidence = {"kind": kind, "observed": observed}
 
 
+def safe_flash_failure_evidence(error: BaseException) -> dict | None:
+    """! @brief pyOCD flash 오류에서 UID가 없는 허용된 분류와 정수만 추출합니다. """
+
+    reasons = {
+        "flash init timed out": "init_timeout",
+        "flash init failure": "init_failure",
+        "flash uninit timed out": "uninit_timeout",
+        "flash uninit": "uninit_failure",
+        "attempt to program invalid flash address": "invalid_address",
+        "target was not halted as expected after calling": "target_not_halted",
+        "flash algorithm overflowed stack": "algorithm_stack_overflow",
+    }
+    current: BaseException | None = error
+    visited = set()
+    while current is not None and id(current) not in visited:
+        visited.add(id(current))
+        if type(current).__name__ == "FlashFailure":
+            message = str(current).strip().casefold()
+            reason = next((value for prefix, value in reasons.items()
+                           if message.startswith(prefix)), "other")
+            evidence = {"reason": reason}
+            for name in ("address", "result_code"):
+                value = getattr(current, name, None)
+                if type(value) is int:
+                    evidence[name] = value
+            return evidence
+        current = current.__cause__ or current.__context__
+    return None
+
+
 class RawResetMonitor:
     """! @brief DHCSR의 유일한 소비 경로이며 순간 reset bit를 software에 영구 latch합니다. """
     def __init__(self, target):
@@ -1340,6 +1370,9 @@ def prepare_pair(args: argparse.Namespace, backend=None) -> None:
         report["status"] = "FAIL"
         ## @brief 예외 문자열에는 raw UID가 포함될 수 있어 type과 안전한 stage만 보존합니다.
         report["error_type"] = type(error).__name__
+        flash_failure = safe_flash_failure_evidence(error)
+        if flash_failure is not None:
+            report["flash_failure"] = flash_failure
         if isinstance(error, IdleAuditFailure):
             report["audit_failure"] = error.evidence
     finally:

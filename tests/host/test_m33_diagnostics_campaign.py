@@ -312,6 +312,13 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                 "result": {"path": result_path.name, "sha256": digest(result_path)},
                 "third_idle": third_reference,
                 "hardware": hardware,
+                "preparation_attempts": [{
+                    "attempt": 1, "status": "PREPARED",
+                    "preflight": {
+                        "path": preflight_path.name,
+                        "sha256": digest(preflight_path),
+                    },
+                }],
             })
             final_hardware = hardware
         statuses = {token: "PASS" for token in CAMPAIGN.SEMANTICS}
@@ -435,6 +442,7 @@ class DiagnosticsCampaignTests(unittest.TestCase):
             reference = {"path": preflight_path.name,
                          "sha256": digest(preflight_path)}
             row["preflight"] = reference
+            row["preparation_attempts"][0]["preflight"] = reference
             for index, hardware in enumerate(row["hardware"]):
                 build_path = root / hardware["build_record"]["path"]
                 build = json.loads(build_path.read_text(encoding="utf-8"))
@@ -456,6 +464,99 @@ class DiagnosticsCampaignTests(unittest.TestCase):
             with self.subTest(cycles=cycles, execute=execute), self.assertRaisesRegex(
                     ValueError, "24-case"):
                 CAMPAIGN.execute(argparse.Namespace(cycles=cycles, execute=execute))
+
+    def test_flash_init_timeout_retries_each_role_once(self):
+        """! @brief TX/RX별 init timeout을 별도 prepare directory에서 한 번씩 재시도합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-dtm-retry-") as folder:
+            root = Path(folder)
+            output = root / "campaign.h4.prepare"
+            calls = []
+
+            def prepare(args):
+                calls.append(args.output)
+                args.output.mkdir()
+                if len(calls) <= 2:
+                    (args.output / "preflight.json").write_text(json.dumps({
+                        "status": "FAIL", "mode": "execute",
+                        "stage": "program_tx" if len(calls) == 1 else "program_rx",
+                        "error_type": "FlashFailure",
+                        "flash_failure": {"reason": "init_timeout"},
+                        "cleanup": [
+                            {"role": "tx", "halt_read_only_audit": "FAIL"},
+                            {"role": "rx", "halt_read_only_audit": "PASS"},
+                            {"role": "third", "halt_read_only_audit": "PASS"},
+                        ],
+                    }), encoding="utf-8")
+                    raise RuntimeError("sanitized failure")
+                (args.output / "preflight.json").write_text(json.dumps({
+                    "status": "PREPARED",
+                }), encoding="utf-8")
+
+            with mock.patch.object(CAMPAIGN.diagnostics, "prepare_pair",
+                                   side_effect=prepare):
+                prepared, failed = CAMPAIGN.prepare_with_init_retry(
+                    argparse.Namespace(marker="fixture", output=output), output
+                )
+            self.assertEqual(calls, [
+                output, output.with_name(output.name + ".init-retry-1"),
+                output.with_name(output.name + ".init-retry-2"),
+            ])
+            self.assertEqual(prepared, calls[2])
+            self.assertEqual(failed, [
+                calls[0] / "preflight.json", calls[1] / "preflight.json",
+            ])
+
+    def test_repeated_timeout_on_same_role_is_not_retried_twice(self):
+        """! @brief 같은 역할의 두 번째 init timeout은 즉시 fail-closed 처리합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-dtm-repeat-") as folder:
+            output = Path(folder) / "campaign.h4.prepare"
+            calls = []
+
+            def prepare(args):
+                calls.append(args.output)
+                args.output.mkdir()
+                (args.output / "preflight.json").write_text(json.dumps({
+                    "status": "FAIL", "mode": "execute",
+                    "stage": "program_tx", "error_type": "FlashFailure",
+                    "flash_failure": {"reason": "init_timeout"},
+                    "cleanup": [
+                        {"role": "tx", "halt_read_only_audit": "FAIL"},
+                        {"role": "rx", "halt_read_only_audit": "PASS"},
+                        {"role": "third", "halt_read_only_audit": "PASS"},
+                    ],
+                }), encoding="utf-8")
+                raise RuntimeError("sanitized failure")
+
+            with mock.patch.object(CAMPAIGN.diagnostics, "prepare_pair",
+                                   side_effect=prepare), self.assertRaises(RuntimeError):
+                CAMPAIGN.prepare_with_init_retry(
+                    argparse.Namespace(marker="fixture", output=output), output
+                )
+            self.assertEqual(len(calls), 2)
+
+    def test_other_flash_failure_is_not_retried(self):
+        """! @brief init timeout 외 flash 실패는 기존 fail-closed 동작을 유지합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="nu54-dtm-no-retry-") as folder:
+            output = Path(folder) / "campaign.h4.prepare"
+
+            def prepare(args):
+                args.output.mkdir()
+                (args.output / "preflight.json").write_text(json.dumps({
+                    "status": "FAIL", "mode": "execute",
+                    "stage": "program_tx", "error_type": "FlashFailure",
+                    "flash_failure": {"reason": "init_failure"},
+                    "cleanup": [],
+                }), encoding="utf-8")
+                raise RuntimeError("sanitized failure")
+
+            with mock.patch.object(CAMPAIGN.diagnostics, "prepare_pair",
+                                   side_effect=prepare), self.assertRaises(RuntimeError):
+                CAMPAIGN.prepare_with_init_retry(
+                    argparse.Namespace(marker="fixture", output=output), output
+                )
 
 
 if __name__ == "__main__":

@@ -44,6 +44,56 @@ def clean_revision() -> str:
     return revision
 
 
+def retryable_flash_init_timeout(path: Path) -> bool:
+    """! @brief 새 session 재시도를 허용할 정확한 flash init timeout 증거만 검사합니다. """
+
+    if not path.is_file():
+        return False
+    report = json.loads(path.read_text(encoding="utf-8"))
+    cleanup = report.get("cleanup")
+    return (
+        report.get("status") == "FAIL"
+        and report.get("mode") == "execute"
+        and report.get("stage") in ("program_tx", "program_rx")
+        and report.get("error_type") == "FlashFailure"
+        and report.get("flash_failure") == {"reason": "init_timeout"}
+        and isinstance(cleanup, list)
+        and len(cleanup) == 3
+        and {row.get("role") for row in cleanup} == {"tx", "rx", "third"}
+        and all(row.get("halt_read_only_audit") in ("PASS", "FAIL")
+                for row in cleanup)
+    )
+
+
+def prepare_with_init_retry(args: argparse.Namespace,
+                            output: Path) -> tuple[Path, list[Path]]:
+    """! @brief 역할별 flash init timeout만 새 session으로 최대 한 번씩 다시 준비합니다. """
+
+    failed_preflights = []
+    failed_stages = set()
+    for attempt in range(3):
+        current = output if attempt == 0 else output.with_name(
+            output.name + f".init-retry-{attempt}"
+        )
+        values = vars(args).copy()
+        values["output"] = current
+        current_args = argparse.Namespace(**values)
+        try:
+            diagnostics.prepare_pair(current_args)
+            return current, failed_preflights
+        except RuntimeError:
+            preflight = current / "preflight.json"
+            if retryable_flash_init_timeout(preflight):
+                report = json.loads(preflight.read_text(encoding="utf-8"))
+                stage = report["stage"]
+                if stage not in failed_stages and len(failed_stages) < 2:
+                    failed_stages.add(stage)
+                    failed_preflights.append(preflight)
+                    continue
+            raise
+    raise RuntimeError("DTM flash init retry control flow mismatch")
+
+
 class TranscriptReplay:
     """! @brief 저장 UART transaction을 DtmPort의 실제 parser에 순서대로 재입력합니다. """
 
@@ -285,6 +335,43 @@ def adjacent(path: Path, reference: dict, label: str) -> Path:
     return child
 
 
+def validate_preparation_attempts(path: Path, row: dict) -> None:
+    """! @brief 정상 1회 또는 init timeout 뒤 새 session 1회만 허용합니다. """
+
+    attempts = row.get("preparation_attempts")
+    prepared = {
+        "attempt": 1, "status": "PREPARED", "preflight": row["preflight"],
+    }
+    if attempts == [prepared]:
+        return
+    if (not isinstance(attempts, list) or len(attempts) not in (2, 3)
+            or attempts[-1] != {
+                "attempt": len(attempts), "status": "PREPARED",
+                "preflight": row["preflight"],
+            }):
+        raise ValueError("DTM preparation retry denominator mismatch")
+    stages = set()
+    for number, failed_attempt in enumerate(attempts[:-1], start=1):
+        if (not isinstance(failed_attempt, dict)
+                or set(failed_attempt) != {
+                    "attempt", "status", "stage", "reason", "preflight"
+                }
+                or failed_attempt.get("attempt") != number
+                or failed_attempt.get("status") != "FAIL"
+                or failed_attempt.get("stage") not in (
+                    "program_tx", "program_rx"
+                )
+                or failed_attempt.get("stage") in stages
+                or failed_attempt.get("reason") != "init_timeout"):
+            raise ValueError("DTM preparation retry evidence mismatch")
+        stages.add(failed_attempt["stage"])
+        failed = adjacent(
+            path, failed_attempt["preflight"], "failed preparation"
+        )
+        if not retryable_flash_init_timeout(failed):
+            raise ValueError("DTM preparation retry cause mismatch")
+
+
 def validate_phase_hardware(path: Path, row: dict, fixture: dict,
                             revision: str) -> list[dict]:
     """! @brief transport phase의 image·build·program·readback을 fixture와 재결합합니다. """
@@ -441,6 +528,7 @@ def validate_campaign(path: Path, expected_revision: str | None = None) -> dict:
     for row, (_, h4) in zip(transports, TRANSPORTS, strict=True):
         for label in ("fixture", "preflight", "result"):
             adjacent(path, row.get(label, {}), label)
+        validate_preparation_attempts(path, row)
         fixture_path = path.parent / row["fixture"]["path"]
         preflight_path = path.parent / row["preflight"]["path"]
         fixture = load_phase_fixture(fixture_path, preflight_path, h4)
@@ -517,7 +605,7 @@ def execute(args: argparse.Namespace) -> dict:
         route_image = args.h4_hex if h4 else args.twowire_hex
         prepare_dir = output.parent / f"{output.stem}.{transport}.prepare"
         run_dir = output.parent / f"{output.stem}.{transport}.run"
-        diagnostics.prepare_pair(argparse.Namespace(
+        prepare_args = argparse.Namespace(
             sdk=args.sdk_root, output=prepare_dir,
             firmware_identity=manifest["dtm_identity"], transport=transport,
             tx_probe_sha256=args.tx_probe_sha256, tx_port=args.tx_port,
@@ -529,7 +617,10 @@ def execute(args: argparse.Namespace) -> dict:
             authorize_tx_rx_algorithm_reset=True, authorize_third_halt_audit=True,
             third_idle_fixture=args.third_idle_fixture,
             third_idle_fixture_sha256=watcher_hash,
-        ))
+        )
+        prepare_dir, failed_preflights = prepare_with_init_retry(
+            prepare_args, prepare_dir
+        )
         diagnostics.run_pair(argparse.Namespace(
             fixture=prepare_dir / "fixture.json", output=run_dir,
             h4=h4, authorize_start_tx_rx=True,
@@ -567,6 +658,33 @@ def execute(args: argparse.Namespace) -> dict:
             output.parent, transport, fixture_copy, preflight_copy, result_copy,
             manifest_copy, route_image
         )
+        if not failed_preflights:
+            record["preparation_attempts"] = [{
+                "attempt": 1, "status": "PREPARED",
+                "preflight": record["preflight"],
+            }]
+        else:
+            attempts = []
+            for number, failed_preflight in enumerate(
+                    failed_preflights, start=1):
+                failed_copy = output.parent / (
+                    f"{transport}.init-timeout-{number}.preflight.json"
+                )
+                shutil.copyfile(failed_preflight, failed_copy)
+                failed = json.loads(failed_copy.read_text(encoding="utf-8"))
+                attempts.append({
+                    "attempt": number, "status": "FAIL",
+                    "stage": failed["stage"], "reason": "init_timeout",
+                    "preflight": {
+                        "path": failed_copy.name,
+                        "sha256": digest(failed_copy),
+                    },
+                })
+            attempts.append({
+                "attempt": len(attempts) + 1, "status": "PREPARED",
+                "preflight": record["preflight"],
+            })
+            record["preparation_attempts"] = attempts
         transport_records.append(record)
         all_cases.extend(cases)
         final_hardware = hardware

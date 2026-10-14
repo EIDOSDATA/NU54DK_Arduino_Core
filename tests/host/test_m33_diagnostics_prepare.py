@@ -22,7 +22,7 @@ SPEC.loader.exec_module(DIAG)
 MDK_EVIDENCE = DIAG.mdk_evidence
 UIDS = [f"{index:032x}" for index in (1, 2, 3)]
 HASHES = [DIAG.probe_hash(uid) for uid in UIDS]
-IDENTITY = DIAG.W02_IDLE_CORE_REVISION + "b" * 64
+IDENTITY = DIAG.revision(ROOT) + "b" * 64
 DEBUG_IDENTITY = {"dp_idcode": 0x6BA02477, "target_id": 0x000C0289,
                   "ahb_ap_idr": 0x84770001, "ahb_ap_csw": 0x40,
                   "ctrl_ap_idr": 0x32880000, "approtect_status": 0}
@@ -411,6 +411,31 @@ class PreparationTests(unittest.TestCase):
             self.prepare()
         output = (self.args.output / "preflight.json").read_text()
         self.assertNotIn(UIDS[0], output + str(error.exception))
+        self.assertNotIn("private raw UID", output)
+
+    def test_flash_failure_publishes_only_safe_classification(self):
+        """! @brief pyOCD 오류 문자열은 숨기고 허용된 원인과 정수 속성만 보존합니다. """
+
+        class FlashFailure(RuntimeError):
+            """! @brief pyOCD FlashFailure의 안전한 Host 대역입니다. """
+
+            def __init__(self, message):
+                super().__init__(message)
+                self.address = 0x1000
+                self.result_code = -1
+
+        def fail_program(_session, _image):
+            raise FlashFailure("flash init timed out; private raw UID=" + UIDS[0])
+
+        self.backend.program = fail_program
+        with self.assertRaises(RuntimeError):
+            self.prepare()
+        output = (self.args.output / "preflight.json").read_text()
+        report = json.loads(output)
+        self.assertEqual(report["flash_failure"], {
+            "reason": "init_timeout", "address": 0x1000, "result_code": -1,
+        })
+        self.assertNotIn(UIDS[0], output)
         self.assertNotIn("private raw UID", output)
 
     def test_backend_safety_options_and_no_automatic_recovery_interface(self):
