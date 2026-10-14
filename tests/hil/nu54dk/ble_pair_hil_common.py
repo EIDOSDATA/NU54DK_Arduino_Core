@@ -328,15 +328,19 @@ def _intel_hex_programmed_bytes(image: Path) -> int:
     return sum(len(data) for _address, data in intel_hex_ranges(image))
 
 
-def _flash_init_timed_out(error: BaseException) -> bool:
-    """! @brief pyOCD flash algorithm 초기화 timeout만 정확히 식별합니다. """
+def _flash_session_retryable(error: BaseException) -> bool:
+    """! @brief 새 session에서 회복 가능한 pyOCD flash timeout만 식별합니다. """
 
     current: BaseException | None = error
     visited = set()
+    retryable = {
+        ("FlashFailure", "flash init timed out"),
+        ("FlashEraseFailure", "flash erase sector timed out"),
+    }
     while current is not None and id(current) not in visited:
         visited.add(id(current))
-        if (type(current).__name__ == "FlashFailure" and
-                str(current).strip().casefold() == "flash init timed out"):
+        identity = (type(current).__name__, str(current).strip().casefold())
+        if identity in retryable:
             return True
         current = current.__cause__ or current.__context__
     return False
@@ -347,7 +351,7 @@ def _run_flash_session_with_retry(
     deadline: float,
     operation: Callable[[Any, Any], None],
 ) -> None:
-    """! @brief init timeout에만 새 pyOCD session으로 유한 1회 재시도합니다. """
+    """! @brief 관측된 flash timeout만 새 pyOCD session으로 유한 1회 재시도합니다. """
 
     for attempt in range(2):
         backend, probe, private_debug_output = _load_private_pyocd_backend(digest)
@@ -358,7 +362,7 @@ def _run_flash_session_with_retry(
             return
         except Exception as error:
             if (attempt == 0 and time.monotonic() < deadline and
-                    _flash_init_timed_out(error)):
+                    _flash_session_retryable(error)):
                 continue
             raise
 

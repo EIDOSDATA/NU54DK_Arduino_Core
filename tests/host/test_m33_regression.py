@@ -3444,13 +3444,16 @@ class RegressionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "cannot store"):
             RUNNER._validate_argument_board_binding(expected, rows, probes)
 
-    def test_flash_init_timeout_retries_once_with_a_new_session(self):
-        """! @brief flash init timeout만 새 session으로 한 번 재시도하고 다른 오류는 전파합니다. """
+    def test_flash_timeouts_retry_once_with_a_new_session(self):
+        """! @brief 관측된 init·sector erase timeout만 새 session으로 한 번 재시도합니다. """
 
         import ble_pair_hil_common as common
 
         class FlashFailure(RuntimeError):
             """! @brief pyOCD FlashFailure 이름을 재현하는 Host fixture입니다. """
+
+        class FlashEraseFailure(RuntimeError):
+            """! @brief pyOCD FlashEraseFailure 이름을 재현하는 Host fixture입니다. """
 
         class Backend:
             """! @brief 실제 probe 없이 session 경계를 기록합니다. """
@@ -3474,6 +3477,18 @@ class RegressionTests(unittest.TestCase):
                 common, "_load_private_pyocd_backend", side_effect=load_backend):
             common._run_flash_session_with_retry(
                 "a" * 64, float("inf"), transient
+            )
+        self.assertEqual([1, 2], attempts)
+
+        attempts.clear()
+        def erase_transient(_backend, _session):
+            if len(attempts) == 1:
+                raise FlashEraseFailure("flash erase sector timed out")
+
+        with mock.patch.object(
+                common, "_load_private_pyocd_backend", side_effect=load_backend):
+            common._run_flash_session_with_retry(
+                "a" * 64, float("inf"), erase_transient
             )
         self.assertEqual([1, 2], attempts)
 
