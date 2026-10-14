@@ -35,6 +35,20 @@ SECOND = MODULE.Binding(1, 1, "c" * 64, "d" * 64)
 
 class RegressionTests(unittest.TestCase):
     """! @brief Host oracle 검사는 production 구현 또는 실물 실행 PASS로 표시하지 않습니다. """
+    def test_ecosystem_start_denominator_excludes_malformed_zero_nonce(self):
+        """! @brief malformed 0 nonce가 wrong-peer START 분모를 늘리지 않습니다. """
+
+        self.assertIsNone(
+            RUNNER._ecosystem_start_nonce(
+                "START 00000000000000000000000000000000 ancs"
+            )
+        )
+        self.assertIsNone(RUNNER._ecosystem_start_nonce("START invalid ancs"))
+        self.assertEqual(
+            "1" * 32,
+            RUNNER._ecosystem_start_nonce("START " + "1" * 32 + " ancs"),
+        )
+
     def test_mesh_update_direct_program_mapping_uses_signed_images(self):
         """! @brief Mesh Update 사후 판독은 실제 program한 signed image를 선택합니다. """
 

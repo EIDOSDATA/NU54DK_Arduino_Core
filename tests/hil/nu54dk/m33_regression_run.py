@@ -3316,6 +3316,18 @@ def _validate_multiphase_direct_native_raw(native: dict, native_path: Path,
             "multiphase flat attestation differs from selected final phase")
 
 
+def _ecosystem_start_nonce(payload: str) -> str | None:
+    """! @brief malformed 0 nonce를 제외한 ecosystem START nonce를 반환합니다. """
+
+    match = re.fullmatch(
+        r"START ([0-9a-f]{32}) (?:ancs|ams|access_denied|ancs_bad|ams_bad)",
+        payload,
+    )
+    if match is None or match.group(1) == "0" * 32:
+        return None
+    return match.group(1)
+
+
 def _replay_ecosystem_transcript(native: dict, native_path: Path,
                                  expected: dict) -> None:
     """! @brief ecosystem 명령·응답의 nonce별 전역 순서를 원본 byte에서 재생합니다. """
@@ -3446,10 +3458,7 @@ def _replay_ecosystem_transcript(native: dict, native_path: Path,
     for role in roles:
         valid_starts = indexes(
             role, "send",
-            lambda row: re.fullmatch(
-                r"START [0-9a-f]{32} (?:ancs|ams|access_denied|"
-                r"ancs_bad|ams_bad)", row["payload"]
-            ) is not None,
+            lambda row: _ecosystem_start_nonce(row["payload"]) is not None,
         )
         extra = [
             index for index in valid_starts
