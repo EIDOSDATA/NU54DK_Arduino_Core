@@ -194,6 +194,7 @@ class M32RadioAttestationTest(unittest.TestCase):
             encoding="utf-8"
         )
         for source in (standalone_source, coexistence_source):
+            self.assertIn("discover_live", source)
             self.assertIn("prepare_direct_program(", source)
             self.assertIn("complete_direct_program(", source)
             self.assertIn("cleanup_direct_ports(", source)

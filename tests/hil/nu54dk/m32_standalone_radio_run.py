@@ -28,7 +28,10 @@ from m33_sdk_risk_common import (  # noqa: E402
 )
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
-from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
+from m32_ble_capability_run import (  # noqa: E402
+    collect_register_identity,
+    discover_live,
+)
 from v04_protocol import ProbeLocks  # noqa: E402
 
 
@@ -373,7 +376,7 @@ def execute(args: argparse.Namespace) -> dict:
     }
     endpoints: dict[str, dict] = {}
     for name, digest in probe_definitions.items():
-        uid, volume, vcom = discover(digest, list_ports)
+        uid, volume, vcom = discover_live(digest, list_ports)
         endpoints[name] = {
             "uid": uid, "volume": volume, "vcom": vcom,
             "probe_sha256": digest,
