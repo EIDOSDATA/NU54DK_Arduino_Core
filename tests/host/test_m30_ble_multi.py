@@ -117,6 +117,7 @@ class M30BleMultiTests(unittest.TestCase):
             "CYCLE_COUNT",
             "serial_closed",
             "discover_endpoint_sha256",
+            "collect_debug_identities(endpoints, args.flash_backend)",
         ):
             self.assertIn(token, source)
         self.assertNotIn('"daplink_uid"', source)
