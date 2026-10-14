@@ -75,6 +75,36 @@ def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
     return candidates[0]
 
 
+def discover_live(
+    probe_sha256: str,
+    list_ports: object,
+) -> tuple[str, str | None, str]:
+    """! @brief MSD 부재 시 실제 USB serial과 target UART로 probe를 결합합니다. """
+
+    try:
+        return discover(probe_sha256, list_ports)
+    except ExecutionFailure as error:
+        if str(error) != "probe SHA-256 mapping count=0":
+            raise
+
+    raw_ids = {
+        (port.serial_number or "").lower()
+        for port in list_ports.comports()
+        if port.serial_number
+        and port.vid == 0x0D28
+        and port.pid == 0x0204
+        and sha256_bytes(
+            port.serial_number.lower().encode("ascii")
+        ) == probe_sha256
+    }
+    if len(raw_ids) != 1:
+        raise ExecutionFailure(
+            f"live probe SHA-256 mapping count={len(raw_ids)}"
+        )
+    raw_uid = raw_ids.pop()
+    return raw_uid, None, find_serial_port(raw_uid, "auto", list_ports)
+
+
 def _read_line(port: object, deadline: float) -> bytes:
     """! @brief CRLF까지 bounded UART byte만 반환합니다. """
     captured = bytearray()
@@ -92,13 +122,14 @@ def _read_line(port: object, deadline: float) -> bytes:
 
 def collect_register_identity_sha256(
     digest: str,
-    volume: str,
+    volume: str | None,
 ) -> dict[str, str]:
     """! @brief SHA-256 probe를 pyOCD API로 선택해 DP/AP identity를 읽습니다. """
 
-    details = read_details(Path(volume))
-    if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
-        raise ExecutionFailure("DAPLink target identity 불일치")
+    if volume is not None:
+        details = read_details(Path(volume))
+        if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
+            raise ExecutionFailure("DAPLink target identity 불일치")
     try:
         return collect_register_identity_backend(digest, volume)
     except BlePairHilFailure as error:

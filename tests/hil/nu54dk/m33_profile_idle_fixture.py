@@ -10,7 +10,7 @@ from pathlib import Path
 import shutil
 import sys
 
-from m32_ble_capability_run import discover
+from m32_ble_capability_run import discover_live
 from m6_serial_echo import import_pyserial
 from m33_profile_run import (fields, resolve_build_record_artifact,
                              validate_stop_record)
@@ -98,7 +98,7 @@ def export(args: argparse.Namespace) -> dict:
         raise ValueError("new isolated fixture directory required")
     _, port_list = import_pyserial()
     digest = evidence["boards"]["watcher"]["probe_sha256"]
-    uid, _, port = discover(digest, port_list)
+    uid, _, port = discover_live(digest, port_list)
     image = inspect_hex(sources["image"], evidence["boards"]["watcher"]["image_sha256"], None)
     symbols = watcher_symbols(sources["elf"].read_bytes())
     ranges, readback = [], []

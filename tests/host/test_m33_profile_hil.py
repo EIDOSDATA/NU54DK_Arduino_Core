@@ -5,12 +5,14 @@ import json
 import sys
 import subprocess
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 from host_compiler import compiler_command, run_executable
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hil/nu54dk"))
 import m33_profile_run as PROFILE_RUN
+import m32_ble_capability_run as CAPABILITY_RUN
 from m33_profile_run import (bms_transition, failure_details, fields, start_roles,
                              complete_serial_line,
                              load_build_identities, validate_native_security,
@@ -26,6 +28,49 @@ from m33_profile_native_pair import validate_pair
 
 
 class ProfileHilTests(unittest.TestCase):
+    def test_live_discovery_falls_back_when_msd_is_unavailable(self):
+        """! @brief MSD가 없어도 실제 USB serial과 pyOCD 검증을 결합합니다. """
+
+        raw_uid = "5415360300052840fcd47678fd7d106d"
+        probe_digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        ports = [
+            SimpleNamespace(
+                serial_number=raw_uid.upper(),
+                vid=0x0D28,
+                pid=0x0204,
+                device="COM5",
+                location="1-2:x.1",
+                hwid=r"USB\VID_0D28&PID_0204&MI_01",
+            ),
+            SimpleNamespace(
+                serial_number=raw_uid,
+                vid=0x0D28,
+                pid=0x0204,
+                device="COM6",
+                location="1-2:x.3",
+                hwid=r"USB\VID_0D28&PID_0204&MI_03",
+            ),
+        ]
+        port_list = SimpleNamespace(comports=lambda: ports)
+        with mock.patch.object(CAPABILITY_RUN, "read_details", return_value=None):
+            discovered = CAPABILITY_RUN.discover_live(probe_digest, port_list)
+        self.assertEqual(discovered, (raw_uid, None, "COM6"))
+
+        registers = {"dp_idcode": "0x6ba02477"}
+        with mock.patch.object(
+            CAPABILITY_RUN,
+            "collect_register_identity_backend",
+            return_value=registers,
+        ) as backend:
+            self.assertEqual(
+                CAPABILITY_RUN.collect_register_identity_sha256(
+                    probe_digest,
+                    None,
+                ),
+                registers,
+            )
+        backend.assert_called_once_with(probe_digest, None)
+
     @staticmethod
     def attach_exact_bundle(root, evidence, stem):
         """! @brief predecessor fixture에 실제 image·build·readback·transcript byte를 결합합니다. """

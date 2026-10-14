@@ -29,7 +29,7 @@ from ble_pair_hil_common import flash_image_pyocd_sha256  # noqa: E402
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability_run import (  # noqa: E402
     collect_register_identity_sha256,
-    discover,
+    discover_live,
 )
 from m33_sdk_risk_common import (  # noqa: E402
     exact_program_evidence,
@@ -626,7 +626,7 @@ def prepare_ecosystem_fixture(
     sidecars, build_records = copy_ecosystem_inputs(fixture_path, inputs)
     serial_module, list_ports = import_pyserial()
     discovered = {
-        role: discover(probe_hashes[role], list_ports)
+        role: discover_live(probe_hashes[role], list_ports)
         for role in ROLES
     }
     raw_ids = {role: discovered[role][0] for role in ROLES}

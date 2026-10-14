@@ -13,7 +13,7 @@ import sys
 import time
 
 from ble_pair_hil_common import flash_image_pyocd
-from m32_ble_capability_run import discover
+from m32_ble_capability_run import discover_live
 from m6_serial_echo import import_pyserial
 from m33_profile_run import fields, validate_results, validate_stop_record
 from v04_protocol import ProbeLocks
@@ -232,7 +232,7 @@ def execute(args: argparse.Namespace) -> dict:
                 raise ValueError("chain original RAM proof mismatch")
         if not image.is_file() or image.suffix != ".hex":
             raise ValueError("exact cleanup image required")
-        uid, _, port = discover(private["probe_sha256"], port_list)
+        uid, _, port = discover_live(private["probe_sha256"], port_list)
         boards[role] = {"uid": uid, "port": port, "command": command, "image": image,
                         "nonce": cleanup_nonce, "probe_sha256": private["probe_sha256"],
                         "image_sha256": hashlib.sha256(image.read_bytes()).hexdigest(),

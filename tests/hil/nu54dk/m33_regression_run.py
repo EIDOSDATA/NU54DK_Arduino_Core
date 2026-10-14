@@ -1477,12 +1477,12 @@ def _wait_watcher_record(port, kinds: set[str], revision: str,
 def _stop_restored_watcher(plan: dict, transcript_path: Path) -> dict:
     """! @brief third image를 reset 뒤 미시작 STOPPED 상태로 결정적으로 되돌립니다. """
 
-    from m32_ble_capability_run import discover
+    from m32_ble_capability_run import discover_live
     from m33_profile_run import validate_stop_record
     from m6_serial_echo import import_pyserial
 
     serial_module, list_ports = import_pyserial()
-    _uid, _volume, port_name = discover(
+    _uid, _volume, port_name = discover_live(
         plan["probes"]["third"], list_ports
     )
     fixture_port = plan["watcher"]["data"].get("port")

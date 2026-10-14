@@ -14,7 +14,7 @@ import time
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd_sha256, git_revision
 from m6_serial_echo import import_pyserial
-from m32_ble_capability_run import collect_register_identity_sha256, discover
+from m32_ble_capability_run import collect_register_identity_sha256, discover_live
 from m33_sdk_risk_common import (ACTIVE_TARGET_STATES,
                                 exact_program_evidence,
                                 intel_hex_ranges, readback_programmed_images,
@@ -746,7 +746,7 @@ def execute(args: argparse.Namespace) -> dict:
         image = Path(filename).resolve()
         if not image.is_file() or image.suffix.lower() != ".hex":
             raise ValueError("existing role .hex required")
-        uid, volume, vcom = discover(digest, list_ports)
+        uid, volume, vcom = discover_live(digest, list_ports)
         boards[role] = {"uid": uid, "volume": volume, "vcom": vcom, "image": image,
                         "probe_sha256": digest, "image_sha256": hashlib.sha256(image.read_bytes()).hexdigest()}
     if len({board["uid"] for board in boards.values()}) != len(boards):
