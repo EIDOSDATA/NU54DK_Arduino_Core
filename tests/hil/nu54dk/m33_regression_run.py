@@ -2312,6 +2312,30 @@ def _validate_board_plan(rows: list[dict], expected: dict) -> dict[str, str]:
     return {row["role"]: row["probe_sha256"] for row in rows}
 
 
+def _validate_execution_hardware_binding(
+    campaign_id: str,
+    hardware: list[dict],
+    board_plan: dict[str, str],
+    roles: list[str],
+) -> None:
+    """! @brief 역할 교대 캠페인의 최종 probe 배치를 실행 계획과 검증합니다. """
+
+    observed = {entry["role"]: entry["probe_sha256"] for entry in hardware}
+    planned = {role: board_plan[role] for role in roles}
+    if campaign_id == "m32_standalone_radio":
+        require(
+            roles == ["dut", "peer"]
+            and observed
+            == {"dut": planned["peer"], "peer": planned["dut"]},
+            "campaign child board role swap differs from execution plan",
+        )
+        return
+    require(
+        observed == planned,
+        "campaign child board mapping differs from execution plan",
+    )
+
+
 def _validate_semantic_status(expected: dict,
                               value: dict[str, str]) -> dict[str, str]:
     """! @brief 조건 미충족을 PASS와 분리하고 허용된 SDK 조건에만 한정합니다. """
@@ -4539,12 +4563,9 @@ def execute_campaign_spec(spec_path: Path, output: Path,
             hardware, receipt, semantic_status = _run_pending_campaign(
                 item, output, readiness, spec, expected_plan, root
             )
-        execution_board_plan = {
-            role: item["board_plan"][role] for role in expected["roles"]
-        }
-        require({entry["role"]: entry["probe_sha256"] for entry in hardware} ==
-                execution_board_plan,
-                "campaign child board mapping differs from execution plan")
+        _validate_execution_hardware_binding(
+            expected["id"], hardware, item["board_plan"], expected["roles"]
+        )
         if item["reuse"]:
             semantic_status = read_json(item["child"])["semantic_status"]
         results.append({

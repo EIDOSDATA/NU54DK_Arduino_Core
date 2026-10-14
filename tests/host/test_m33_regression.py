@@ -35,6 +35,54 @@ SECOND = MODULE.Binding(1, 1, "c" * 64, "d" * 64)
 
 class RegressionTests(unittest.TestCase):
     """! @brief Host oracle 검사는 production 구현 또는 실물 실행 PASS로 표시하지 않습니다. """
+
+    def test_standalone_radio_final_hardware_requires_exact_role_swap(self):
+        """! @brief standalone 최종 ESB 역할은 최초 두 probe의 정확한 역배치입니다. """
+
+        first = "a" * 64
+        second = "b" * 64
+        board_plan = {"dut": first, "peer": second}
+        swapped = [
+            {"role": "dut", "probe_sha256": second},
+            {"role": "peer", "probe_sha256": first},
+        ]
+        RUNNER._validate_execution_hardware_binding(
+            "m32_standalone_radio", swapped, board_plan, ["dut", "peer"]
+        )
+        with self.assertRaisesRegex(ValueError, "role swap"):
+            RUNNER._validate_execution_hardware_binding(
+                "m32_standalone_radio",
+                [
+                    {"role": "dut", "probe_sha256": first},
+                    {"role": "peer", "probe_sha256": second},
+                ],
+                board_plan,
+                ["dut", "peer"],
+            )
+        with self.assertRaisesRegex(ValueError, "role swap"):
+            RUNNER._validate_execution_hardware_binding(
+                "m32_standalone_radio",
+                [
+                    {"role": "dut", "probe_sha256": "c" * 64},
+                    {"role": "peer", "probe_sha256": first},
+                ],
+                board_plan,
+                ["dut", "peer"],
+            )
+        RUNNER._validate_execution_hardware_binding(
+            "m32_coexistence",
+            [
+                {"role": "dut", "probe_sha256": first},
+                {"role": "peer", "probe_sha256": second},
+            ],
+            board_plan,
+            ["dut", "peer"],
+        )
+        with self.assertRaisesRegex(ValueError, "mapping"):
+            RUNNER._validate_execution_hardware_binding(
+                "m32_coexistence", swapped, board_plan, ["dut", "peer"]
+            )
+
     def test_ecosystem_start_denominator_excludes_malformed_zero_nonce(self):
         """! @brief malformed 0 nonce가 wrong-peer START 분모를 늘리지 않습니다. """
 
