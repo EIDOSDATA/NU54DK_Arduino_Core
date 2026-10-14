@@ -1921,7 +1921,8 @@ def _restore_campaign_state(expected: dict, row: dict, native_path: Path,
 
 
 @contextmanager
-def _campaign_probe_authority(plan: dict | None, native_path: Path):
+def _campaign_probe_authority(plan: dict | None, native_path: Path,
+                              campaign_id: str | None = None):
     """! @brief parent lock을 복원부터 child 증거 확정까지 연속 소유합니다. """
 
     if plan is None:
@@ -1929,14 +1930,21 @@ def _campaign_probe_authority(plan: dict | None, native_path: Path):
         return
     from m33_diagnostics import HashedProbeLocks
 
-    native_path.parent.mkdir(parents=True, exist_ok=True)
+    if campaign_id == "m33_ecosystem":
+        _state_restore_path(native_path, campaign_id)
+        lock_parent = native_path.parent.parent
+        lock_prefix = ".m33_ecosystem.child-locks-"
+    else:
+        lock_parent = native_path.parent
+        lock_prefix = f".{native_path.stem}.child-locks-"
+    lock_parent.mkdir(parents=True, exist_ok=True)
     hashes = list(plan["all_probes"].values())
     with HashedProbeLocks(hashes):
         authority = _RestoreAuthority(_RESTORE_AUTHORITY_SECRET, hashes)
         try:
             with tempfile.TemporaryDirectory(
-                    prefix=f".{native_path.stem}.child-locks-",
-                    dir=native_path.parent) as lock_directory:
+                    prefix=lock_prefix,
+                    dir=lock_parent) as lock_directory:
                 environment = os.environ.copy()
                 environment.update({
                     "TMPDIR": lock_directory,
@@ -4382,7 +4390,8 @@ def _run_pending_campaign(item: dict, output: Path, readiness: dict,
         expected, row, spec["source_revision"], root
     )
     with _campaign_probe_authority(
-            plan, item["native"]) as (child_environment, authority):
+            plan, item["native"], expected["id"]) as (
+                child_environment, authority):
         _restore_campaign_state(
             expected, row, item["native"], spec["source_revision"], root,
             plan=plan, authority=authority

@@ -1890,6 +1890,27 @@ class RegressionTests(unittest.TestCase):
                 "m33_ecosystem",
             )
 
+    def test_ecosystem_probe_authority_does_not_create_child_output(self):
+        """! @brief ecosystem parent 임시 lock도 child 전용 output 밖에 놓이는지 확인합니다. """
+
+        import m33_diagnostics
+
+        with tempfile.TemporaryDirectory() as temporary:
+            native = (Path(temporary) / "native" / "m33_ecosystem" /
+                      "result.json")
+            plan = {"all_probes": {"client": "a" * 64, "peer": "b" * 64}}
+            with mock.patch.object(
+                    m33_diagnostics, "HashedProbeLocks",
+                    side_effect=lambda _hashes: nullcontext()):
+                with RUNNER._campaign_probe_authority(
+                        plan, native, "m33_ecosystem") as (
+                            environment, _authority):
+                    lock_root = Path(environment["TEMP"])
+                    self.assertEqual(native.parent.parent.resolve(),
+                                     lock_root.parent.resolve())
+                    self.assertFalse(native.parent.exists())
+            self.assertFalse(lock_root.exists())
+
     def test_bap_central_program_uses_normalized_application_path(self):
         """! @brief BAP dispatcher가 해시 객체의 path로 build record를 검증합니다. """
 
