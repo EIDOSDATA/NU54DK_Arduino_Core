@@ -157,6 +157,13 @@ def _write_line(serial_port: Any, line: str) -> None:
         raise BlePairHilFailure("M30-W07 UART command가 일부만 기록됐습니다.")
 
 
+def _write_redundant_start(serial_port: Any, line: str) -> None:
+    """! @brief 장시간 campaign의 간헐 UART 누락에 대비해 멱등 START를 두 번 기록합니다. """
+
+    for _attempt in range(2):
+        _write_line(serial_port, line)
+
+
 def _read_checked_line(
     serial_port: Any,
     role: str,
@@ -334,7 +341,7 @@ def execute_three_board(
                             pending[role], captures[role], deadline,
                         )
                     start = f"{PROTOCOL}|START|test={TEST_ID}|nonce={nonce}|core={revision}"
-                    _write_line(ports["peripheral"], start)
+                    _write_redundant_start(ports["peripheral"], start)
                     peripheral_advertise = (
                         f"{PROTOCOL}|ADVERTISE|role=peripheral|marker=161|status=pass"
                         f"|nonce={nonce}|core={revision}"
@@ -344,7 +351,7 @@ def execute_three_board(
                         nonce, revision, pending["peripheral"],
                         captures["peripheral"], deadline,
                     )
-                    _write_line(ports["mixed"], start)
+                    _write_redundant_start(ports["mixed"], start)
                     mixed_advertise = (
                         f"{PROTOCOL}|ADVERTISE|role=mixed|marker=178|status=pass"
                         f"|nonce={nonce}|core={revision}"
@@ -353,7 +360,7 @@ def execute_three_board(
                         ports["mixed"], "mixed", mixed_advertise, nonce, revision,
                         pending["mixed"], captures["mixed"], deadline,
                     )
-                    _write_line(ports["central"], start)
+                    _write_redundant_start(ports["central"], start)
                     for role, connections in (("peripheral", 1), ("mixed", 2), ("central", 1)):
                         link = (
                             f"{PROTOCOL}|LINK|role={role}|connections={connections}"

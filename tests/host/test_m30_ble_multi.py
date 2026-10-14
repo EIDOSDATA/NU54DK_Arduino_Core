@@ -119,10 +119,12 @@ class M30BleMultiTests(unittest.TestCase):
             "discover_endpoint_sha256",
             "collect_debug_identities(endpoints, args.flash_backend)",
             "reset_and_halt_before_program=True",
+            "_write_redundant_start",
         ):
             self.assertIn(token, source)
         self.assertNotIn('"daplink_uid"', source)
         self.assertNotIn("--peripheral-board-id", source)
+        self.assertIn("isRepeatedStart()", TARGET.read_text(encoding="utf-8"))
 
     def test_twenty_session_campaign_requires_unique_nonce_and_cleanup(self) -> None:
         """! @brief 20회 campaign 분모와 각 cycle zero cleanup을 고정합니다. """

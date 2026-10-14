@@ -226,6 +226,13 @@ namespace
         return ::strcmp(candidate, nonce) == 0;
     }
 
+    /** @brief 같은 nonce의 중복 START를 새 session이나 RUN으로 해석하지 않습니다. */
+    bool isRepeatedStart()
+    {
+        return session_started && !operations_started &&
+               acceptIdentity(command, start_prefix);
+    }
+
     /** @brief cleanup 완료 뒤 다음 독립 session을 위해 모든 local 상태를 초기화합니다. */
     void resetSessionState()
     {
@@ -828,6 +835,10 @@ namespace
                 else if (!session_started)
                 {
                     startProtocol();
+                }
+                else if (isRepeatedStart())
+                {
+                    return;
                 }
                 else if (session_finished)
                 {
