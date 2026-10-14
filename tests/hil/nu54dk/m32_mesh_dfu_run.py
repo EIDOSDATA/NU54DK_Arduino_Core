@@ -563,6 +563,18 @@ def integer(values: dict[str, str], key: str) -> int:
     return int(value)
 
 
+def recover_vcom_protocol_prefix(line: str) -> tuple[str, str | None]:
+    """! @brief 재부팅 직후 VCOM의 제한된 물음표 접두사를 분리합니다. """
+
+    marker = PROTOCOL + "|"
+    if line.startswith(marker):
+        return line, None
+    for prefix in ("?", "??"):
+        if line.startswith(prefix + marker):
+            return line[len(prefix) :], prefix
+    return line, None
+
+
 def send(port: Any, line: str) -> None:
     """! @brief ASCII 명령 한 줄을 완전히 기록합니다. """
 
@@ -591,6 +603,9 @@ def read_record(
         if len(payload) > 1024:
             raise MeshDfuFailure(f"{role} UART line이 너무 깁니다")
         line = payload.decode("ascii", errors="replace").strip()
+        line, raw_prefix = recover_vcom_protocol_prefix(line)
+        if raw_prefix is not None:
+            transcript.append(f"{role}-raw-prefix: {raw_prefix}")
         if not line.startswith(PROTOCOL + "|"):
             if line:
                 transcript.append(f"{role}-raw: {line}")
@@ -657,6 +672,9 @@ def cleanup_ports(
                 continue
             progressed = True
             line = payload.decode("ascii", errors="replace").strip()
+            line, raw_prefix = recover_vcom_protocol_prefix(line)
+            if raw_prefix is not None:
+                transcript.append(f"{role}-raw-prefix: {raw_prefix}")
             if not line.startswith(PROTOCOL + "|"):
                 continue
             transcript.append(f"{role}: {line}")
@@ -784,6 +802,9 @@ def collect_iteration(
             if len(payload) > 1024:
                 raise MeshDfuFailure(f"{role} UART line이 너무 깁니다")
             line = payload.decode("ascii", errors="replace").strip()
+            line, raw_prefix = recover_vcom_protocol_prefix(line)
+            if raw_prefix is not None:
+                transcript.append(f"{role}-raw-prefix: {raw_prefix}")
             if not line.startswith(PROTOCOL + "|"):
                 if line:
                     transcript.append(f"{role}-raw: {line}")

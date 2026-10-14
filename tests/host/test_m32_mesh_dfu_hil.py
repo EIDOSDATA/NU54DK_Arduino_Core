@@ -8,6 +8,7 @@ from pathlib import Path
 import struct
 import sys
 import tempfile
+import time
 import unittest
 
 
@@ -39,6 +40,96 @@ class M32MeshDfuHilTests(unittest.TestCase):
 
         with self.assertRaisesRegex(runner.MeshDfuFailure, "target fault"):
             runner.reject_target_fault("target_a", "Fatal error")
+
+    def test_vcom_question_prefix_recovers_boot_and_dispatches_apply(self) -> None:
+        """! @brief 제한된 VCOM 접두사 뒤 BOOT도 APPLY까지 진행합니다. """
+
+        marker = runner.PROTOCOL + "|"
+        canonical = marker + "BOOT|role=target_b"
+        for prefix in ("?", "??"):
+            self.assertEqual(
+                (canonical, prefix),
+                runner.recover_vcom_protocol_prefix(prefix + canonical),
+            )
+        self.assertEqual(
+            (canonical, None), runner.recover_vcom_protocol_prefix(canonical)
+        )
+        for prefix in ("x", "???", "noise "):
+            line = prefix + canonical
+            self.assertEqual(
+                (line, None), runner.recover_vcom_protocol_prefix(line)
+            )
+
+        class FakePort:
+            """! @brief 수신 레코드와 송신 명령을 보존하는 직렬 포트입니다. """
+
+            def __init__(self, lines: list[str]) -> None:
+                self.lines = [(line + "\n").encode("ascii") for line in lines]
+                self.writes: list[bytes] = []
+
+            def readline(self) -> bytes:
+                """! @brief 대기 중인 한 줄을 반환합니다. """
+
+                if self.lines:
+                    return self.lines.pop(0)
+                return b""
+
+            def write(self, payload: bytes) -> int:
+                """! @brief 전송 명령을 기록합니다. """
+
+                self.writes.append(payload)
+                return len(payload)
+
+            def flush(self) -> None:
+                """! @brief 실제 버퍼가 없는 테스트 포트의 flush를 모사합니다. """
+
+        nonce = "test-nonce"
+        core = "a" * 40
+        digest = "b" * 64
+        size = 55039
+        ports = {
+            "distributor": FakePort(
+                [
+                    f"{marker}ITERATION|role=distributor|iteration=1|targets=2"
+                    f"|version=2.0.0+0|signed_sha256={digest}|image_size={size}"
+                    f"|nonce={nonce}|core={core}"
+                ]
+            ),
+            "target_a": FakePort(
+                [
+                    f"{marker}BOOT|role=target_a|version=2.0.0+0|confirmed=0"
+                    f"|nonce={nonce}|core={core}",
+                    f"{marker}APPLIED|role=target_a|iteration=1|confirmed=0"
+                    f"|nonce={nonce}|core={core}",
+                ]
+            ),
+            "target_b": FakePort(
+                [
+                    f"?{marker}BOOT|role=target_b|version=2.0.0+0|confirmed=0"
+                    f"|nonce={nonce}|core={core}",
+                    f"{marker}APPLIED|role=target_b|iteration=1|confirmed=0"
+                    f"|nonce={nonce}|core={core}",
+                ]
+            ),
+        }
+        candidate = runner.ImageInput(
+            Path("candidate.bin"), size, digest, runner.CANDIDATE_VERSION
+        )
+        transcript: list[str] = []
+        _boots, _result, _end, details = runner.collect_iteration(
+            ports,
+            1,
+            nonce,
+            core,
+            candidate,
+            transcript,
+            time.monotonic() + 1.0,
+        )
+        target_b_writes = b"".join(ports["target_b"].writes)
+        self.assertIn(f"{marker}APPLY|".encode("ascii"), target_b_writes)
+        self.assertEqual({"target_a", "target_b"}, set(details["boots"]))
+        self.assertEqual({"target_a", "target_b"}, set(details["applied"]))
+        self.assertIn("target_b-raw-prefix: ?", transcript)
 
     def test_domains_accepts_relocated_sysbuild_root(self) -> None:
         """! @brief artifact 이동 뒤에도 원래 domain 상대 identity를 검증합니다. """
