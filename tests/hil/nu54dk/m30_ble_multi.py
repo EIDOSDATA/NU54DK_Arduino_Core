@@ -292,6 +292,7 @@ def execute_three_board(
                     common.probe_sha256(endpoints[role].board_id),
                     images[role],
                     flash_timeout,
+                    reset_and_halt_before_program=True,
                 )
             else:
                 flashes[role] = common.flash_image(
