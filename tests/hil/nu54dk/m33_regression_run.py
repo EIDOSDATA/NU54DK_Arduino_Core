@@ -2579,10 +2579,10 @@ def _validate_template_native_raw(native: dict, native_path: Path,
         for kind in kinds
     }
     negative_ids = {
-        "test_credentials_reject_missing_unknown_and_invalid_fast_pair_values",
-        "test_credentials_reject_production_debug_and_low_entropy_values",
-        "test_mds_credentials_reject_invalid_and_placeholder_values",
-        "test_prepare_rejects_missing_internal_or_drifted_inputs",
+        "test_debug_model_and_key_cannot_be_production",
+        "test_mds_credentials_and_command_injection",
+        "test_missing_placeholder_wrong_use_case_and_scalar",
+        "test_valid_test_credentials_require_explicit_opt_in",
     }
     lock = read_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
     require(native.get("schema_version") == 1 and

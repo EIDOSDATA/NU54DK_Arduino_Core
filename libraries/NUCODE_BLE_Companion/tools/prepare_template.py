@@ -199,7 +199,7 @@ def main() -> int:
             environment["CMAKE_BUILD_PARALLEL_LEVEL"] = "2"
             command = manifest["command"]
             command[0:1] = [str(args.toolchain_root.resolve() / "opt/bin/python.exe"), "-m", "west"]
-            result = subprocess.run(command, cwd=args.sdk_root, env=environment, capture_output=True, timeout=1800)
+            result = subprocess.run(command, cwd=args.output.resolve(), env=environment, capture_output=True, timeout=1800)
             log = (result.stdout + result.stderr).decode("utf-8", errors="replace")
             for secret in secrets:
                 log = log.replace(secret, "<redacted>")
