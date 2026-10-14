@@ -136,7 +136,10 @@ def collect_register_identity_sha256(
         raise ExecutionFailure(str(error)) from error
 
 
-def collect_register_identity(raw_uid: str, volume: str) -> dict[str, str]:
+def collect_register_identity(
+    raw_uid: str,
+    volume: str | None,
+) -> dict[str, str]:
     """! @brief legacy 내부 UID를 hash한 뒤 argv 없는 API helper로 위임합니다. """
 
     return collect_register_identity_sha256(probe_sha256(raw_uid), volume)

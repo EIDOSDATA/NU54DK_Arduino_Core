@@ -34,7 +34,10 @@ from m33_sdk_risk_common import (  # noqa: E402
     prepare_direct_program,
 )
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
-from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
+from m32_ble_capability_run import (  # noqa: E402
+    collect_register_identity,
+    discover_live,
+)
 from m32_mesh_run import _fields, _integer, _save  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -313,7 +316,7 @@ def execute(args: argparse.Namespace) -> dict:
         image = getattr(args, f"hex_{role}").resolve()
         if not image.is_file() or image.suffix.lower() != ".hex":
             raise MeshUpdateFailure(f"{role} target image missing")
-        uid, volume, vcom = discover(digest, list_ports)
+        uid, volume, vcom = discover_live(digest, list_ports)
         build_root = image.parents[2]
         boot_image = build_root / "mcuboot" / "zephyr" / "zephyr.hex"
         signed_image = image.with_name("zephyr.signed.hex")

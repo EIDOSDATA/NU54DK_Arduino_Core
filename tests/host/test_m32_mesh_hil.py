@@ -217,6 +217,7 @@ class M32MeshHilTests(unittest.TestCase):
         """! @brief 세 역할 모두 CMSIS-DAP v2 DP/AP identity를 통과해야 합니다. """
         source = (HIL / "m32_mesh_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
+        self.assertIn("discover_live", source)
         self.assertIn("flash_image_pyocd_sha256", source)
         self.assertIn("reset_and_halt_before_program=True", source)
         self.assertNotIn("cmsis_dap_v1=True", source)

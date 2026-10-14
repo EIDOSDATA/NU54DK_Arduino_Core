@@ -330,6 +330,7 @@ class M32MeshDfuHilTests(unittest.TestCase):
         source = (HIL / "m32_mesh_dfu_run.py").read_text(encoding="utf-8")
         for token in (
             "collect_register_identity_sha256",
+            "discover_live",
             "flash_image_pyocd_sha256",
             "flash_binary_pyocd_sha256",
             "erase_nrf54l_rram_pyocd_sha256",

@@ -199,6 +199,7 @@ class M32MeshUpdateHilTests(unittest.TestCase):
         """! @brief runner가 V2 exact 안전장치와 BLOB traffic 범위만 기록합니다. """
         source = (HIL / "m32_mesh_update_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
+        self.assertIn("discover_live", source)
         self.assertIn("cmsis_dap_v1=False", source)
         self.assertIn("reset_target_pyocd", source)
         self.assertIn("clear_nrf54l_rram_pyocd", source)

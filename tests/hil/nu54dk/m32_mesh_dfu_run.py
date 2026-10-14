@@ -53,7 +53,7 @@ from m30_ble_dfu import (  # noqa: E402
 )
 from m32_ble_capability_run import (  # noqa: E402
     collect_register_identity_sha256,
-    discover,
+    discover_live,
 )
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -1072,7 +1072,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     boards: dict[str, dict[str, Any]] = {}
     for role in ROLES:
         digest = getattr(args, f"probe_{role}_sha256")
-        uid, volume, port = discover(digest, list_ports)
+        uid, volume, port = discover_live(digest, list_ports)
         boards[role] = {
             "uid": uid,
             "probe_sha256": digest,
