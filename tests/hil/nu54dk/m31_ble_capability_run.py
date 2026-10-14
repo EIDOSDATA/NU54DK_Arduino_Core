@@ -29,10 +29,13 @@ from ble_pair_hil_common import (  # noqa: E402
     probe_sha256,
 )
 from m6_serial_echo import (  # noqa: E402
+    DAPLINK_PID,
     DAPLINK_TARGET,
+    DAPLINK_VID,
     detail_value,
     find_serial_port,
     import_pyserial,
+    is_target_uart_interface,
     read_details,
 )
 from m31_ble_capability import (  # noqa: E402
@@ -46,13 +49,16 @@ class ExecutionFailure(RuntimeError):
     """! @brief flash·serial·mapping·증거 단계의 제한된 실패를 나타냅니다. """
 
 
+MSD_UNAVAILABLE = "MSD_UNAVAILABLE"
+
+
 def sha256_bytes(payload: bytes) -> str:
     """! @brief probe 원문 대신 artifact byte의 SHA-256을 계산합니다. """
     return hashlib.sha256(payload).hexdigest()
 
 
 def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
-    """! @brief SHA-256 identity 하나에 정확히 하나의 MSD와 VCOM을 결합합니다. """
+    """! @brief SHA-256 identity 하나에 정확히 하나의 MSD 또는 VCOM을 결합합니다. """
     if len(probe_sha256) != 64 or any(character not in "0123456789abcdef" for character in probe_sha256):
         raise ExecutionFailure("--probe-sha256은 소문자 SHA-256이어야 합니다")
     candidates = []
@@ -67,6 +73,20 @@ def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
         if sha256_bytes(raw_uid.lower().encode("ascii")) == probe_sha256:
             port = find_serial_port(raw_uid.lower(), "auto", list_ports)
             candidates.append((raw_uid.lower(), volume.as_posix(), port))
+    if not candidates:
+        for port in list_ports.comports():
+            raw_uid = getattr(port, "serial_number", None)
+            if (raw_uid is None or not is_target_uart_interface(port) or
+                    getattr(port, "vid", None) not in (None, DAPLINK_VID) or
+                    getattr(port, "pid", None) not in (None, DAPLINK_PID)):
+                continue
+            normalized = str(raw_uid).lower()
+            try:
+                digest = sha256_bytes(normalized.encode("ascii"))
+            except UnicodeEncodeError:
+                continue
+            if digest == probe_sha256:
+                candidates.append((normalized, MSD_UNAVAILABLE, str(port.device)))
     if len(candidates) != 1:
         raise ExecutionFailure(f"probe SHA-256 mapping count={len(candidates)}")
     return candidates[0]
@@ -94,7 +114,9 @@ def collect_register_identity_sha256(
     """! @brief SHA-256 probe를 pyOCD API로 선택해 DP/AP identity를 읽습니다. """
 
     details = read_details(Path(volume))
-    if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
+    if details is None and volume != MSD_UNAVAILABLE:
+        raise ExecutionFailure("DAPLink target identity 불일치")
+    if details is not None and detail_value(details, "Target Detect") != DAPLINK_TARGET:
         raise ExecutionFailure("DAPLink target identity 불일치")
     try:
         return collect_register_identity_backend(digest, volume)

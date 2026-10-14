@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 from pathlib import Path
 import sys
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,9 +19,40 @@ MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
+RUNNER_SPEC = importlib.util.spec_from_file_location(
+    "m31_ble_capability_runner_test", RUNNER_PATH
+)
+assert RUNNER_SPEC is not None and RUNNER_SPEC.loader is not None
+RUNNER = importlib.util.module_from_spec(RUNNER_SPEC)
+sys.modules[RUNNER_SPEC.name] = RUNNER
+RUNNER_SPEC.loader.exec_module(RUNNER)
+
 NONCE = "0123456789abcdef0123456789abcdef"
 IDENTITY = MODULE.ExpectedIdentity("1" * 40, "2" * 40, "3" * 40, "4" * 40)
 IMAGE = "a" * 64
+
+
+class FakePort:
+    """! @brief MSD 없이 타겟 UART로 보이는 최소 포트 정보입니다. """
+
+    def __init__(self, device: str, serial_number: str) -> None:
+        self.device = device
+        self.serial_number = serial_number
+        self.location = "1-2:x.3"
+        self.hwid = "USB VID:PID=0D28:0204 MI_03"
+        self.vid = RUNNER.DAPLINK_VID
+        self.pid = RUNNER.DAPLINK_PID
+
+
+class FakeListPorts:
+    """! @brief 주입된 포트 목록만 반환합니다. """
+
+    def __init__(self, ports: list[FakePort]) -> None:
+        self._ports = ports
+
+    def comports(self) -> list[FakePort]:
+        """! @brief 순서를 유지한 가짜 직렬 포트를 반환합니다. """
+        return list(self._ports)
 
 
 def valid_lines() -> list[str]:
@@ -68,6 +101,45 @@ class M31CapabilityParserTests(unittest.TestCase):
         self.assertIn("collect_register_identity_backend(digest, volume)", runner)
         self.assertNotIn('"--uid"', runner)
         self.assertNotIn("PYOCD_LAUNCHER", runner)
+
+    def test_discover_uses_unique_target_uart_when_msd_is_unavailable(self) -> None:
+        """! @brief MSD가 없어도 해시·interface가 유일한 UART를 선택합니다. """
+
+        raw_uid = "a1b2c3d4"
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        ports = FakeListPorts([FakePort("COM5", raw_uid.upper())])
+        with mock.patch.object(RUNNER, "read_details", return_value=None):
+            observed = RUNNER.discover(digest, ports)
+        self.assertEqual(observed, (raw_uid, RUNNER.MSD_UNAVAILABLE, "COM5"))
+
+    def test_discover_rejects_ambiguous_uart_fallback(self) -> None:
+        """! @brief 같은 probe 해시가 두 UART에서 보이면 fail-closed 처리합니다. """
+
+        raw_uid = "a1b2c3d4"
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        ports = FakeListPorts([
+            FakePort("COM5", raw_uid),
+            FakePort("COM6", raw_uid),
+        ])
+        with mock.patch.object(RUNNER, "read_details", return_value=None):
+            with self.assertRaisesRegex(RUNNER.ExecutionFailure, "count=2"):
+                RUNNER.discover(digest, ports)
+
+    def test_register_query_accepts_only_explicit_msd_unavailable_sentinel(self) -> None:
+        """! @brief UART fallback 후에도 live pyOCD 해시 재검증을 수행합니다. """
+
+        expected = {"dp_idcode": "0x12345678"}
+        with mock.patch.object(RUNNER, "read_details", return_value=None), \
+                mock.patch.object(
+                    RUNNER, "collect_register_identity_backend", return_value=expected
+                ) as backend:
+            observed = RUNNER.collect_register_identity_sha256(
+                "a" * 64, RUNNER.MSD_UNAVAILABLE
+            )
+            self.assertEqual(observed, expected)
+            backend.assert_called_once_with("a" * 64, RUNNER.MSD_UNAVAILABLE)
+            with self.assertRaisesRegex(RUNNER.ExecutionFailure, "identity"):
+                RUNNER.collect_register_identity_sha256("a" * 64, "G:/")
 
     def test_wrong_nonce_and_revision_are_rejected(self) -> None:
         """! @brief 다른 attempt/source의 serial 출력을 재사용하지 않습니다. """
