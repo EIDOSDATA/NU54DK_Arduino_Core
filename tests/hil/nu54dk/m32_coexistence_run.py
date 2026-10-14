@@ -18,7 +18,11 @@ REPOSITORY = HIL.parents[2]
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
-from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BOARD_ROOT,
+    flash_image_pyocd_sha256,
+    git_revision,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m33_sdk_risk_common import (  # noqa: E402
     cleanup_direct_ports,
@@ -273,14 +277,12 @@ def _run_scenario(
     }
     for role in roles:
         board = boards[logical_to_board[role]]
-        mode, written = flash_image_pyocd(
+        mode, written = flash_image_pyocd_sha256(
             f"{scenario}-{role}",
-            board["uid"],
+            board["probe_sha256"],
             images[role],
             120.0,
-            hardware_reset=True,
-            cmsis_dap_v1=False,
-            preserve_nrf54l_access=True,
+            reset_and_halt_before_program=True,
         )
         board["flashes"][scenario] = {"mode": mode, "bytes": written}
     time.sleep(2.0)

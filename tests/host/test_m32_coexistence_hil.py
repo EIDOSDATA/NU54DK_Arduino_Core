@@ -171,9 +171,10 @@ class M32CoexistenceHilTests(unittest.TestCase):
         """! @brief runner가 V2 exact 안전장치와 내부 radio 범위만 기록합니다. """
         source = (HIL / "m32_coexistence_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
-        self.assertIn("cmsis_dap_v1=False", source)
+        self.assertIn("flash_image_pyocd_sha256", source)
+        self.assertIn("reset_and_halt_before_program=True", source)
         self.assertIn("READY_TIMEOUT_SECONDS = 30.0", source)
-        self.assertNotIn("cmsis_dap_v1=True", source)
+        self.assertNotIn("cmsis_dap_v1=", source)
         self.assertNotIn("prefer_v1=true", source)
         for test_id in (
             '"M32-COEX-01:ble_154"',

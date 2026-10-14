@@ -19,7 +19,11 @@ REPOSITORY = HIL.parents[2]
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
-from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BOARD_ROOT,
+    flash_image_pyocd_sha256,
+    git_revision,
+)
 from m33_sdk_risk_common import (  # noqa: E402
     cleanup_direct_ports,
     complete_direct_program,
@@ -240,13 +244,12 @@ def _run_protocol(protocol: str, boards: dict[str, dict], serial_module: object,
     for role in (transmit_role, receive_role):
         board = boards[role]
         board["registers"] = collect_register_identity(board["uid"], board["volume"])
-        board["flash_mode"], board["flash_bytes"] = flash_image_pyocd(
+        board["flash_mode"], board["flash_bytes"] = flash_image_pyocd_sha256(
             role,
-            board["uid"],
+            board["probe_sha256"],
             board["image"],
             120.0,
-            hardware_reset=True,
-            preserve_nrf54l_access=True,
+            reset_and_halt_before_program=True,
         )
     time.sleep(2.0)
     ports: dict[str, object] = {}

@@ -50,8 +50,9 @@ class M32StandaloneRadioHilTests(unittest.TestCase):
         """! @brief 네 역할 모두 CMSIS-DAP v2 sector flash와 DP/AP 대조를 사용합니다. """
         source = (HIL / "m32_standalone_radio_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
-        self.assertIn("flash_image_pyocd", source)
-        self.assertNotIn("cmsis_dap_v1=True", source)
+        self.assertIn("flash_image_pyocd_sha256", source)
+        self.assertIn("reset_and_halt_before_program=True", source)
+        self.assertNotIn("cmsis_dap_v1=", source)
         self.assertNotIn("unlock", source.lower())
         self.assertIn('"M32-154-01:primary"', source)
         self.assertIn('"M32-ESB-01:primary"', source)

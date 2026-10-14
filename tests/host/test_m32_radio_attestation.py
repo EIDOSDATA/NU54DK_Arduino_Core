@@ -195,6 +195,8 @@ class M32RadioAttestationTest(unittest.TestCase):
         )
         for source in (standalone_source, coexistence_source):
             self.assertIn("discover_live", source)
+            self.assertIn("flash_image_pyocd_sha256", source)
+            self.assertIn("reset_and_halt_before_program=True", source)
             self.assertIn("prepare_direct_program(", source)
             self.assertIn("complete_direct_program(", source)
             self.assertIn("cleanup_direct_ports(", source)
