@@ -185,7 +185,11 @@ class DiagnosticsCampaignTests(unittest.TestCase):
         }), encoding="utf-8")
         third_path = root / "third-idle-fixture.json"
         third_path.write_text('{"status":"PASS"}', encoding="utf-8")
-        third_reference = {"path": third_path.name, "sha256": digest(third_path)}
+        third_reference = {
+            "path": third_path.name,
+            "sha256": digest(third_path),
+            "source_fixture_sha256": "f" * 64,
+        }
         for transport in ("twowire", "h4"):
             fixture_path = root / f"{transport}.fixture.json"
             preflight_path = root / f"{transport}.preflight.json"

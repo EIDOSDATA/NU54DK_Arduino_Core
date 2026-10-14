@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -335,6 +336,22 @@ def adjacent(path: Path, reference: dict, label: str) -> Path:
     return child
 
 
+def adjacent_watcher(path: Path, reference: dict) -> Path:
+    """! @brief 원본 fixture 해시를 보존한 watcher 인접 참조를 검증합니다. """
+
+    if (not isinstance(reference, dict)
+            or set(reference) != {
+                "path", "sha256", "source_fixture_sha256"
+            }
+            or not re.fullmatch(
+                r"[0-9a-f]{64}", reference.get("source_fixture_sha256", "")
+            )):
+        raise ValueError("DTM third watcher fixture reference mismatch")
+    return adjacent(path, {
+        "path": reference["path"], "sha256": reference["sha256"],
+    }, "third watcher fixture")
+
+
 def validate_preparation_attempts(path: Path, row: dict) -> None:
     """! @brief 정상 1회 또는 init timeout 뒤 새 session 1회만 허용합니다. """
 
@@ -547,7 +564,7 @@ def validate_campaign(path: Path, expected_revision: str | None = None) -> dict:
         route_images.add(declared[0]["image"]["sha256"])
         if row.get("third_idle") != fixture.get("third_idle"):
             raise ValueError("DTM third watcher fixture mismatch")
-        adjacent(path, row["third_idle"], "third watcher fixture")
+        adjacent_watcher(path, row["third_idle"])
         current_third = {
             "probe_sha256": fixture["boards"][2]["probe_sha256"],
             "third_idle": row.get("third_idle"),
