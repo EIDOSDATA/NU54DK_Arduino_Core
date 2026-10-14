@@ -32,6 +32,7 @@ from m6_serial_echo import (  # noqa: E402
     detail_value,
     find_daplink_volume,
     find_serial_port,
+    is_target_uart_interface,
     normalize_board_id,
     read_details,
     validate_hex_image,
@@ -197,9 +198,45 @@ def discover_endpoint_sha256(
         normalized = normalize_board_id(raw_uid)
         if probe_sha256(normalized) == digest:
             matches.append((normalized, DaplinkVolume(root, details)))
-    if len(matches) != 1:
+    if len(matches) > 1:
         raise BlePairHilFailure(
             f"probe SHA-256 mapping은 정확히 하나여야 합니다: count={len(matches)}"
+        )
+    if not matches:
+        if explicit_volume is None or explicit_port.casefold() == "auto":
+            raise BlePairHilFailure(
+                "probe SHA-256 mapping은 정확히 하나여야 합니다: count=0"
+            )
+        volume_root = Path(explicit_volume)
+        if re.fullmatch(r"[A-Za-z]:[\\/]?", str(volume_root)) is None:
+            raise BlePairHilFailure(
+                "MSD 미가용 복구에는 Windows drive root를 명시해야 합니다."
+            )
+        requested = explicit_port.casefold()
+        ports = [
+            port for port in list_ports.comports()
+            if str(getattr(port, "device", "")).casefold() == requested
+        ]
+        if len(ports) != 1:
+            raise BlePairHilFailure(
+                "MSD 미가용 복구 UART는 정확히 하나여야 합니다."
+            )
+        port = ports[0]
+        raw_uid = getattr(port, "serial_number", None)
+        if raw_uid is None or not is_target_uart_interface(port):
+            raise BlePairHilFailure(
+                "MSD 미가용 복구 UART의 DAPLink identity가 불완전합니다."
+            )
+        normalized = normalize_board_id(str(raw_uid))
+        if probe_sha256(normalized) != digest:
+            raise BlePairHilFailure(
+                "MSD 미가용 복구 UART의 probe SHA-256이 다릅니다."
+            )
+        details = f"Target Detect: {DAPLINK_TARGET}\nUnique ID: {normalized}\n"
+        return RoleEndpoint(
+            normalized,
+            DaplinkVolume(volume_root, details),
+            str(port.device),
         )
     board_id, volume = matches[0]
     try:

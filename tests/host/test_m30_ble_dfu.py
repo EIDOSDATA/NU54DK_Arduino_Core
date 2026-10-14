@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
 import struct
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -28,6 +30,43 @@ HIL_SPEC.loader.exec_module(HIL_RUNNER)
 
 class M30SecureBleDfuTests(unittest.TestCase):
     """! @brief 인증 transport·명시적 confirm·profile 격리를 검사합니다. """
+
+    def test_discovery_recovers_from_missing_msd_with_bound_target_uart(self) -> None:
+        """! @brief MSD가 사라져도 명시 UART의 USB serial과 SHA를 결합합니다. """
+
+        raw_uid = "5415360300052840fcd47678fd7d106d"
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        port = SimpleNamespace(
+            device="COM5",
+            serial_number=raw_uid.upper(),
+            location="1-1.2:x.3",
+            hwid=(
+                "USB VID:PID=0D28:0204 "
+                f"SER={raw_uid.upper()} LOCATION=1-1.2:x.3"
+            ),
+        )
+        ports = SimpleNamespace(comports=lambda: [port])
+        with mock.patch("ble_pair_hil_common.read_details", return_value=None):
+            endpoint = HIL_RUNNER.discover_endpoint_sha256(
+                digest,
+                "G:/",
+                "COM5",
+                ports,
+            )
+        self.assertEqual(endpoint.board_id, raw_uid)
+        self.assertEqual(endpoint.port_name, "COM5")
+        self.assertEqual(endpoint.volume.root, Path("G:/"))
+
+        with (
+            mock.patch("ble_pair_hil_common.read_details", return_value=None),
+            self.assertRaises(HIL_RUNNER.BlePairHilFailure),
+        ):
+            HIL_RUNNER.discover_endpoint_sha256(
+                "0" * 64,
+                "G:/",
+                "COM5",
+                ports,
+            )
 
     def test_profile_requires_authenticated_reassembled_smp(self) -> None:
         """! @brief secure profile이 인증 BLE SMP와 bounded buffer를 고정합니다. """
