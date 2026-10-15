@@ -140,6 +140,8 @@ class M32MeshManagementHilTests(unittest.TestCase):
         """! @brief exact runner가 V2 identity·sector flash·clean source를 강제합니다. """
         source = (HIL / "m32_mesh_management_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
+        self.assertIn("discover_live", source)
+        self.assertNotIn("discover(digest, list_ports)", source)
         self.assertIn("cmsis_dap_v1=False", source)
         self.assertNotIn("cmsis_dap_v1=True", source)
         self.assertIn('"M32-MESH11-01:management"', source)
