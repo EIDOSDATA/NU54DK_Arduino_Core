@@ -57,6 +57,12 @@ def stopped_record(role: str = "advertiser") -> str:
 class BeaconHilContractTest(unittest.TestCase):
     """HIL Host oracle가 누락·중복·분모 축소를 거부하는지 검사합니다."""
 
+    def test_live_discovery_supports_missing_msd_volume(self) -> None:
+        """! @brief Beacon 실행이 MSD 없는 USB serial probe를 탐색하는지 검증합니다. """
+
+        self.assertIn("discover_live", RUNNER.execute.__code__.co_names)
+        self.assertNotIn("discover", RUNNER.execute.__code__.co_names)
+
     def test_result_record_parser(self) -> None:
         fields = RUNNER._fields(
             "M33BEACON|1|RESULT|role=observer|raw=600|codec_negative=pass"
