@@ -41,7 +41,7 @@ from ble_pair_hil_common import (  # noqa: E402
     validate_image_unchanged,
     validate_source_clean,
 )
-from m28_ble_3board import daplink_debug_identity  # noqa: E402
+from m28_ble_3board import collect_debug_identities  # noqa: E402
 from m29_ble_multi_protocol import (  # noqa: E402
     CYCLE_COUNT,
     MultiProtocolFailure,
@@ -532,9 +532,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
         for role in ROLES
     }
     validate_three_board_identity(endpoints)
-    debug_identities = {
-        role: daplink_debug_identity(endpoints[role]) for role in ROLES
-    }
+    debug_identities = collect_debug_identities(endpoints, args.flash_backend)
     print(
         "NU54DK M29-W07-D discovery SUCCESS: "
         + ", ".join(

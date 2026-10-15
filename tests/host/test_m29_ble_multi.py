@@ -156,8 +156,10 @@ class M29BleMultiTests(unittest.TestCase):
             "CYCLE_COUNT",
             "serial_closed",
             "discover_endpoint_sha256",
+            "collect_debug_identities(endpoints, args.flash_backend)",
         ):
             self.assertIn(token, runner)
+        self.assertNotIn("daplink_debug_identity", runner)
         self.assertNotIn('"daplink_uid"', runner)
         self.assertNotIn("--peripheral-board-id", runner)
         self.assertLess(
