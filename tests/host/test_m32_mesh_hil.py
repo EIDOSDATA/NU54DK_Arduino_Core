@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 import sys
+import time
 import unittest
 
 
@@ -19,6 +20,30 @@ import m32_mesh_run as runner  # noqa: E402
 
 class M32MeshHilTests(unittest.TestCase):
     """! @brief 세 역할 분모·negative·보드 안전 조건을 고정합니다. """
+
+    def test_protocol_line_reassembles_serial_timeout_fragments(self) -> None:
+        """! @brief timeout 조각을 완성된 개행 protocol 레코드로 재조립합니다. """
+
+        class FragmentedPort:
+            """! @brief pyserial readline timeout의 부분 반환을 재현합니다. """
+
+            def __init__(self) -> None:
+                self.fragments = [
+                    b"M32MESH|1|PROGRESS|role=provisioner|sen",
+                    b"t=320|received=160\r\n",
+                ]
+
+            def readline(self) -> bytes:
+                """! @brief 준비된 UART 조각을 순서대로 반환합니다. """
+                if self.fragments:
+                    return self.fragments.pop(0)
+                return b""
+
+        line = runner._line(FragmentedPort(), time.monotonic() + 1.0)
+        self.assertEqual(
+            "M32MESH|1|PROGRESS|role=provisioner|sent=320|received=160",
+            line,
+        )
 
     def test_record_parser_rejects_duplicate_and_invalid_integer(self) -> None:
         """! @brief protocol field 중복과 decimal 외 입력을 거부합니다. """

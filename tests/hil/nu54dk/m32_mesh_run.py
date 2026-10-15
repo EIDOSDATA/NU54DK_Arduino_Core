@@ -117,14 +117,21 @@ def _validate_capacity(fields: dict[str, str]) -> dict[str, int]:
 
 
 def _line(port: object, deadline: float) -> str:
-    """! @brief DAPLink 잡음에서 M32 Mesh protocol 줄만 반환합니다. """
+    """! @brief timeout으로 나뉜 UART 조각을 합쳐 protocol 줄만 반환합니다. """
+    pending = bytearray()
     while time.monotonic() < deadline:
         payload = port.readline()
-        if len(payload) > 768:
+        if not payload:
+            continue
+        pending.extend(payload)
+        if len(pending) > 768:
             raise MeshExecutionFailure("serial line overlong")
-        line = payload.decode("ascii", errors="replace").strip()
-        if line.startswith(PROTOCOL + "|"):
-            return line
+        while b"\n" in pending:
+            raw_line, _, remainder = pending.partition(b"\n")
+            pending = bytearray(remainder)
+            line = raw_line.rstrip(b"\r").decode("ascii", errors="replace").strip()
+            if line.startswith(PROTOCOL + "|"):
+                return line
     raise MeshExecutionFailure("serial line timeout")
 
 
