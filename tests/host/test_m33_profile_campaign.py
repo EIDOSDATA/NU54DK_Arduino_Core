@@ -556,6 +556,117 @@ class ProfileCampaignTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "20-cycle"):
             execute_campaign(args)
 
+    def test_retry_accepts_only_clean_initial_hci_3e_disconnect(self):
+        """! @brief 측정 전 HCI 0x3E와 세 역할 정리 완료만 재시도합니다. """
+        nonce = "1" * 32
+        cleanup = {
+            role: {
+                "nonce": nonce,
+                "native_links": "0",
+                "links": "0",
+                "pending": "0",
+                "scan": "0",
+                "advertising": "0",
+                "watchdog": "0",
+                "serial_close": "PASS",
+            }
+            for role in ("server", "client", "watcher")
+        }
+        evidence = {
+            "status": "FAIL",
+            "reason": "server: hub-watcher-disconnected",
+            "failure_details": {
+                "hci_reason": "62",
+                "phase": "0",
+                "count": "0",
+                "measurements": "0",
+                "connected": "0",
+                "gap_event": "8",
+            },
+            "cleanup": cleanup,
+        }
+        self.assertTrue(campaign_runner.retryable_initial_disconnect(evidence))
+        for label, mutate in (
+            ("hci", lambda value: value["failure_details"].update(hci_reason="19")),
+            ("measurement", lambda value: value["failure_details"].update(count="1")),
+            ("cleanup", lambda value: value["cleanup"]["watcher"].update(
+                serial_close="FAIL"
+            )),
+        ):
+            with self.subTest(label=label):
+                changed = json.loads(json.dumps(evidence))
+                mutate(changed)
+                self.assertFalse(
+                    campaign_runner.retryable_initial_disconnect(changed)
+                )
+
+    def test_retry_preserves_failed_attempt_under_new_prefix(self):
+        """! @brief 허용 실패를 덮어쓰지 않고 retry-02 증적으로 한 번만 재실행합니다. """
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            prefix = root / "profile.cycle-04.restored.run"
+            nonce = "2" * 32
+            cleanup = {
+                role: {
+                    "nonce": nonce,
+                    "native_links": "0",
+                    "links": "0",
+                    "pending": "0",
+                    "scan": "0",
+                    "advertising": "0",
+                    "watchdog": "0",
+                    "serial_close": "PASS",
+                }
+                for role in ("server", "client", "watcher")
+            }
+            failed = {
+                "status": "FAIL",
+                "reason": "server: hub-watcher-disconnected",
+                "failure_details": {
+                    "hci_reason": "62",
+                    "phase": "0",
+                    "count": "0",
+                    "measurements": "0",
+                    "connected": "0",
+                    "gap_event": "8",
+                },
+                "cleanup": cleanup,
+            }
+            calls = []
+
+            def execute_phase(phase_args):
+                """! @brief 첫 실패와 두 번째 성공을 서로 다른 파일에 기록합니다. """
+                path = phase_args.output_prefix.with_suffix(".json")
+                evidence = failed if not calls else {"status": "PASS"}
+                path.write_text(json.dumps(evidence), encoding="utf-8")
+                calls.append(path)
+                return evidence
+
+            evidence, path = campaign_runner.execute_phase_with_retry(
+                argparse.Namespace(sdk_root=root),
+                "standard",
+                "restored",
+                {role: (role * 64, root / f"{role}.hex")
+                 for role in ("server", "client", "watcher")},
+                {role: root / f"{role}.json"
+                 for role in ("server", "client", "watcher")},
+                prefix,
+                root / "fresh.json",
+                execute_phase,
+            )
+            self.assertEqual("PASS", evidence["status"])
+            self.assertEqual(2, len(calls))
+            self.assertEqual(prefix.with_suffix(".json"), calls[0])
+            self.assertEqual(
+                prefix.with_name(
+                    "profile.cycle-04.restored.retry-02.run"
+                ).with_suffix(".json"),
+                path,
+            )
+            self.assertEqual("FAIL", json.loads(calls[0].read_text(
+                encoding="utf-8"
+            ))["status"])
+
     def test_execution_writes_every_phase_without_clobber(self):
         """! @brief 실제 실행기를 40/60회 연결하고 점을 포함한 phase 경로와 원본 보존을 검증합니다. """
         for family, phase_count in (("standard", 40), ("native", 60)):

@@ -7,7 +7,9 @@ from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
+from typing import Callable
 
 import m33_profile_run as phase_runner
 from ble_pair_hil_common import git_revision
@@ -17,6 +19,7 @@ from m33_profile_native_pair import (evidence_nonce, parse_time,
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = "nucode-m33-profile-campaign-v1"
 EXPECTED_CYCLES = 20
+MAX_PHASE_ATTEMPTS = 2
 SEMANTICS = {
     "standard": ("standard_profiles", "bms_reboot_restore",
                  "scoped_bond_delete", "cleanup"),
@@ -117,6 +120,77 @@ def phase_namespace(args: argparse.Namespace, family: str, phase: str,
     )
 
 
+def phase_attempt_prefix(prefix: Path, attempt: int) -> Path:
+    """! @brief 첫 실행과 제한된 재시도의 충돌 없는 증적 prefix를 반환합니다. """
+    if attempt < 1 or attempt > MAX_PHASE_ATTEMPTS:
+        raise ValueError("profile phase attempt가 범위를 벗어났습니다")
+    if attempt == 1:
+        return prefix
+    return prefix.with_name(f"{prefix.stem}.retry-{attempt:02d}.run")
+
+
+def retryable_initial_disconnect(evidence: dict) -> bool:
+    """! @brief 정리 완료된 HCI 0x3E 초기 연결 실패만 재시도 대상으로 판정합니다. """
+    failure = evidence.get("failure_details", {})
+    cleanup = evidence.get("cleanup", {})
+    if (evidence.get("status") != "FAIL"
+            or evidence.get("reason") != "server: hub-watcher-disconnected"
+            or not isinstance(failure, dict)
+            or not isinstance(cleanup, dict)
+            or failure.get("hci_reason") != "62"
+            or failure.get("phase") != "0"
+            or failure.get("count") != "0"
+            or failure.get("measurements") != "0"
+            or failure.get("connected") != "0"
+            or failure.get("gap_event") != "8"
+            or set(cleanup) != {"server", "client", "watcher"}):
+        return False
+    nonces = {
+        record.get("nonce")
+        for record in cleanup.values()
+        if isinstance(record, dict)
+    }
+    if (len(nonces) != 1
+            or re.fullmatch(r"[0-9a-f]{32}", next(iter(nonces), "")) is None):
+        return False
+    nonce = next(iter(nonces))
+    try:
+        return all(
+            phase_runner.validate_stop_record("STOPPED", record, nonce, False)
+            and record.get("serial_close") == "PASS"
+            for record in cleanup.values()
+        )
+    except (TypeError, ValueError):
+        return False
+
+
+def execute_phase_with_retry(
+    args: argparse.Namespace,
+    family: str,
+    phase: str,
+    roles: dict[str, tuple[str, Path]],
+    records: dict[str, Path],
+    prefix: Path,
+    predecessor: Path | None,
+    execute_phase: Callable[[argparse.Namespace], dict],
+) -> tuple[dict, Path]:
+    """! @brief 허용된 초기 연결 실패 한 번만 별도 증적으로 보존하고 재실행합니다. """
+    last_evidence = None
+    last_path = None
+    for attempt in range(1, MAX_PHASE_ATTEMPTS + 1):
+        attempt_prefix = phase_attempt_prefix(prefix, attempt)
+        last_evidence = execute_phase(phase_namespace(
+            args, family, phase, roles, records, attempt_prefix, predecessor
+        ))
+        last_path = attempt_prefix.with_suffix(".json")
+        if (last_evidence.get("status") == "PASS"
+                or not retryable_initial_disconnect(last_evidence)):
+            break
+    if last_evidence is None or last_path is None:
+        raise ValueError("profile phase attempt가 실행되지 않았습니다")
+    return last_evidence, last_path
+
+
 def planned_phase_prefixes(output: Path, family: str) -> dict[tuple[int, str], Path]:
     """! @brief 전체 phase의 JSON·transcript·sidecar 충돌을 물리 접근 전에 거부합니다. """
     phases = (("fresh", "restored", "second-peer")
@@ -127,17 +201,26 @@ def planned_phase_prefixes(output: Path, family: str) -> dict[tuple[int, str], P
         for phase in phases:
             ## @note 마지막 .run만 교체하므로 출력 이름의 점과 phase 식별자를 보존합니다.
             prefix = output.with_name(f"{output.stem}.cycle-{cycle:02d}.{phase}.run")
-            native_path = prefix.with_suffix(".json")
-            sidecars = phase_runner.reserve_sidecars(
-                native_path, ("server", "client", "watcher")
-            )
-            paths = [native_path, prefix.with_suffix(".transcript.log")]
-            paths.extend(path for values in sidecars.values() for path in values.values())
-            for path in paths:
-                key = str(path).casefold()
-                if key in used or path.exists() or path.is_symlink():
-                    raise ValueError("existing or duplicate profile campaign phase output")
-                used.add(key)
+            for attempt in range(1, MAX_PHASE_ATTEMPTS + 1):
+                attempt_prefix = phase_attempt_prefix(prefix, attempt)
+                attempt_native = attempt_prefix.with_suffix(".json")
+                sidecars = phase_runner.reserve_sidecars(
+                    attempt_native, ("server", "client", "watcher")
+                )
+                paths = [
+                    attempt_native,
+                    attempt_prefix.with_suffix(".transcript.log"),
+                ]
+                paths.extend(
+                    path for values in sidecars.values() for path in values.values()
+                )
+                for path in paths:
+                    key = str(path).casefold()
+                    if key in used or path.exists() or path.is_symlink():
+                        raise ValueError(
+                            "existing or duplicate profile campaign phase output"
+                        )
+                    used.add(key)
             prefixes[(cycle, phase)] = prefix
     return prefixes
 
@@ -370,28 +453,25 @@ def execute_campaign(args: argparse.Namespace, execute_phase=phase_runner.execut
     for cycle in range(1, args.cycles + 1):
         phases = []
         fresh_prefix = prefixes[(cycle, "fresh")]
-        fresh = execute_phase(phase_namespace(
+        fresh, fresh_path = execute_phase_with_retry(
             args, args.family, "fresh", base_roles, base_records,
-            fresh_prefix, None
-        ))
-        fresh_path = fresh_prefix.with_suffix(".json")
+            fresh_prefix, None, execute_phase
+        )
         phases.append(phase_reference(fresh_path, fresh))
 
         restored_prefix = prefixes[(cycle, "restored")]
-        restored = execute_phase(phase_namespace(
+        restored, restored_path = execute_phase_with_retry(
             args, args.family, "restored", base_roles, base_records,
-            restored_prefix, fresh_path
-        ))
-        restored_path = restored_prefix.with_suffix(".json")
+            restored_prefix, fresh_path, execute_phase
+        )
         phases.append(phase_reference(restored_path, restored))
 
         if args.family == "native":
             second_prefix = prefixes[(cycle, "second-peer")]
-            second = execute_phase(phase_namespace(
+            second, second_path = execute_phase_with_retry(
                 args, "native", "second-peer", second_roles, second_records,
-                second_prefix, restored_path
-            ))
-            second_path = second_prefix.with_suffix(".json")
+                second_prefix, restored_path, execute_phase
+            )
             phases.append(phase_reference(second_path, second))
             normalized = validate_campaign_triplet(
                 fresh_path, restored_path, second_path
