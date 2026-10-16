@@ -97,6 +97,35 @@ class M30DfuFailure(RuntimeError):
     """! @brief M30-DFU build·transport·target 검증 실패입니다. """
 
 
+def flash_image_with_retry(
+    role: str,
+    digest: str,
+    image: Path,
+    timeout_seconds: float,
+) -> tuple[str, str]:
+    """! @brief 간헐 sector flash session 오류만 reset-halt 후 1회 재시도합니다. """
+
+    retryable_messages = {
+        f"{role} pyOCD sector flash timeout",
+        f"{role} pyOCD sector flash 실패",
+    }
+    for attempt in range(2):
+        try:
+            return flash_image_pyocd_sha256(
+                role,
+                digest,
+                image,
+                timeout_seconds,
+                reset_and_halt_before_program=True,
+            )
+        except BlePairHilFailure as error:
+            if attempt == 0 and str(error) in retryable_messages:
+                time.sleep(0.5)
+                continue
+            raise
+    raise AssertionError("unreachable sector flash retry state")
+
+
 @dataclass(frozen=True)
 class ImageArtifact:
     """! @brief 변경 감시 가능한 MCUboot image identity입니다. """
@@ -1674,27 +1703,25 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 SLOT1_SIZE,
                 args.flash_timeout,
             )
-            flash_results["peripheral_bootloader"] = flash_image_pyocd_sha256(
+            flash_results["peripheral_bootloader"] = flash_image_with_retry(
                 "peripheral-bootloader",
                 args.probe_peripheral_sha256,
                 confirmed.boot_hex,
                 args.flash_timeout,
-                reset_and_halt_before_program=True,
             )
-            flash_results["peripheral_primary"] = flash_image_pyocd_sha256(
+            flash_results["peripheral_primary"] = flash_image_with_retry(
                 "peripheral-primary",
                 args.probe_peripheral_sha256,
                 program_images["peripheral"],
                 args.flash_timeout,
             )
-            flash_results["central_bootloader"] = flash_image_pyocd_sha256(
+            flash_results["central_bootloader"] = flash_image_with_retry(
                 "central-bootloader",
                 args.probe_central_sha256,
                 central.boot_hex,
                 args.flash_timeout,
-                reset_and_halt_before_program=True,
             )
-            flash_results["central_primary"] = flash_image_pyocd_sha256(
+            flash_results["central_primary"] = flash_image_with_retry(
                 "central-primary",
                 args.probe_central_sha256,
                 program_images["central"],
@@ -1785,13 +1812,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 args.flash_timeout,
             )
             cleanup_flash_results = {
-                "peripheral": flash_image_pyocd_sha256(
+                "peripheral": flash_image_with_retry(
                     "peripheral-cleanup",
                     args.probe_peripheral_sha256,
                     program_images["peripheral"],
                     args.flash_timeout,
                 ),
-                "central": flash_image_pyocd_sha256(
+                "central": flash_image_with_retry(
                     "central-cleanup",
                     args.probe_central_sha256,
                     program_images["central"],
@@ -1814,13 +1841,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 SLOT1_SIZE,
                 min(args.flash_timeout, 120.0),
             )
-            flash_image_pyocd_sha256(
+            flash_image_with_retry(
                 "peripheral-failure-cleanup",
                 args.probe_peripheral_sha256,
                 program_images["peripheral"],
                 min(args.flash_timeout, 120.0),
             )
-            flash_image_pyocd_sha256(
+            flash_image_with_retry(
                 "central-failure-cleanup",
                 args.probe_central_sha256,
                 program_images["central"],

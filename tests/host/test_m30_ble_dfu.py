@@ -257,6 +257,42 @@ class M30SecureBleDfuTests(unittest.TestCase):
             session.send_line.call_args_list[0], session.send_line.call_args_list[1]
         )
 
+    def test_hil_runner_retries_only_transient_sector_flash_failure(self) -> None:
+        """! @brief 간헐 sector session 실패만 reset-halt로 1회 재시도합니다. """
+
+        transient = HIL_RUNNER.BlePairHilFailure(
+            "peripheral-primary pyOCD sector flash 실패"
+        )
+        with mock.patch.object(
+            HIL_RUNNER,
+            "flash_image_pyocd_sha256",
+            side_effect=(transient, ("pyocd-sector-sw-reset", "42")),
+        ) as flash, mock.patch.object(HIL_RUNNER.time, "sleep") as delay:
+            result = HIL_RUNNER.flash_image_with_retry(
+                "peripheral-primary", "a" * 64, Path("image.hex"), 120.0
+            )
+
+        self.assertEqual(result, ("pyocd-sector-sw-reset", "42"))
+        self.assertEqual(flash.call_count, 2)
+        self.assertTrue(
+            all(
+                call.kwargs["reset_and_halt_before_program"]
+                for call in flash.call_args_list
+            )
+        )
+        delay.assert_called_once_with(0.5)
+
+        deterministic = HIL_RUNNER.BlePairHilFailure(
+            "peripheral-primary exact HEX snapshot 불일치"
+        )
+        with mock.patch.object(
+            HIL_RUNNER, "flash_image_pyocd_sha256", side_effect=deterministic
+        ) as flash, self.assertRaises(HIL_RUNNER.BlePairHilFailure):
+            HIL_RUNNER.flash_image_with_retry(
+                "peripheral-primary", "a" * 64, Path("image.hex"), 120.0
+            )
+        flash.assert_called_once()
+
     def test_hil_runner_parses_exact_mcuboot_hash_tlv(self) -> None:
         """! @brief version과 SHA-256 TLV를 header 경계에서 읽습니다. """
 
