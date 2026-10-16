@@ -116,22 +116,37 @@ def _validate_capacity(fields: dict[str, str]) -> dict[str, int]:
     return observed
 
 
+def _read_complete_line(
+    port: object, pending: bytearray
+) -> tuple[str | None, bool]:
+    """! @brief UART timeout 조각을 누적하고 완성된 줄 하나만 반환합니다. """
+
+    if b"\n" not in pending:
+        payload = port.readline()
+        if not payload:
+            return None, False
+        pending.extend(payload)
+    if b"\n" not in pending:
+        if len(pending) > 768:
+            raise MeshExecutionFailure("serial line overlong")
+        return None, True
+    raw_line, _, remainder = pending.partition(b"\n")
+    pending[:] = remainder
+    if len(raw_line) > 768:
+        raise MeshExecutionFailure("serial line overlong")
+    return (
+        raw_line.rstrip(b"\r").decode("ascii", errors="replace").strip(),
+        True,
+    )
+
+
 def _line(port: object, deadline: float) -> str:
     """! @brief timeout으로 나뉜 UART 조각을 합쳐 protocol 줄만 반환합니다. """
     pending = bytearray()
     while time.monotonic() < deadline:
-        payload = port.readline()
-        if not payload:
-            continue
-        pending.extend(payload)
-        if len(pending) > 768:
-            raise MeshExecutionFailure("serial line overlong")
-        while b"\n" in pending:
-            raw_line, _, remainder = pending.partition(b"\n")
-            pending = bytearray(remainder)
-            line = raw_line.rstrip(b"\r").decode("ascii", errors="replace").strip()
-            if line.startswith(PROTOCOL + "|"):
-                return line
+        line, _ = _read_complete_line(port, pending)
+        if line is not None and line.startswith(PROTOCOL + "|"):
+            return line
     raise MeshExecutionFailure("serial line timeout")
 
 
@@ -366,17 +381,15 @@ def _read_session(
     begins: set[str] = set()
     ends: set[str] = set()
     results: dict[str, dict[str, str]] = {}
+    pending = {role: bytearray() for role in ports}
     deadline = time.monotonic() + 600.0
     while time.monotonic() < deadline and ends != set(ROLES):
         progressed = False
         for role, port in ports.items():
-            payload = port.readline()
-            if not payload:
+            line, read_progressed = _read_complete_line(port, pending[role])
+            progressed = progressed or read_progressed
+            if line is None:
                 continue
-            progressed = True
-            if len(payload) > 768:
-                raise MeshExecutionFailure("serial line overlong")
-            line = payload.decode("ascii", errors="replace").strip()
             if not line.startswith(PROTOCOL + "|"):
                 if line:
                     transcript.append(f"{role}-raw: {line}")
@@ -428,6 +441,7 @@ def cleanup_ports(
         "errors": [],
         "status": "NOT_REQUIRED" if not ports else "FAIL",
     }
+    pending = {role: bytearray() for role in ports}
     stop = f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
     for role in ("node_a", "node_b", "provisioner"):
         if role not in ports:
@@ -445,16 +459,15 @@ def cleanup_ports(
             if role in report["records"]:
                 continue
             try:
-                payload = port.readline()
+                line, read_progressed = _read_complete_line(port, pending[role])
             except Exception as error:
                 report["errors"].append(
                     f"{role} cleanup read: {type(error).__name__}: {error}"
                 )
                 continue
-            if not payload:
+            progressed = progressed or read_progressed
+            if line is None:
                 continue
-            progressed = True
-            line = payload.decode("ascii", errors="replace").strip()
             if not line.startswith(PROTOCOL + "|"):
                 continue
             transcript.append(f"{role}: {line}")

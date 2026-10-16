@@ -45,6 +45,65 @@ class M32MeshHilTests(unittest.TestCase):
             line,
         )
 
+    def test_session_reassembles_fragmented_progress_identity(self) -> None:
+        """! @brief session 수집도 timeout으로 잘린 identity 줄을 재조립합니다. """
+
+        nonce = "1" * 32
+        core = "2" * 40
+
+        class FragmentedPort:
+            """! @brief 각 protocol 줄을 UART timeout 조각으로 반환합니다. """
+
+            def __init__(self, role: str, result: str) -> None:
+                progress = (
+                    f"M32MESH|1|PROGRESS|role={role}|nonce={nonce}|core={core}\r\n"
+                ).encode("ascii")
+                self.fragments = [
+                    (
+                        f"M32MESH|1|BEGIN|role={role}|nonce={nonce}|core={core}\r\n"
+                    ).encode("ascii"),
+                    progress[:48],
+                    progress[48:],
+                    result.encode("ascii"),
+                    (
+                        f"M32MESH|1|END|role={role}|status=pass|"
+                        f"nonce={nonce}|core={core}\r\n"
+                    ).encode("ascii"),
+                ]
+
+            def readline(self) -> bytes:
+                """! @brief 준비된 UART 조각을 순서대로 반환합니다. """
+                if self.fragments:
+                    return self.fragments.pop(0)
+                return b""
+
+        suffix = f"nonce={nonce}|core={core}\r\n"
+        ports = {
+            "provisioner": FragmentedPort(
+                "provisioner",
+                "M32MESH|1|RESULT|role=provisioner|provisioned_nodes=2|"
+                "configured_nodes=2|base_messages=300|secured_messages=200|"
+                "acknowledged=500|max_latency_ms=100|"
+                "invalid_destination_rejected=1|wrong_key_rejected=1|"
+                f"payload_integrity=pass|{suffix}",
+            ),
+            "node_a": FragmentedPort(
+                "node_a",
+                "M32MESH|1|RESULT|role=node_a|received=250|"
+                "unprovisioned_rejected=1|feature=pass|friendship=pass|"
+                f"payload_integrity=pass|{suffix}",
+            ),
+            "node_b": FragmentedPort(
+                "node_b",
+                "M32MESH|1|RESULT|role=node_b|received=250|"
+                "unprovisioned_rejected=1|feature=pass|friendship=pass|"
+                f"payload_integrity=pass|{suffix}",
+            ),
+        }
+        results = runner._read_session(ports, nonce, core, [])
+        self.assertEqual(set(runner.ROLES), set(results))
+        self.assertEqual("500", results["provisioner"]["acknowledged"])
+
     def test_record_parser_rejects_duplicate_and_invalid_integer(self) -> None:
         """! @brief protocol field 중복과 decimal 외 입력을 거부합니다. """
         fields = runner._fields(
