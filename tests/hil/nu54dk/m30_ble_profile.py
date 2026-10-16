@@ -244,6 +244,7 @@ def wait_exact(
     deadline: float,
     *,
     allow_boot_noise: bool = False,
+    allowed_repeated_records: tuple[bytes, ...] = (),
 ) -> None:
     """! @brief exact record 전 FAIL·다른 protocol record를 거부합니다. """
 
@@ -255,6 +256,9 @@ def wait_exact(
         if line.startswith(FAIL_PREFIX):
             capture_line(capture, line)
             raise M30ProfileFailure(f"target 실패: {line!r}")
+        if line in allowed_repeated_records:
+            capture_line(capture, line)
+            continue
         if line.startswith(PROTOCOL_PREFIX) or not allow_boot_noise:
             capture_line(capture, line)
             raise M30ProfileFailure(f"예상 밖 protocol record입니다: {line!r}")
@@ -412,6 +416,12 @@ def execute_hil(
             captures["peripheral"],
             b"M30PROFILE|1|BEGIN|role=peripheral" + suffix(nonce, core_revision),
             deadline,
+            allowed_repeated_records=(
+                (
+                    "M30PROFILE|1|BOOT|role=peripheral|catalog=7|core="
+                    + core_revision
+                ).encode("ascii"),
+            ),
         )
         send_line(ports["central"], start)
         wait_exact(
@@ -420,6 +430,12 @@ def execute_hil(
             captures["central"],
             b"M30PROFILE|1|BEGIN|role=central" + suffix(nonce, core_revision),
             deadline,
+            allowed_repeated_records=(
+                (
+                    "M30PROFILE|1|BOOT|role=central|catalog=7|core="
+                    + core_revision
+                ).encode("ascii"),
+            ),
         )
         wait_exact(
             ports["central"],
