@@ -192,6 +192,10 @@ class M30BleOobBondTests(unittest.TestCase):
 
         source = RUNNER.read_text(encoding="utf-8")
         self.assertIn("flash_image_pyocd", source)
+        self.assertNotIn("ThreadPoolExecutor", source)
+        self.assertIn("for role in ROLES:", source)
+        self.assertIn("expected_sha256=image.sha256", source)
+        self.assertIn("reset_and_halt_before_program=True", source)
         self.assertIn("validate_pair_identity(peripheral, central)", source)
         self.assertIn('"power_cut_injected": False', source)
         self.assertIn('"mass_erase_or_recover": False', source)

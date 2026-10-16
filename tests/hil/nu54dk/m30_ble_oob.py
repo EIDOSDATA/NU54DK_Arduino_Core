@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import binascii
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import ExitStack
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -449,20 +448,17 @@ def execute_hil(
 
     if baud != DEFAULT_BAUD_RATE:
         raise M30OobFailure(f"M30-OOB-01은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        futures = {
-            role: executor.submit(
-                flash_image_pyocd_sha256,
-                role,
-                hashlib.sha256(
-                    endpoints[role].board_id.encode("ascii")
-                ).hexdigest(),
-                images[role].path,
-                flash_timeout,
-            )
-            for role in endpoints
-        }
-        flash_results = {role: future.result() for role, future in futures.items()}
+    flash_results = {}
+    for role in ROLES:
+        image = images[role]
+        flash_results[role] = flash_image_pyocd_sha256(
+            role,
+            hashlib.sha256(endpoints[role].board_id.encode("ascii")).hexdigest(),
+            image.path,
+            flash_timeout,
+            expected_sha256=image.sha256,
+            reset_and_halt_before_program=True,
+        )
     time.sleep(0.5)
 
     pending = {"peripheral": bytearray(), "central": bytearray()}
