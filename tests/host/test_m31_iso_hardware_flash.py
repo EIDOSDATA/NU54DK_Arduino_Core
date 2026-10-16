@@ -5,7 +5,6 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
-from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -21,45 +20,43 @@ import m31_iso_combined as combined  # noqa: E402
 class M31IsoHardwareFlashTests(unittest.TestCase):
     """! @brief flash 완료와 app 재시작을 서로 독립적인 성공 조건으로 검사합니다. """
 
-    def test_sector_flash_requires_explicit_hardware_reset(self) -> None:
-        """! @brief UID sector flash 뒤 CMSIS-DAP hardware reset 성공을 확인합니다. """
-        flash = SimpleNamespace(returncode=0, stdout=b"programmed 274432 bytes", stderr=b"")
-        reset = SimpleNamespace(returncode=0, stdout=b"", stderr=b"")
-        with patch.object(common.subprocess, "run", side_effect=(flash, reset)) as run:
+    def test_legacy_uid_flash_delegates_to_hash_only_backend(self) -> None:
+        """! @brief legacy UID가 외부 argv 없이 hash-only backend로 전달되는지 확인합니다. """
+        with patch.object(common, "probe_sha256", return_value="b" * 64), \
+                patch.object(
+                    common,
+                    "flash_image_pyocd_sha256",
+                    return_value=("pyocd-sector-sw-reset", "274432"),
+                ) as flash:
             mode, byte_count = common.flash_image_pyocd(
                 "central", "a" * 32, Path("image.hex"), 120.0, hardware_reset=True
             )
-        self.assertEqual(("pyocd-sector-hw-reset", "274432"), (mode, byte_count))
-        self.assertEqual(2, run.call_count)
-        flash_command = run.call_args_list[0].args[0]
-        reset_command = run.call_args_list[1].args[0]
-        self.assertTrue(flash_command[2].endswith("pyocd_launcher.py"))
-        self.assertEqual("flash", flash_command[3])
-        self.assertEqual("sector", flash_command[flash_command.index("--erase") + 1])
-        self.assertIn("--no-reset", flash_command)
-        self.assertNotIn("chip", flash_command)
-        self.assertTrue(reset_command[2].endswith("pyocd_launcher.py"))
-        self.assertEqual("reset", reset_command[3])
-        self.assertEqual("hw", reset_command[reset_command.index("--method") + 1])
-        self.assertNotIn("--erase", reset_command)
-        self.assertEqual("a" * 32, reset_command[reset_command.index("--uid") + 1])
+        self.assertEqual(("pyocd-sector-sw-reset", "274432"), (mode, byte_count))
+        flash.assert_called_once_with(
+            "central", "b" * 64, Path("image.hex"), 120.0, defer_reset=False
+        )
 
-    def test_programming_does_not_hide_hardware_reset_failure(self) -> None:
-        """! @brief byte program 성공 뒤 reset 실패를 HIL PASS로 올리지 않습니다. """
-        flash = SimpleNamespace(returncode=0, stdout=b"programmed 274432 bytes", stderr=b"")
-        reset = SimpleNamespace(returncode=1, stdout=b"", stderr=b"No ACK")
-        with patch.object(common.subprocess, "run", side_effect=(flash, reset)):
-            with self.assertRaisesRegex(common.BlePairHilFailure, "hardware reset 실패"):
+    def test_programming_does_not_hide_backend_failure(self) -> None:
+        """! @brief hash-only backend 실패를 legacy HIL PASS로 올리지 않습니다. """
+        with patch.object(common, "probe_sha256", return_value="b" * 64), \
+                patch.object(
+                    common,
+                    "flash_image_pyocd_sha256",
+                    side_effect=common.BlePairHilFailure("software reset 실패"),
+                ):
+            with self.assertRaisesRegex(common.BlePairHilFailure, "software reset 실패"):
                 common.flash_image_pyocd(
                     "central", "a" * 32, Path("image.hex"), 120.0, hardware_reset=True
                 )
 
-    def test_m32_access_preserving_flash_uses_attach_and_software_reset(self) -> None:
-        """! @brief M32 경로는 pin reset 없이 attach와 system reset을 사용합니다. """
-
-        flash = SimpleNamespace(returncode=0, stdout=b"programmed 274432 bytes", stderr=b"")
-        reset = SimpleNamespace(returncode=0, stdout=b"", stderr=b"")
-        with patch.object(common.subprocess, "run", side_effect=(flash, reset)) as run:
+    def test_m32_access_preserving_flash_uses_software_reset_backend(self) -> None:
+        """! @brief M32 경로도 hash-only software reset backend를 사용합니다. """
+        with patch.object(common, "probe_sha256", return_value="b" * 64), \
+                patch.object(
+                    common,
+                    "flash_image_pyocd_sha256",
+                    return_value=("pyocd-sector-sw-reset", "274432"),
+                ) as flash:
             mode, byte_count = common.flash_image_pyocd(
                 "capability",
                 "a" * 32,
@@ -69,11 +66,9 @@ class M31IsoHardwareFlashTests(unittest.TestCase):
                 preserve_nrf54l_access=True,
             )
         self.assertEqual(("pyocd-sector-sw-reset", "274432"), (mode, byte_count))
-        flash_command = run.call_args_list[0].args[0]
-        reset_command = run.call_args_list[1].args[0]
-        self.assertEqual("attach", flash_command[flash_command.index("--connect") + 1])
-        self.assertEqual("attach", reset_command[reset_command.index("--connect") + 1])
-        self.assertEqual("sw", reset_command[reset_command.index("--method") + 1])
+        flash.assert_called_once_with(
+            "capability", "b" * 64, Path("image.hex"), 120.0, defer_reset=False
+        )
 
     def test_combined_exact_requires_software_reset_evidence(self) -> None:
         """! @brief 결합 HIL 완료 승격에서 명시적 software reset 근거를 요구합니다. """
