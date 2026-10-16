@@ -32,6 +32,34 @@ def line(kind: str, fields: dict[str, object]) -> bytes:
 class M30NativeAttestationTests(unittest.TestCase):
     """! @brief 축소·위조 raw record를 fail-closed로 거부하는지 검사합니다. """
 
+    def test_dfu_rows_resynchronize_bounded_reset_noise(self) -> None:
+        """! @brief DFU reset noise는 prefix 앞에서만 제거하고 protocol 손상은 거부합니다. """
+
+        reset_noise = b"\x00\x7f\x7e\x9f\x1e"
+        record = b"M30DFU|1|READY|role=peripheral\n"
+        self.assertEqual(
+            adapter._rows(
+                reset_noise + record,
+                "M30DFU|1",
+                max_prefix_noise=8,
+            ),
+            [("READY", {"role": "peripheral"})],
+        )
+        with self.assertRaises(adapter.M30AttestationFailure):
+            adapter._rows(reset_noise + record, "M30DFU|1")
+        with self.assertRaises(adapter.M30AttestationFailure):
+            adapter._rows(
+                b"\xfe" * 9 + record,
+                "M30DFU|1",
+                max_prefix_noise=8,
+            )
+        with self.assertRaises(adapter.M30AttestationFailure):
+            adapter._rows(
+                b"M30DFU|1|READY|role=peri\xfepheral\n",
+                "M30DFU|1",
+                max_prefix_noise=8,
+            )
+
     def test_pair_derives_fifty_unique_raw_cycles(self) -> None:
         """! @brief 5 capability x 10회의 CLEAR·START·PASS를 모두 요구합니다. """
 

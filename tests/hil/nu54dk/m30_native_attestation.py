@@ -216,12 +216,20 @@ def complete_program_phase(
     }
 
 
-def _rows(capture: bytes, protocol: str) -> list[tuple[str, dict[str, str]]]:
+def _rows(
+    capture: bytes,
+    protocol: str,
+    max_prefix_noise: int = 0,
+) -> list[tuple[str, dict[str, str]]]:
     """! @brief raw transcript의 protocol record를 중복 field 없이 파싱합니다. """
 
     output: list[tuple[str, dict[str, str]]] = []
     prefix = protocol + "|"
+    prefix_bytes = prefix.encode("ascii")
     for raw in capture.splitlines():
+        prefix_index = raw.find(prefix_bytes)
+        if 0 < prefix_index <= max_prefix_noise:
+            raw = raw[prefix_index:]
         try:
             line = raw.decode("ascii")
         except UnicodeDecodeError as error:
@@ -785,7 +793,10 @@ def build_dfu_cycle_records(
                 raise M30AttestationFailure(f"DFU {name} attempt raw state가 다릅니다")
     if set(captures) != set(ROLES):
         raise M30AttestationFailure("DFU transcript role 분모가 다릅니다")
-    parsed = {role: _rows(captures[role], "M30DFU|1") for role in ROLES}
+    parsed = {
+        role: _rows(captures[role], "M30DFU|1", max_prefix_noise=8)
+        for role in ROLES
+    }
     for role in ROLES:
         links = _matching(
             parsed[role],
