@@ -35,8 +35,25 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   바로잡았다. 관련 HIL oracle 26개와 campaign 6개, 합계 32/32·skip 0을 통과했다.
   기존 clean 초기 연결 실패 한 번 재시도 검사의 두 test ID를 독립 registry에 반영했다.
   최초 환경 실패 원본과 별도 attempt-2를 `D:\w06\profile29-host-*`에 보존한다.
-  이것은 표준/네이티브 프로필의 현재 source 실기 PASS가 아니다.
-- 개발 집중 집계는 28/49이며 다음 항목은 #29 표준 프로필, 이어 네이티브 프로필이다. 이 집계는 서로 다른 개발
+  준비 당시 단위검사만으로 실기 PASS를 주장하지 않았으며, 아래는 이후 실제 완료 결과다.
+- #29~#32는 clean source `8185c55d1c915446765980df62a0fcd53cc2e241`에서 완료했다.
+  #29 표준 20개 fresh/restored chain과 네이티브 20개 fresh/restored/second-peer chain,
+  #30 비콘 20 cycle·두 session, #31 합성 ANCS 20·AMS 20·access denied 1·malformed 4개를
+  실제 PASS했다. 세 그룹 모두 raw·semantic·exact image·readback·STOP·serial close와
+  해당 runner-owned bond 정리를 원본에서 독립 재검증했다. 실제 Apple/Google 상호운용은 `NOT_RUN`이다.
+- #32 Fast Pair input/locator·EnOcean·MDS 네 template의 실제 build와 credential negative 4개,
+  manifest·log·ELF/HEX/config·exact command 재검증이 PASS다. 계약상 build-semantic이며
+  보드 runtime·외부 peer PASS가 아니다. 실패 시에도 private 원본 build 자료를 보존하도록
+  외부 실행 helper의 임시 폴더 자동 삭제만 해제했으며, 등록 runner의 source·명령·판정은 바꾸지 않았다.
+  네 그룹의 증거는 `D:\w06\focused-profile29-final-replay-8185c55d.json`,
+  `D:\w06\focused-beacon30-final-replay-8185c55d.json`,
+  `D:\w06\focused-ecosystem31-final-replay-8185c55d.json`,
+  `D:\w06\focused-template32-final-replay-8185c55d.json`이다.
+- #33 준비의 직접 테스트는 진단 11·campaign 6·prepare 40개가 모두 성공했지만 독립 Host registry가
+  campaign을 과거 3개로 등록해 집계 검사는 FAIL했다. 실제 verbose ID 6개와 hash에 맞춰
+  그 registry 한 항목만 수정한다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
+  #33 DTM 실기와 controller/scan-request build는 이 수정 후 후보에서 별도 확인해야 한다.
+- 개발 집중 집계는 32/49이며 다음 항목은 #33 진단 그룹이다. 이 집계는 서로 다른 개발
   수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
   40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
 - 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.

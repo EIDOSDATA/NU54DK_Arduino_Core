@@ -498,7 +498,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m32_standalone_radio_hil.py": (3, "aefb754280edb64cb63135c19f83e55e5be916e3df0d9c3bf1e3f163cb768ec0"),
     "test_m33_beacon_codec.py": (1, "17ca5b67be018c6265b62719596e7b5032fc4b20c9fafae3149bd89da176086c"),
     "test_m33_diagnostics.py": (11, "8769c80c9722e21962736cbbd268568929466a4bae98ec994857064d70f132c2"),
-    "test_m33_diagnostics_campaign.py": (3, "8d00ae57da9d42424d9e40ae2a9c16d0435b006351a7324ba3e41f66607bdb00"),
+    "test_m33_diagnostics_campaign.py": (6, "ad9e2ed8f1ffcccd2c3b05b13814ea108ac5cabb4250c5f99df36cf13f279474"),
     "test_m33_ecosystem_codec.py": (1, "5a773dfd6dc927eadcba6fdb737336cb6a9a29f2a6cea22a00374e889cb46698"),
     "test_m33_ecosystem_hil.py": (8, "4dd38126b1ce70685444a91e6a4fbab4e9b9e008f40d7913055d13e3524e9322"),
     "test_m33_ecosystem_templates.py": (4, "2ac11eed5d998d58dfd99ab1fd79a59de2dabbee31ee254191b1a2326a25e8a7"),
