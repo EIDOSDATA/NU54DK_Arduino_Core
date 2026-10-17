@@ -24,7 +24,19 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   `targeted-3168868b-mesh27-*` 디렉터리, `D:\w06\mesh27-native-transcript-fix-checks`다.
   네 역할의 DFU bound build는 `D:\w06\dfu316`이다. 첫 DFU 호출의 출력 폴더 누락은
   플래시 전에 실패했으며 원본 launch failure와 새 attempt-2를 분리 보존했다.
-- 개발 집중 집계는 27/49이며 다음 항목은 #28 무선 공존이다. 이 집계는 서로 다른 개발
+- #28 `families:radio_coexistence`는 clean source
+  `f62d311dc64276474e9304a99cf95fc8b1d42855`에서 두 캠페인 모두 실제 PASS했다.
+  독립 IEEE 802.15.4·ESB는 각각 20회·2,000 packet의 ACK/고유 수신 2,000개, 최종 손실 0개다.
+  BLE+802.15.4·BLE+ESB·BLE+Mesh 공존은 각각 20회, 두 transport 수신 4,000개씩,
+  손실·corrupt·starvation 0이며 아홉 scenario-role의 STOP·serial close와 exact readback을
+  원본에서 재검증했다. 증거는 `D:\w06\focused-radio28-final-replay-f62d311d.json`과
+  `D:\w06\targeted-f62d311d-radio28-progress.json`에 있다. 과거 d909 실패는 보존했다.
+- #29 표준 프로필 준비 시 Host C++ compiler PATH 누락을 실제 설치된 MSYS2 UCRT compiler로
+  바로잡았다. 관련 HIL oracle 26개와 campaign 6개, 합계 32/32·skip 0을 통과했다.
+  기존 clean 초기 연결 실패 한 번 재시도 검사의 두 test ID를 독립 registry에 반영했다.
+  최초 환경 실패 원본과 별도 attempt-2를 `D:\w06\profile29-host-*`에 보존한다.
+  이것은 표준/네이티브 프로필의 현재 source 실기 PASS가 아니다.
+- 개발 집중 집계는 28/49이며 다음 항목은 #29 표준 프로필, 이어 네이티브 프로필이다. 이 집계는 서로 다른 개발
   수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
   40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
 - 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.

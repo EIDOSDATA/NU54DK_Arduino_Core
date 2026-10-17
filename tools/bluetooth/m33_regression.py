@@ -505,7 +505,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_flat_build_evidence.py": (7, "a961893a3f5929129ac46fb801066a7df758e3b90e97b07305c22460399e8ca8"),
     "test_m33_modern_direct_attestation.py": (5, "f56fb1c93279dc749af8e478bd14b5ca43614b224030467f8070a11520b087f0"),
     "test_m33_profile_runtime.py": (1, "fe0c7a7a50d6cb201f0bf5ff912c8b5bfb1a227c13bc3784b853d35c11d3295c"),
-    "test_m33_profile_campaign.py": (4, "5eb631b4f1edc9bf67e251c4bd45b3203beed26765a5b3115587c08a5c833a18"),
+    "test_m33_profile_campaign.py": (6, "625710a9e0c1d480270fbf819ad529958f0c6101b34e509a74ffc50ef58b3c0d"),
     "test_m33_readiness_contract.py": (31, "a0c78cd5b0f2357384456465c1ac21077b55ead8bb8277e8dabb1821cb22c36c"),
     "test_m33_regression.py": (89, "87fe6412b67dcd9abce0853b0d767927efd3b097489e5c748fe7a875fc7d1376"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
