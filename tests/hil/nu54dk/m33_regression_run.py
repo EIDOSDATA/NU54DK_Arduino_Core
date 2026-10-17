@@ -2421,13 +2421,16 @@ def _native_revision(native: dict, family: str) -> str | None:
 
 
 def _native_transcript(native: dict, native_path: Path) -> list[str]:
-    """! @brief native JSON과 같은 stem의 UART byte와 기록 digest를 재검증합니다. """
+    """! @brief UART byte와 digest를 검증하고 저장기의 LF 기록 경계를 보존합니다. """
 
     path = native_path.with_suffix(".transcript.log")
     require(path.is_file() and
             digest(path) == native.get("transcript_sha256"),
             "native transcript byte mismatch")
-    return path.read_text(encoding="ascii", errors="replace").splitlines()
+    records = path.read_bytes().decode("ascii", errors="replace").split("\n")
+    if records[-1] == "":
+        records.pop()
+    return records
 
 
 def _validate_mesh_native_raw(native: dict, native_path: Path) -> None:

@@ -36,6 +36,32 @@ SECOND = MODULE.Binding(1, 1, "c" * 64, "d" * 64)
 class RegressionTests(unittest.TestCase):
     """! @brief Host oracle 검사는 production 구현 또는 실물 실행 PASS로 표시하지 않습니다. """
 
+    def test_native_transcript_preserves_serial_record_boundaries(self):
+        """! @brief UART 제어문자가 LF 기록 경계와 회차 hash를 바꾸지 않습니다. """
+
+        with tempfile.TemporaryDirectory() as temporary:
+            native_path = Path(temporary) / "dfu.json"
+            transcript_path = native_path.with_suffix(".transcript.log")
+            records = [
+                "target_b-raw: boot\x1cdata\x1dmore\x1eend",
+                "",
+                "target_a: M32MDFU|RESULT|status=pass",
+            ]
+            raw = ("\n".join(records) + "\n").encode("ascii")
+            transcript_path.write_bytes(raw)
+            native = {"transcript_sha256": hashlib.sha256(raw).hexdigest()}
+            observed = RUNNER._native_transcript(native, native_path)
+            self.assertEqual(records, observed)
+            self.assertEqual(
+                native["transcript_sha256"],
+                hashlib.sha256(
+                    ("\n".join(observed) + "\n").encode("ascii")
+                ).hexdigest(),
+            )
+            transcript_path.write_bytes(raw.replace(b"boot", b"BOOT"))
+            with self.assertRaisesRegex(ValueError, "transcript byte mismatch"):
+                RUNNER._native_transcript(native, native_path)
+
     def test_standalone_radio_final_hardware_requires_exact_role_swap(self):
         """! @brief standalone 최종 ESB 역할은 최초 두 probe의 정확한 역배치입니다. """
 

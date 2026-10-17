@@ -1,11 +1,34 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-11**. 현재 요청은 문서 전수 검토·정리·검사 후 같은 브랜치의
-commit/push다. 이 문서 작업 중 코드 수정·build·실기는 보류한다. 이후 실패 수정은
+최종 갱신: **2026-10-17**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
+실패 수정은
 **한 항목 수정 → 로컬 해당 항목 재검증 → 실제 PASS 확인 → 다음 실패** 순서다.
 전수조사 완료·대규모 일괄 수정·전체 49개·Actions를 개별 수정의 선행조건으로 삼지 않는다.
 W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범위를 우선한다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+## 최신 재개 지점 — 2026-10-17
+
+- 개발 집중 검증의 #27 `families:mesh`는 실기 source
+  `3168868b6077cf5a24c7ce113ca0a952d17be313`에서 base 20회, management 10회×두 target,
+  BLOB update 10회×두 target, signed DFU 5회×두 target을 실제 PASS했다.
+  DFU rollback 9회와 세 역할 cleanup·serial close도 PASS다.
+- 네 native/child 영수증의 원본 로그·semantic·image·build-record·readback을 공통 판정기로
+  재검증했다. DFU UART raw의 `0x1c` 14개와 `0x1e` 2개를 `splitlines()`가 LF 기록 경계로
+  잘못 나누는 소비자 오류를 수정했다. 저장된 원본 byte·hash·실기 source는 변경하지 않았다.
+  이 소비자 수정 뒤의 재검증을 새 source에서 수행한 HIL로 표시하지 않는다.
+- 직접 관련 Host 세 suite는 회귀 89, Mesh 21, Mesh DFU 14, 합계 124/124·skip 0이다.
+  세 suite의 독립 test ID count/hash 목록도 실제 verbose 결과와 일치시켰다.
+  전체 최종 Host 검사를 대신하지 않는다.
+- 로컬 진행·증거 위치는 `D:\w06\targeted-3168868b-mesh27-progress.json`, 네
+  `targeted-3168868b-mesh27-*` 디렉터리, `D:\w06\mesh27-native-transcript-fix-checks`다.
+  네 역할의 DFU bound build는 `D:\w06\dfu316`이다. 첫 DFU 호출의 출력 폴더 누락은
+  플래시 전에 실패했으며 원본 launch failure와 새 attempt-2를 분리 보존했다.
+- 개발 집중 집계는 27/49이며 다음 항목은 #28 무선 공존이다. 이 집계는 서로 다른 개발
+  수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
+  40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
+- 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.
+  현재 HEAD·실행·결과를 그 원본 source로 되돌리거나 과거 FAIL을 덮어쓰지 않는다.
 
 ## 1. 지금의 정본
 
@@ -13,7 +36,7 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 | --- | --- |
 | 작업 저장소 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`; build·artifact·실행·log·cache·tmp는 `D:\w06` 전용 |
 | 브랜치 | `Dev-0.6.0-M33`, origin의 같은 브랜치 추적; 사용자 요청으로 main 이후 87개 commit을 하나로 정리 |
-| 현재 개발 기준 source | `d9090f22c258303660c3bb6d288b7580c0d2a453`; 이번 문서 commit의 부모 기준선이며 최종 검증 완료 source가 아님 |
+| 2026-10-11 문서 정리 전 개발 source | `d9090f22c258303660c3bb6d288b7580c0d2a453`; 원본 조사 기준선이며 최종 검증 완료 source가 아님 |
 | 첫 전수 조사 | `c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a`: 49개 중 PASS 16 / FAIL 33, 후속 source의 PASS로 승계하지 않음 |
 | squash 전 구현 source | `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`; 원본 시험의 identity, 현재 HEAD와 구분 |
 | board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
