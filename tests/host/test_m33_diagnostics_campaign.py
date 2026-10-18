@@ -82,6 +82,8 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                         returned = b"\x01"
                     elif opcode == 0x201D and parameters == b"\x13":
                         returned = b"\x0c"
+                    elif opcode == 0xFC81 and self.active:
+                        returned = b"\x0c"
                     else:
                         returned = b"\x00"
                         if opcode in (0x2033, 0x2034):
@@ -96,6 +98,8 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                         response = (0x8000 | self.counts.pop(0)).to_bytes(2, "big")
                         self.active = False
                     elif command in (0x6800, 0xA800, 0x06FF):
+                        response = b"\x00\x01"
+                    elif command == 0x3E00 and self.active:
                         response = b"\x00\x01"
                     elif command & 0xC000 in (0x4000, 0x8000):
                         response = b"\x00\x01" if self.active else b"\x00\x00"
@@ -143,6 +147,7 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                 raise AssertionError("DTM fixture packet count mismatch")
         for port in ports:
             port.stop()
+            port.handover()
         return [port.transcript for port in ports]
 
     def campaign(self, root: Path) -> tuple[Path, dict]:
@@ -152,6 +157,12 @@ class DiagnosticsCampaignTests(unittest.TestCase):
         fixtures = {}
         final_hardware = None
         identity = REVISION + "c" * 64
+        addresses = [CAMPAIGN.diagnostics.RADIO_BASE + offset for offset in
+                     CAMPAIGN.diagnostics.RADIO_SUBSCRIBE + CAMPAIGN.diagnostics.RADIO_PUBLISH + (0x400, 0x520)]
+        addresses += [base + offset for base in CAMPAIGN.diagnostics.WDT_BASES for offset in
+                      CAMPAIGN.diagnostics.WDT_ROUTES + (0x100, 0x400, 0x50C)]
+        halted_registers = {f"0x{address:08x}": 0 for address in addresses}
+        halted_registers["dhcsr_halt"] = CAMPAIGN.diagnostics.DHCSR_HALTED
         config_text = "CONFIG_WATCHDOG=y\nCONFIG_BT_LL_SOFTDEVICE=y\n"
         resources = {}
         for marker, transport in enumerate(("twowire", "h4"), 1):
@@ -250,6 +261,14 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                           {"role": 1, "range_length_busy": "PASS", "firmware_lease": "PASS"}],
                       "cleanup": [{"role": 0, "stop": "PASS"},
                                   {"role": 1, "stop": "PASS"}],
+                      "runtime_watchdogs": [{"role": index, "runstatus": 1, "config": 65} for index in range(2)],
+                      "serial_close": [{"role": index, "status": "PASS"} for index in range(2)],
+                      "handover": [{"role": index, "status": "PASS", "wdt_runstatus": [0, 0],
+                                    "watchdog_before": {"runstatus": 1, "config": 65}, "wdt31_stopped": 1,
+                                    "halt_read_only_audit": {"cpu": "HALTED", "radio_state": 0,
+                                        "read_only": True, "reset_observed": False,
+                                        "registers": dict(halted_registers)}}
+                                   for index in range(2)],
                       "third_final": baseline, "third_audit_checks": 12,
                       "transcripts": self.transcripts(transport, identity, cases)}
             result_path.write_text(json.dumps(result), encoding="utf-8")
@@ -468,6 +487,31 @@ class DiagnosticsCampaignTests(unittest.TestCase):
             with self.subTest(cycles=cycles, execute=execute), self.assertRaisesRegex(
                     ValueError, "24-case"):
                 CAMPAIGN.execute(argparse.Namespace(cycles=cycles, execute=execute))
+
+    def test_terminal_handover_requires_runtime_watchdog_raw_ack_and_stopped_readback(self):
+        """! @brief RF Test End만 있거나 watchdog의 종료 관측이 없으면 PASS를 거부합니다. """
+        with tempfile.TemporaryDirectory(prefix="nu54-dtm-handover-") as folder:
+            path, fixtures = self.campaign(Path(folder))
+            value = json.loads(path.read_text(encoding="utf-8"))
+            row = value["transports"][0]
+            original = json.loads((Path(folder) / row["result"]["path"]).read_text(encoding="utf-8"))
+            CAMPAIGN.validate_result(original, fixtures["twowire"], "twowire")
+            mutations = (
+                lambda result: result.pop("handover"),
+                lambda result: result.__setitem__("runtime_watchdogs", []),
+                lambda result: result.__setitem__("serial_close", []),
+                lambda result: result["handover"][0].__setitem__("wdt31_stopped", 0),
+                lambda result: result["handover"][0].__setitem__("wdt_runstatus", [0, 1]),
+                lambda result: result["handover"][0].__setitem__("watchdog_before", {"runstatus": 0, "config": 65}),
+                lambda result: result["handover"][0]["halt_read_only_audit"]["registers"].__setitem__("0x5008a100", 1 << 31),
+                lambda result: result["transcripts"][0][-1].__setitem__("rx", "0001"),
+                lambda result: result["transcripts"][0].pop(),
+            )
+            for index, mutate in enumerate(mutations):
+                result = json.loads(json.dumps(original))
+                mutate(result)
+                with self.subTest(index=index), self.assertRaises(ValueError):
+                    CAMPAIGN.validate_result(result, fixtures["twowire"], "twowire")
 
     def test_flash_init_timeout_retries_each_role_once(self):
         """! @brief TX/RX별 init timeout을 별도 prepare directory에서 한 번씩 재시도합니다. """

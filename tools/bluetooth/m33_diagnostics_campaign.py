@@ -169,6 +169,7 @@ def replay_transcripts(result: dict, fixture: dict, transport: str) -> None:
             raise ValueError("DTM transcript packet count mismatch")
     for port in ports:
         port.stop()
+        port.handover()
     for replay in replays:
         replay.finish()
 
@@ -197,6 +198,33 @@ def validate_result(result: dict, fixture: dict, transport: str) -> list[dict]:
             or result["third_audit_checks"] <= 0):
         raise ValueError(f"DTM {transport} raw denominator mismatch")
     replay_transcripts(result, fixture, transport)
+    if result.get("runtime_watchdogs") != [
+            {"role": index, "runstatus": 1, "config": 65} for index in range(2)]:
+        raise ValueError("DTM runtime watchdog evidence mismatch")
+    if result.get("serial_close") != [{"role": index, "status": "PASS"} for index in range(2)]:
+        raise ValueError("DTM serial close evidence mismatch")
+    handover = result.get("handover")
+    if not isinstance(handover, list) or len(handover) != 2:
+        raise ValueError("DTM terminal handover denominator mismatch")
+    for index, row in enumerate(handover):
+        audit = row.get("halt_read_only_audit", {})
+        registers = audit.get("registers", {})
+        routes = [diagnostics.RADIO_BASE + offset for offset in diagnostics.RADIO_SUBSCRIBE + diagnostics.RADIO_PUBLISH]
+        routes += [base + offset for base in diagnostics.WDT_BASES for offset in diagnostics.WDT_ROUTES]
+        zero = [diagnostics.RADIO_STATE, *(base + 0x100 for base in diagnostics.WDT_BASES),
+                *(base + 0x400 for base in diagnostics.WDT_BASES)]
+        if (row.get("role") != index or row.get("status") != "PASS"
+                or row.get("wdt_runstatus") != [0, 0] or row.get("wdt31_stopped") != 1
+                or row.get("watchdog_before") != {"runstatus": 1, "config": 65}
+                or audit.get("cpu") != "HALTED" or audit.get("radio_state") != 0
+                or audit.get("read_only") is not True or audit.get("reset_observed") is not False
+                or registers.get("dhcsr_halt") != diagnostics.DHCSR_HALTED
+                or any(registers.get(f"0x{address:08x}") != 0 for address in zero)
+                or any(not isinstance(registers.get(f"0x{address:08x}"), int)
+                       or registers[f"0x{address:08x}"] & (1 << 31) for address in routes)
+                or registers.get(f"0x{diagnostics.RADIO_BASE + 0x400:08x}") not in
+                (0, diagnostics.RADIO_PASSIVE_SHORTS)):
+            raise ValueError("DTM terminal handover readback mismatch")
     return [{"transport": transport, **row} for row in cases]
 
 

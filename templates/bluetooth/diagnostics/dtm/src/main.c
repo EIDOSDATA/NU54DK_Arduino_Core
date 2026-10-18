@@ -143,9 +143,48 @@ static void stop_test(bool report)
     net_buf_unref(event);
 }
 
+/** @brief 최종 Test End 뒤 명시된 인계에서만 watchdog을 정상 해제하고 명령 처리를 끝냅니다. */
+static void finish_handover(void)
+{
+    if (active)
+    {
+        if (IS_ENABLED(CONFIG_NUCODE_DIAG_H4))
+        {
+            write_hci_error(0xfc81, 0x0c);
+        }
+        else
+        {
+            write_twowire(1);
+        }
+        return;
+    }
+    if (wdt_disable(watchdog) != 0)
+    {
+        fail_closed();
+        return;
+    }
+    if (IS_ENABLED(CONFIG_NUCODE_DIAG_H4))
+    {
+        write_hci_error(0xfc81, 0);
+    }
+    else
+    {
+        write_twowire(0);
+    }
+    for (;;)
+    {
+        k_sleep(K_MSEC(1000));
+    }
+}
+
 /** @brief 표준 두 선식 setup과 TX/RX 명령을 고정 SDK 변환기로 처리한다. */
 static void process_twowire(uint16_t word)
 {
+    if (word == 0x3e00)
+    {
+        finish_handover();
+        return;
+    }
     if ((word & 0xff00) == 0x3f00)
     {
         const uint8_t index = word & 0xff;
@@ -223,6 +262,11 @@ static void process_h4(const uint8_t *bytes)
     if (status != 0)
     {
         write_hci_error(opcode, status);
+        return;
+    }
+    if (opcode == 0xfc81)
+    {
+        finish_handover();
         return;
     }
     if (opcode == 0x201f)

@@ -154,8 +154,11 @@ reporting counter 50~2000, 양쪽 Test End 응답 성공이다. 이 기준은 �
 계측이나 감도·출력 인증 수치가 아니다. Range/length/unsupported command·active 재시작 거부와
 3초 RX lease 자동 STOP/restart도 두 보드 각각 검사한다. 실패 transcript와 cleanup 결과는 보존한다.
 
-5. 양쪽 STOP과 실제 RX count를 확인한 뒤 별도 승인된 idle image 복원/종료 절차로 UART·clock·핀
-   소유권을 반환한다. Test End는 RF 시험의 종료이며 진단 application 전체의 UART service 종료와 다르다.
+5. 양쪽 STOP과 실제 RX count를 확인한 뒤 runner가 아래 terminal handover를 보낸다.
+   firmware는 이 마지막 인계에서만 watchdog을 정상 해제하고 ACK 뒤 명령 처리를 끝낸다.
+   runner는 양쪽 CPU halt·RADIO 유휴·WDT30/31 RUNSTATUS=0·WDT31 STOPPED=1과 serial close를
+   확인한다. Test End만으로 watchdog 종료를 추정하지 않는다. 다음 image는 별도의 정상 준비 절차로
+   시작하며, 단순 software reset이 실행 중 watchdog까지 초기화한다고 가정하지 않는다.
    모든 program은 sector-only, `auto_unlock=false`, exact SHA, 공용 probe lock으로 제한한다.
    mass erase·unlock·recover·임의 hardware reset fallback은 제공하지 않는다.
 
@@ -226,6 +229,12 @@ H4 fragment 간격은 20 ms이며 최대 command frame 259 byte를 고정 buffer
 실물 source 확인용 읽기 전용 확장: H4 vendor `0xfc80`은 status 뒤 HEAD40+template SHA256을 반환한다.
 2-wire setup `0x3f00 | index`는 같은 104 ASCII 문자를 각 `character << 1` event로 제공한다.
 이 확장은 RF를 시작하지 않으며 표준 DTM 측정 command의 payload나 counter를 바꾸지 않는다.
+
+최종 인계 전용 확장: H4 `0xfc81`(parameter 없음) 또는 two-wire `0x3e00`이다.
+active RF에서는 각각 status `0x0c` 또는 event `0x0001`로 거부하며 watchdog을 유지한다.
+최종 Test End 뒤에만 정상 watchdog 해제 성공을 확인하고 H4 status `0x00` 또는 event `0x0000`을
+반환한다. 그 뒤 명령을 처리하지 않으므로 일반적인 시험 중 STOP/restart에는 사용하지 않는다.
+runtime의 8초 watchdog과 3초 RF lease는 그대로 유지한다.
 
 | 오류 | 확인할 부분 |
 | --- | --- |

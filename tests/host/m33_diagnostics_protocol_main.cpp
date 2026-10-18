@@ -64,6 +64,9 @@ int main()
     const uint8_t invalid_modulation[] = {0, 1, 2};
     assert(diagnostic_hci_status(0x2033, invalid_modulation, 3) == 0x12);
     assert(diagnostic_hci_status(0x0c03, nullptr, 0) == 0);
+    assert(diagnostic_hci_status(0xfc81, nullptr, 0) == 0);
+    assert(diagnostic_hci_status(0xfc81, parameters, 1) == 0x12);
+    assert(!diagnostic_starts(0xfc81));
     assert(diagnostic_starts(0x2034));
     assert(!diagnostic_starts(0x201f));
     return 0;

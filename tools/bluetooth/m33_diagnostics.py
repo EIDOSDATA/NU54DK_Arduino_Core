@@ -565,6 +565,12 @@ class DtmPort:
             return int.from_bytes(result[1:], "little")
         return packet_count(self.twowire(0xc000))
 
+    def handover(self) -> None:
+        """! @brief 최종 RF STOP 뒤 firmware의 정상 watchdog 해제와 명령 종료를 요청합니다. """
+        response = self.hci(0xfc81) if self.h4 else self.twowire(0x3e00)
+        if response != (b"\x00" if self.h4 else b"\x00\x00"):
+            raise ValueError("DTM terminal handover failed")
+
     def automatic_stop(self) -> int:
         """! @brief 3초 firmware lease 종료 event를 실제로 수신한다. """
         if self.h4:
@@ -613,6 +619,10 @@ class DtmPort:
             refused = self.twowire(0x5300) == b"\x00\x01"
         if not refused:
             raise ValueError("active RADIO 재시작을 거부하지 않았습니다")
+        refused_handover = (self.hci(0xfc81) == b"\x0c" if self.h4
+                            else self.twowire(0x3e00) == b"\x00\x01")
+        if not refused_handover:
+            raise ValueError("active RADIO의 terminal handover를 거부하지 않았습니다")
         self.stop()
 
 
@@ -1516,7 +1526,8 @@ def run_pair(args: argparse.Namespace) -> None:
         raise ValueError("기존 증거를 덮어쓰지 않습니다")
     args.output.mkdir(parents=True)
     report = {"test_id": "M33-DIAG-01", "status": "FAIL", "fixture_sha256": sha256(args.fixture),
-              "startup_settle_ms": 1000, "cases": [], "negative": [], "cleanup": []}
+              "startup_settle_ms": 1000, "cases": [], "negative": [], "cleanup": [],
+              "runtime_watchdogs": [], "handover": []}
     ports = []
     try:
         with ExitStack() as resources:
@@ -1539,6 +1550,12 @@ def run_pair(args: argparse.Namespace) -> None:
                     if endpoint.identity() != fixture["firmware_identity"]:
                         raise ValueError("실물 firmware identity가 준비된 image와 다릅니다")
                     endpoint.stop()
+                    watchdog = sessions[index].target
+                    running = watchdog.read32(WDT_BASES[1] + 0x400)
+                    config = watchdog.read32(WDT_BASES[1] + 0x50C)
+                    if running != 1 or config != 65:
+                        raise ValueError("DTM runtime watchdog is not active with debug pause")
+                    report["runtime_watchdogs"].append({"role": index, "runstatus": running, "config": config})
                 for index, endpoint in enumerate(ports):
                     guard.check()
                     endpoint.negative()
@@ -1570,15 +1587,36 @@ def run_pair(args: argparse.Namespace) -> None:
                 report["status"] = "PASS"
             finally:
                 for index, endpoint in enumerate(ports):
+                    cleanup = {"role": index, "stop": "FAIL"}
+                    report["cleanup"].append(cleanup)
+                    target = sessions[index].target
                     try:
                         ## @brief guard 실패 후에도 RF STOP 전송을 시도하되 새 RF 시작은 허용하지 않습니다.
                         endpoint.guard = None
                         endpoint.serial.timeout = 1.5
                         endpoint.stop()
-                        report["cleanup"].append({"role": index, "stop": "PASS"})
+                        cleanup["stop"] = "PASS"
+                        before = {"runstatus": target.read32(WDT_BASES[1] + 0x400),
+                                  "config": target.read32(WDT_BASES[1] + 0x50C)}
+                        if before != {"runstatus": 1, "config": 65}:
+                            raise ValueError("DTM runtime watchdog stopped before terminal handover")
+                        endpoint.handover()
+                        monitor = halt_and_wait(target)
+                        audit = verify_isolation(target, monitor, allowed_shorts=RADIO_PASSIVE_SHORTS)
+                        running = [target.read32(base + 0x400) for base in WDT_BASES]
+                        stopped = target.read32(WDT_BASES[1] + 0x104)
+                        if running != [0, 0] or stopped != 1:
+                            raise ValueError("DTM terminal handover watchdog readback mismatch")
+                        report["handover"].append({"role": index, "status": "PASS", "wdt_runstatus": running,
+                                                   "watchdog_before": before, "wdt31_stopped": stopped,
+                                                   "halt_read_only_audit": audit})
                     except Exception as error:
-                        report["cleanup"].append({"role": index, "stop": "FAIL", "error_type": type(error).__name__})
+                        report["handover"].append({"role": index, "status": "FAIL", "error_type": type(error).__name__})
                         report["status"] = "FAIL"
+                        try:
+                            halt_and_wait(target)
+                        except Exception as halt_error:
+                            report["handover"][-1]["halt_error_type"] = type(halt_error).__name__
                 try:
                     report["third_final"] = guard.check()
                     report["third_audit_checks"] = guard.checks
@@ -1592,6 +1630,10 @@ def run_pair(args: argparse.Namespace) -> None:
         report["status"] = "FAIL"
     finally:
         report["transcripts"] = [port.transcript for port in ports]
+        report["serial_close"] = [{"role": index, "status": "FAIL" if port.serial.is_open else "PASS"}
+                                  for index, port in enumerate(ports)]
+        if any(row["status"] != "PASS" for row in report["serial_close"]):
+            report["status"] = "FAIL"
         (args.output / "result.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if report["status"] != "PASS" or len(report["cases"]) != 12 or len(report["cleanup"]) != 2:
         raise RuntimeError("DTM 시험 또는 양쪽 STOP이 실패했습니다. RF lease와 watchdog은 firmware에서 유지합니다")

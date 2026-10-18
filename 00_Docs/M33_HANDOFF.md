@@ -9,6 +9,16 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-17
 
+- 2026-10-18 #33의 two-wire→H4 전환에서 실행 중인 WDT31이 software reset 뒤에도 남는
+  원인을 좁혔다. 사용자 승인으로 현재 RX에 정상 STOP을 한 번만 수행했으며
+  `RUNSTATUS=0`, `STOPPED=1`, `TSEN=0` readback을 확인했다. TX·세 번째 보드는 변경하지 않았다.
+  원본 FAIL·두 bounded 진단은 보존하며 이 복구를 #33 PASS로 세지 않는다.
+  DTM runtime의 watchdog·3초 RF lease는 유지하고 최종 Test End 뒤 별도 terminal handover에서만
+  정상 watchdog 해제·ACK·명령 종료를 수행하도록 최소 수정 중이다. 직접 단위검사와 새 동일 후보의
+  필요 역할 build·DTM 24-case 실기·원본/정확한 image/readback/cleanup 검증 및
+  controller/scan-request build는 완료 전이다. 진행은 `D:\w06\targeted-diagnostics33-progress.json`,
+  정상 STOP 영수증은 `D:\w06\diagnostic33-rx-approved-wdt31-stop-20261018\result.json`이다.
+
 - 개발 집중 검증의 #27 `families:mesh`는 실기 source
   `3168868b6077cf5a24c7ce113ca0a952d17be313`에서 base 20회, management 10회×두 target,
   BLOB update 10회×두 target, signed DFU 5회×두 target을 실제 PASS했다.

@@ -67,6 +67,30 @@ class DiagnosticsTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             DIAG.DtmPort(FakeSerial(bytes.fromhex("0000")), False).automatic_stop()
 
+    def test_terminal_handover_requires_exact_ack_and_keeps_runtime_watchdog(self):
+        """! @brief terminal ACK의 opcode·길이·status와 firmware의 해제 순서를 고정합니다. """
+        for h4, response, command in ((False, "0000", "3e00"),
+                                      (True, "040e040181fc00", "0181fc00")):
+            port = FakeSerial(bytes.fromhex(response))
+            DIAG.DtmPort(port, h4).handover()
+            self.assertEqual(port.sent.hex(), command)
+        for h4, response in ((False, "0001"), (False, "8000"),
+                              (True, "040e040181fc0c"), (True, "040e040180fc00"),
+                              (True, "040e050181fc0000")):
+            with self.subTest(h4=h4, response=response), self.assertRaises(ValueError):
+                DIAG.DtmPort(FakeSerial(bytes.fromhex(response)), h4).handover()
+        source = (DIAG.TEMPLATES / "dtm/src/main.c").read_text(encoding="utf-8")
+        terminal = source.split("static void finish_handover(void)", 1)[1].split(
+            "static void process_twowire", 1)[0]
+        self.assertLess(terminal.index("if (active)"), terminal.index("wdt_disable(watchdog)"))
+        self.assertLess(terminal.index("wdt_disable(watchdog)"), terminal.index("write_hci_error(0xfc81, 0)"))
+        self.assertIn("for (;;)", terminal)
+        self.assertNotIn("wdt_feed", terminal)
+        self.assertEqual(source.count("wdt_disable(watchdog)"), 1)
+        stop = source.split("static void stop_test(bool report)", 1)[1].split(
+            "static void finish_handover", 1)[0]
+        self.assertNotIn("wdt_disable", stop)
+
     def test_full_identity_from_both_transports(self):
         identity = "a" * 40 + "b" * 64
         wire = b"".join((ord(character) << 1).to_bytes(2, "big") for character in identity)

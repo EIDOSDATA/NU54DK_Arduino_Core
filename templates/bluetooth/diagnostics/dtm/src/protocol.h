@@ -64,6 +64,7 @@ static inline uint8_t diagnostic_hci_status(uint16_t opcode, const uint8_t *p, u
     case 0x1003:
     case 0x2003:
     case 0x201f:
+    case 0xfc81:
         return length == 0 ? 0 : 0x12;
     case 0x201d:
         return length == 1 && p[0] <= 39 ? 0 : 0x12;
