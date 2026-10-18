@@ -1,13 +1,36 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-18**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
+최종 갱신: **2026-10-19**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
 실패 수정은
 **한 항목 수정 → 로컬 해당 항목 재검증 → 실제 PASS 확인 → 다음 실패** 순서다.
 전수조사 완료·대규모 일괄 수정·전체 49개·Actions를 개별 수정의 선행조건으로 삼지 않는다.
 W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범위를 우선한다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
-## 최신 재개 지점 — 2026-10-18
+## 최신 재개 지점 — 2026-10-19
+
+- #34 `resources:gap_gatt`는 clean `d19a02d674d724eb823138906f5068a905542398`에서
+  multi 20회·PAST 20회·signed 재부팅 20회/replay 거부/EATT를 순차 실제 PASS했다.
+  multi cleanup 60건·UART 3개 종료, PAST 1,000/1,000 수신·손실 0·실제 UART 3개 종료,
+  signed counter 21·replay accept 0·EATT 두 bearer별 1,000회·실제 UART 2개 종료를 검증했다.
+  각 캠페인의 raw/schema/semantic·exact image/readback과 세 보드 STOP/idle을 독립 재검증했고,
+  최종 현재 세 보드의 읽기 전용 identity·HALTED·RADIO0·DPPI 차단·WDT30/31 정지도 확인했다.
+- 직접 관련 Host는 고유 166개·skip 0·registry count/hash 일치다. 외부 실행 경계 검사는
+  multi 3개·PAST 3개·signed 5개이며 물리 PASS나 전체 최종 Host 분모에 합산하지 않는다.
+  필요 역할만 3+3+2개 빌드했고 공식 SDK patch context 원복을 확인했다. Firmware·runner·
+  oracle은 그대로이며, 아래 최초 parser registry FAIL만 실제 18개 ID/count/hash에 맞춰 정정했다.
+- 사용자가 위임한 초기화 선택은 signed 시험 두 보드의 기본 identity CLEAR 각 1회로 실행됐다.
+  실제 전달 시도 각 1회와 원본 CLEAR ACK를 검증했으며 세 번째 보드·다른 identity·자동 재시도로
+  확대하지 않았다. 이 사용된 범위를 후속 반복 CLEAR의 포괄적 권한으로 재사용하지 않는다.
+- 통합 원본 검증은 `D:\w06\focused-resource34-final-replay-d19a02d6.json`, SHA-256은
+  `d559895b55af58af5e13460f2d8f67b549c295ee47abf59a6b4c757ed7d4d1bc`다.
+  진행은 `D:\w06\targeted-resource34-d19a02d6-progress.json`이며 세 캠페인의 원본·정규화·
+  readback·실제 UART 종료·정지 증거는 `D:\w06\targeted-d19a02d6-resource34-*`에 보존한다.
+  이전 fb8832 PASS는 합치지 않았다. 다음은 #35 `resources:security_dfu`다. 이는 개발 집중
+  캠페인 집계 34/49이며 최종 동일 후보의 공식 49/49·별도 resource measurement closure·
+  141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
+
+### #34의 이전 source와 최초 실패 — 원본 보존
 
 - #34 `resources:gap_gatt`의 clean `fb8832a21ba5f326b2d9c5239078c2ffcf6a2987`에서
   multi-link 20회와 PAST 20회를 실제 PASS했다. 두 캠페인 모두 원본·정규화·exact image/readback·
@@ -21,9 +44,9 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 - signed/EATT 직접 기능 테스트 17+18개는 PASS했으나 parser Host 등록부가 과거 16개여서
   집계는 FAIL했다. 원본은 `D:\w06\resource34-signed-host-fb8832a2`에 보존한다.
   실제 verbose ID에 맞춰 그 등록 수와 hash 한 항목만 정정했다. 빌드·실기·bond 삭제는
-  이 실패 전에 시작하지 않았다. 직접 검사를 재실행한 뒤 새 clean source로 #34 세 캠페인을
-  순차 실행한다. 위 fb8832의 PASS는 별도 개발 증거이며 새 source의 #34 PASS에 합치지 않는다.
-  진행 정본은 `D:\w06\targeted-resource34-progress.json`이며 #34 전체·최종 W06은 미완료다.
+  이 실패 전에 시작하지 않았다. 이후 직접 검사와 새 clean source의 #34 세 캠페인을 위와 같이
+  완료했다. 위 fb8832의 PASS는 별도 개발 증거이며 새 source의 #34 PASS에 합치지 않았다.
+  이전 진행 `D:\w06\targeted-resource34-progress.json`은 현재 source 진행을 가리키며 원본은 보존한다.
 
 - #33 `families:diagnostic_templates`는 clean source
   `a8de62883831398deb5bc68ef629006934cf920b`에서 two-wire 12개·H4 12개 실기와 두 등록
@@ -96,7 +119,7 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   campaign을 과거 3개로 등록해 집계 검사는 FAIL했다. 실제 verbose ID 6개와 hash에 맞춰
   그 registry 한 항목을 수정했다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
   이후 terminal handover 검사 추가에 따른 현재 12·7개도 실제 verbose ID로 검증했다.
-- 개발 집중 집계는 33/49이며 다음 항목은 #34 `resources:gap_gatt`다. 이 집계는 서로 다른 개발
+- 개발 집중 집계는 34/49이며 다음 항목은 #35 `resources:security_dfu`다. 이 집계는 서로 다른 개발
   수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
   40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
 - 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.
