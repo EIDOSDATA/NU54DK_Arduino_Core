@@ -9,6 +9,22 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-18
 
+- #34 `resources:gap_gatt`의 clean `fb8832a21ba5f326b2d9c5239078c2ffcf6a2987`에서
+  multi-link 20회와 PAST 20회를 실제 PASS했다. 두 캠페인 모두 원본·정규화·exact image/readback·
+  실제 serial 종료·세 보드 STOP/idle을 재검증했다. PAST는 1,000/1,000 수신·손실 0이다.
+  multi의 수동적 PHYEND→DISABLE SHORTS를 외부 helper가 잘못 거부한 원본 FAIL은 보존했고,
+  기존 수동 bit 계약만 재사용해 모든 다른 정지 조건을 유지했다. 펌웨어·SDK는 바꾸지 않았다.
+- signed/EATT의 기존 runner가 시험 두 보드에서 기본 identity 전체 bond 초기화를 요구하여
+  먼저 승인 경계를 알렸다. 사용자는 제시한 초기화와 무삭제 최소 수정 중 편한 방법을 선택해
+  W06을 계속 마무리하도록 지시했다. 기존 runner 유지와 시험 두 보드의 시작 초기화 각 1회를
+  선택했으며 세 번째 보드·다른 identity·금지된 erase/unlock/recover로 확대하지 않는다.
+- signed/EATT 직접 기능 테스트 17+18개는 PASS했으나 parser Host 등록부가 과거 16개여서
+  집계는 FAIL했다. 원본은 `D:\w06\resource34-signed-host-fb8832a2`에 보존한다.
+  실제 verbose ID에 맞춰 그 등록 수와 hash 한 항목만 정정했다. 빌드·실기·bond 삭제는
+  이 실패 전에 시작하지 않았다. 직접 검사를 재실행한 뒤 새 clean source로 #34 세 캠페인을
+  순차 실행한다. 위 fb8832의 PASS는 별도 개발 증거이며 새 source의 #34 PASS에 합치지 않는다.
+  진행 정본은 `D:\w06\targeted-resource34-progress.json`이며 #34 전체·최종 W06은 미완료다.
+
 - #33 `families:diagnostic_templates`는 clean source
   `a8de62883831398deb5bc68ef629006934cf920b`에서 two-wire 12개·H4 12개 실기와 두 등록
   캠페인의 독립 원본 재검증을 PASS했다. DTM 두 경로·동일 source idle 준비 세 역할과

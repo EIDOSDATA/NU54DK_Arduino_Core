@@ -470,7 +470,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m29_ble_multi.py": (8, "42ca94eb5de2a9777cbca18fbc76b67e8d73a362f6199f1e42903a3afa0dfc76"),
     "test_m29_ble_multi_parser.py": (17, "70785a96d2b35d27018342b27970cc54b5e1ca40fd1ac9531bd559e06bb04fc7"),
     "test_m29_ble_signed_eatt.py": (17, "541d9145af9f231568cdacf71265782c4954b29074bbe5f8fd14c2debab7eb53"),
-    "test_m29_ble_signed_eatt_parser.py": (16, "735312243214d58c246b17ccc179666987a0f0d3e5a5976ed629c177b50f42f3"),
+    "test_m29_ble_signed_eatt_parser.py": (18, "c4e4b83b4743b7b51d12db2b11b107a5d974db35d0fe2c96347c8186087d32e7"),
     "test_m30_ble_bond_hil.py": (6, "f786b63f72f9c6edd8c63269e98269d8baf6335165cf174ce918d6345f9ac0f2"),
     "test_m30_ble_dfu.py": (11, "1f07932717c543b9c07c79a0026a89988cfff8f2a10a888f89ec4ea680f83ab7"),
     "test_m30_ble_oob_bond.py": (8, "e39f964408267c05d27aced6da8a3e693e49231d0154c789d6d4c35f7006a2c5"),
