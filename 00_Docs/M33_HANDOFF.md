@@ -9,6 +9,16 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #37 `resources:df_cs`의 clean `8b1b132a9942bdac4a5f47eef4e5f6c6145e8028`에서 DF 설정 1개·
+  회귀 89개·skip 0은 PASS했다. 이어 직접 attestation 기능 검사 9개·skip 0도 모두 PASS했지만
+  Host registry가 과거 5개여서 집계는 FAIL했다. 원본은
+  `D:\w06\resource37-df-attestation-host-8b1b132a\result.json`, SHA-256은
+  `6e736945842ad8693583715aa4ee49ab6c275a55b86cdb1d6f610c484bda5d44`다.
+  이 등록 한 항목의 count/hash만 실제 9개 verbose ID에 맞춰 정정하고 직접 회귀 뒤 새 clean
+  후보에서 DF→CS RAS→CS ACL 위험을 순차 검증한다. #37 build·flash·실기는 아직 시작하지 않았다.
+  과거 d909의 DF 20회 PASS·CS 재연결 FAIL과 아래 c1의 #36 PASS는 각 source로 보존한다.
+  수정 전 commit의 dirty 직접 검사 99개·skip 0·각 suite의 독립 등록 count/hash 일치도 PASS했다.
+
 - #36 `resources:iso_audio`는 clean `c1f7e8ce1c0217b0fe529da7ecbf349398bcb957`에서
   combined ISO·BAP duplex·CIS ACL 위험 세 캠페인을 각각 20회 순차 실제 PASS했다.
   combined의 CIS 수신·BIS 전달·BIS 수신은 각각 2,000건이다. BAP는 매 회차 양쪽 송수신
