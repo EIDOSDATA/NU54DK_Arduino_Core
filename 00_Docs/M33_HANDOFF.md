@@ -9,15 +9,45 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #37 `resources:df_cs`는 clean `74398d4ebfda015173ef9afa4bf1fd170275d3f1`에서 DF 20회,
+  CS RAS 100 procedure·재시작 20회·재연결 20회, CS·scan 동시 ACL 종료·복구 20회를
+  순차 실제 PASS했다. 원본 raw/schema/semantic·정규화·exact image/readback을 독립 재검증했다.
+  실제 UART는 DF 1개·CS 2개·CS 위험 app 2개/aux 2개의 종료를 확인했고,
+  최종 HALTED readback은 1+2+2역할 PASS다. 마감 때 새 읽기 전용 세 보드 identity·HALTED·
+  RADIO0·DPPI 차단·WDT30/31 정지도 PASS했다. DF는 controller acceptance이며 over-air IQ,
+  CS는 bounded sanity이며 보정된 거리 정확도 PASS로 확대하지 않는다.
+- 직접 검사는 등록 Host 고유 126개·별도 counter/security 5개, 총 131개·skip 0 PASS다.
+  등록한 suite의 독립 count/hash도 일치했다. 외부 실행 경계 10개와 archive 경로 단위검사 1개는
+  별도이며 전체 Host·물리 시험 분모에 합산하지 않는다. 필요한 공개 DF 1·CS 2·P2 위험 2역할만
+  빌드했다. 기존 `1fb198ea`의 진행 중 보안 callback 대기와 `4aeb45ce`의 native revision 추출
+  수정을 현재 후보에서 검증했고, 추가 firmware·runner·oracle·SDK pin 수정은 하지 않았다.
+- CS 위험 첫 build는 실제 생성된 261자 object 경로를 번들 `ar`가 읽지 못해 FAIL했다.
+  동일 byte의 긴 경로 FAIL/짧은 경로 PASS를 직접 재현한 뒤 새 build/cache root `D:\w06\k37`만
+  짧게 바꿔 두 역할 build를 PASS했다. 최초 실패·log·cache는 `D:\w06\r37-74398d4e-cs-risk`에
+  보존했다. 공식 SDK patch context 원복도 검증했고 CLEAR·자동 재시도는 하지 않았다.
+- 통합 원본 재검증은 `D:\w06\focused-resource37-final-replay-74398d4e.json`, SHA-256은
+  `f3dc451959f4ad47ed0d55b2ef2d761303335b406b813526b34400ee6c5cfdd9`다.
+  진행은 `D:\w06\targeted-resource37-74398d4e-progress.json`, 세 원본은
+  `D:\w06\targeted-74398d4e-resource37-df`, `targeted-74398d4e-resource37-cs`,
+  `targeted-74398d4e-resource37-cs-risk`에 있다. 과거 d909·8b1·c1 source의 PASS는 합치지 않았다.
+  개발 집중 집계는 37/49이며 다음은 #38 `resources:mesh`다. 최종 동일 후보의 공식 49/49·
+  별도 resource measurement closure·141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·
+  qualification 3·strict closure·최종 문서 마감은 미완료다.
+
+### #37의 최초 Host 등록 실패 — 해결 완료·원본 보존
+
 - #37 `resources:df_cs`의 clean `8b1b132a9942bdac4a5f47eef4e5f6c6145e8028`에서 DF 설정 1개·
   회귀 89개·skip 0은 PASS했다. 이어 직접 attestation 기능 검사 9개·skip 0도 모두 PASS했지만
   Host registry가 과거 5개여서 집계는 FAIL했다. 원본은
   `D:\w06\resource37-df-attestation-host-8b1b132a\result.json`, SHA-256은
   `6e736945842ad8693583715aa4ee49ab6c275a55b86cdb1d6f610c484bda5d44`다.
   이 등록 한 항목의 count/hash만 실제 9개 verbose ID에 맞춰 정정하고 직접 회귀 뒤 새 clean
-  후보에서 DF→CS RAS→CS ACL 위험을 순차 검증한다. #37 build·flash·실기는 아직 시작하지 않았다.
+  후보에서 DF→CS RAS→CS ACL 위험을 순차 검증했다. #37 build·flash·실기는 이 등록 실패 전에 시작하지 않았다.
   과거 d909의 DF 20회 PASS·CS 재연결 FAIL과 아래 c1의 #36 PASS는 각 source로 보존한다.
   수정 전 commit의 dirty 직접 검사 99개·skip 0·각 suite의 독립 등록 count/hash 일치도 PASS했다.
+  이 등록 오류는 `74398d4e`에서 해결 완료했으며 새 clean 후보의 세 캠페인은 위와 같이 실제 검증했다.
+
+### #36 집중 검증 완료 — 당시 증거
 
 - #36 `resources:iso_audio`는 clean `c1f7e8ce1c0217b0fe529da7ecbf349398bcb957`에서
   combined ISO·BAP duplex·CIS ACL 위험 세 캠페인을 각각 20회 순차 실제 PASS했다.
