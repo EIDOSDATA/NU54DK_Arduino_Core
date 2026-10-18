@@ -8,7 +8,7 @@
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-17 |
+| 최종 갱신일 | 2026-10-18 |
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
@@ -71,7 +71,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 집중 집계 32/49, #29~#31 실기·원본 재검증과 #32 네 template build-semantic PASS. source별 근거와 다음 #33은 [M33 인계](M33_HANDOFF.md) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 집중 집계 33/49, #33 DTM 실기 24개·원본 재검증과 controller/scan-request build-semantic 2개 PASS. source별 근거와 다음 #34는 [M33 인계](M33_HANDOFF.md) |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 

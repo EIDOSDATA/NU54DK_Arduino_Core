@@ -1,23 +1,40 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-17**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
+최종 갱신: **2026-10-18**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
 실패 수정은
 **한 항목 수정 → 로컬 해당 항목 재검증 → 실제 PASS 확인 → 다음 실패** 순서다.
 전수조사 완료·대규모 일괄 수정·전체 49개·Actions를 개별 수정의 선행조건으로 삼지 않는다.
 W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범위를 우선한다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
-## 최신 재개 지점 — 2026-10-17
+## 최신 재개 지점 — 2026-10-18
 
+- #33 `families:diagnostic_templates`는 clean source
+  `a8de62883831398deb5bc68ef629006934cf920b`에서 two-wire 12개·H4 12개 실기와 두 등록
+  캠페인의 독립 원본 재검증을 PASS했다. DTM 두 경로·동일 source idle 준비 세 역할과
+  controller/scan-request 두 역할만 빌드했으며 SDK 원복도 확인했다. 뒤의 두 역할은
+  build-semantic 2개이며 물리 runtime·외부 상호운용 PASS로 세지 않는다.
+- DTM runtime의 WDT31 `RUNSTATUS=1`, `CONFIG=65`와 3초 RF lease를 유지했다.
+  최종 Test End 뒤 별도 terminal handover에서만 정상 watchdog 해제·ACK·명령 종료를 수행한다.
+  양쪽 STOP·WDT30/31 정지·CPU halt·RADIO idle·DPPI/timeout·serial close 및 세 번째 보드
+  연속 guard를 원본에서 재검증했다. 고정 nrfx가 정상 해제 event를 소비하므로 ACK 뒤
+  STOPPED event는 정확히 0이다. 두 transport × 두 역할의 program/readback은 4건이고,
+  최종 H4 상태의 campaign identity는 2개다. 두 분모를 각각 검증했으며 기준은 완화하지 않았다.
+- 직접 영향 Host는 진단 12·campaign 7·prepare 40·회귀 89, 합계 148/148·skip 0이며
+  등록 suite의 독립 test ID count/hash도 일치한다. 원본·정규화·semantic·exact image/readback·
+  cleanup 재검증은 `D:\w06\focused-diagnostic33-final-replay-a8de6288.json`에 있다.
+  SHA-256은 `c0fdb0eafc4e1578b20d24e7de7df39291a7cbc30b10199d2672971f86ec8556`이다.
+  진행은 `D:\w06\targeted-diagnostics33-progress.json`, 두 캠페인은
+  `targeted-a8de6288-diagnostic33-dtm`과 `targeted-a8de6288-diagnostic33-build`에 보존한다.
 - 2026-10-18 #33의 two-wire→H4 전환에서 실행 중인 WDT31이 software reset 뒤에도 남는
   원인을 좁혔다. 사용자 승인으로 현재 RX에 정상 STOP을 한 번만 수행했으며
   `RUNSTATUS=0`, `STOPPED=1`, `TSEN=0` readback을 확인했다. TX·세 번째 보드는 변경하지 않았다.
   원본 FAIL·두 bounded 진단은 보존하며 이 복구를 #33 PASS로 세지 않는다.
-  DTM runtime의 watchdog·3초 RF lease는 유지하고 최종 Test End 뒤 별도 terminal handover에서만
-  정상 watchdog 해제·ACK·명령 종료를 수행하도록 최소 수정 중이다. 직접 단위검사와 새 동일 후보의
-  필요 역할 build·DTM 24-case 실기·원본/정확한 image/readback/cleanup 검증 및
-  controller/scan-request build는 완료 전이다. 진행은 `D:\w06\targeted-diagnostics33-progress.json`,
   정상 STOP 영수증은 `D:\w06\diagnostic33-rx-approved-wdt31-stop-20261018\result.json`이다.
+  이 정지 상태의 미소비 event=1과 위 firmware 정상 API 뒤의 event=0은 다른 관측이다.
+  수동 STOP을 반복하지 않았다. 잘못 선택한 Windows PowerShell의 사전 launch 실패와 외부
+  집계 helper의 최종 identity/phase 분모 혼동도 별도 원본에 보존했다. 실행 정책·실기 source·
+  원본 byte는 변경하지 않았으며, 기존 허용 PowerShell 7과 수정된 오프라인 helper로 검증했다.
 
 - 개발 집중 검증의 #27 `families:mesh`는 실기 source
   `3168868b6077cf5a24c7ce113ca0a952d17be313`에서 base 20회, management 10회×두 target,
@@ -59,11 +76,11 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   `D:\w06\focused-beacon30-final-replay-8185c55d.json`,
   `D:\w06\focused-ecosystem31-final-replay-8185c55d.json`,
   `D:\w06\focused-template32-final-replay-8185c55d.json`이다.
-- #33 준비의 직접 테스트는 진단 11·campaign 6·prepare 40개가 모두 성공했지만 독립 Host registry가
+- #33 최초 준비의 직접 테스트는 진단 11·campaign 6·prepare 40개가 모두 성공했지만 독립 Host registry가
   campaign을 과거 3개로 등록해 집계 검사는 FAIL했다. 실제 verbose ID 6개와 hash에 맞춰
-  그 registry 한 항목만 수정한다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
-  #33 DTM 실기와 controller/scan-request build는 이 수정 후 후보에서 별도 확인해야 한다.
-- 개발 집중 집계는 32/49이며 다음 항목은 #33 진단 그룹이다. 이 집계는 서로 다른 개발
+  그 registry 한 항목을 수정했다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
+  이후 terminal handover 검사 추가에 따른 현재 12·7개도 실제 verbose ID로 검증했다.
+- 개발 집중 집계는 33/49이며 다음 항목은 #34 `resources:gap_gatt`다. 이 집계는 서로 다른 개발
   수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
   40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
 - 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.
