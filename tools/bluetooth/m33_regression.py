@@ -484,7 +484,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m31_cs_negative_attestation.py": (6, "fb6343523a6e10d29faeb47021059e69d00dbffd1bc65d45ffafab8da9853d6c"),
     "test_m31_df_beacon_config.py": (1, "bbe8dc2cf28193e0a22c85a373eecae8ad592e1fd7526eaa357489b50c346102"),
     "test_m31_iso_bis_negative.py": (4, "839b6862827c34cb9d38292f79c63e7e1baaa161d1ae8aa2bc078ae0dfbdc496"),
-    "test_m31_iso_combined.py": (4, "52255144829cf6b412aad04bbf1608af740d1826721b4fb78f527d8f13d631a4"),
+    "test_m31_iso_combined.py": (5, "4033b795118d42e0403de587cb42fc9ffbb7bac18f5eba587e3ccfb253738a51"),
     "test_m31_iso_combined_build_provenance.py": (5, "61d1003af6e6372ef403aece07315b2dcf8d0caf760eb9ffd63e386edad116f6"),
     "test_m32_ble_advertising.py": (2, "4d2070282b6fb206c9d9a3d1021af70f8e236d9119b68054a89e561610b7ae04"),
     "test_m32_ble_nordic.py": (1, "a522b2993ed2c16ed5df9215115e4f7978eeb7533e3f51b2018392f7b282ccba"),

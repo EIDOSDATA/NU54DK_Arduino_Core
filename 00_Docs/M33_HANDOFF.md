@@ -9,6 +9,16 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #36 `resources:iso_audio` 첫 combined ISO의 clean `4948cec95f01b9b96c54f06446d87da3697c340f`에서
+  parser 5개·build provenance 5개·skip 0은 모두 PASS했지만 Host registry가 과거 parser 4개여서
+  집계가 FAIL했다. 원본은 `D:\w06\resource36-combined-host-4948cec9\result.json`이며 SHA-256은
+  `1409ef01c979f5e88fe35566e103529d69262e54cc2d79cb891cbd73e04c29c1`이다.
+  이 등록 한 항목의 count/hash만 실제 5개 verbose ID에 맞춰 정정하고 직접 회귀 뒤 새 clean
+  후보에서 #36 세 캠페인을 순차 검증한다. #36 build·flash·실기는 이 실패 전에 시작하지 않았다.
+  수정 전 commit의 dirty 직접 검사는 parser 5·provenance 5·회귀 89, 합계 99개·skip 0·등록 일치 PASS다.
+  과거 d909 combined의 software reset 증적을 hardware reset으로 오판한 원인은 `e8b5be12`에서
+  이미 수정됐다. 새 speculative firmware/SDK 수정이나 과거 PASS 승계는 하지 않는다.
+
 - #35 `resources:security_dfu`는 clean `64ec9a874c265e05a19b4c4e3d10239c91418773`에서
   M30 multi 20회·cleanup 60건과 signed DFU 10회·negative 5종별 20회·unconfirmed rollback을
   순차 실제 PASS했다. multi 실제 UART 3개와 DFU 실제 UART 2개 종료를 검증했다.
