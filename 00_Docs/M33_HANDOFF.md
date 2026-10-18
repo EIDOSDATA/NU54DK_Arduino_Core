@@ -9,6 +9,32 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #36 `resources:iso_audio`는 clean `c1f7e8ce1c0217b0fe529da7ecbf349398bcb957`에서
+  combined ISO·BAP duplex·CIS ACL 위험 세 캠페인을 각각 20회 순차 실제 PASS했다.
+  combined의 CIS 수신·BIS 전달·BIS 수신은 각각 2,000건이다. BAP는 매 회차 양쪽 송수신
+  각 100 frame 이상·energy 양수·drop 0·stream STOP·ACL disconnect를 확인했다.
+  CIS 위험은 양쪽 NSE 최소 2·load tick 최소 29·active payload 25 이상에서 ACL을 먼저 종료했다.
+- 세 캠페인의 등록 raw/schema/semantic·정규화·exact image/readback을 독립 재검증했다.
+  combined 실제 UART 3개, BAP flash 준비와 본 시험 각각 실제 UART 2개, CIS 실제 UART 2개의
+  종료를 따로 확인했다. 캠페인별 최종 HALTED readback 3+2+2개와 세 보드 STOP/idle도 PASS다.
+  마감 때 새 읽기 전용 identity·HALTED·RADIO0·DPPI 차단·WDT30/31 정지를 다시 확인했다.
+- 직접 관련 검사는 등록 Host 127개·skip 0·독립 count/hash 일치와 별도 CIS parser 4개 PASS다.
+  외부 실행 경계 3+3+4개는 별도이며 전체 최종 Host나 물리 PASS 분모에 합산하지 않는다.
+  필요한 combined 3·BAP 공개 Arduino 2·일반 CIS 2역할만 빌드했고 SDK patch context 원복을 검증했다.
+  아래 registry 두 항목만 실제 ID에 맞춰 정정했다. firmware·runner·oracle·SDK pin은 바꾸지 않았다.
+  과거 CIS 8회차의 reason 62·7/20·cleanup FAIL도 보존하며 하위 원인이 해결됐다고 추정하지 않는다.
+  현재의 엄격한 20회 실제 PASS와 과거 원인 미확정 기록은 구분한다. CLEAR·자동 재시도는 하지 않았다.
+- 통합 원본 검증은 `D:\w06\focused-resource36-final-replay-c1f7e8ce.json`, SHA-256은
+  `5a2d94156806a4edb76d093d47220bc0d3422a2ba8eb4cd5b11bbf651c90afa3`다.
+  진행은 `D:\w06\targeted-resource36-c1f7e8ce-progress.json`, 세 캠페인 원본은
+  `D:\w06\targeted-c1f7e8ce-resource36-combined`, `targeted-c1f7e8ce-resource36-bap`,
+  `targeted-c1f7e8ce-resource36-cis-risk`에 보존한다. 이전 8096cc7f의 combined PASS는 합치지 않았다.
+  다음은 #37 `resources:df_cs`다. 개발 집중 집계는 36/49이며 최종 동일 후보의 공식 49/49·
+  별도 resource measurement closure·141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·
+  qualification 3·strict closure·최종 문서 마감은 미완료다.
+
+### #36의 이전 source와 최초 실패 — 원본 보존
+
 - #36 clean `8096cc7f29922d5f6354c8a761dfaf74cc857351`의 combined ISO 20회는 CIS 수신·BIS 전달·
   BIS 수신 각각 2,000건, 실제 UART 3개 종료·exact image/readback·세 보드 STOP/idle과 독립 원본
   재검증까지 PASS했다. 증거는 `D:\w06\focused-resource36-combined-final-replay-8096cc7f.json`이다.
@@ -29,6 +55,8 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   과거 d909 combined의 software reset 증적을 hardware reset으로 오판한 원인은 `e8b5be12`에서
   이미 수정됐다. 새 speculative firmware/SDK 수정이나 과거 PASS 승계는 하지 않는다.
 
+### #35 집중 검증 완료 — 당시 증거
+
 - #35 `resources:security_dfu`는 clean `64ec9a874c265e05a19b4c4e3d10239c91418773`에서
   M30 multi 20회·cleanup 60건과 signed DFU 10회·negative 5종별 20회·unconfirmed rollback을
   순차 실제 PASS했다. multi 실제 UART 3개와 DFU 실제 UART 2개 종료를 검증했다.
@@ -44,7 +72,7 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   `3bd5da224ff4599995ab1318d9f4e232b35c4aada1d18ec4185db1e7d9ae363d`다.
   진행은 `D:\w06\targeted-resource35-64ec9a87-progress.json`, 캠페인 증거는
   `D:\w06\targeted-64ec9a87-resource35-multi`와 `targeted-64ec9a87-resource35-dfu`에 보존한다.
-  이전 fe84a247 multi PASS는 합치지 않았다. 다음은 #36 `resources:iso_audio`다.
+  이전 fe84a247 multi PASS는 합치지 않았다. 당시 다음은 #36 `resources:iso_audio`였다.
   이는 개발 집중 캠페인 집계 35/49이며 최종 동일 후보의 공식 49/49·별도 resource measurement closure·
   141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
 
@@ -169,7 +197,7 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
   campaign을 과거 3개로 등록해 집계 검사는 FAIL했다. 실제 verbose ID 6개와 hash에 맞춰
   그 registry 한 항목을 수정했다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
   이후 terminal handover 검사 추가에 따른 현재 12·7개도 실제 verbose ID로 검증했다.
-- 개발 집중 집계는 35/49이며 다음 항목은 #36 `resources:iso_audio`다. 이 집계는 서로 다른 개발
+- 개발 집중 집계는 36/49이며 다음 항목은 #37 `resources:df_cs`다. 이 집계는 서로 다른 개발
   수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
   40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
 - 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.
