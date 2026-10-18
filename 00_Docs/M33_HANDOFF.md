@@ -9,6 +9,16 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #36 clean `8096cc7f29922d5f6354c8a761dfaf74cc857351`의 combined ISO 20회는 CIS 수신·BIS 전달·
+  BIS 수신 각각 2,000건, 실제 UART 3개 종료·exact image/readback·세 보드 STOP/idle과 독립 원본
+  재검증까지 PASS했다. 증거는 `D:\w06\focused-resource36-combined-final-replay-8096cc7f.json`이다.
+  이어 BAP 직접 기능 9개·skip 0은 PASS했으나 flat 증거 검사 등록부 7개와 실제 8개가 불일치해
+  집계 FAIL했다. 원본 `D:\w06\resource36-bap-host-8096cc7f\result.json`, SHA-256
+  `275b1a71e7cc8a272c227a73464926a7a2e3b7fe5dbbdadb949be96d3ef06282`를 보존한다.
+  이 등록 한 항목의 count/hash만 실제 ID에 맞춰 수정한다. BAP build·flash·실기는 시작하지 않았으며,
+  새 clean 후보에서 combined부터 다시 순차 검증한다. 8096cc7f의 combined PASS를 새 후보에 합치지 않는다.
+  수정 전 commit의 dirty 직접 검사 108개·skip 0·각 suite의 등록 count/hash 일치는 PASS했다.
+
 - #36 `resources:iso_audio` 첫 combined ISO의 clean `4948cec95f01b9b96c54f06446d87da3697c340f`에서
   parser 5개·build provenance 5개·skip 0은 모두 PASS했지만 Host registry가 과거 parser 4개여서
   집계가 FAIL했다. 원본은 `D:\w06\resource36-combined-host-4948cec9\result.json`이며 SHA-256은
