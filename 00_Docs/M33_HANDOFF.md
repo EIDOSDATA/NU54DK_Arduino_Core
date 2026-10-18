@@ -9,6 +9,15 @@ W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범�
 
 ## 최신 재개 지점 — 2026-10-19
 
+- #35 `resources:security_dfu`의 clean `fe84a2478436bfb22d80823e2fced0e3f2beb08f`에서
+  M30 multi 20회·cleanup 60건·UART 3개 종료·exact readback·세 보드 STOP/idle과 독립 원본
+  재검증은 PASS했다. 다음 DFU 기능 검사 16개·skip 0도 PASS했지만 Host registry는 과거
+  11개여서 집계가 FAIL했다. 원본은 `D:\w06\resource35-dfu-host-fe84a247\result.json`에 보존한다.
+  이 등록 한 항목의 count/hash만 실제 16개 ID에 맞춰 정정하고 직접 회귀 뒤 새 clean 후보로
+  #35 두 캠페인을 순차 검증한다. fe84a247의 multi PASS를 새 후보 #35 PASS에 합치지 않는다.
+  DFU build·flash·runtime은 이 registry 실패 전에 시작하지 않았다. 과거 d909의 원본 실패는
+  power용 unconfirmed 입력과 unsigned direct image 선택이었으며 관련 수정은 이미 현재 코드에 있다.
+
 - #34 `resources:gap_gatt`는 clean `d19a02d674d724eb823138906f5068a905542398`에서
   multi 20회·PAST 20회·signed 재부팅 20회/replay 거부/EATT를 순차 실제 PASS했다.
   multi cleanup 60건·UART 3개 종료, PAST 1,000/1,000 수신·손실 0·실제 UART 3개 종료,
