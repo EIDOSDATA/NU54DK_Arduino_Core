@@ -214,7 +214,7 @@ def validate_result(result: dict, fixture: dict, transport: str) -> list[dict]:
         zero = [diagnostics.RADIO_STATE, *(base + 0x100 for base in diagnostics.WDT_BASES),
                 *(base + 0x400 for base in diagnostics.WDT_BASES)]
         if (row.get("role") != index or row.get("status") != "PASS"
-                or row.get("wdt_runstatus") != [0, 0] or row.get("wdt31_stopped") != 1
+                or row.get("wdt_runstatus") != [0, 0] or row.get("wdt31_stopped_event") != 0
                 or row.get("watchdog_before") != {"runstatus": 1, "config": 65}
                 or audit.get("cpu") != "HALTED" or audit.get("radio_state") != 0
                 or audit.get("read_only") is not True or audit.get("reset_observed") is not False

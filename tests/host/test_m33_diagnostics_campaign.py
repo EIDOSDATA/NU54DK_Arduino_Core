@@ -264,7 +264,7 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                       "runtime_watchdogs": [{"role": index, "runstatus": 1, "config": 65} for index in range(2)],
                       "serial_close": [{"role": index, "status": "PASS"} for index in range(2)],
                       "handover": [{"role": index, "status": "PASS", "wdt_runstatus": [0, 0],
-                                    "watchdog_before": {"runstatus": 1, "config": 65}, "wdt31_stopped": 1,
+                                    "watchdog_before": {"runstatus": 1, "config": 65}, "wdt31_stopped_event": 0,
                                     "halt_read_only_audit": {"cpu": "HALTED", "radio_state": 0,
                                         "read_only": True, "reset_observed": False,
                                         "registers": dict(halted_registers)}}
@@ -489,7 +489,7 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                 CAMPAIGN.execute(argparse.Namespace(cycles=cycles, execute=execute))
 
     def test_terminal_handover_requires_runtime_watchdog_raw_ack_and_stopped_readback(self):
-        """! @brief RF Test End만 있거나 watchdog의 종료 관측이 없으면 PASS를 거부합니다. """
+        """! @brief 정상 해제 ACK·정지 readback·고정 드라이버의 event 소비가 없으면 PASS를 거부합니다. """
         with tempfile.TemporaryDirectory(prefix="nu54-dtm-handover-") as folder:
             path, fixtures = self.campaign(Path(folder))
             value = json.loads(path.read_text(encoding="utf-8"))
@@ -500,7 +500,8 @@ class DiagnosticsCampaignTests(unittest.TestCase):
                 lambda result: result.pop("handover"),
                 lambda result: result.__setitem__("runtime_watchdogs", []),
                 lambda result: result.__setitem__("serial_close", []),
-                lambda result: result["handover"][0].__setitem__("wdt31_stopped", 0),
+                lambda result: result["handover"][0].pop("wdt31_stopped_event"),
+                lambda result: result["handover"][0].__setitem__("wdt31_stopped_event", 1),
                 lambda result: result["handover"][0].__setitem__("wdt_runstatus", [0, 1]),
                 lambda result: result["handover"][0].__setitem__("watchdog_before", {"runstatus": 0, "config": 65}),
                 lambda result: result["handover"][0]["halt_read_only_audit"]["registers"].__setitem__("0x5008a100", 1 << 31),

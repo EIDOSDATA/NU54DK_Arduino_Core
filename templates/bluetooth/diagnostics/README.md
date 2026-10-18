@@ -156,8 +156,10 @@ reporting counter 50~2000, 양쪽 Test End 응답 성공이다. 이 기준은 �
 
 5. 양쪽 STOP과 실제 RX count를 확인한 뒤 runner가 아래 terminal handover를 보낸다.
    firmware는 이 마지막 인계에서만 watchdog을 정상 해제하고 ACK 뒤 명령 처리를 끝낸다.
-   runner는 양쪽 CPU halt·RADIO 유휴·WDT30/31 RUNSTATUS=0·WDT31 STOPPED=1과 serial close를
-   확인한다. Test End만으로 watchdog 종료를 추정하지 않는다. 다음 image는 별도의 정상 준비 절차로
+   runner는 양쪽 CPU halt·RADIO 유휴·WDT30/31 RUNSTATUS=0·WDT31 STOPPED event=0과 serial close를
+   확인한다. 고정 nrfx 드라이버는 STOPPED event를 소비한 뒤에만 `wdt_disable()` 성공을 반환하므로
+   ACK 이후 event는 0이다. CPU를 정지한 채 직접 정상 STOP한 경우의 미소비 event=1과 구분한다.
+   Test End만으로 watchdog 종료를 추정하지 않는다. 다음 image는 별도의 정상 준비 절차로
    시작하며, 단순 software reset이 실행 중 watchdog까지 초기화한다고 가정하지 않는다.
    모든 program은 sector-only, `auto_unlock=false`, exact SHA, 공용 probe lock으로 제한한다.
    mass erase·unlock·recover·임의 hardware reset fallback은 제공하지 않는다.

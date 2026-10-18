@@ -1605,10 +1605,11 @@ def run_pair(args: argparse.Namespace) -> None:
                         audit = verify_isolation(target, monitor, allowed_shorts=RADIO_PASSIVE_SHORTS)
                         running = [target.read32(base + 0x400) for base in WDT_BASES]
                         stopped = target.read32(WDT_BASES[1] + 0x104)
-                        if running != [0, 0] or stopped != 1:
+                        ## @brief 고정 nrfx가 STOPPED event를 소비한 뒤에만 wdt_disable 성공 ACK를 보냅니다.
+                        if running != [0, 0] or stopped != 0:
                             raise ValueError("DTM terminal handover watchdog readback mismatch")
                         report["handover"].append({"role": index, "status": "PASS", "wdt_runstatus": running,
-                                                   "watchdog_before": before, "wdt31_stopped": stopped,
+                                                   "watchdog_before": before, "wdt31_stopped_event": stopped,
                                                    "halt_read_only_audit": audit})
                     except Exception as error:
                         report["handover"].append({"role": index, "status": "FAIL", "error_type": type(error).__name__})
