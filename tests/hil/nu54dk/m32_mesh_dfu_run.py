@@ -585,11 +585,17 @@ def send(port: Any, line: str) -> None:
 
 
 def rejected_candidate_boot(line: str) -> bool:
-    """! @brief 손상 BOOT를 수락하지 않고 제한된 새 조회가 필요한 framing만 식별합니다. """
+    """! @brief 혼합 손상 BOOT도 수락하지 않고 한 번의 새 조회가 필요한 framing만 식별합니다. """
 
-    return re.fullmatch(
-        r"\?{3,32}" + re.escape(PROTOCOL) + r"\|BOOT\|[^\r\n]+", line
-    ) is not None
+    match = re.fullmatch(
+        r"([^\r\n]{3,32})" + re.escape(PROTOCOL) + r"\|BOOT\|([^\r\n]+)", line
+    )
+    return (
+        match is not None
+        and "?" in match.group(1)
+        and PROTOCOL not in match.group(1)
+        and PROTOCOL not in match.group(2)
+    )
 
 
 def query_candidate_boot(

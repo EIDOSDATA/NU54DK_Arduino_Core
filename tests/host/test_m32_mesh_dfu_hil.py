@@ -153,7 +153,7 @@ class M32MeshDfuHilTests(unittest.TestCase):
             )
             runner.validate_domains(root)
 
-    def boot_query_fixture(self, reply_changes=None, reply_mode="canonical"):
+    def boot_query_fixture(self, reply_changes=None, reply_mode="canonical", noise_prefix=None):
         """! @brief 손상 BOOT 뒤 조회에만 새 canonical record를 내는 유한 포트를 구성합니다. """
 
         marker = runner.PROTOCOL + "|"
@@ -162,7 +162,7 @@ class M32MeshDfuHilTests(unittest.TestCase):
                   "nonce": nonce, "core": core}
         values.update(reply_changes or {})
         canonical = marker + "BOOT|" + "|".join(f"{key}={value}" for key, value in values.items())
-        noisy = "?" * 22 + canonical
+        noisy = ("?" * 22 if noise_prefix is None else noise_prefix) + canonical
 
         class Port:
             """! @brief 조회·APPLY 순서와 원래 응답 byte를 보존하는 모의 UART입니다. """
@@ -237,6 +237,31 @@ class M32MeshDfuHilTests(unittest.TestCase):
                     runner.collect_iteration(ports, 1, nonce, core, candidate, [], time.monotonic() + 0.1)
                 self.assertEqual(1, len(ports["target_b"].writes))
                 self.assertIn(b"|QUERY_BOOT|", ports["target_b"].writes[0])
+
+    def test_mixed_corrupt_boot_queries_fresh_record_without_recovering_noise(self) -> None:
+        """! @brief 실제 혼합 손상 접두사도 거부한 채 새 BOOT를 조회하고 그 응답 뒤에만 APPLY합니다. """
+
+        prefix = "\x00?w?w????_XE?\x1e?]???U??w??"
+        ports, nonce, core, candidate, noisy = self.boot_query_fixture(noise_prefix=prefix)
+        self.assertEqual((noisy, None), runner.recover_vcom_protocol_prefix(noisy))
+        self.assertTrue(runner.rejected_candidate_boot(noisy))
+        transcript = []
+        _boots, _result, _end, details = runner.collect_iteration(
+            ports, 1, nonce, core, candidate, transcript, time.monotonic() + 1.0
+        )
+        self.assertEqual({"target_a", "target_b"}, set(details["applied"]))
+        self.assertEqual([b"QUERY_BOOT", b"APPLY"],
+                         [payload.split(b"|")[2] for payload in ports["target_b"].writes])
+        self.assertIn("target_b-raw: " + noisy, transcript)
+        self.assertEqual(1, sum(line.startswith(f"target_b: {runner.PROTOCOL}|BOOT|") for line in transcript))
+        for mode in ("none", "corrupt"):
+            with self.subTest(reply_mode=mode):
+                ports, nonce, core, candidate, _noisy = self.boot_query_fixture(
+                    reply_mode=mode, noise_prefix=prefix
+                )
+                with self.assertRaises(runner.MeshDfuFailure):
+                    runner.collect_iteration(ports, 1, nonce, core, candidate, [], time.monotonic() + 0.05)
+                self.assertEqual([b"QUERY_BOOT"], [payload.split(b"|")[2] for payload in ports["target_b"].writes])
 
     def test_boot_query_is_bounded_and_rejects_corrupt_or_duplicate_reply(self) -> None:
         """! @brief 무응답·다시 손상된 BOOT·중복 BOOT는 한 조회 뒤 실패하며 무한 재시도하지 않습니다. """
