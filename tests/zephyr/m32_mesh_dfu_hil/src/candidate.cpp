@@ -24,6 +24,7 @@ namespace
 {
     constexpr char protocol[] = "M32MDFU|1";
     constexpr char apply_prefix[] = "M32MDFU|1|APPLY|nonce=";
+    constexpr char boot_query_prefix[] = "M32MDFU|1|QUERY_BOOT|nonce=";
     constexpr char stop_prefix[] = "M32MDFU|1|STOP|nonce=";
     constexpr std::size_t nonce_length = 32U;
     constexpr std::size_t command_capacity = 192U;
@@ -216,7 +217,7 @@ namespace
         return true;
     }
 
-    /** @brief candidate의 PROBE·APPLY·STOP 명령을 처리합니다. */
+    /** @brief candidate의 PROBE·session-bound BOOT 재조회·APPLY·STOP 명령을 처리합니다. */
     void processCommand()
     {
         if (::strcmp(command, "M32MDFU|1|PROBE") == 0)
@@ -242,6 +243,13 @@ namespace
             Serial.print(image.confirmed ? 1 : 0);
             Serial.print("|cdb_node_slots=3|cdb_local_slots=1|core=");
             Serial.println(M32_MDFU_CORE_REVISION);
+            return;
+        }
+        if (hasSessionPrefix(boot_query_prefix) &&
+            (::strcmp(command + ::strlen(boot_query_prefix) + nonce_length,
+                      "|core=" M32_MDFU_CORE_REVISION) == 0))
+        {
+            reportBoot();
             return;
         }
         if (applyCandidate())

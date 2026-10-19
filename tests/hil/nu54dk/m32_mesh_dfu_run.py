@@ -584,6 +584,37 @@ def send(port: Any, line: str) -> None:
     port.flush()
 
 
+def rejected_candidate_boot(line: str) -> bool:
+    """! @brief 손상 BOOT를 수락하지 않고 제한된 새 조회가 필요한 framing만 식별합니다. """
+
+    return re.fullmatch(
+        r"\?{3,32}" + re.escape(PROTOCOL) + r"\|BOOT\|[^\r\n]+", line
+    ) is not None
+
+
+def query_candidate_boot(
+    role: str,
+    port: Any,
+    nonce: str,
+    core_revision: str,
+    transcript: list[str],
+    deadline: float,
+) -> dict[str, str]:
+    """! @brief 손상 record 대신 새 session-bound BOOT를 한 번 요청하고 원래 identity를 검증합니다. """
+
+    transcript.append(f"{role}-raw: BOOT_QUERY attempt=1")
+    send(port, f"{PROTOCOL}|QUERY_BOOT|nonce={nonce}|core={core_revision}")
+    return read_record(
+        role,
+        port,
+        "BOOT",
+        transcript,
+        min(deadline, time.monotonic() + 5.0),
+        nonce=nonce,
+        core_revision=core_revision,
+    )
+
+
 def read_record(
     role: str,
     port: Any,
@@ -792,6 +823,7 @@ def collect_iteration(
     distributor_iteration: dict[str, str] | None = None
     final_result: dict[str, str] | None = None
     final_end: dict[str, str] | None = None
+    boot_queries: set[str] = set()
     while time.monotonic() < deadline:
         progressed = False
         for role, port in ports.items():
@@ -809,10 +841,21 @@ def collect_iteration(
                 if line:
                     transcript.append(f"{role}-raw: {line}")
                     reject_target_fault(role, line)
-                continue
-            transcript.append(f"{role}: {line}")
-            values = fields(line)
-            if line.startswith(f"{PROTOCOL}|FAIL|"):
+                if (role not in ("target_a", "target_b") or
+                        role in boots or not rejected_candidate_boot(line)):
+                    continue
+                if role in boot_queries:
+                    raise MeshDfuFailure(f"{role} candidate BOOT query 중복")
+                boot_queries.add(role)
+                values = query_candidate_boot(
+                    role, port, nonce, core_revision, transcript, deadline
+                )
+                record_type = "BOOT"
+            else:
+                transcript.append(f"{role}: {line}")
+                values = fields(line)
+                record_type = line.split("|", 3)[2]
+            if record_type == "FAIL":
                 raise MeshDfuFailure(
                     f"{role} target FAIL: {values.get('stage', 'unknown')}"
                 )
@@ -820,11 +863,13 @@ def collect_iteration(
                 raise MeshDfuFailure(f"{role} session nonce 불일치")
             if values.get("core") not in (None, core_revision):
                 raise MeshDfuFailure(f"{role} Core revision 불일치")
-            if role in ("target_a", "target_b") and line.startswith(
-                f"{PROTOCOL}|BOOT|"
-            ):
+            if role in ("target_a", "target_b") and record_type == "BOOT":
                 if role in boots:
                     raise MeshDfuFailure(f"{role} candidate BOOT 중복")
+                if (values.get("role") != role or
+                        values.get("nonce") != nonce or
+                        values.get("core") != core_revision):
+                    raise MeshDfuFailure(f"{role} candidate BOOT identity 불일치")
                 validate_boot(role, values, "2.0.0+0", 0, iteration)
                 boots[role] = values
                 confirm = int(iteration == ITERATION_TARGET and role == "target_a")
@@ -833,9 +878,7 @@ def collect_iteration(
                     f"{PROTOCOL}|APPLY|nonce={nonce}|iteration={iteration}"
                     f"|confirm={confirm}|core={core_revision}",
                 )
-            elif role in ("target_a", "target_b") and line.startswith(
-                f"{PROTOCOL}|APPLIED|"
-            ):
+            elif role in ("target_a", "target_b") and record_type == "APPLIED":
                 if role not in boots or integer(values, "iteration") != iteration:
                     raise MeshDfuFailure(f"{role} APPLIED 순서 불일치")
                 expected_confirm = int(
@@ -844,9 +887,7 @@ def collect_iteration(
                 if integer(values, "confirmed") != expected_confirm:
                     raise MeshDfuFailure(f"{role} APPLIED confirm 불일치")
                 applied[role] = values
-            elif role == "distributor" and line.startswith(
-                f"{PROTOCOL}|ITERATION|"
-            ):
+            elif role == "distributor" and record_type == "ITERATION":
                 if integer(values, "iteration") != iteration:
                     raise MeshDfuFailure("Distributor iteration 불일치")
                 if integer(values, "targets") != 2:
@@ -858,9 +899,9 @@ def collect_iteration(
                 ):
                     raise MeshDfuFailure("Distributor candidate identity 불일치")
                 distributor_iteration = values
-            elif role == "distributor" and line.startswith(f"{PROTOCOL}|RESULT|"):
+            elif role == "distributor" and record_type == "RESULT":
                 final_result = values
-            elif role == "distributor" and line.startswith(f"{PROTOCOL}|END|"):
+            elif role == "distributor" and record_type == "END":
                 final_end = values
         ready = (
             set(boots) == {"target_a", "target_b"}

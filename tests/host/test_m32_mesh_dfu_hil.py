@@ -153,6 +153,103 @@ class M32MeshDfuHilTests(unittest.TestCase):
             )
             runner.validate_domains(root)
 
+    def boot_query_fixture(self, reply_changes=None, reply_mode="canonical"):
+        """! @brief 손상 BOOT 뒤 조회에만 새 canonical record를 내는 유한 포트를 구성합니다. """
+
+        marker = runner.PROTOCOL + "|"
+        nonce, core, digest = "query-nonce", "a" * 40, "b" * 64
+        values = {"role": "target_b", "version": "2.0.0+0", "confirmed": "0",
+                  "nonce": nonce, "core": core}
+        values.update(reply_changes or {})
+        canonical = marker + "BOOT|" + "|".join(f"{key}={value}" for key, value in values.items())
+        noisy = "?" * 22 + canonical
+
+        class Port:
+            """! @brief 조회·APPLY 순서와 원래 응답 byte를 보존하는 모의 UART입니다. """
+
+            def __init__(self, lines, queried=False):
+                self.lines = [(line + "\n").encode("ascii") for line in lines]
+                self.writes = []
+                self.queried = queried
+
+            def readline(self):
+                return self.lines.pop(0) if self.lines else b""
+
+            def write(self, payload):
+                self.writes.append(payload)
+                if self.queried and b"|QUERY_BOOT|" in payload:
+                    if reply_mode == "canonical":
+                        self.lines.append((canonical + "\n").encode("ascii"))
+                    elif reply_mode == "corrupt":
+                        self.lines.append((noisy + "\n").encode("ascii"))
+                    elif reply_mode == "duplicate":
+                        self.lines.extend([(canonical + "\n").encode("ascii")] * 2)
+                elif self.queried and b"|APPLY|" in payload:
+                    self.lines.append((f"{marker}APPLIED|role=target_b|iteration=1|confirmed=0"
+                                       f"|nonce={nonce}|core={core}\n").encode("ascii"))
+                return len(payload)
+
+            def flush(self):
+                pass
+
+        ports = {
+            "distributor": Port([f"{marker}ITERATION|role=distributor|iteration=1|targets=2"
+                                 f"|version=2.0.0+0|signed_sha256={digest}|image_size=55038"
+                                 f"|nonce={nonce}|core={core}"]),
+            "target_a": Port([f"{marker}BOOT|role=target_a|version=2.0.0+0|confirmed=0|nonce={nonce}|core={core}",
+                              f"{marker}APPLIED|role=target_a|iteration=1|confirmed=0|nonce={nonce}|core={core}"]),
+            "target_b": Port([noisy], queried=True),
+        }
+        candidate = runner.ImageInput(Path("candidate.bin"), 55038, digest, runner.CANDIDATE_VERSION)
+        return ports, nonce, core, candidate, noisy
+
+    def test_noisy_boot_requires_fresh_session_bound_record_before_apply(self) -> None:
+        """! @brief 원본22물음표 BOOT는 거부하고 새 조회 응답을 받은 뒤에만 APPLY합니다. """
+
+        ports, nonce, core, candidate, noisy = self.boot_query_fixture()
+        self.assertEqual((noisy, None), runner.recover_vcom_protocol_prefix(noisy))
+        self.assertTrue(runner.rejected_candidate_boot(noisy))
+        for line in ("?" * 33 + noisy[22:], "noise " + noisy[22:], noisy[22:],
+                     "???" + runner.PROTOCOL + "|FAIL|stage=boot"):
+            self.assertFalse(runner.rejected_candidate_boot(line))
+        transcript = []
+        _boots, _result, _end, details = runner.collect_iteration(
+            ports, 1, nonce, core, candidate, transcript, time.monotonic() + 1.0
+        )
+        self.assertEqual({"target_a", "target_b"}, set(details["boots"]))
+        self.assertEqual({"target_a", "target_b"}, set(details["applied"]))
+        self.assertEqual([
+            f"{runner.PROTOCOL}|QUERY_BOOT|nonce={nonce}|core={core}\n".encode("ascii"),
+            f"{runner.PROTOCOL}|APPLY|nonce={nonce}|iteration=1|confirm=0|core={core}\n".encode("ascii"),
+        ], ports["target_b"].writes)
+        self.assertIn("target_b-raw: " + noisy, transcript)
+        self.assertIn("target_b-raw: BOOT_QUERY attempt=1", transcript)
+        self.assertEqual(1, sum(line.startswith(f"target_b: {runner.PROTOCOL}|BOOT|") for line in transcript))
+
+    def test_boot_query_rejects_wrong_identity_or_boot_state(self) -> None:
+        """! @brief 재조회도 role·nonce·core·version·confirm 오류면 APPLY를 전송하지 않습니다. """
+
+        for changes in ({"role": "target_a"}, {"nonce": "wrong"}, {"core": "c" * 40},
+                        {"version": "0.0.0+0"}, {"confirmed": "1"}):
+            with self.subTest(changes=changes):
+                ports, nonce, core, candidate, _noisy = self.boot_query_fixture(changes)
+                with self.assertRaises(runner.MeshDfuFailure):
+                    runner.collect_iteration(ports, 1, nonce, core, candidate, [], time.monotonic() + 0.1)
+                self.assertEqual(1, len(ports["target_b"].writes))
+                self.assertIn(b"|QUERY_BOOT|", ports["target_b"].writes[0])
+
+    def test_boot_query_is_bounded_and_rejects_corrupt_or_duplicate_reply(self) -> None:
+        """! @brief 무응답·다시 손상된 BOOT·중복 BOOT는 한 조회 뒤 실패하며 무한 재시도하지 않습니다. """
+
+        for mode in ("none", "corrupt", "duplicate"):
+            with self.subTest(mode=mode):
+                ports, nonce, core, candidate, _noisy = self.boot_query_fixture(reply_mode=mode)
+                with self.assertRaises(runner.MeshDfuFailure):
+                    runner.collect_iteration(ports, 1, nonce, core, candidate, [], time.monotonic() + 0.05)
+                self.assertEqual(1, sum(b"|QUERY_BOOT|" in payload for payload in ports["target_b"].writes))
+                if mode != "duplicate":
+                    self.assertFalse(any(b"|APPLY|" in payload for payload in ports["target_b"].writes))
+
     def test_mcuboot_version_parser(self) -> None:
         """! @brief MCUboot v1 header에서 exact semantic version을 읽습니다. """
 
@@ -355,6 +452,9 @@ class M32MeshDfuHilTests(unittest.TestCase):
         for token in (
             "boot_write_img_confirmed",
             'settings_load_subtree_direct("m32mdfu"',
+            '"M32MDFU|1|QUERY_BOOT|nonce="',
+            "hasSessionPrefix(boot_query_prefix)",
+            '"|core=" M32_MDFU_CORE_REVISION',
             'Serial.print("|BOOT|role=")',
             'Serial.print("|APPLIED|role=")',
             'Serial.print("|STOPPED|role=")',
