@@ -64,6 +64,25 @@ class M32StandaloneRadioContractTests(unittest.TestCase):
         self.assertNotIn("malloc(", backend)
         self.assertNotIn("new ", backend)
 
+    def test_esb_stop_clears_only_exclusive_radio_shortcuts_after_disable(self) -> None:
+        """! @brief 이미-idle인 단독 PTX의 잔여 SHORTS를 지우되 MPSL 공유 RADIO에는 쓰지 않습니다. """
+        backend = (ESB / "src/NUCODE_Radio_ESB.cpp").read_text(encoding="utf-8")
+        stop = backend.split("bool EsbRadio::stop() noexcept", 1)[1].split(
+            "bool EsbRadio::busy() const noexcept", 1
+        )[0]
+        guarded_cleanup = (
+            "if (!IS_ENABLED(CONFIG_ESB_MPSL_TIMESLOT))\n"
+            "        {\n"
+            "            nrf_radio_shorts_set(NRF_RADIO, 0U);\n"
+            "        }"
+        )
+        self.assertIn("#include <hal/nrf_radio.h>", backend)
+        self.assertIn(guarded_cleanup, stop)
+        self.assertEqual(stop.count("nrf_radio_shorts_set("), 1)
+        self.assertLess(stop.index("esb_disable();"), stop.index(guarded_cleanup))
+        self.assertLess(stop.index(guarded_cleanup), stop.index("state.started = false;"))
+        self.assertLess(stop.index("return false;"), stop.index(guarded_cleanup))
+
     def test_dedicated_profiles_forbid_cross_radio_ownership(self) -> None:
         """! @brief 각 단독 profile과 feature가 다른 RADIO backend를 거부합니다. """
         profile154 = json.loads(
