@@ -585,14 +585,14 @@ def send(port: Any, line: str) -> None:
 
 
 def rejected_candidate_boot(line: str) -> bool:
-    """! @brief 혼합 손상 BOOT도 수락하지 않고 한 번의 새 조회가 필요한 framing만 식별합니다. """
+    """! @brief 수신 decode 대체문자·혼합 손상 BOOT는 수락하지 않고 한 번의 새 조회만 식별합니다. """
 
     match = re.fullmatch(
         r"([^\r\n]{3,32})" + re.escape(PROTOCOL) + r"\|BOOT\|([^\r\n]+)", line
     )
     return (
         match is not None
-        and "?" in match.group(1)
+        and any(marker in match.group(1) for marker in ("?", "\ufffd"))
         and PROTOCOL not in match.group(1)
         and PROTOCOL not in match.group(2)
     )

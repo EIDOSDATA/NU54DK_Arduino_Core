@@ -490,7 +490,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m32_ble_nordic.py": (1, "a522b2993ed2c16ed5df9215115e4f7978eeb7533e3f51b2018392f7b282ccba"),
     "test_m32_coexistence.py": (6, "353e2ad06054049a5cb9ad502bb28299e1fb000ac0874833cbbe6419037705d0"),
     "test_m32_coexistence_hil.py": (6, "af0451d5eee9802420b35765c2305a79515f437def51336aa555232b56140281"),
-    "test_m32_mesh_dfu_hil.py": (18, "bec52325c6a8c02c691981b98915c474e422755404cab13ea7ebdd9f052f56a8"),
+    "test_m32_mesh_dfu_hil.py": (19, "77fdd800c4b7dc6520eaec94fbfe5249e3ffbc97d4295037b28f65cf83735c0c"),
     "test_m32_mesh_hil.py": (21, "4af53e61748e6cd8e3bc1e2cb9ff5a526746f05276e0b76aad41271058f8e082"),
     "test_m32_mesh_management.py": (4, "3f1d108e3adebc29fc6264ef9bffc037edc89b12cb1df78619c1fb36f23d5efa"),
     "test_m32_radio_attestation.py": (5, "266b9501383403943fabc9a37c926a0e4d87cb991c600c904192f532cf553d09"),

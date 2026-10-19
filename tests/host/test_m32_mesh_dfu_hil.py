@@ -263,6 +263,51 @@ class M32MeshDfuHilTests(unittest.TestCase):
                     runner.collect_iteration(ports, 1, nonce, core, candidate, [], time.monotonic() + 0.05)
                 self.assertEqual([b"QUERY_BOOT"], [payload.split(b"|")[2] for payload in ports["target_b"].writes])
 
+    def test_non_ascii_uart_decode_queries_fresh_boot_before_apply(self) -> None:
+        """! @brief 실제 수신 decode의 대체문자는 저장 로그의 물음표와 구분해 새 응답만 검증합니다. """
+
+        marker = (runner.PROTOCOL + "|").encode("ascii")
+        for high_byte in (b"\x80", b"\xff"):
+            prefix = b"\x00" + high_byte * 6 + b"_XE\x1e" + high_byte * 5
+            decoded_prefix = prefix.decode("ascii", errors="replace")
+            stored_prefix = decoded_prefix.encode("ascii", errors="replace").decode("ascii")
+            self.assertNotIn("?", decoded_prefix)
+            self.assertIn("\ufffd", decoded_prefix)
+            for mode in ("canonical", "none", "corrupt", "duplicate"):
+                with self.subTest(high_byte=high_byte.hex(), reply_mode=mode):
+                    ports, nonce, core, candidate, stored = self.boot_query_fixture(
+                        reply_mode=mode, noise_prefix=stored_prefix
+                    )
+                    canonical = marker + stored.encode("ascii").partition(marker)[2]
+                    wire = prefix + canonical + b"\n"
+                    decoded = wire.decode("ascii", errors="replace").strip()
+                    self.assertEqual(stored, decoded.encode("ascii", errors="replace").decode("ascii"))
+                    self.assertEqual((decoded, None), runner.recover_vcom_protocol_prefix(decoded))
+                    self.assertTrue(runner.rejected_candidate_boot(decoded))
+                    ports["target_b"].lines = [wire]
+                    transcript = []
+                    if mode == "canonical":
+                        _boots, _result, _end, details = runner.collect_iteration(
+                            ports, 1, nonce, core, candidate, transcript, time.monotonic() + 0.1
+                        )
+                        self.assertEqual({"target_a", "target_b"}, set(details["applied"]))
+                        self.assertEqual([b"QUERY_BOOT", b"APPLY"],
+                                         [payload.split(b"|")[2] for payload in ports["target_b"].writes])
+                        self.assertIn("target_b-raw: " + decoded, transcript)
+                    else:
+                        with self.assertRaises(runner.MeshDfuFailure):
+                            runner.collect_iteration(
+                                ports, 1, nonce, core, candidate, transcript, time.monotonic() + 0.05
+                            )
+                        self.assertEqual(1, sum(b"|QUERY_BOOT|" in payload
+                                                for payload in ports["target_b"].writes))
+                        if mode != "duplicate":
+                            self.assertFalse(any(b"|APPLY|" in payload for payload in ports["target_b"].writes))
+            for length in (2, 33):
+                self.assertFalse(runner.rejected_candidate_boot(
+                    "\ufffd" * length + runner.PROTOCOL + "|BOOT|role=target_b"
+                ))
+
     def test_boot_query_is_bounded_and_rejects_corrupt_or_duplicate_reply(self) -> None:
         """! @brief 무응답·다시 손상된 BOOT·중복 BOOT는 한 조회 뒤 실패하며 무한 재시도하지 않습니다. """
 
