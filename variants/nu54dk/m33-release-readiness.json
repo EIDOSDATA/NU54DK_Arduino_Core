@@ -11826,7 +11826,7 @@
           "evidence": null
         }
       },
-      "sha256": "f31574296689f6f773cbcb98ce93fd283574d31263d5591b7ed32e9ce26c45b4"
+      "sha256": "4fd4fb21bbce1aa61dcd284da130c24ecb8445545006a8692e89f28850c7a6a1"
     },
     {
       "path": "libraries/NUCODE_BLE/examples/PeriodicAdvertiser/PeriodicAdvertiser.ino",
