@@ -532,6 +532,7 @@ namespace
         }
         return false;
     }
+#if !defined(M33_PROFILE_NATIVE)
     /** @brief 이전 link의 보안 event queue가 비워질 때까지 표준 profile 재연결을 지연합니다. */
     bool deferStaleRecoveryRestart(StaleRecoveryRestart restart)
     {
@@ -596,6 +597,7 @@ namespace
         }
         record("PROGRESS", progress_reason);
     }
+#endif
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
     bool subscribed(unsigned slot, unsigned profile)
     {
@@ -2442,7 +2444,9 @@ void loop()
     }
     BLEDevice.poll();
     BLESecurity.poll();
+#if !defined(M33_PROFILE_NATIVE)
     pollStaleRecoveryRestart();
+#endif
     if (watchdog_channel >= 0 && !cleanup_expired)
     {
         static_cast<void>(wdt_feed(watchdog, watchdog_channel));

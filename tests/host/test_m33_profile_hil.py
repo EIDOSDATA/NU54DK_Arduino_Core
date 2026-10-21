@@ -683,6 +683,19 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("stale_recovery_restart_delay_ms", deferred)
         self.assertIn("BLEScan.start(true)", deferred)
         self.assertIn("advertise()", deferred)
+        self.assertIn(
+            "#if !defined(M33_PROFILE_NATIVE)\n"
+            "    /** @brief 이전 link의 보안 event queue가 비워질 때까지 표준 profile 재연결을 지연합니다. */\n"
+            "    bool deferStaleRecoveryRestart",
+            source,
+        )
+        self.assertIn(
+            "BLESecurity.poll();\n"
+            "#if !defined(M33_PROFILE_NATIVE)\n"
+            "    pollStaleRecoveryRestart();\n"
+            "#endif",
+            source,
+        )
 
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]
