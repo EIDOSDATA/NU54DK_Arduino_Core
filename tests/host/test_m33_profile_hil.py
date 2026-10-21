@@ -686,6 +686,12 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("restart_delay_ms", deferred)
         self.assertIn("BLEScan.start(true)", deferred)
         self.assertIn("advertise()", deferred)
+        self.assertIn("stale_recovery_require_advertiser_ready = true", source)
+        self.assertIn("stale_recovery_advertiser_ready = true", source)
+        self.assertIn("standard_manufacturer_data[sizeof(nonce_bytes)]", source)
+        self.assertIn("length == 20U", source)
+        self.assertIn("stale-bond-advertiser-not-ready", source)
+        self.assertIn("stale-bond-advertiser-ready", source)
         self.assertIn(
             "#if !defined(M33_PROFILE_NATIVE)\n"
             "    /** @brief 이전 link의 보안 event queue가 비워질 때까지 표준 profile 재연결을 지연합니다. */\n"

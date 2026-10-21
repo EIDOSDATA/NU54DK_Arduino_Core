@@ -88,6 +88,11 @@ namespace
     size_t stale_recovery_count = 0U;
     StaleRecoveryRestart stale_recovery_restart = StaleRecoveryRestart::none;
     uint32_t stale_recovery_restart_at = 0U;
+#if !defined(M33_PROFILE_NATIVE)
+    bool stale_recovery_advertiser_ready = false;
+    bool stale_recovery_require_advertiser_ready = false;
+    bool stale_recovery_wait_reported = false;
+#endif
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
     SensorService *sensors[] = {&clock_service, &temperature, &cycling, &running, &elapsed};
@@ -564,6 +569,16 @@ namespace
         }
         stale_recovery_restart = restart;
         stale_recovery_restart_at = millis();
+        if (restart == StaleRecoveryRestart::hub_scan ||
+            restart == StaleRecoveryRestart::client_scan)
+        {
+            stale_recovery_require_advertiser_ready = true;
+            stale_recovery_wait_reported = false;
+        }
+        else
+        {
+            stale_recovery_advertiser_ready = true;
+        }
         record("PROGRESS", "|reason=stale-bond-restart-deferred");
         return true;
     }
@@ -1703,10 +1718,20 @@ namespace
 #else
             0x054dU;
 #endif
+        const uint8_t *manufacturer_data = nonce_bytes;
+        size_t manufacturer_data_size = sizeof(nonce_bytes);
+#if !defined(M33_PROFILE_NATIVE)
+        uint8_t standard_manufacturer_data[sizeof(nonce_bytes) + 1U] = {};
+        memcpy(standard_manufacturer_data, nonce_bytes, sizeof(nonce_bytes));
+        standard_manufacturer_data[sizeof(nonce_bytes)] =
+            stale_recovery_advertiser_ready ? 1U : 0U;
+        manufacturer_data = standard_manufacturer_data;
+        manufacturer_data_size = sizeof(standard_manufacturer_data);
+#endif
         return startStep(BLEAdvertising.clear(), "advertising-clear") &&
-               startStep(
-                   BLEAdvertising.setManufacturerData(company, nonce_bytes, sizeof(nonce_bytes)),
-                   "advertising-data") &&
+               startStep(BLEAdvertising.setManufacturerData(
+                             company, manufacturer_data, manufacturer_data_size),
+                         "advertising-data") &&
                startStep(BLEAdvertising.start(), "advertising-start");
     }
     void onLink(const BLEEventInfo &event, void *)
@@ -2004,11 +2029,36 @@ namespace
 #else
                 0x4dU;
 #endif
-            if (length == 19U && result.payload[cursor + 1U] == 0xffU &&
+            const bool identity_match =
+#if defined(M33_PROFILE_NATIVE)
+                length == 19U &&
+#else
+                length == 20U && result.payload[cursor + 20U] <= 1U &&
+#endif
+                result.payload[cursor + 1U] == 0xffU &&
                 result.payload[cursor + 2U] == company_low &&
                 result.payload[cursor + 3U] == 0x05U &&
-                memcmp(result.payload + cursor + 4U, nonce_bytes, sizeof(nonce_bytes)) == 0)
+                memcmp(result.payload + cursor + 4U, nonce_bytes, sizeof(nonce_bytes)) == 0;
+            if (identity_match)
             {
+#if !defined(M33_PROFILE_NATIVE)
+                const bool advertiser_ready = result.payload[cursor + 20U] == 1U;
+                if (stale_recovery_require_advertiser_ready && !advertiser_ready)
+                {
+                    if (!stale_recovery_wait_reported)
+                    {
+                        stale_recovery_wait_reported = true;
+                        record("PROGRESS", "|reason=stale-bond-advertiser-not-ready");
+                    }
+                    return;
+                }
+                if (stale_recovery_require_advertiser_ready)
+                {
+                    record("PROGRESS", "|reason=stale-bond-advertiser-ready");
+                }
+                stale_recovery_require_advertiser_ready = false;
+                stale_recovery_wait_reported = false;
+#endif
                 record("PROGRESS", "|reason=scan-match");
                 if (!BLEScan.stop() || !BLEConnection.connect(result.address, peer))
                 {
@@ -2062,6 +2112,11 @@ namespace
         hub_security_started = false;
         stale_recovery_restart = StaleRecoveryRestart::none;
         stale_recovery_restart_at = 0U;
+#if !defined(M33_PROFILE_NATIVE)
+        stale_recovery_advertiser_ready = false;
+        stale_recovery_require_advertiser_ready = false;
+        stale_recovery_wait_reported = false;
+#endif
         for (size_t index = 0U; index < stale_recovery_capacity; ++index)
         {
             stale_recovery_links[index] = {};
