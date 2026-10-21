@@ -658,6 +658,32 @@ class ProfileHilTests(unittest.TestCase):
                       connected_guard)
         self.assertIn("return;", connected_guard)
 
+    def test_stale_recovery_defers_restart_until_security_poll(self):
+        """! @brief stale bond 재연결이 이전 보안 event drain 뒤에만 시작되는지 검사합니다. """
+
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "tests/zephyr/m33_profile_hil/src/main.cpp").read_text(
+            encoding="utf-8"
+        )
+        on_link = source.split("void onLink(const BLEEventInfo &event, void *)", 1)[1].split(
+            "void onScan(const BLEScanResult &result, void *)", 1
+        )[0]
+        for action in ("hub_scan", "hub_advertise", "watcher_advertise", "client_scan"):
+            self.assertIn(f"deferStaleRecoveryRestart(StaleRecoveryRestart::{action})", on_link)
+        self.assertNotIn('record("PROGRESS", "|reason=stale-bond-hub-rescan")', on_link)
+        poll_order = source.split("void loop()", 1)[1].split(
+            "if (watchdog_channel >= 0", 1
+        )[0]
+        self.assertLess(poll_order.index("BLESecurity.poll();"),
+                        poll_order.index("pollStaleRecoveryRestart();"))
+        deferred = source.split("void pollStaleRecoveryRestart()", 1)[1].split(
+            "/** @brief test backend", 1
+        )[0]
+        self.assertIn("if (cleanup_requested)", deferred)
+        self.assertIn("stale_recovery_restart_delay_ms", deferred)
+        self.assertIn("BLEScan.start(true)", deferred)
+        self.assertIn("advertise()", deferred)
+
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]
         compiler = compiler_command()

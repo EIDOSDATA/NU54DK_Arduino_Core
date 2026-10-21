@@ -71,10 +71,21 @@ namespace
     unsigned bms_persistence_preserved = 0U, bms_persistence_restored = 0U;
     bool hub_security_started = false;
     constexpr size_t stale_recovery_capacity = 2U;
+    constexpr uint32_t stale_recovery_restart_delay_ms = 250U;
+    enum class StaleRecoveryRestart : uint8_t
+    {
+        none,
+        hub_scan,
+        hub_advertise,
+        watcher_advertise,
+        client_scan,
+    };
     BLEConnectionHandle stale_recovery_links[stale_recovery_capacity] = {};
     PeerAddress stale_recovery_addresses[stale_recovery_capacity] = {};
     bool stale_recovery_disconnected[stale_recovery_capacity] = {};
     size_t stale_recovery_count = 0U;
+    StaleRecoveryRestart stale_recovery_restart = StaleRecoveryRestart::none;
+    uint32_t stale_recovery_restart_at = 0U;
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
     SensorService *sensors[] = {&clock_service, &temperature, &cycling, &running, &elapsed};
@@ -520,6 +531,70 @@ namespace
             }
         }
         return false;
+    }
+    /** @brief 이전 link의 보안 event queue가 비워질 때까지 표준 profile 재연결을 지연합니다. */
+    bool deferStaleRecoveryRestart(StaleRecoveryRestart restart)
+    {
+        if (restart == StaleRecoveryRestart::none ||
+            stale_recovery_restart != StaleRecoveryRestart::none)
+        {
+            fail("|reason=stale-bond-restart-state");
+            return false;
+        }
+        stale_recovery_restart = restart;
+        stale_recovery_restart_at = millis();
+        record("PROGRESS", "|reason=stale-bond-restart-deferred");
+        return true;
+    }
+    /** @brief 늦은 security event를 poll한 뒤 예약된 scan 또는 advertising을 한 번 재개합니다. */
+    void pollStaleRecoveryRestart()
+    {
+        if (cleanup_requested)
+        {
+            stale_recovery_restart = StaleRecoveryRestart::none;
+            return;
+        }
+        if (stale_recovery_restart == StaleRecoveryRestart::none ||
+            millis() - stale_recovery_restart_at < stale_recovery_restart_delay_ms)
+        {
+            return;
+        }
+        const StaleRecoveryRestart restart = stale_recovery_restart;
+        stale_recovery_restart = StaleRecoveryRestart::none;
+        bool restarted = false;
+        const char *failure_reason = "|reason=stale-bond-restart-state";
+        const char *progress_reason = "|reason=stale-bond-restart-state";
+        if (restart == StaleRecoveryRestart::hub_scan)
+        {
+            restarted = BLEScan.start(true);
+            failure_reason = "|reason=stale-bond-hub-rescan";
+            progress_reason = "|reason=stale-bond-hub-rescan";
+        }
+        else if (restart == StaleRecoveryRestart::hub_advertise)
+        {
+            restarted = advertise();
+            hub_advertised = restarted;
+            failure_reason = "|reason=stale-bond-hub-readvertise";
+            progress_reason = "|reason=stale-bond-hub-readvertise";
+        }
+        else if (restart == StaleRecoveryRestart::watcher_advertise)
+        {
+            restarted = advertise();
+            failure_reason = "|reason=stale-bond-watcher-readvertise";
+            progress_reason = "|reason=stale-bond-watcher-readvertise";
+        }
+        else if (restart == StaleRecoveryRestart::client_scan)
+        {
+            restarted = BLEScan.start(true);
+            failure_reason = "|reason=stale-bond-client-rescan";
+            progress_reason = "|reason=stale-bond-client-rescan";
+        }
+        if (!restarted)
+        {
+            fail(failure_reason);
+            return;
+        }
+        record("PROGRESS", progress_reason);
     }
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
     bool subscribed(unsigned slot, unsigned profile)
@@ -1780,22 +1855,11 @@ namespace
             {
                 peer = {};
                 hub_security_started = false;
-                if (!BLEScan.start(true))
-                {
-                    fail("|reason=stale-bond-hub-rescan");
-                    return;
-                }
-                record("PROGRESS", "|reason=stale-bond-hub-rescan");
+                static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::hub_scan));
             }
             else
             {
-                hub_advertised = advertise();
-                if (!hub_advertised)
-                {
-                    fail("|reason=stale-bond-hub-readvertise");
-                    return;
-                }
-                record("PROGRESS", "|reason=stale-bond-hub-readvertise");
+                static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::hub_advertise));
             }
             return;
         }
@@ -1823,19 +1887,9 @@ namespace
         {
             peer = {};
 #if defined(M33_PROFILE_WATCHER)
-            if (!advertise())
-            {
-                fail("|reason=stale-bond-watcher-readvertise");
-                return;
-            }
-            record("PROGRESS", "|reason=stale-bond-watcher-readvertise");
+            static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise));
 #else
-            if (!BLEScan.start(true))
-            {
-                fail("|reason=stale-bond-client-rescan");
-                return;
-            }
-            record("PROGRESS", "|reason=stale-bond-client-rescan");
+            static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::client_scan));
 #endif
             return;
         }
@@ -1978,6 +2032,8 @@ namespace
 #endif
         stale_recovery_count = 0U;
         hub_security_started = false;
+        stale_recovery_restart = StaleRecoveryRestart::none;
+        stale_recovery_restart_at = 0U;
         for (size_t index = 0U; index < stale_recovery_capacity; ++index)
         {
             stale_recovery_links[index] = {};
@@ -2386,6 +2442,7 @@ void loop()
     }
     BLEDevice.poll();
     BLESecurity.poll();
+    pollStaleRecoveryRestart();
     if (watchdog_channel >= 0 && !cleanup_expired)
     {
         static_cast<void>(wdt_feed(watchdog, watchdog_channel));
