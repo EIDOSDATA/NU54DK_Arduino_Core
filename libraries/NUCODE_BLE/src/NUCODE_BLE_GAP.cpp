@@ -81,7 +81,9 @@ namespace nucode::ble::internal::gap
                     BLEPeriodicSyncHandle periodic_sync,
                     std::uint8_t reason,
                     BLETransmitPowerReport transmit_power,
-                    BLEPathLossReport path_loss) noexcept
+                    BLEPathLossReport path_loss,
+                    BLEError error,
+                    int driver_error) noexcept
     {
         const std::uint32_t current_generation =
             static_cast<std::uint32_t>(atomic_get(&gapState().device_session_generation));
@@ -96,6 +98,8 @@ namespace nucode::ble::internal::gap
                     .reason = reason,
                     .transmit_power = transmit_power,
                     .path_loss = path_loss,
+                    .error = error,
+                    .driver_error = driver_error,
                 },
             .device_generation =
                 device_generation == 0U ? current_generation : device_generation,
@@ -118,7 +122,8 @@ namespace nucode::ble::internal
         atomic_set(&gapState().last_driver_error_value, driver_error);
         if (notify && error != BLEError::none)
         {
-            queueEvent(BLEEvent::error);
+            queueEvent(BLEEvent::error, {}, BLELinkRole::none, 0U, {}, {}, 0U, {}, {}, error,
+                       driver_error);
         }
     }
     struct bt_conn *referenceConnection() noexcept
@@ -313,6 +318,13 @@ namespace nucode::ble
             BLEEventCallback callback = gapState().event_callback;
             if (callback != nullptr)
             {
+                if (record.information.event == BLEEvent::error)
+                {
+                    atomic_set(&gapState().last_error_value,
+                               static_cast<atomic_val_t>(record.information.error));
+                    atomic_set(&gapState().last_driver_error_value,
+                               record.information.driver_error);
+                }
                 callback(record.information.event, gapState().event_context);
             }
             if (record.device_generation !=
@@ -323,6 +335,13 @@ namespace nucode::ble
             BLEEventInfoCallback information_callback = gapState().event_info_callback;
             if (information_callback != nullptr)
             {
+                if (record.information.event == BLEEvent::error)
+                {
+                    atomic_set(&gapState().last_error_value,
+                               static_cast<atomic_val_t>(record.information.error));
+                    atomic_set(&gapState().last_driver_error_value,
+                               record.information.driver_error);
+                }
                 information_callback(record.information, gapState().event_info_context);
             }
         }

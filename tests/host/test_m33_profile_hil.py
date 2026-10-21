@@ -720,6 +720,12 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("while (expected_error_events != 0U", drain)
         self.assertIn("BLEDevice.poll();", drain)
         self.assertIn("BLESecurity.poll();", drain)
+        on_link = source.split("void onLink(const BLEEventInfo &event, void *)", 1)[1].split(
+            "void onScan(const BLEScanResult &result, void *)", 1
+        )[0]
+        self.assertIn("event.error == BLEError::not_connected", on_link)
+        self.assertIn("event.driver_error == -ENOTCONN", on_link)
+        self.assertNotIn("BLEDevice.lastDriverError() == -ENOTCONN", on_link)
         stop = source.split(
             'else if (strncmp(command, "M33PROFILE|1|STOP|nonce=", 24U) == 0)', 1
         )[1].split("else if (!start(command)", 1)[0]

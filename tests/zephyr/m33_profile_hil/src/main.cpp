@@ -1742,7 +1742,8 @@ namespace
         }
         if (event.event == BLEEvent::error)
         {
-            if (BLEDevice.lastDriverError() == -ENOTCONN && expected_error_events != 0U)
+            if (event.error == BLEError::not_connected && event.driver_error == -ENOTCONN &&
+                expected_error_events != 0U)
             {
                 --expected_error_events;
                 ++no_ccc_errors;
@@ -1767,7 +1768,7 @@ namespace
             snprintf(detail, sizeof(detail),
                      "|reason=unexpected-gap-error|ble_error=%u|ble_driver=%d|last_att_error=%u|"
                      "profile_index=%u|phase=%u|alert_slot=%u|alert_ccc=%u|alert_sent=%u",
-                     static_cast<unsigned>(BLEDevice.lastError()), BLEDevice.lastDriverError(),
+                     static_cast<unsigned>(event.error), event.driver_error,
                      static_cast<unsigned>(BLEClient.lastAttError(peer)), index, phase, alert_slot,
                      alert_ccc, alert_sent);
             fail(detail);

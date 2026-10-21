@@ -388,7 +388,9 @@ namespace nucode::ble::internal::gap
                     BLEPeriodicSyncHandle periodic_sync = {},
                     std::uint8_t reason = 0U,
                     BLETransmitPowerReport transmit_power = {},
-                    BLEPathLossReport path_loss = {}) noexcept;
+                    BLEPathLossReport path_loss = {},
+                    BLEError error = BLEError::none,
+                    int driver_error = 0) noexcept;
 
     /** @brief local name의 UTF-8이 well-formed인지 동적 할당 없이 검증합니다. */
     inline bool validUtf8(const char *text, std::size_t length) noexcept
