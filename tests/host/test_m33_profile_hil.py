@@ -680,7 +680,10 @@ class ProfileHilTests(unittest.TestCase):
             "/** @brief test backend", 1
         )[0]
         self.assertIn("if (cleanup_requested)", deferred)
-        self.assertIn("stale_recovery_restart_delay_ms", deferred)
+        self.assertIn("stale_recovery_advertiser_restart_delay_ms = 250U", source)
+        self.assertIn("stale_recovery_scanner_restart_delay_ms = 750U", source)
+        self.assertIn("const bool scanner_restart", deferred)
+        self.assertIn("restart_delay_ms", deferred)
         self.assertIn("BLEScan.start(true)", deferred)
         self.assertIn("advertise()", deferred)
         self.assertIn(
@@ -696,6 +699,28 @@ class ProfileHilTests(unittest.TestCase):
             "#endif",
             source,
         )
+
+    def test_stop_drains_expected_errors_before_stats(self):
+        """! @brief STOP이 비동기 no-CCC 오류를 제한 시간 안에 소비한 뒤 통계를 남기는지 검사합니다. """
+
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "tests/zephyr/m33_profile_hil/src/main.cpp").read_text(
+            encoding="utf-8"
+        )
+        drain = source.split("void drainExpectedErrorEvents()", 1)[1].split(
+            "/** @brief facade", 1
+        )[0]
+        self.assertIn("expected_error_drain_timeout_ms = 1000U", source)
+        self.assertIn("while (expected_error_events != 0U", drain)
+        self.assertIn("BLEDevice.poll();", drain)
+        self.assertIn("BLESecurity.poll();", drain)
+        stop = source.split(
+            'else if (strncmp(command, "M33PROFILE|1|STOP|nonce=", 24U) == 0)', 1
+        )[1].split("else if (!start(command)", 1)[0]
+        self.assertLess(stop.index("drainExpectedErrorEvents();"),
+                        stop.index('record("SERVER_STATS", detail);'))
+        self.assertLess(stop.index("drainExpectedErrorEvents();"),
+                        stop.index('record("ERROR_STATS", detail);'))
 
     def test_target_reject_pair_orders(self):
         root = Path(__file__).resolve().parents[2]

@@ -43,6 +43,7 @@ namespace
     unsigned last_att_error = 0U;
     bool hub_advertised = false;
     unsigned no_ccc_errors = 0U, expected_error_events = 0U;
+    constexpr uint32_t expected_error_drain_timeout_ms = 1000U;
     unsigned sensor_sent[2][5] = {}, sensor_no_ccc[2][5] = {};
     ExpectedReject<BLEConnectionHandle> att_reject;
     unsigned att_gap_rejects = 0U;
@@ -71,7 +72,8 @@ namespace
     unsigned bms_persistence_preserved = 0U, bms_persistence_restored = 0U;
     bool hub_security_started = false;
     constexpr size_t stale_recovery_capacity = 2U;
-    constexpr uint32_t stale_recovery_restart_delay_ms = 250U;
+    constexpr uint32_t stale_recovery_advertiser_restart_delay_ms = 250U;
+    constexpr uint32_t stale_recovery_scanner_restart_delay_ms = 750U;
     enum class StaleRecoveryRestart : uint8_t
     {
         none,
@@ -168,6 +170,24 @@ namespace
         }
         return true;
     }
+#if defined(M33_PROFILE_SERVER) && !defined(M33_PROFILE_NATIVE)
+    /** @brief STOP 통계 전에 예약된 no-CCC 오류 event를 제한 시간 동안 모두 소비합니다. */
+    void drainExpectedErrorEvents()
+    {
+        const uint32_t drain_at = millis();
+        while (expected_error_events != 0U &&
+               millis() - drain_at < expected_error_drain_timeout_ms)
+        {
+            BLEDevice.poll();
+            BLESecurity.poll();
+            if (watchdog_channel >= 0)
+            {
+                static_cast<void>(wdt_feed(watchdog, watchdog_channel));
+            }
+            delay(1);
+        }
+    }
+#endif
     /** @brief facade가 handle을 지운 뒤에도 native 연결·시도·해제 중 상태를 셉니다. */
     void countNativeConnections(bt_conn *connection, void *context)
     {
@@ -555,8 +575,14 @@ namespace
             stale_recovery_restart = StaleRecoveryRestart::none;
             return;
         }
+        const bool scanner_restart =
+            stale_recovery_restart == StaleRecoveryRestart::hub_scan ||
+            stale_recovery_restart == StaleRecoveryRestart::client_scan;
+        const uint32_t restart_delay_ms =
+            scanner_restart ? stale_recovery_scanner_restart_delay_ms
+                            : stale_recovery_advertiser_restart_delay_ms;
         if (stale_recovery_restart == StaleRecoveryRestart::none ||
-            millis() - stale_recovery_restart_at < stale_recovery_restart_delay_ms)
+            millis() - stale_recovery_restart_at < restart_delay_ms)
         {
             return;
         }
@@ -2371,6 +2397,9 @@ namespace
                 fail("|reason=stop-nonce-mismatch");
                 return;
             }
+#if defined(M33_PROFILE_SERVER) && !defined(M33_PROFILE_NATIVE)
+            drainExpectedErrorEvents();
+#endif
             char detail[160];
             snprintf(detail, sizeof(detail),
                       "|max_links=%u|email_deliveries=%u|alert_denied=%u|bond_deletions=%u|bms_"
