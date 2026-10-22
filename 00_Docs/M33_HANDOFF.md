@@ -1,13 +1,30 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-19**. 현재는 사용자 연속 진행 지시에 따라 실패별 집중 수정을 진행한다.
-실패 수정은
-**한 항목 수정 → 로컬 해당 항목 재검증 → 실제 PASS 확인 → 다음 실패** 순서다.
-전수조사 완료·대규모 일괄 수정·전체 49개·Actions를 개별 수정의 선행조건으로 삼지 않는다.
-W06은 미완료이며, 이전 자동 재개 지시보다 최신 사용자 범위를 우선한다.
+최종 갱신: **2026-10-23**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+사용자 요청으로 최종 전체 검증은 빌드 도중 중지하고 현재 결과를 기록·push한다.
+개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
-## 최신 재개 지점 — 2026-10-19
+## 최신 중단 지점 — 2026-10-23
+
+- 개발 집중 검증 #1~#49는 모두 PASS했다. #39~#43의 주요 실기는 clean `e944a7cc…`,
+  #44~#49와 #40 ecosystem의 최종 재확인은 clean `c6fc5764…`에 귀속된다. 이 source별 PASS를
+  합쳐 최종 동일 source 49/49로 선언하지 않는다.
+- 마지막 #49 `resources:radio`는 clean `c6fc5764…`에서 Host 124개·skip 0, 필요한 build,
+  standalone radio154/ESB와 세 coexistence scenario 실제 HIL·독립 replay를 PASS했다. 최종 replay
+  `D:\w06\focused-resource49-radio-replay-c6fc5764-attempt1.json`의 SHA-256은
+  `3f018cd4a083d30983713ae7c227a98e6bdc9b1be6c7d6274d7c12b7117e2447`이다.
+- 최종 clean `c6fc5764…` build에서 Twister 54/54·40/40과 `arduino-07eba4b91392`를 PASS했다.
+  긴 root에서 발생한 두 Arduino FAIL은 실제 존재하는 260자 초과 object를 번들 `ar`가 열지 못한
+  Windows MAX_PATH 환경 문제다. 짧은 root `D:\w06\f5`에서 첫 Arduino action 408/408을 통과해
+  우회를 확인했다.
+- 다음 `arduino-141392f7c7a0`의 220/463에서 사용자가 중지를 요청했다. 실행 writer는 종료했고
+  이 action을 PASS로 승격하지 않았다. build index 141·runtime 9·stage 150·동일 source matrix
+  49/49·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
+- 중단 원본과 SHA는 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)을
+  따른다. D의 현재 final root와 `D:\w06\f5`는 삭제하지 않는다.
+
+## 이전 재개 지점 — 2026-10-19
 
 - #37 `resources:df_cs`는 clean `74398d4ebfda015173ef9afa4bf1fd170275d3f1`에서 DF 20회,
   CS RAS 100 procedure·재시작 20회·재연결 20회, CS·scan 동시 ACL 종료·복구 20회를
