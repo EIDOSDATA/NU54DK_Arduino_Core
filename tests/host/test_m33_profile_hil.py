@@ -620,7 +620,7 @@ class ProfileHilTests(unittest.TestCase):
         self.assertIn("|security_error=%u|security_driver=%d", client_submit)
 
     def test_programming_halts_target_and_binds_exact_image(self):
-        """! @brief profile flash가 실행 중 target을 정지하고 exact image를 결합하는지 검사합니다. """
+        """! @brief watcher readback까지 halt를 유지하고 exact image를 결합하는지 검사합니다. """
 
         source = Path(PROFILE_RUN.__file__).read_text(encoding="utf-8")
         flash_call = source.split(
@@ -628,6 +628,14 @@ class ProfileHilTests(unittest.TestCase):
         )[1].split("readback_records, programming_receipt", 1)[0]
         self.assertIn('expected_sha256=board["image_sha256"]', flash_call)
         self.assertIn("reset_and_halt_before_program=True", flash_call)
+        self.assertIn('defer_reset=role == "watcher"', flash_call)
+        readback = source.index("readback_records, programming_receipt")
+        watcher_reset = source.index("watcher_reset = reset_target_pyocd_sha256")
+        serial_open = source.index("ports[role] = serial.Serial", watcher_reset)
+        self.assertLess(readback, watcher_reset)
+        self.assertLess(watcher_reset, serial_open)
+        self.assertIn('flash_records["watcher"]["mode"] = "pyocd-sector-sw-reset"', source)
+        self.assertIn('watcher_reset != "pyocd-v2-sw-reset"', source)
 
     def test_partial_serial_line_waits_for_newline(self):
         """! @brief timeout으로 나뉜 protocol 줄을 완성 전에는 해석하지 않는지 검사합니다. """

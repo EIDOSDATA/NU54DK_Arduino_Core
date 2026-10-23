@@ -12,7 +12,8 @@ import shutil
 import subprocess
 import time
 
-from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd_sha256, git_revision
+from ble_pair_hil_common import (BOARD_ROOT, flash_image_pyocd_sha256,
+                                 git_revision, reset_target_pyocd_sha256)
 from m6_serial_echo import import_pyserial
 from m32_ble_capability_run import collect_register_identity_sha256, discover_live
 from m33_sdk_risk_common import (ACTIVE_TARGET_STATES,
@@ -925,6 +926,7 @@ def execute(args: argparse.Namespace) -> dict:
                     role, board["probe_sha256"], board["image"], 120.0,
                     expected_sha256=board["image_sha256"],
                     reset_and_halt_before_program=True,
+                    defer_reset=role == "watcher",
                 )
                 flash_records[role] = {"mode": board["flash_mode"],
                                        "bytes": board["flash_bytes"]}
@@ -934,6 +936,14 @@ def execute(args: argparse.Namespace) -> dict:
                 {role: boards[role]["image"] for role in ordered_roles},
                 sidecars,
             )
+            ## @brief watcher는 readback까지 halt한 뒤 승인된 software reset으로 시작합니다.
+            watcher_reset = reset_target_pyocd_sha256(
+                "watcher", boards["watcher"]["probe_sha256"], 120.0
+            )
+            if watcher_reset != "pyocd-v2-sw-reset":
+                raise ValueError("watcher software reset mode mismatch")
+            boards["watcher"]["flash_mode"] = "pyocd-sector-sw-reset"
+            flash_records["watcher"]["mode"] = "pyocd-sector-sw-reset"
             time.sleep(2.0)
             for role, board in boards.items():
                 ports[role] = serial.Serial(
