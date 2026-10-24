@@ -1972,6 +1972,47 @@ def _bap_flash_provenance(record: dict, role: str, probe_sha256: str,
     return flash[0], int(flash[1])
 
 
+def _m30_dfu_cleanup_program_declarations(
+        native: dict, native_path: Path, roles: tuple[str, ...],
+        probes: dict[str, str], images: dict[str, Path]) -> dict[str, dict]:
+    """! @brief M30 DFU cleanup의 두 역할 program 증거를 중앙 readback에 결합합니다. """
+
+    phases = native.get("program_phases")
+    require(isinstance(phases, list), "M30 DFU program phase denominator mismatch")
+    cleanup = [
+        phase for phase in phases
+        if isinstance(phase, dict) and phase.get("phase") == "dfu-cleanup"
+    ]
+    require(len(cleanup) == 1, "M30 DFU cleanup phase denominator mismatch")
+    hardware = cleanup[0].get("hardware")
+    require(isinstance(hardware, list), "M30 DFU cleanup hardware mismatch")
+    by_role = {
+        row.get("role"): row
+        for row in hardware
+        if isinstance(row, dict)
+    }
+    require(set(by_role) == set(roles),
+            "M30 DFU cleanup role denominator mismatch")
+    declarations = {}
+    exact_fields = {
+        "role", "probe_sha256", "image", "build_record", "flash", "readback",
+    }
+    for role in roles:
+        row = by_role[role]
+        require(set(row) == exact_fields | {"build_identity"},
+                f"M30 DFU {role} cleanup program schema mismatch")
+        exact = _validate_exact_program_row(
+            {key: row[key] for key in exact_fields}, native_path, role
+        )
+        record = build_record_path(images[role])
+        require(exact["probe_sha256"] == probes[role] and
+                exact["image_sha256"] == digest(images[role]) and
+                exact["build_record_sha256"] == digest(record),
+                f"M30 DFU {role} cleanup program binding mismatch")
+        declarations[role] = {"flash": row["flash"]}
+    return declarations
+
+
 def _central_program_hardware(expected: dict, row: dict,
                               native_path: Path) -> list[dict]:
     """! @brief direct HEX군을 live probe hash에 결합해 same-process readback합니다. """
@@ -1992,6 +2033,10 @@ def _central_program_hardware(expected: dict, row: dict,
         entry.get("role"): entry for entry in declared if isinstance(entry, dict)
     }
     copied_build_records: dict[str, Path] | None = None
+    if expected["id"] == "m30_dfu" and not declared_by_role:
+        declared_by_role = _m30_dfu_cleanup_program_declarations(
+            native, native_path, tuple(expected["roles"]), probes, images
+        )
     if expected["id"] == "m33_ecosystem" and not declared_by_role:
         arguments = _argument_values(row["arguments"])
         fixtures = arguments.get("--fixture", [])

@@ -2067,6 +2067,98 @@ class RegressionTests(unittest.TestCase):
                         invalid, "client", probe, image
                     )
 
+    def test_m30_dfu_cleanup_program_declarations_bind_both_roles(self):
+        """! @brief M30 DFU cleanup 두 역할을 원본 HEX·build record에 결합합니다. """
+
+        roles = ("peripheral", "central")
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            native_path = base / "m30_dfu.json"
+            native_path.write_text("{}\n", encoding="utf-8")
+            images = {}
+            probes = {}
+            hardware = []
+            for role in roles:
+                image = base / f"{role}.hex"
+                image.write_text(
+                    ":080000000102030405060708D4\n:00000001FF\n",
+                    encoding="ascii"
+                )
+                record = image.with_suffix(".nu54-build.json")
+                record.write_text(
+                    json.dumps({"role": role}) + "\n", encoding="utf-8"
+                )
+                probe = hashlib.sha256(role.encode("ascii")).hexdigest()
+                ranges = [
+                    {
+                        "start": start,
+                        "length": len(data),
+                        "expected_sha256": hashlib.sha256(data).hexdigest(),
+                        "observed_sha256": hashlib.sha256(data).hexdigest(),
+                        "status": "PASS",
+                    }
+                    for start, data in RUNNER.intel_hex_ranges(image)
+                ]
+                readback = base / f"{role}.readback.json"
+                readback.write_text(json.dumps({
+                    "schema_version": 1,
+                    "kind": "m33_exact_program_readback",
+                    "status": "PASS",
+                    "role": role,
+                    "probe_sha256": probe,
+                    "image_sha256": MODULE.digest(image),
+                    "backend": "pyocd-live-target",
+                    "halted": True,
+                    "resumed": True,
+                    "pre_state": "RUNNING",
+                    "post_state": "RUNNING",
+                    "restored": True,
+                    "ranges": ranges,
+                }) + "\n", encoding="utf-8")
+                flash = {
+                    "mode": "pyocd-sector-sw-reset",
+                    "programmed_bytes": 8,
+                    "erase": "sector",
+                    "auto_unlock": False,
+                    "mass_erase": False,
+                    "automatic_recover": False,
+                }
+                hardware.append({
+                    "role": role,
+                    "probe_sha256": probe,
+                    "image": {
+                        "path": image.name,
+                        "sha256": MODULE.digest(image),
+                    },
+                    "build_record": {
+                        "path": record.name,
+                        "sha256": MODULE.digest(record),
+                    },
+                    "flash": flash,
+                    "readback": {
+                        "path": readback.name,
+                        "sha256": MODULE.digest(readback),
+                    },
+                    "build_identity": {},
+                })
+                images[role] = image
+                probes[role] = probe
+            native = {
+                "program_phases": [{
+                    "phase": "dfu-cleanup",
+                    "hardware": hardware,
+                }],
+            }
+            declarations = RUNNER._m30_dfu_cleanup_program_declarations(
+                native, native_path, roles, probes, images
+            )
+            self.assertEqual(set(roles), set(declarations))
+            self.assertTrue(all(
+                declarations[role]["flash"]["mode"] ==
+                "pyocd-sector-sw-reset"
+                for role in roles
+            ))
+
     def test_post_reset_state_accepts_active_sleep_and_rejects_halt(self):
         """! @brief debugger 상태 복원은 RUNNING과 SLEEPING만 허용합니다. """
 

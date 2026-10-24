@@ -507,7 +507,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_profile_runtime.py": (1, "fe0c7a7a50d6cb201f0bf5ff912c8b5bfb1a227c13bc3784b853d35c11d3295c"),
     "test_m33_profile_campaign.py": (6, "625710a9e0c1d480270fbf819ad529958f0c6101b34e509a74ffc50ef58b3c0d"),
     "test_m33_readiness_contract.py": (31, "a0c78cd5b0f2357384456465c1ac21077b55ead8bb8277e8dabb1821cb22c36c"),
-    "test_m33_regression.py": (89, "87fe6412b67dcd9abce0853b0d767927efd3b097489e5c748fe7a875fc7d1376"),
+    "test_m33_regression.py": (90, "a9999d3b63844786d77241fb97a3e3c09b876d9f7889f5df79478300bc2edf1e"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
     "test_m33_w06_artifacts.py": (43, "1a8a2893231f4d3c1467a6db64c986036b30ab45d318e7b1f56bacbfc988190f"),
     "test_m33_w06_pipeline.py": (20, "46462a2c6b3b604a4e2730a68140632d2b831681d6856fc85fd3dea18b6cff26"),
