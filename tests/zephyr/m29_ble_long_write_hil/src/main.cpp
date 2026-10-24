@@ -386,6 +386,11 @@ namespace
             fail("gatt_operation", information.status);
             return;
         }
+        if (phase == Phase::settling && disconnect_requested &&
+            information.event == nucode::ble::BLEGattClientEvent::handles_invalidated)
+        {
+            return;
+        }
         if (phase == Phase::discovering)
         {
             if (information.event != nucode::ble::BLEGattClientEvent::discovery_complete ||
