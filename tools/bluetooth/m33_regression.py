@@ -477,7 +477,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m30_ble_profile_hil.py": (9, "81ae6b3754e36731fa9e158ebf591e5aa5b3e63da35e48bb27ef6aa97ce00e63"),
     "test_m30_ble_multi.py": (8, "ab4d801b87a3feb15db73c0ab98f4972f054550f91f695b837d446f6d9d7720b"),
     "test_m30_ble_security.py": (4, "7ff9b08c4412bff48fb8c85f41a746b6bd19933e6d19c3aa80e5c2365d037bb9"),
-    "test_m30_native_attestation.py": (11, "bca03c271c89c47476ca008ee7a835f7f793a052be253a4e68c2b5f9934664de"),
+    "test_m30_native_attestation.py": (12, "f046cf0deabd4fec993ead63410a52400ed0942db32e030c6630123cca0964cc"),
     "test_m31_audio_lc3.py": (3, "154edf0d52e77f445997dd4e5bfb3864cd5b757a45c8a2c701d97967fdbc3a87"),
     "test_m31_audio_bap_native_pair_run.py": (1, "583fc0107ed192ed4762c3460e75229a7015f590425c678f30331e494aad7aca"),
     "test_m31_cs_stale_key.py": (6, "d46cc053ce7050b9703eb1c5e581d9e3efa871879b830368dce2c2b20dbaa4c0"),
