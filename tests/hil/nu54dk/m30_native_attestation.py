@@ -1141,12 +1141,18 @@ def _require_target_cleanup(cleanup: Any, expected: str) -> None:
         raise M30AttestationFailure("target cleanup receipt가 다릅니다")
 
 
-def _session_identity(captures: dict[str, bytes], protocol: str) -> tuple[str, str]:
+def _session_identity(
+    captures: dict[str, bytes],
+    protocol: str,
+    max_prefix_noise: int = 0,
+) -> tuple[str, str]:
     """! @brief 두 role raw record가 공유하는 단일 nonce·revision을 반환합니다. """
 
     identities: set[tuple[str, str]] = set()
     for role in ROLES:
-        for _kind, fields in _rows(captures[role], protocol):
+        for _kind, fields in _rows(
+            captures[role], protocol, max_prefix_noise=max_prefix_noise
+        ):
             nonce = fields.get("nonce")
             core = fields.get("core")
             if nonce is not None and core is not None:
@@ -1241,7 +1247,9 @@ def validate_m30_native_evidence(
         _require_target_cleanup(
             native.get("cleanup", {}).get("target"), "SECTOR_REPROGRAM_RESET"
         )
-        nonce, core = _session_identity(captures, "M30DFU|1")
+        nonce, core = _session_identity(
+            captures, "M30DFU|1", max_prefix_noise=8
+        )
         denominator = build_dfu_cycle_records(
             native.get("results", {}), native.get("candidates", {}), captures,
             nonce, core, native.get("cleanup", {}).get("serial", {}),

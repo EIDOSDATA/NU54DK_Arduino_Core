@@ -60,6 +60,29 @@ class M30NativeAttestationTests(unittest.TestCase):
                 max_prefix_noise=8,
             )
 
+    def test_dfu_session_identity_resynchronizes_bounded_reset_noise(self) -> None:
+        """! @brief DFU session identity 재도출에도 동일한 reset noise 상한을 적용합니다. """
+
+        nonce = "ab" * 16
+        revision = "c" * 40
+        record = (
+            "M30DFU|1|BEGIN|role={role}|nonce="
+            f"{nonce}|core={revision}\n"
+        )
+        captures = {
+            "peripheral": b"\x00\x00\x00\x80\x00" +
+            record.format(role="peripheral").encode("ascii"),
+            "central": record.format(role="central").encode("ascii"),
+        }
+        self.assertEqual(
+            adapter._session_identity(
+                captures, "M30DFU|1", max_prefix_noise=8
+            ),
+            (nonce, revision),
+        )
+        with self.assertRaises(adapter.M30AttestationFailure):
+            adapter._session_identity(captures, "M30DFU|1")
+
     def test_pair_derives_fifty_unique_raw_cycles(self) -> None:
         """! @brief 5 capability x 10회의 CLEAR·START·PASS를 모두 요구합니다. """
 
