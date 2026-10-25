@@ -1,0 +1,28 @@
+Official browser DOM cell outerHTML excerpts, observed 2026-10-25.
+URL: https://docs.nordicsemi.com/r/bundle/comp_matrix_nrf54l15/page/comp/nrf54l15/nrf54l15_ble_qdid_qual_matrix.html
+Table ID: nrf54l15_ble_qdid_qual_matrix__table_czr_vbs_knb
+Indices are 0-based HTMLTableElement.rows, including both header rows. cellIndex is the physical row.cells index, not the expanded logical grid column.
+
+rowIndex 19 (SDK 3.3.1), cellIndex 1:
+<td class="entry cellrowborder" rowspan="6" style="text-align:center;vertical-align:middle;" headers="d4024e102 d4024e116 ">Q397276<p class="p">Q390319<a class="xref ft-internal-link" href="https://docs.nordicsemi.com/r/7JjFf5ea_JtCa~OqBYOGOg/zsn9H3PxhI5hHhQtKyg~Gg?section=nrf54l15_ble_qdid_qual_matrix__cs-support-fn" data-ft-click-interceptor="ft-internal-link"><sup><sup class="ph sup">3</sup></sup></a></p>
+</td>
+
+rowIndex 19, cellIndex 2:
+<td class="entry cellrowborder" rowspan="6" style="text-align:center;vertical-align:middle;" headers="d4024e102 d4024e119 ">6.3</td>
+
+rowIndex 19, cellIndex 3:
+<td class="entry cellrowborder" rowspan="6" style="text-align:center;vertical-align:middle;" headers="d4024e105 d4024e122 ">Q393370<p class="p">Q397090<a class="xref ft-internal-link" href="https://docs.nordicsemi.com/r/7JjFf5ea_JtCa~OqBYOGOg/zsn9H3PxhI5hHhQtKyg~Gg?section=nrf54l15_ble_qdid_qual_matrix__cs-support-fn" data-ft-click-interceptor="ft-internal-link"><sup><sup class="ph sup">3</sup></sup></a></p>
+<p class="p">Q397412<a class="xref ft-internal-link" href="https://docs.nordicsemi.com/r/7JjFf5ea_JtCa~OqBYOGOg/zsn9H3PxhI5hHhQtKyg~Gg?section=nrf54l15_ble_qdid_qual_matrix__cs-cte-support-fn" data-ft-click-interceptor="ft-internal-link"><sup><sup class="ph sup">4</sup></sup></a></p>
+</td>
+
+rowIndex 19, cellIndex 4:
+<td class="entry cellrowborder" rowspan="6" style="text-align:center;vertical-align:middle;" headers="d4024e105 d4024e125 ">6.3</td>
+
+rowIndex 12 (SDK 3.2.0), cellIndex 5:
+<td class="entry cellrowborder" rowspan="13" style="text-align:center;vertical-align:middle;" headers="d4024e108 d4024e128 ">Q380588</td>
+
+rowIndex 12, cellIndex 6:
+<td class="entry cellrowborder" rowspan="13" style="text-align:center;vertical-align:middle;" headers="d4024e108 d4024e132 ">1.1.1<a class="xref ft-internal-link" href="https://docs.nordicsemi.com/r/7JjFf5ea_JtCa~OqBYOGOg/zsn9H3PxhI5hHhQtKyg~Gg?section=nrf54l15_ble_qdid_qual_matrix__dn-details-1.1.1-fn" data-ft-click-interceptor="ft-internal-link"><sup><sup class="ph sup">2</sup></sup></a></td>
+
+rowIndex 23 (SDK 3.4.0 LTS), cellIndex 0; this is the only physical cell in this row:
+<td class="entry cellrowborder" style="text-align:center;vertical-align:middle;" headers="d4024e99 ">3.4.0 LTS<a class="xref ft-internal-link" href="https://docs.nordicsemi.com/r/7JjFf5ea_JtCa~OqBYOGOg/zsn9H3PxhI5hHhQtKyg~Gg?section=nrf54l15_ble_qdid_qual_matrix__ncs-lts-fn" data-ft-click-interceptor="ft-internal-link"><sup><sup class="ph sup">5</sup></sup></a></td>

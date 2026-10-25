@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 from dataclasses import dataclass
 import hashlib
 import json
@@ -359,11 +360,47 @@ QUALIFICATION_REFERENCE = (
     "https://docs.nordicsemi.com/r/bundle/comp_matrix_nrf54l15/page/comp/"
     "nrf54l15/nrf54l15_ble_qdid_qual_matrix.html"
 )
+QUALIFICATION_COMPONENT_VERSION = "NCS 3.4.0 LTS"
+QUALIFICATION_SELECTION_STATUS = "NOT_ASSESSED"
+## @brief 2026-10-21 공식 표의 병합 셀을 NCS 3.4.0 LTS까지 적용한 component별 DN 선택지입니다.
+## @note 각주가 없는 DN은 기능의 포함·제외를 추정하지 않으며 제품에서 선택한 DN을 뜻하지 않습니다.
 QUALIFICATION_COMPONENTS = {
-    "host": "PLANNED_NO_DN",
-    "controller": "PLANNED_NO_DN",
-    "mesh": "NOT_LISTED_NO_DN",
+    "host": {
+        "specification_version": "6.3",
+        "design_identifier_options": [
+            {"design_identifier": "Q397276", "feature_annotation": "UNANNOTATED", "official_footnote": None},
+            {"design_identifier": "Q390319", "feature_annotation": "CHANNEL_SOUNDING", "official_footnote": 3},
+        ],
+    },
+    "controller": {
+        "specification_version": "6.3",
+        "design_identifier_options": [
+            {"design_identifier": "Q393370", "feature_annotation": "UNANNOTATED", "official_footnote": None},
+            {"design_identifier": "Q397090", "feature_annotation": "CHANNEL_SOUNDING", "official_footnote": 3},
+            {"design_identifier": "Q397412", "feature_annotation": "CHANNEL_SOUNDING_AND_CONTINUOUS_TONE_EXTENSIONS", "official_footnote": 4},
+        ],
+    },
+    "mesh": {
+        "specification_version": "1.1.1",
+        "design_identifier_options": [{
+            "design_identifier": "Q380588",
+            "feature_annotation": "MESH_ADDITIONAL_SPECIFICATIONS",
+            "official_footnote": 2,
+            "additional_specifications": [
+                "NLC Profiles v1.0.1",
+                "HVAC Integration NLC Profile v1.0",
+                "Mesh Device Firmware Update Model v1.0",
+                "Mesh Binary Large Object Transfer Model v1.0",
+            ],
+        }],
+    },
 }
+QUALIFICATION_EVIDENCE_FIELDS = frozenset({
+    "component", "applicability", "component_status", "component_version",
+    "design_identifier", "design_identifier_options", "specification_version",
+    "product_design_selection", "product_status", "example_status_implied",
+    "official_reference", "remaining_product_procedure",
+})
 MATRIX_MANIFEST_NAME = "m33-campaign-matrix.json"
 ## @brief 33개 family는 work package 분모와 별개이며 기존 구현 시험을 다시 실행하는 경로를 명시합니다.
 FAMILIES = {
@@ -507,7 +544,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_profile_runtime.py": (1, "fe0c7a7a50d6cb201f0bf5ff912c8b5bfb1a227c13bc3784b853d35c11d3295c"),
     "test_m33_profile_campaign.py": (6, "625710a9e0c1d480270fbf819ad529958f0c6101b34e509a74ffc50ef58b3c0d"),
     "test_m33_readiness_contract.py": (31, "a0c78cd5b0f2357384456465c1ac21077b55ead8bb8277e8dabb1821cb22c36c"),
-    "test_m33_regression.py": (90, "a9999d3b63844786d77241fb97a3e3c09b876d9f7889f5df79478300bc2edf1e"),
+    "test_m33_regression.py": (92, "87bc25ff1e64eb838b35e9e48a9f69331c778e48267e44fc7cd7e8bb1d3d431d"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
     "test_m33_w06_artifacts.py": (43, "1a8a2893231f4d3c1467a6db64c986036b30ab45d318e7b1f56bacbfc988190f"),
     "test_m33_w06_pipeline.py": (20, "46462a2c6b3b604a4e2730a68140632d2b831681d6856fc85fd3dea18b6cff26"),
@@ -2512,6 +2549,27 @@ def validate_sdk_risks(rows: list[dict], base: Path, revision: str,
                     "SDK risk evidence was not derived from campaign raw evidence")
 
 
+def qualification_component_row(component: str, remaining_product_procedure: str) -> dict:
+    """! @brief 공식 DN 선택지를 기록하되 실제 제품의 선택·자격을 미판정으로 유지합니다. """
+
+    metadata = copy.deepcopy(QUALIFICATION_COMPONENTS[component])
+    return {
+        "component": component,
+        "applicability": "applicable",
+        "component_status": "EVIDENCE_RECORDED",
+        "product_status": "NOT_ASSESSED",
+        "example_status_implied": False,
+        "component_version": QUALIFICATION_COMPONENT_VERSION,
+        "design_identifier": ", ".join(
+            option["design_identifier"] for option in metadata["design_identifier_options"]
+        ),
+        **metadata,
+        "product_design_selection": QUALIFICATION_SELECTION_STATUS,
+        "official_reference": QUALIFICATION_REFERENCE,
+        "remaining_product_procedure": remaining_product_procedure,
+    }
+
+
 def validate_qualification(row: dict) -> None:
     """! @brief Host/controller/Mesh component 근거와 별도 제품 자격을 구분합니다. """
     require(row.get("component") in ("host", "controller", "mesh"), "qualification component")
@@ -2520,19 +2578,13 @@ def validate_qualification(row: dict) -> None:
     require(row.get("product_status") == "NOT_ASSESSED" and row.get("example_status_implied") is False,
             "component qualification cannot certify product or example")
     if row["component_status"] == "EVIDENCE_RECORDED":
-        require(all(isinstance(row.get(key), str) and row[key] for key in
-                    ("component_version", "design_identifier", "official_reference", "remaining_product_procedure")),
-                "component evidence and remaining product procedure required")
-        expected_identifier = {
-            "host": "PLANNED_NO_DN",
-            "controller": "PLANNED_NO_DN",
-            "mesh": "NOT_LISTED_NO_DN",
-        }[row["component"]]
-        require(row["applicability"] == "applicable" and
-                row["component_version"] == "NCS 3.4.0 LTS" and
-                row["design_identifier"] == expected_identifier,
+        require(set(row) == QUALIFICATION_EVIDENCE_FIELDS,
+                "qualification evidence fields mismatch")
+        procedure = row["remaining_product_procedure"]
+        require(isinstance(procedure, str) and procedure.strip(),
+                "qualification remaining product procedure required")
+        require(row == qualification_component_row(row["component"], procedure),
                 "fixed NCS qualification evidence status mismatch")
-        require(row["official_reference"].startswith("https://"), "official qualification reference required")
 
 
 def validate_closure(document: dict, base: Path, current: dict) -> dict:
@@ -2739,20 +2791,12 @@ def produce_qualification(output: Path, root: Path = ROOT) -> dict:
             not current["prerequisite_blockers"],
             "qualification production requires current clean exact source")
     procedure = (
-        "제품 소유자가 출시 시점 DN 표와 실제 component 변경 범위를 확인하고 "
+        "제품 소유자가 출시 시점 DN 표와 실제 component 변경·CS/CTE 기능 범위를 확인하여 "
+        "적합한 DN을 선택하고 "
         "Qualification Workspace의 시험·서류·수수료 절차를 완료해야 함"
     )
-    rows = [{
-        "component": component,
-        "applicability": "applicable",
-        "component_status": "EVIDENCE_RECORDED",
-        "product_status": "NOT_ASSESSED",
-        "example_status_implied": False,
-        "component_version": "NCS 3.4.0 LTS",
-        "design_identifier": identifier,
-        "official_reference": QUALIFICATION_REFERENCE,
-        "remaining_product_procedure": procedure,
-    } for component, identifier in QUALIFICATION_COMPONENTS.items()]
+    rows = [qualification_component_row(component, procedure)
+            for component in QUALIFICATION_COMPONENTS]
     for row in rows:
         validate_qualification(row)
     document = {

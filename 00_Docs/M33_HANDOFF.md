@@ -1,11 +1,39 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-23**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자 요청으로 최종 전체 검증은 빌드 도중 중지하고 현재 결과를 기록·push한다.
+최종 갱신: **2026-10-25**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+사용자의 연속 진행 요청으로 최종 검증을 재개했으며, 디버그 접근 진단과 qualification 메타데이터 정정을 진행했다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
-## 최신 중단 지점 — 2026-10-23
+## 현행 재개 지점 — 2026-10-25
+
+- clean `a0ab02e6f49b460f5d26004c9f5e493afa06a299`에서 전체 Host 64 suite·646 test·skip 0,
+  Actions 59(run `40156447719`)의 build 141개와 runtime용 ecosystem 두 역할 build를 완료했다.
+  원본은 `D:\w06\final-a0ab02e6-host-attempt1`, `D:\w06\final-a0ab02e6-actions59-attempt1`,
+  `D:\w06\rt59`에 보존한다. 현재 실기 최종 runtime 0/9·matrix 0/49·soak 미실행이며 W06 미완료다.
+- COM3/board_3는 DP/AP 접근에서 No ACK가 발생한다. pyOCD와 별도 probe-rs의 실패를 보존했으며,
+  보드·케이블 고장이나 제품 firmware 결함으로 확정하지 않는다. 제어 AP를 통한 정상 soft reset은
+  사전 identity를 통과하지 못해 실제 요청하지 않았다. 전체 삭제와 LED 진단은 반복하지 않았다.
+  `debugger-assessment-20261025-0744.json`이 현재 실패 경계와 미확정 상태를 기록한다.
+- 기존 build의 119개 ELF/HEX·map/config 정적 감사는 일치와 공통 메모리 한도를 확인했다.
+  이는 a0ab 산출물의 정적 근거이며 live stack/heap peak나 실제 radio 소유권 PASS가 아니다.
+  `resource-audit-draft/resource-evidence-summary-attempt4.json`의 미관측 항목을 그대로 유지한다.
+- 2026-10-21 갱신된 Nordic 공식 DN 표의 병합 셀을 확인했다. 오래된 `NO_DN` 상수와 중복 판정을
+  공통 DN 선택지·각주·사양 메타데이터로 정정하고 제품 자격·DN 선택은 `NOT_ASSESSED`로 유지했다.
+  관련 회귀 92개·readiness 31개·skip 0, `m33_contract.py --check`를 통과했다.
+  정본은 [qualification 적용성](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>)이다.
+- 이 검증 도구 변경 후에는 새 clean source를 고정해야 한다. a0ab의 Host/build·정적 감사에 새 SHA를
+  붙이지 않는다. 새 source의 Host/build/runtime/stage와 전체 실기 증거를 각각 실제 생성·검증한다.
+- 같은 source·입력·조건의 campaign 재사용 초안은 49개 논리 group/82개 참조/48개 고유 campaign을
+  구분한다. 오프라인 검사만 완료했으며 실제 최종 matrix에는 아직 적용하지 않았다. 기존 D helper는
+  a0ab로 고정되어 있으므로 새 source에서 그대로 실행하지 않는다. 원본·복사본의 공식 replay와
+  별도 불변 정책·원장 검증을 통과해야 하며 복사본을 추가 실기 횟수로 세지 않는다.
+- 남은 순서는 디버그 접근 복구 → 새 source 입력 검증과 runtime 9 → stage/validate 150 → 전체
+  33 family+8 resource+8 peer → 1,800초 soak → 실제 자원 증거 결합·SDK risk 7·qualification 3 →
+  strict closure/export → 최종 기록 commit/push·CI 확인이다. 과거 full PASS 36종의 시간과 soak만
+  합쳐 약 14시간 30분이며, 나머지 12종·준비·마감·문제 해결 시간은 포함하지 않은 부분 산정이다.
+
+## 이전 중단 지점 — 2026-10-23
 
 - 개발 집중 검증 #1~#49는 모두 PASS했다. #39~#43의 주요 실기는 clean `e944a7cc…`,
   #44~#49와 #40 ecosystem의 최종 재확인은 clean `c6fc5764…`에 귀속된다. 이 source별 PASS를

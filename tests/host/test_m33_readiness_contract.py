@@ -179,18 +179,10 @@ class M33ReadinessContractTests(unittest.TestCase):
     def _qualification(self) -> list[dict]:
         """! @brief 고정 NCS 3.4.0 component 조사 결과 세 행을 만듭니다. """
         return [
-            {
-                "component": component,
-                "applicability": "applicable",
-                "component_status": "EVIDENCE_RECORDED",
-                "component_version": "NCS 3.4.0 LTS",
-                "design_identifier": identifier,
-                "product_status": "NOT_ASSESSED",
-                "example_status_implied": False,
-                "official_reference": MODULE.QUALIFICATION_OFFICIAL_REFERENCE,
-                "remaining_product_procedure": "제품 소유자가 공개 전 별도 절차를 완료합니다.",
-            }
-            for component, identifier in MODULE.QUALIFICATION_IDENTIFIERS.items()
+            MODULE.m33_regression.qualification_component_row(
+                component, "제품 소유자가 공개 전 별도 절차를 완료합니다."
+            )
+            for component in MODULE.QUALIFICATION_IDENTIFIERS
         ]
 
     def _git(self, repository: Path, *arguments: str) -> str:
@@ -895,18 +887,29 @@ class M33ReadinessContractTests(unittest.TestCase):
             MODULE.validate(partial)
 
         valid = {"qualification": self._qualification()}
+        MODULE._validate_w06_qualification(valid)
         mutations = (
             ("component_status", "QUALIFIED"),
             ("applicability", "not_applicable"),
             ("component_version", "NCS 3.4.1"),
             ("design_identifier", "Q123456"),
+            ("design_identifier", "PLANNED_NO_DN"),
+            ("design_identifier", "NOT_LISTED_NO_DN"),
             ("product_status", "QUALIFIED"),
+            ("product_design_selection", "SELECTED"),
+            ("specification_version", "6.0"),
             ("official_reference", "https://example.com/not-nordic"),
         )
         for field, value in mutations:
             with self.subTest(field=field, value=value):
                 broken = copy.deepcopy(valid)
                 broken["qualification"][0][field] = value
+                with self.assertRaisesRegex(ValueError, "qualification"):
+                    MODULE._validate_w06_qualification(broken)
+        for field, value in (("feature_annotation", "CS_AND_CTE"), ("official_footnote", "4")):
+            with self.subTest(option_field=field):
+                broken = copy.deepcopy(valid)
+                broken["qualification"][0]["design_identifier_options"][0][field] = value
                 with self.assertRaisesRegex(ValueError, "qualification"):
                     MODULE._validate_w06_qualification(broken)
 

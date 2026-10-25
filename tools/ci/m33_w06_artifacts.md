@@ -511,10 +511,11 @@ python tools/bluetooth/m33_regression.py qualification \
   --output <bundle>/qualification.json
 ```
 
-qualification producer는 Nordic nRF54L15의 고정 NCS 3.4.0 LTS 조사 결과만 기록한다. Host와
-Controller는 `PLANNED_NO_DN`, Mesh는 `NOT_LISTED_NO_DN`, 세 component는
-`EVIDENCE_RECORDED`다. 제품은 항상 `NOT_ASSESSED`이고 예제 PASS를 제품 qualification으로
-승격하지 않는다.
+qualification producer는 Nordic nRF54L15의 고정 NCS 3.4.0 LTS 조사 결과만 기록한다. 2026-10-21
+공식 표의 병합 셀을 포함한 DN은 Host `Q397276, Q390319`, Controller `Q393370, Q397090, Q397412`,
+Mesh `Q380588`이다. DN별 각주·사양을 `design_identifier_options`에 보존하고 세 component는
+`EVIDENCE_RECORDED`로 기록한다. 제품의 DN 선택과 자격은 `NOT_ASSESSED`이며 예제 PASS를 제품
+qualification으로 승격하지 않는다. 정본은 [적용성 조사](<../../00_Docs/00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>)다.
 
 ### 8.5 closure 조립과 최종 재검증
 

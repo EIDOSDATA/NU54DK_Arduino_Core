@@ -1,13 +1,13 @@
 # M33 Bluetooth Qualification 적용성
 
-검토일: **2026-10-04** · 대상: **nRF54L15 + nRF Connect SDK 3.4.0 LTS**
+검토일: **2026-10-25** · 대상: **nRF54L15 + nRF Connect SDK 3.4.0 LTS**
 
 ## 결론
 
 M33의 Host·SoftDevice Controller·Bluetooth Mesh는 모두 제품 기능에 사용되므로 qualification
-적용성을 조사해야 한다. 그러나 Nordic의 nRF54L15 공식 DN 표에서 NCS 3.4.0 LTS의 Host와
-SoftDevice Controller는 **`Planned`**이고, Bluetooth Mesh DN은 **기재되어 있지 않다**. 따라서
-현재 저장소에는 NCS 3.4.0 조합을 `QUALIFIED`로 표시할 근거가 없다.
+적용성을 조사해야 한다. Nordic의 2026-10-21 갱신 표는 NCS 3.4.0 LTS에 적용되는 Host·Controller·
+Mesh DN을 병합 셀로 제공한다. 2026-10-25에는 실제 HTML의 `rowspan`까지 확인해 아래 값을 기록했다.
+이전에 기록한 `PLANNED_NO_DN`·`NOT_LISTED_NO_DN`은 현행 판정에 사용하지 않으며 과거 증거 원본은 보존한다.
 
 이 문서는 component 공개 상태를 기록한 조사 결과일 뿐이다. NU54DK Arduino Core, 예제 또는 이를
 사용한 최종 제품의 Bluetooth Qualification 완료를 뜻하지 않는다. 제품 자격 상태는 계속
@@ -17,17 +17,20 @@ Workspace에서 제품별 절차를 완료해야 한다.
 ## 1. 고정 SDK component 상태
 
 Nordic의 [nRF54L15 Bluetooth DN 표](https://docs.nordicsemi.com/r/bundle/comp_matrix_nrf54l15/page/comp/nrf54l15/nrf54l15_ble_qdid_qual_matrix.html)는
-nRF54L15과 호환 Bluetooth stack 조합의 Design Number를 SDK 버전별로 제시한다. 2026-10-04에
-NCS 3.4.0 LTS 행을 확인한 결과는 다음과 같다.
+nRF54L15과 호환 Bluetooth stack 조합의 Design Number를 SDK 버전별로 제시한다. NCS 3.4.0 LTS는
+Host·Controller의 3.3.1 시작 6행 병합 셀과 Mesh의 3.2.0 시작 13행 병합 셀에 포함된다.
+버전 행에 별도 DN 텍스트가 없다는 이유로 미등재로 판정하지 않는다.
 
-| Component | 프로젝트 적용성 | NCS 3.4.0 공식 표 | 기록용 식별자 | 판정 |
+| Component | 프로젝트 적용성 | 공개 DN 선택지 | 공식 각주 | 사양 |
 | --- | --- | --- | --- | --- |
-| Zephyr Bluetooth Host | 적용 | `Planned` | `PLANNED_NO_DN` | 근거 기록 완료, component 자격 완료 아님 |
-| SoftDevice Controller | 적용 | `Planned` | `PLANNED_NO_DN` | 근거 기록 완료, component 자격 완료 아님 |
-| Bluetooth Mesh | 적용 | NCS 3.4.0 행에 DN 미기재 | `NOT_LISTED_NO_DN` | 근거 기록 완료, component 자격 완료 아님 |
+| Zephyr Bluetooth Host | 적용 | `Q397276`, `Q390319` | `Q390319`: Channel Sounding, 각주 3 | Core 6.3 |
+| SoftDevice Controller | 적용 | `Q393370`, `Q397090`, `Q397412` | `Q397090`: Channel Sounding, 각주 3; `Q397412`: Channel Sounding·CTE, 각주 4 | Core 6.3 |
+| Bluetooth Mesh | 적용 | `Q380588` | 각주 2의 추가 사양 포함 | Model/Profile/Protocol 1.1.1 |
 
-표의 `Planned`는 DN이 발급되었다는 뜻이 아니다. 이전 NCS 버전의 DN을 3.4.0에 임의로 복사하지
-않으며, 문서 갱신 뒤에도 실제 사용 조합·수정 범위와 Qualification Workspace 판정을 다시 확인한다.
+각주 없는 DN에 Channel Sounding·CTE가 없다고 역으로 단정하지 않는다. 각주 2의 추가 사양은 NLC
+Profiles 1.0.1, HVAC Integration NLC Profile 1.0, Device Firmware Update Model 1.0,
+Binary Large Object Transfer Model 1.0이다. 이 기록은 공식 표의 선택지이며 특정 제품에 사용할
+DN 선택을 확정하지 않는다. 실제 사용 조합·수정 범위와 Qualification Workspace 판정을 다시 확인한다.
 이 상태를 이유로 NCS 3.4.1로 전환하지 않는다. v0.6.0은 계획대로 NCS 3.4.0을 유지하고 SDK
 전환은 v0.7.0의 별도 작업이다.
 
@@ -45,9 +48,8 @@ Qualification Workspace가 입력한 design을 바탕으로 다음 경로를 결
 - 여러 기존 Design을 결합하는 Option 2a
 - 그 밖의 새 Design을 만드는 Option 2b
 
-어느 경로가 적용되는지는 이 저장소가 임의로 확정하지 않는다. 현재 NCS 3.4.0 행에는 사용할 수
-있는 Host·Controller DN이 없고 Mesh DN도 확인되지 않았으므로, 제품 소유자는 Nordic 표의 갱신
-여부와 실제 component/design 조합을 다시 확인한 뒤 Qualification Workspace 또는 Bluetooth SIG
+어느 경로가 적용되는지는 이 저장소가 임의로 확정하지 않는다. 제품 소유자는 Nordic 표의 갱신
+여부와 실제 component/design 조합·각주 적용성을 확인한 뒤 Qualification Workspace 또는 Bluetooth SIG
 지원 절차에서 필요한 시험과 제출 범위를 결정해야 한다. 새 design에 시험이 요구되면 최신 TCRL과
 [공식 qualification 시험 도구 안내](https://www.bluetooth.com/develop-with-bluetooth/qualify/qualification-test-tools/)를
 따른다.
@@ -61,7 +63,9 @@ W06 증거의 qualification 세 행은 다음 의미로만 기록한다.
 | `applicability` | `applicable` | `applicable` | `applicable` |
 | `component_status` | `EVIDENCE_RECORDED` | `EVIDENCE_RECORDED` | `EVIDENCE_RECORDED` |
 | `component_version` | `NCS 3.4.0 LTS` | `NCS 3.4.0 LTS` | `NCS 3.4.0 LTS` |
-| `design_identifier` | `PLANNED_NO_DN` | `PLANNED_NO_DN` | `NOT_LISTED_NO_DN` |
+| `design_identifier` | `Q397276, Q390319` | `Q393370, Q397090, Q397412` | `Q380588` |
+| `specification_version` | `6.3` | `6.3` | `1.1.1` |
+| `product_design_selection` | `NOT_ASSESSED` | `NOT_ASSESSED` | `NOT_ASSESSED` |
 | `product_status` | `NOT_ASSESSED` | `NOT_ASSESSED` | `NOT_ASSESSED` |
 | `example_status_implied` | `false` | `false` | `false` |
 
@@ -69,6 +73,11 @@ W06 증거의 qualification 세 행은 다음 의미로만 기록한다.
 아니다. 예제의 compile/runtime PASS, scripted peer PASS, component DN, 제품 qualification은 서로
 승격하지 않는다. 공식 표가 바뀌면 조회일과 정확한 DN을 새 evidence에 기록하되 과거 evidence를
 소급 변경하지 않는다.
+
+`design_identifier_options`는 DN별 공식 각주와 기능 표기를 함께 보존한다. producer·최종 closure·
+readiness 검증은 공통 메타데이터를 사용하며, DN 목록만 맞고 각주를 바꾼 기록도 거부한다.
+공식 표의 DOM 관측과 병합 범위는
+[2026-10-25 관측 원본](<../04_검증 기록/evidence/m33-w06-qualification-reference-20261025/official-rowspans-review-20261025.json>)에 보존한다.
 
 제품 공개 전에 남는 소유자 절차는 다음과 같다.
 

@@ -607,20 +607,72 @@ class RegressionTests(unittest.TestCase):
             row["component_status"] = "EVIDENCE_RECORDED"
             with self.assertRaises(ValueError):
                 MODULE.validate_qualification(row)
-            row.update(applicability="applicable", component_version="NCS 3.4.0 LTS",
-                       design_identifier=("NOT_LISTED_NO_DN" if component == "mesh"
-                                          else "PLANNED_NO_DN"),
-                       official_reference="https://example.invalid/test",
-                       remaining_product_procedure="owner must verify and complete product qualification")
+            row = MODULE.qualification_component_row(
+                component, "owner must verify and complete product qualification"
+            )
             MODULE.validate_qualification(row)
-            row["design_identifier"] = "QUALIFIED"
-            with self.assertRaises(ValueError):
-                MODULE.validate_qualification(row)
-            row["design_identifier"] = ("NOT_LISTED_NO_DN" if component == "mesh"
-                                        else "PLANNED_NO_DN")
-            row["product_status"] = "QUALIFIED"
-            with self.assertRaises(ValueError):
-                MODULE.validate_qualification(row)
+            for field, value in (
+                    ("product_status", "QUALIFIED"),
+                    ("example_status_implied", True),
+                    ("product_design_selection", "QUALIFIED")):
+                with self.subTest(component=component, field=field):
+                    broken = copy.deepcopy(row)
+                    broken[field] = value
+                    with self.assertRaises(ValueError):
+                        MODULE.validate_qualification(broken)
+
+    def test_qualification_rejects_stale_no_dn_evidence(self):
+        """! @brief 공식 병합 셀에 DN이 있는 세 component를 과거 미등재 상태로 되돌리지 못합니다. """
+
+        for component, stale in (
+                ("host", "PLANNED_NO_DN"),
+                ("controller", "PLANNED_NO_DN"),
+                ("mesh", "NOT_LISTED_NO_DN")):
+            with self.subTest(component=component):
+                row = MODULE.qualification_component_row(component, "제품별 후속 절차 필요")
+                row["design_identifier"] = stale
+                with self.assertRaisesRegex(ValueError, "qualification"):
+                    MODULE.validate_qualification(row)
+
+    def test_qualification_rejects_incorrect_dn_feature_and_selection_claims(self):
+        """! @brief DN 선택지의 기능 각주·적용 사양·실제 제품 선택 주장을 독립적으로 검사합니다. """
+
+        original = MODULE.qualification_component_row("controller", "제품별 후속 절차 필요")
+        mutations = [
+            ("design_identifier", "Q397412"),
+            ("specification_version", "6.2"),
+            ("product_design_selection", "Q397412"),
+            ("official_reference", "https://example.invalid/not-nordic"),
+        ]
+        for field, value in mutations:
+            with self.subTest(field=field):
+                row = copy.deepcopy(original)
+                row[field] = value
+                with self.assertRaisesRegex(ValueError, "qualification"):
+                    MODULE.validate_qualification(row)
+        for index, field, value in (
+                (0, "feature_annotation", "WITHOUT_CHANNEL_SOUNDING"),
+                (0, "design_identifier", "Q390319"),
+                (1, "feature_annotation", "CHANNEL_SOUNDING_AND_CONTINUOUS_TONE_EXTENSIONS"),
+                (2, "official_footnote", 3)):
+            with self.subTest(index=index, field=field):
+                row = copy.deepcopy(original)
+                row["design_identifier_options"][index][field] = value
+                with self.assertRaisesRegex(ValueError, "qualification"):
+                    MODULE.validate_qualification(row)
+        for field in ("design_identifier_options", "specification_version", "product_design_selection"):
+            with self.subTest(missing_field=field):
+                row = copy.deepcopy(original)
+                row.pop(field)
+                with self.assertRaisesRegex(ValueError, "qualification"):
+                    MODULE.validate_qualification(row)
+        row = MODULE.qualification_component_row("mesh", "제품별 후속 절차 필요")
+        row["design_identifier_options"][0]["additional_specifications"].remove(
+            "HVAC Integration NLC Profile v1.0"
+        )
+        with self.assertRaisesRegex(ValueError, "qualification"):
+            MODULE.validate_qualification(row)
+        MODULE.validate_qualification(MODULE.qualification_component_row("mesh", "제품별 후속 절차 필요"))
 
     def test_qualification_producer_records_fixed_ncs_without_product_pass(self):
         """! @brief producer는 NCS 3.4.0 조사 근거만 기록하고 제품 자격을 승격하지 않습니다. """
@@ -636,17 +688,38 @@ class RegressionTests(unittest.TestCase):
                 document = MODULE.produce_qualification(output, ROOT)
             self.assertEqual(document, MODULE.read_json(output))
             self.assertEqual(
-                {"host": "PLANNED_NO_DN", "controller": "PLANNED_NO_DN",
-                 "mesh": "NOT_LISTED_NO_DN"},
+                {"host": "Q397276, Q390319", "controller": "Q393370, Q397090, Q397412",
+                 "mesh": "Q380588"},
                 {row["component"]: row["design_identifier"]
                  for row in document["qualification"]},
             )
             self.assertTrue(all(
                 row["component_status"] == "EVIDENCE_RECORDED" and
                 row["product_status"] == "NOT_ASSESSED" and
-                row["example_status_implied"] is False
+                row["example_status_implied"] is False and
+                row["product_design_selection"] == "NOT_ASSESSED"
                 for row in document["qualification"]
             ))
+            rows = {row["component"]: row for row in document["qualification"]}
+            self.assertEqual("6.3", rows["host"]["specification_version"])
+            self.assertEqual("6.3", rows["controller"]["specification_version"])
+            self.assertEqual("1.1.1", rows["mesh"]["specification_version"])
+            self.assertEqual([
+                ("Q397276", "UNANNOTATED", None),
+                ("Q390319", "CHANNEL_SOUNDING", 3),
+                ("Q393370", "UNANNOTATED", None),
+                ("Q397090", "CHANNEL_SOUNDING", 3),
+                ("Q397412", "CHANNEL_SOUNDING_AND_CONTINUOUS_TONE_EXTENSIONS", 4),
+                ("Q380588", "MESH_ADDITIONAL_SPECIFICATIONS", 2),
+            ], [
+                (option["design_identifier"], option["feature_annotation"], option["official_footnote"])
+                for row in document["qualification"] for option in row["design_identifier_options"]
+            ])
+            self.assertEqual([
+                "NLC Profiles v1.0.1", "HVAC Integration NLC Profile v1.0",
+                "Mesh Device Firmware Update Model v1.0",
+                "Mesh Binary Large Object Transfer Model v1.0",
+            ], rows["mesh"]["design_identifier_options"][0]["additional_specifications"])
             with mock.patch.object(MODULE, "snapshot", return_value=current), \
                     self.assertRaisesRegex(ValueError, "new qualification"):
                 MODULE.produce_qualification(output, ROOT)
@@ -4898,20 +4971,10 @@ class RegressionTests(unittest.TestCase):
                 "kind": "m33_qualification_results",
                 "source_revision": REVISION,
                 "source_clean": True,
-                "qualification": [{
-                    "component": component,
-                    "applicability": "applicable",
-                    "component_status": "EVIDENCE_RECORDED",
-                    "product_status": "NOT_ASSESSED",
-                    "example_status_implied": False,
-                    "component_version": "NCS 3.4.0 LTS",
-                    "design_identifier": (
-                        "NOT_LISTED_NO_DN" if component == "mesh" else
-                        "PLANNED_NO_DN"
-                    ),
-                    "official_reference": "https://example.invalid/qualification",
-                    "remaining_product_procedure": "별도 제품 자격 절차 필요",
-                } for component in ("host", "controller", "mesh")],
+                "qualification": [
+                    MODULE.qualification_component_row(component, "별도 제품 자격 절차 필요")
+                    for component in ("host", "controller", "mesh")
+                ],
             }), encoding="utf-8")
 
             def validate(document, bundle, observed):

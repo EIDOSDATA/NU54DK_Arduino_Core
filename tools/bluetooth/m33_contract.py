@@ -47,14 +47,10 @@ M31 = json.loads(M31_PATH.read_text(encoding="utf-8"))
 M32 = json.loads(M32_PATH.read_text(encoding="utf-8"))
 REVISION_PATTERN = re.compile(r"^[0-9a-f]{40}$", re.ASCII)
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$", re.ASCII)
-QUALIFICATION_OFFICIAL_REFERENCE = (
-    "https://docs.nordicsemi.com/r/bundle/comp_matrix_nrf54l15/page/comp/"
-    "nrf54l15/nrf54l15_ble_qdid_qual_matrix.html"
-)
+QUALIFICATION_OFFICIAL_REFERENCE = m33_regression.QUALIFICATION_REFERENCE
 QUALIFICATION_IDENTIFIERS = {
-    "host": "PLANNED_NO_DN",
-    "controller": "PLANNED_NO_DN",
-    "mesh": "NOT_LISTED_NO_DN",
+    component: ", ".join(option["design_identifier"] for option in metadata["design_identifier_options"])
+    for component, metadata in m33_regression.QUALIFICATION_COMPONENTS.items()
 }
 SDK_RISK_OWNERS = {
     "DRGN-29228": "M33-DIAG-01",
@@ -1520,23 +1516,15 @@ def _validate_w06_qualification(closure: dict) -> None:
             {row.get("component") for row in rows if isinstance(row, dict)} !=
             set(QUALIFICATION_IDENTIFIERS)):
         raise ValueError("W06 qualification denominator mismatch")
-    required = {
-        "component", "applicability", "component_status", "component_version",
-        "design_identifier", "product_status", "example_status_implied",
-        "official_reference", "remaining_product_procedure",
-    }
+    required = m33_regression.QUALIFICATION_EVIDENCE_FIELDS
     for row in rows:
-        component = row["component"]
         if (set(row) != required or row.get("applicability") != "applicable" or
-                row.get("component_status") != "EVIDENCE_RECORDED" or
-                row.get("component_version") != "NCS 3.4.0 LTS" or
-                row.get("design_identifier") != QUALIFICATION_IDENTIFIERS[component] or
-                row.get("product_status") != "NOT_ASSESSED" or
-                row.get("example_status_implied") is not False or
-                row.get("official_reference") != QUALIFICATION_OFFICIAL_REFERENCE or
-                not isinstance(row.get("remaining_product_procedure"), str) or
-                not row["remaining_product_procedure"]):
+                row.get("component_status") != "EVIDENCE_RECORDED"):
             raise ValueError("W06 qualification evidence mismatch")
+        try:
+            m33_regression.validate_qualification(row)
+        except ValueError as error:
+            raise ValueError("W06 qualification evidence mismatch") from error
 
 
 def _git_text(repository: Path, *arguments: str) -> str:
