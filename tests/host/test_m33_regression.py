@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import copy
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 import hashlib
 import importlib.util
 import inspect
@@ -1567,6 +1567,93 @@ class RegressionTests(unittest.TestCase):
         source = (ROOT / "tools/bluetooth/m33_regression.py").read_text(encoding="utf-8")
         self.assertIn("subprocess.Popen(", source)
         self.assertIn('"status": "AUDIT_ONLY"', source)
+
+    @contextmanager
+    def _host_clock_closure_fixture(self):
+        """! @brief 임시 clean Git 저장소에서 실제 단일 unittest와 run_host 기록을 생성합니다. """
+
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "repository"
+            tests = root / "tests" / "host"
+            tests.mkdir(parents=True)
+            test_path = tests / "test_clock_fixture.py"
+            test_path.write_text(
+                "import unittest\n"
+                "class ClockFixtureTests(unittest.TestCase):\n"
+                "    def test_alive(self):\n"
+                "        self.assertEqual(2, 1 + 1)\n",
+                encoding="utf-8",
+            )
+            for command in (
+                    ("git", "init", "-q"),
+                    ("git", "add", "."),
+                    ("git", "-c", "user.name=M33 clock test", "-c", "user.email=clock@example.invalid",
+                     "-c", "commit.gpgsign=false", "commit", "-qm", "clock fixture")):
+                subprocess.run(command, cwd=root, check=True, capture_output=True)
+            expected_ids_sha256 = hashlib.sha256(b"ClockFixtureTests.test_alive").hexdigest()
+            bundle = base / "evidence"
+            with mock.patch.object(MODULE, "ROOT", root), \
+                    mock.patch.object(MODULE, "HOST_TESTS", [test_path.name]), \
+                    mock.patch.object(MODULE, "HOST_TEST_EXPECTATIONS",
+                                      {test_path.name: (1, expected_ids_sha256)}):
+                host = MODULE.run_host(bundle, root)
+                self.assertEqual("PASS", host["status"])
+                self.assertTrue(host["source_clean"])
+                row = host["records"][0]
+                self.assertGreater(row["started_ns"], 2**31 - 1)
+                self.assertGreater(row["finished_ns"], row["started_ns"])
+                soak_path = bundle / "soak.json"
+                soak_path.write_text("{}\n", encoding="utf-8")
+                current = {
+                    "source_revision": host["source_revision"], "source_clean": True,
+                    "prerequisite_blockers": [], "inputs": {"fixture": "host-clock-only"},
+                    "lock_sha256": "b" * 64,
+                }
+                document = {
+                    "schema_version": 1, **current,
+                    "negative_classes": sorted(MODULE.NEGATIVES),
+                    "host_regression": {"path": "result.json", "sha256": MODULE.digest(bundle / "result.json")},
+                    "soak": {"path": soak_path.name, "sha256": MODULE.digest(soak_path)},
+                }
+                yield bundle, host, document, current
+
+    def test_closure_accepts_real_host_monotonic_ns_before_soak(self):
+        """! @brief 실제 run_host의 32-bit 초과 시각을 raw log까지 검증한 뒤 soak 경계에 도달합니다. """
+
+        with self._host_clock_closure_fixture() as (bundle, _host, document, current), \
+                mock.patch.object(RUNNER, "validate_soak", side_effect=RuntimeError("host clock reached soak")) as soak:
+            with self.assertRaisesRegex(RuntimeError, "host clock reached soak"):
+                MODULE.validate_closure(document, bundle, current)
+            soak.assert_called_once_with(bundle / "soak.json", current["source_revision"], allow_physical_audit=True)
+
+    def test_closure_rejects_invalid_host_timestamp_types_order_and_range(self):
+        """! @brief 시각의 타입·양수·증가·signed 64-bit 상한과 기존 PID/정수 범위를 유지합니다. """
+
+        with self._host_clock_closure_fixture() as (bundle, host, document, current), \
+                mock.patch.object(RUNNER, "validate_soak", side_effect=RuntimeError("invalid clock reached soak")) as soak:
+            self.assertFalse(MODULE.integer(2**31))
+            row = host["records"][0]
+            mutations = [
+                {field: value}
+                for field in ("started_ns", "finished_ns")
+                for value in (False, True, -1, 0, 1.5, str(row[field]), 2**63)
+            ] + [
+                {"finished_ns": row["started_ns"]},
+                {"finished_ns": row["started_ns"] - 1},
+                {"started_ns": row["finished_ns"] + 1},
+                {"pid": 2**31},
+            ]
+            for changes in mutations:
+                with self.subTest(changes=changes):
+                    broken = copy.deepcopy(host)
+                    broken["records"][0].update(changes)
+                    host_path = bundle / "result.json"
+                    host_path.write_text(json.dumps(broken), encoding="utf-8")
+                    document["host_regression"]["sha256"] = MODULE.digest(host_path)
+                    with self.assertRaisesRegex(ValueError, "Host process audit fields missing"):
+                        MODULE.validate_closure(document, bundle, current)
+            soak.assert_not_called()
 
     def test_raw_build_producer_is_real_catalog_and_two_pass_target(self):
         """! @brief generic raw build는 폐기되고 실제 runner registry만 production 계획에 남습니다. """

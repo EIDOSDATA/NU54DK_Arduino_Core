@@ -1,20 +1,40 @@
 # M33 개발 인계 — W06 재설계 구현
 
 최종 갱신: **2026-10-25**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자의 연속 진행 요청으로 최종 검증을 재개했으며, 디버그 접근 진단과 qualification 메타데이터 정정을 진행했다.
+사용자의 연속 진행 요청으로 최종 검증을 재개했으며, 디버그 접근 진단과 qualification·Host 시각 검증 정정을 진행했다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
 ## 현행 재개 지점 — 2026-10-25
 
-- clean `a0ab02e6f49b460f5d26004c9f5e493afa06a299`에서 전체 Host 64 suite·646 test·skip 0,
+- clean `49103850345a24e0e7b2dae05b26a973a02f29ad`에서 전체 Host 64 suite·648 test·skip 0,
+  ecosystem client·peer 두 역할 build와 qualification 근거 3개를 완료했다. 원본은
+  `D:\w06\final-49103850-host-attempt2`, `D:\w06\final-49103850-actions60-attempt1`, `D:\w06\rt60`이다.
+  Host attempt1의 compiler 경로 누락 실패는 보존했고, CC/CXX/PATH를 명시한 attempt2에서 해결했다.
+- 독립 저장 증거 재검사에서 Host 로그·ID·command·source·hash와 qualification 3행은 일치했으나,
+  마감 validator가 `monotonic_ns`를 32비트 정수 범위로 제한하여 64개 process 기록을 모두 거부했다.
+  실제 첫 시작 시각은 `800396744185600`ns다. `host-qualification-independent-replay.json`의 FAIL은
+  보존하며 Host 나노초 필드만 signed 64-bit 범위로 정정했다. PID·반복 횟수의 기존 상한과 시각 순서 검사는 유지한다.
+  실제 subprocess를 사용하는 긍정·부정 회귀를 추가해 해당 suite 94개·skip 0과 계약 검사를 통과했다.
+  원본 로그·검증 기록은 `D:\w06\host-clock-range-fix-20261025`에 보존한다.
+  Actions 60(run `40174462009`)과 위 491 source 결과는 수정 전 근거이며 새 source의 PASS로 바꾸지 않는다.
+- COM3의 마지막 이미지가 watcher라는 추정은 이후 기록을 누락한 오류였다. `D:\w06\mx8c7a1`의
+  #06 `families:link_control`은 source `8c7dafbc…` central 이미지를 실제 program/readback했고,
+  뒤 #07~18에는 COM3 재프로그램 기록이 없다. 정상 pin reset 후 UART의 `M28B3 central/CTRL`
+  응답도 이 기록과 정합하지만 현재 flash byte 동일성까지 확인한 것은 아니다.
+- debug 전원 REQ/ACK 0 확인 후 정상 pin reset의 요청·해제 readback은 성공했다. 이후 연결은
+  실패했고, 실제 HID 경로에서도 No ACK가 발생했다. 모든 probe는 닫았으며 현재 CPU halt·strict
+  idle은 미확인이다. reset으로 이전 STOP 실패를 PASS로 바꾸지 않았고 전체 삭제·LED 진단도 반복하지 않았다.
+  사용자 제공 `C:\Users\eidos\GitHub\FW_DAP_nRF52820_DedicatedDev`의 디버거 소스를 대조 중이다.
+  이 트리에는 `.git`이 없어 설치된 Build ID와 Git commit이 같다고 추정하지 않는다.
+- 직전 clean `a0ab02e6f49b460f5d26004c9f5e493afa06a299`에서 전체 Host 64 suite·646 test·skip 0,
   Actions 59(run `40156447719`)의 build 141개와 runtime용 ecosystem 두 역할 build를 완료했다.
   원본은 `D:\w06\final-a0ab02e6-host-attempt1`, `D:\w06\final-a0ab02e6-actions59-attempt1`,
   `D:\w06\rt59`에 보존한다. 현재 실기 최종 runtime 0/9·matrix 0/49·soak 미실행이며 W06 미완료다.
 - COM3/board_3는 DP/AP 접근에서 No ACK가 발생한다. pyOCD와 별도 probe-rs의 실패를 보존했으며,
   보드·케이블 고장이나 제품 firmware 결함으로 확정하지 않는다. 제어 AP를 통한 정상 soft reset은
   사전 identity를 통과하지 못해 실제 요청하지 않았다. 전체 삭제와 LED 진단은 반복하지 않았다.
-  `debugger-assessment-20261025-0744.json`이 현재 실패 경계와 미확정 상태를 기록한다.
+  `debugger-assessment-20261025-0744.json`은 당시 실패 경계와 미확정 상태를 기록한다.
 - 기존 build의 119개 ELF/HEX·map/config 정적 감사는 일치와 공통 메모리 한도를 확인했다.
   이는 a0ab 산출물의 정적 근거이며 live stack/heap peak나 실제 radio 소유권 PASS가 아니다.
   `resource-audit-draft/resource-evidence-summary-attempt4.json`의 미관측 항목을 그대로 유지한다.
@@ -25,8 +45,8 @@
 - 이 검증 도구 변경 후에는 새 clean source를 고정해야 한다. a0ab의 Host/build·정적 감사에 새 SHA를
   붙이지 않는다. 새 source의 Host/build/runtime/stage와 전체 실기 증거를 각각 실제 생성·검증한다.
 - 같은 source·입력·조건의 campaign 재사용 초안은 49개 논리 group/82개 참조/48개 고유 campaign을
-  구분한다. 오프라인 검사만 완료했으며 실제 최종 matrix에는 아직 적용하지 않았다. 기존 D helper는
-  a0ab로 고정되어 있으므로 새 source에서 그대로 실행하지 않는다. 원본·복사본의 공식 replay와
+  구분한다. 오프라인 검사만 완료했으며 실제 최종 matrix에는 아직 적용하지 않았다. D helper는 각각
+  a0ab 또는 491 source로 고정되어 있으므로 다음 source에서 그대로 실행하지 않는다. 원본·복사본의 공식 replay와
   별도 불변 정책·원장 검증을 통과해야 하며 복사본을 추가 실기 횟수로 세지 않는다.
 - 남은 순서는 디버그 접근 복구 → 새 source 입력 검증과 runtime 9 → stage/validate 150 → 전체
   33 family+8 resource+8 peer → 1,800초 soak → 실제 자원 증거 결합·SDK risk 7·qualification 3 →

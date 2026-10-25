@@ -544,7 +544,7 @@ HOST_TEST_EXPECTATIONS = {
     "test_m33_profile_runtime.py": (1, "fe0c7a7a50d6cb201f0bf5ff912c8b5bfb1a227c13bc3784b853d35c11d3295c"),
     "test_m33_profile_campaign.py": (6, "625710a9e0c1d480270fbf819ad529958f0c6101b34e509a74ffc50ef58b3c0d"),
     "test_m33_readiness_contract.py": (31, "a0c78cd5b0f2357384456465c1ac21077b55ead8bb8277e8dabb1821cb22c36c"),
-    "test_m33_regression.py": (92, "87bc25ff1e64eb838b35e9e48a9f69331c778e48267e44fc7cd7e8bb1d3d431d"),
+    "test_m33_regression.py": (94, "7608d41f5febf1de3ff6933fae10910de93d08d985035158a9edcf80eb25d0fc"),
     "test_m33_sdk_risk_hil.py": (19, "cc8720169bcf3076bd6f2c9cb73d3f039fd6d92478b052fceadc804eb21d71b9"),
     "test_m33_w06_artifacts.py": (43, "1a8a2893231f4d3c1467a6db64c986036b30ab45d318e7b1f56bacbfc988190f"),
     "test_m33_w06_pipeline.py": (20, "46462a2c6b3b604a4e2730a68140632d2b831681d6856fc85fd3dea18b6cff26"),
@@ -2605,8 +2605,8 @@ def validate_closure(document: dict, base: Path, current: dict) -> dict:
             {row.get("test") for row in host["records"]} == expected_tests, "Host test routes missing/duplicate")
     for row in host["records"]:
         require(type(row.get("exit_code")) is int and row["exit_code"] == 0, "Host test did not pass")
-        require(integer(row.get("pid"), 1) and integer(row.get("started_ns"), 1) and
-                integer(row.get("finished_ns"), row["started_ns"] + 1) and
+        require(integer(row.get("pid"), 1) and integer(row.get("started_ns"), 1, 2**63 - 1) and
+                integer(row.get("finished_ns"), row["started_ns"] + 1, 2**63 - 1) and
                 SHA.fullmatch(row.get("raw_sha256", "")),
                 "Host process audit fields missing")
         expected_count, expected_ids_sha256 = HOST_TEST_EXPECTATIONS[row["test"]]
