@@ -11,6 +11,7 @@
 #define BT_HCI_ERR_REMOTE_USER_TERM_CONN 0x13
 #define BT_HCI_ERR_LOCALHOST_TERM_CONN 0x16
 #define BT_SECURITY_ERR_UNSPECIFIED 9
+#define BT_SECURITY_ERR_AUTH_REQUIREMENT 4
 
 namespace
 {
@@ -69,12 +70,12 @@ namespace
     {
         connected = 7,
         disconnected = 8,
-        error = 9,
+        error = 38,
     };
     enum class BLEError : uint8_t
     {
-        none,
-        not_connected,
+        none = 0,
+        not_connected = 11,
     };
     enum class BLELinkRole : uint8_t
     {
@@ -90,8 +91,8 @@ namespace
     };
     enum class SecurityError : uint8_t
     {
-        none,
-        busy,
+        none = 0,
+        busy = 6,
     };
     enum class SecurityEvent : uint8_t
     {
@@ -123,6 +124,9 @@ namespace
         uint8_t reason = 0U;
     };
 
+    /** @brief 원격 정리 guard가 읽는 시작 및 본문 전 상태의 외부 입력입니다. */
+    [[maybe_unused]] bool started = true;
+    [[maybe_unused]] unsigned count = 0U, measurements = 0U;
     uint32_t now_ms = 0U;
     [[maybe_unused]] bool failed = false, cleanup_requested = false, done = false;
     bool local_bond = true, erase_ok = true, disconnect_ok = true;
@@ -413,8 +417,261 @@ namespace
                          stale_recovery_count == 1U && bond_erases == 1U,
                      "H3_normal_connection_no_extra_primary_or_erase");
     }
+    /** @brief 새 누락 사례에서만 실제 중앙 역할과 현재 연결 상태를 명시합니다. */
+    void remoteLink(unsigned handle, BLEEvent event, uint8_t reason = 0U,
+                    BLELinkRole role = BLELinkRole::central, bool update_state = true)
+    {
+        if (update_state)
+        {
+            connected_links[handle] = event == BLEEvent::connected;
+        }
+        BLEEventInfo value{};
+        value.event = event;
+        value.connection.value = handle;
+        value.role = role;
+        value.reason = reason;
+        onLink(value, nullptr);
+    }
+
+    /** @brief local 후보 event 없이 실제 선택과 연결 callback만 시작합니다. */
+    bool remoteBegin(bool report_connected = true, bool initial_ready = false,
+                     bool queued_connected = false, uint8_t connected_reason = 0U)
+    {
+        snapshotBonds();
+        onScan(frame(initial_ready), nullptr);
+        if (report_connected)
+        {
+            if (queued_connected)
+            {
+                connected_links[1U] = false;
+            }
+            remoteLink(1U, BLEEvent::connected, connected_reason, BLELinkRole::central,
+                       !queued_connected);
+        }
+        return check(!failed && connects == 1U && peer.value == 1U && stale_recovery_count == 0U &&
+                         bond_erases == 0U && disconnects == 0U,
+                     "remote_H1_has_no_local_candidate_prune_or_disconnect");
+    }
+
+    /** @brief 원형 순서의 반대편 정리만 있는 callback 입력과 제한된 후속을 비교합니다. */
+    bool runRemote(const std::string &test)
+    {
+        local_bond = test == "remote_local_bond";
+        if (test == "remote_restored")
+        {
+            bms_persistence_fresh_mode = false;
+            bms_persistence_restored_mode = true;
+        }
+        if (test == "remote_started_false")
+        {
+            started = false;
+        }
+        if (test == "remote_preprofile")
+        {
+            count = 1U;
+        }
+        if (!remoteBegin(test != "remote_no_connected_event", test == "remote_initial_ready1",
+                         test == "remote_queued_connected",
+                         test == "remote_connected_error" ? 1U : 0U))
+        {
+            return false;
+        }
+        if (test == "remote_first_l2")
+        {
+            local_bond = true;
+            security(1U, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+            if (!check(!failed, "remote_first_L2_original_callback_completed"))
+            {
+                return false;
+            }
+        }
+        const uint8_t reason = test == "remote_hci62" ? BT_HCI_ERR_CONN_FAIL_TO_ESTAB
+                                                      : BT_HCI_ERR_REMOTE_USER_TERM_CONN;
+        const BLELinkRole role =
+            test == "remote_wrong_role" ? BLELinkRole::peripheral : BLELinkRole::central;
+        remoteLink(1U, BLEEvent::disconnected, reason, role);
+        const bool original_failure_required =
+            test == "remote_local_bond" || test == "remote_restored" ||
+            test == "remote_started_false" || test == "remote_preprofile" ||
+            test == "remote_first_l2" || test == "remote_hci62" || test == "remote_wrong_role" ||
+            test == "remote_connected_error" || test == "remote_no_connected_event" ||
+            test == "remote_initial_ready1";
+        if (original_failure_required)
+        {
+            return check(failed && cleanup_requested && connects == 1U && scan_starts == 0U &&
+                             bond_erases == 0U && disconnects == 0U,
+                         "remote_guard_keeps_original_failure_without_retry");
+        }
+        if (!check(!failed && !cleanup_requested && !peer.valid() && connects == 1U &&
+                       scan_starts == 0U && bond_erases == 0U && disconnects == 0U,
+                   "remote_only_H1_park_before_ready1"))
+        {
+            return false;
+        }
+        if (test == "remote_stop_delay")
+        {
+            cleanup_requested = true;
+            now_ms = 1000U;
+            pollStaleRecoveryRestart();
+            onScan(frame(true), nullptr);
+            return check(!failed && scan_starts == 0U && connects == 1U && bond_erases == 0U &&
+                             disconnects == 0U,
+                         "remote_STOP_cancels_delay_without_operations");
+        }
+        if (test == "remote_retired_conflict" || test == "remote_retired_wrong_peer" ||
+            test == "remote_retired_timeout" || test == "remote_retired_gap_conflict" ||
+            test == "remote_retired_role_conflict" || test == "remote_retired_error_conflict")
+        {
+            if (test == "remote_retired_conflict")
+            {
+                security(1U, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+            }
+            else if (test == "remote_retired_wrong_peer")
+            {
+                security(1U, SecurityEvent::error, BT_SECURITY_ERR_AUTH_REQUIREMENT,
+                         SecurityLevel::none, address(42U));
+            }
+            else if (test == "remote_retired_timeout")
+            {
+                security(1U, SecurityEvent::timeout, BT_SECURITY_ERR_UNSPECIFIED);
+            }
+            else if (test == "remote_retired_role_conflict")
+            {
+                remoteLink(1U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN,
+                           BLELinkRole::peripheral);
+            }
+            else if (test == "remote_retired_error_conflict")
+            {
+                BLEEventInfo conflicting{};
+                conflicting.event = BLEEvent::connected;
+                conflicting.connection.value = 1U;
+                conflicting.role = BLELinkRole::central;
+                conflicting.error = BLEError::not_connected;
+                conflicting.driver_error = -ENOTCONN;
+                onLink(conflicting, nullptr);
+            }
+            else
+            {
+                remoteLink(1U, BLEEvent::disconnected, BT_HCI_ERR_LOCALHOST_TERM_CONN);
+            }
+            return check(failed && connects == 1U && scan_starts == 0U && bond_erases == 0U &&
+                             disconnects == 0U,
+                         "remote_retired_conflict_stops_without_scan");
+        }
+        if (test == "remote_retired_duplicates")
+        {
+            remoteLink(1U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            security(1U, SecurityEvent::error, BT_SECURITY_ERR_AUTH_REQUIREMENT);
+            security(1U, SecurityEvent::pairing_failed, BT_SECURITY_ERR_AUTH_REQUIREMENT);
+            if (!check(!failed && connects == 1U && disconnects == 0U,
+                       "remote_retired_expected_events_no_new_ownership"))
+            {
+                return false;
+            }
+        }
+        if (!advanceScan())
+        {
+            return false;
+        }
+        if (test == "remote_ready0_no_reconnect" || test == "remote_stop_wait")
+        {
+            onScan(frame(false), nullptr);
+            now_ms += 20000U;
+            pollStaleRecoveryRestart();
+            onScan(frame(false), nullptr);
+            if (!check(!failed && connects == 1U && scan_starts == 1U,
+                       "remote_ready0_never_authorizes_reconnect"))
+            {
+                return false;
+            }
+            cleanup_requested = true;
+            pollStaleRecoveryRestart();
+            onScan(frame(true), nullptr);
+            return check(!failed && connects == 1U && scan_starts == 1U && bond_erases == 0U &&
+                             disconnects == 0U,
+                         "remote_STOP_cancels_wait_without_operations");
+        }
+        if (test == "remote_binding_guards")
+        {
+            onScan(frame(false), nullptr);
+            auto bad = frame(true);
+            bad.payload[4] ^= 1U;
+            onScan(bad, nullptr);
+            bad = frame(true);
+            bad.payload[2] ^= 1U;
+            onScan(bad, nullptr);
+            bad = frame(true);
+            bad.address.bytes.type = 1U;
+            onScan(bad, nullptr);
+            bad = frame(true);
+            bad.address.bytes.value[5] = 1U;
+            onScan(bad, nullptr);
+            scan_running = false;
+            onScan(frame(true), nullptr);
+            scan_running = true;
+            const uint32_t correct_epoch = stale_scan_epoch;
+            ++stale_scan_epoch;
+            onScan(frame(true), nullptr);
+            stale_scan_epoch = correct_epoch;
+            if (!check(!failed && connects == 1U && scan_starts == 1U && scan_stops == 1U,
+                       "remote_ready1_requires_nonce_company_typed_peer_scan_epoch"))
+            {
+                return false;
+            }
+        }
+        onScan(frame(true), nullptr);
+        remoteLink(2U, BLEEvent::connected);
+        if (!check(!failed && connects == 2U && peer.value == 2U && security_requests == 2U &&
+                       bond_erases == 0U && disconnects == 0U && stale_recovery_count == 0U,
+                   "remote_ready1_second_link_has_no_local_erase_or_primary_slot"))
+        {
+            return false;
+        }
+        if (test == "remote_second_disconnect")
+        {
+            remoteLink(2U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+        }
+        else if (test == "remote_second_security_error")
+        {
+            security(2U, SecurityEvent::error, BT_SECURITY_ERR_AUTH_REQUIREMENT);
+        }
+        else if (test == "remote_second_wrong_peer")
+        {
+            security(2U, SecurityEvent::pairing_requested, 0U, SecurityLevel::none, address(42U));
+        }
+        else
+        {
+            local_bond = true;
+            security(2U, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+            if (!check(!failed, "remote_second_L2_is_original_success_path"))
+            {
+                return false;
+            }
+            if (test == "remote_second_l2_disconnect")
+            {
+                remoteLink(2U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            }
+            else
+            {
+                return check(connects == 2U && scan_starts == 1U && bond_erases == 0U &&
+                                 disconnects == 0U && stale_recovery_count == 0U,
+                             "remote_ready1_success_is_one_bounded_followup_only");
+            }
+        }
+        const unsigned before_connects = connects;
+        now_ms += 2000U;
+        pollStaleRecoveryRestart();
+        onScan(frame(true), nullptr);
+        return check(failed && cleanup_requested && connects == before_connects && connects == 2U &&
+                         scan_starts == 1U && bond_erases == 0U && disconnects == 0U,
+                     "remote_second_failure_has_no_third_connection");
+    }
     bool run(const std::string &test)
     {
+        if (test.rfind("remote_", 0U) == 0U)
+        {
+            return runRemote(test);
+        }
         PeerAddress copied{};
         BLEAddress typed{};
         typed.bytes = address(41U, 1U);
@@ -707,5 +964,15 @@ int main(int argc, char **argv)
     const bool ok = run(argv[1]);
     std::printf("HOST_ONLY:pass=%u:connects=%u:disconnect_requests=%u:primary_count=%u\n",
                 ok ? 1U : 0U, connects, disconnects, static_cast<unsigned>(stale_recovery_count));
+    if (std::strncmp(argv[1], "remote_", 7U) == 0)
+    {
+        for (const auto &entry : records)
+        {
+            if (entry.rfind("FAIL", 0U) == 0U)
+            {
+                std::printf("OBSERVED_ORIGINAL_OR_CANDIDATE_FAILURE:%s\n", entry.c_str());
+            }
+        }
+    }
     return ok ? 0 : 1;
 }

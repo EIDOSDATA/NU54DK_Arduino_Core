@@ -123,6 +123,31 @@ namespace
     StaleFollowup stale_followup{};
     bool stale_recovery_local_pruned[stale_recovery_capacity] = {};
     uint32_t stale_scan_epoch = 0U;
+#if !defined(M33_PROFILE_WATCHER)
+    /** @brief local 삭제 없이 상대의 새 ready1 광고만 기다리는 일회성 상태입니다. */
+    enum class RemoteStaleState : uint8_t
+    {
+        disabled,
+        first_selected,
+        first_active,
+        wait_ready1,
+        second_submitted,
+        disarmed,
+        failed,
+        cancelled_by_stop,
+    };
+    struct RemoteStaleRecovery
+    {
+        RemoteStaleState state = RemoteStaleState::disabled;
+        bool selection_seen = false;
+        bool first_connected = false;
+        bool first_ever_l2 = false, second_ever_l2 = false, first_retired = false;
+        BLEConnectionHandle first{}, second{};
+        PeerAddress address{};
+        uint32_t expected_scan_epoch = 0U;
+    };
+    RemoteStaleRecovery remote_stale{};
+#endif
 #endif
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
@@ -494,6 +519,14 @@ namespace
             return false;
         }
 #if !defined(M33_PROFILE_NATIVE)
+#if !defined(M33_PROFILE_WATCHER)
+        /** @note remote 경계에서 소비한 H1과 마지막 H2에는 새 primary 예산이 없습니다. */
+        if ((remote_stale.first_retired && connection == remote_stale.first) ||
+            (remote_stale.second.valid() && connection == remote_stale.second))
+        {
+            return false;
+        }
+#endif
         /** @note 이미 소비한 H2/H3에는 primary 복구 표를 다시 할당하지 않습니다. */
         if ((stale_followup.h2.valid() && connection == stale_followup.h2) ||
             (stale_followup.h3.valid() && connection == stale_followup.h3))
@@ -639,6 +672,9 @@ namespace
         if (cleanup_requested)
         {
             stale_followup.state = StaleFollowupState::cancelled_by_stop;
+#if !defined(M33_PROFILE_WATCHER)
+            remote_stale.state = RemoteStaleState::cancelled_by_stop;
+#endif
             stale_recovery_restart = StaleRecoveryRestart::none;
             return;
         }
@@ -705,9 +741,14 @@ namespace
     bool deferOwnedStaleScanner(BLEConnectionHandle connection, uint8_t reason,
                                 StaleRecoveryRestart restart, BLEConnectionHandle previous_peer)
     {
-        if (stale_followup.state == StaleFollowupState::disabled && bms_persistence_fresh_mode &&
-            startup_bonds_valid && !cleanup_requested && connection == previous_peer &&
-            reason == BT_HCI_ERR_CONN_FAIL_TO_ESTAB)
+#if !defined(M33_PROFILE_WATCHER)
+        const bool remote_budget_unused = !remote_stale.first_retired;
+#else
+        const bool remote_budget_unused = true;
+#endif
+        if (remote_budget_unused && stale_followup.state == StaleFollowupState::disabled &&
+            bms_persistence_fresh_mode && startup_bonds_valid && !cleanup_requested &&
+            connection == previous_peer && reason == BT_HCI_ERR_CONN_FAIL_TO_ESTAB)
         {
             for (size_t index = 0U; index < stale_recovery_count; ++index)
             {
@@ -930,6 +971,218 @@ namespace
         }
         return true;
     }
+#if !defined(M33_PROFILE_WATCHER)
+    /** @brief fresh 첫 연결의 본문 전 단계에만 상대 정리 관측을 허용합니다. */
+    bool remoteStaleInitialPhase()
+    {
+#if defined(M33_PROFILE_SERVER)
+        const bool role_phase = !hub_advertised;
+#else
+        const bool role_phase = true;
+#endif
+        return role_phase && bms_persistence_fresh_mode && started && !failed && !done &&
+               !cleanup_requested && startup_bonds_valid && index == 0U && phase == 0U &&
+               count == 0U && measurements == 0U && !move_next;
+    }
+    /** @brief 제한된 상대 정리 경계의 실패를 기존 FAIL/STOP으로 전달합니다. */
+    void failRemoteStale(const char *reason)
+    {
+        remote_stale.state = RemoteStaleState::failed;
+        fail(reason);
+    }
+    /** @brief nonce/company를 통과한 최초 ready0 선택과 local bond 부재를 고정합니다. */
+    void selectRemoteStalePeer(const BLEScanResult &result, bool advertiser_ready)
+    {
+        if (remote_stale.selection_seen)
+        {
+            return;
+        }
+        remote_stale.selection_seen = true;
+        PeerAddress address{};
+        if (!remoteStaleInitialPhase() || advertiser_ready || stale_recovery_count != 0U ||
+            stale_followup.state != StaleFollowupState::disabled || !BLEScan.running() ||
+            !copyPeerAddress(result.address, address) || startupContains(address))
+        {
+            return;
+        }
+        remote_stale.address = address;
+        remote_stale.state = RemoteStaleState::first_selected;
+    }
+    /** @brief 새 scan epoch의 같은 typed peer ready1만 두 번째 제출 예산을 소비합니다. */
+    bool acceptRemoteStaleScan(const BLEScanResult &result, bool advertiser_ready)
+    {
+        if (remote_stale.state != RemoteStaleState::wait_ready1)
+        {
+            return true;
+        }
+        PeerAddress address{};
+        if (!remoteStaleInitialPhase() || remote_stale.first_ever_l2 ||
+            stale_recovery_count != 0U || stale_followup.state != StaleFollowupState::disabled)
+        {
+            failRemoteStale("|reason=remote-stale-scan-state");
+            return false;
+        }
+        if (!BLEScan.running() || stale_scan_epoch != remote_stale.expected_scan_epoch ||
+            !copyPeerAddress(result.address, address) ||
+            !sameAddress(address, remote_stale.address) || !advertiser_ready)
+        {
+            return false;
+        }
+        if (remote_stale.second.valid())
+        {
+            failRemoteStale("|reason=remote-stale-submit-budget");
+            return false;
+        }
+        remote_stale.state = RemoteStaleState::second_submitted;
+        record("PROGRESS", "|reason=remote-stale-peer-ready");
+        return true;
+    }
+    /** @brief 실제 connect 반환 handle만 최초 또는 최종 제출에 결합합니다. */
+    void bindRemoteStaleConnection()
+    {
+        if (remote_stale.state == RemoteStaleState::first_selected)
+        {
+            remote_stale.first = peer;
+            remote_stale.state = RemoteStaleState::first_active;
+        }
+        else if (remote_stale.state == RemoteStaleState::second_submitted &&
+                 !remote_stale.second.valid())
+        {
+            remote_stale.second = peer;
+        }
+    }
+    /** @brief 종료한 H1의 늦은 보안 event와 새 H2의 정상 보안 판정을 분리합니다. */
+    bool observeRemoteStaleSecurity(const SecurityEventRecord &event)
+    {
+        if (remote_stale.second.valid() && event.connection == remote_stale.second)
+        {
+            if (!sameAddress(event.peer, remote_stale.address))
+            {
+                failRemoteStale("|reason=remote-stale-second-peer");
+                return true;
+            }
+            if (event.event == SecurityEvent::security_changed &&
+                event.level >= SecurityLevel::encrypted)
+            {
+                remote_stale.second_ever_l2 = true;
+                remote_stale.state = RemoteStaleState::disarmed;
+            }
+            return false;
+        }
+        if (!remote_stale.first.valid() || event.connection != remote_stale.first)
+        {
+            return false;
+        }
+        if (remote_stale.first_retired)
+        {
+            if (!sameAddress(event.peer, remote_stale.address))
+            {
+                failRemoteStale("|reason=remote-stale-retired-peer");
+            }
+            else if (event.level >= SecurityLevel::encrypted)
+            {
+                failRemoteStale("|reason=remote-stale-retired-l2");
+            }
+            else if ((event.event == SecurityEvent::error ||
+                      event.event == SecurityEvent::pairing_failed) &&
+                     (event.reason == BT_SECURITY_ERR_AUTH_REQUIREMENT ||
+                      event.reason == BT_SECURITY_ERR_UNSPECIFIED))
+            {
+                record("PROGRESS", "|reason=remote-stale-retired-security");
+            }
+            else
+            {
+                /** @note timeout, 늦은 L2, 새 pairing/candidate는 정리 증명으로 쓰지 않습니다. */
+                failRemoteStale("|reason=remote-stale-retired-security-conflict");
+            }
+            return true;
+        }
+        if (event.event == SecurityEvent::security_changed &&
+            event.level >= SecurityLevel::encrypted)
+        {
+            remote_stale.first_ever_l2 = true;
+            remote_stale.state = RemoteStaleState::disarmed;
+        }
+        else if (event.event == SecurityEvent::bond_restored_candidate ||
+                 event.event == SecurityEvent::error ||
+                 event.event == SecurityEvent::pairing_failed ||
+                 event.event == SecurityEvent::timeout)
+        {
+            /** @note local 복구가 먼저 관측되면 원형 경로에 위임하고 remote 예산을 폐기합니다. */
+            remote_stale.state = RemoteStaleState::disarmed;
+        }
+        return false;
+    }
+    /** @brief 소유한 최초 remote19는 park만 수행하며 새 ready1 없이는 재연결하지 않습니다. */
+    bool observeRemoteStaleLink(const BLEEventInfo &event)
+    {
+        if (remote_stale.second.valid() && event.connection == remote_stale.second)
+        {
+            if (!remote_stale.second_ever_l2 && event.event == BLEEvent::disconnected)
+            {
+                failRemoteStale("|reason=remote-stale-second-disconnect");
+                return true;
+            }
+            return false;
+        }
+        if (!remote_stale.first.valid() || event.connection != remote_stale.first)
+        {
+            return false;
+        }
+        if (remote_stale.first_retired)
+        {
+            const bool late_connected = event.event == BLEEvent::connected && event.reason == 0U;
+            const bool duplicate_disconnect = event.event == BLEEvent::disconnected &&
+                                              event.reason == BT_HCI_ERR_REMOTE_USER_TERM_CONN;
+            if (event.role != BLELinkRole::central || event.error != BLEError::none ||
+                event.driver_error != 0 || (!late_connected && !duplicate_disconnect))
+            {
+                failRemoteStale("|reason=remote-stale-retired-link-conflict");
+            }
+            else
+            {
+                record("PROGRESS", "|reason=remote-stale-retired-link");
+            }
+            return true;
+        }
+        if (event.event == BLEEvent::connected && event.role == BLELinkRole::central &&
+            event.reason == 0U && event.error == BLEError::none && event.driver_error == 0)
+        {
+            remote_stale.first_connected = true;
+            return false;
+        }
+        if (event.event != BLEEvent::disconnected ||
+            event.reason != BT_HCI_ERR_REMOTE_USER_TERM_CONN ||
+            remote_stale.state != RemoteStaleState::first_active ||
+            event.role != BLELinkRole::central || !remote_stale.first_connected ||
+            event.error != BLEError::none || event.driver_error != 0 ||
+            remote_stale.first_ever_l2 || !remoteStaleInitialPhase() || event.connection != peer ||
+            stale_recovery_count != 0U || stale_followup.state != StaleFollowupState::disabled ||
+            startupContains(remote_stale.address))
+        {
+            return false;
+        }
+        remote_stale.first_retired = true;
+        remote_stale.state = RemoteStaleState::wait_ready1;
+        remote_stale.expected_scan_epoch = stale_scan_epoch + 1U;
+        peer = {};
+        hub_security_started = false;
+#if defined(M33_PROFILE_SERVER)
+        const StaleRecoveryRestart restart = StaleRecoveryRestart::hub_scan;
+#else
+        const StaleRecoveryRestart restart = StaleRecoveryRestart::client_scan;
+#endif
+        if (!deferStaleRecoveryRestart(restart))
+        {
+            remote_stale.state = RemoteStaleState::failed;
+        }
+        else
+        {
+            record("PROGRESS", "|reason=remote-stale-peer-ready-pending");
+        }
+        return true;
+    }
+#endif
 #endif
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
     bool subscribed(unsigned slot, unsigned profile)
@@ -1646,6 +1899,12 @@ namespace
                  event.connection == peer ? 1U : 0U, peer.valid() ? 1U : 0U);
         record("PROGRESS", detail);
 #if !defined(M33_PROFILE_NATIVE)
+#if !defined(M33_PROFILE_WATCHER)
+        if (observeRemoteStaleSecurity(event))
+        {
+            return;
+        }
+#endif
         if (observeStaleFollowupSecurity(event))
         {
             return;
@@ -2087,6 +2346,12 @@ namespace
             record("PROGRESS", detail);
         }
 #if !defined(M33_PROFILE_NATIVE)
+#if !defined(M33_PROFILE_WATCHER)
+        if (observeRemoteStaleLink(event))
+        {
+            return;
+        }
+#endif
         if (observeStaleFollowupLink(event))
         {
             return;
@@ -2361,6 +2626,12 @@ namespace
             {
 #if !defined(M33_PROFILE_NATIVE)
                 const bool advertiser_ready = result.payload[cursor + 20U] == 1U;
+#if !defined(M33_PROFILE_WATCHER)
+                if (!acceptRemoteStaleScan(result, advertiser_ready))
+                {
+                    return;
+                }
+#endif
                 if (!acceptStaleFollowupScan(result, advertiser_ready))
                 {
                     return;
@@ -2380,6 +2651,9 @@ namespace
                 }
                 stale_recovery_require_advertiser_ready = false;
                 stale_recovery_wait_reported = false;
+#if !defined(M33_PROFILE_WATCHER)
+                selectRemoteStalePeer(result, advertiser_ready);
+#endif
 #endif
                 record("PROGRESS", "|reason=scan-match");
                 if (!BLEScan.stop() || !BLEConnection.connect(result.address, peer))
@@ -2390,6 +2664,9 @@ namespace
                 {
 #if !defined(M33_PROFILE_NATIVE)
                     bindStaleFollowupConnection();
+#if !defined(M33_PROFILE_WATCHER)
+                    bindRemoteStaleConnection();
+#endif
 #endif
                     record("PROGRESS", "|reason=connect-submitted");
                 }
@@ -2439,6 +2716,9 @@ namespace
         stale_recovery_restart_at = 0U;
 #if !defined(M33_PROFILE_NATIVE)
         stale_followup = {};
+#if !defined(M33_PROFILE_WATCHER)
+        remote_stale = {};
+#endif
         stale_scan_epoch = 0U;
         memset(stale_recovery_local_pruned, 0, sizeof(stale_recovery_local_pruned));
         stale_recovery_advertiser_ready = false;
