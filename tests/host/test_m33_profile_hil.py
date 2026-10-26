@@ -676,8 +676,20 @@ class ProfileHilTests(unittest.TestCase):
         on_link = source.split("void onLink(const BLEEventInfo &event, void *)", 1)[1].split(
             "void onScan(const BLEScanResult &result, void *)", 1
         )[0]
-        for action in ("hub_scan", "hub_advertise", "watcher_advertise", "client_scan"):
+        for action in ("hub_advertise", "watcher_advertise"):
             self.assertIn(f"deferStaleRecoveryRestart(StaleRecoveryRestart::{action})", on_link)
+        for action, previous_peer in (("hub_scan", "event.connection"),
+                                      ("client_scan", "previous_peer")):
+            self.assertRegex(
+                on_link,
+                r"deferOwnedStaleScanner\(\s*event\.connection,\s*event\.reason,\s*"
+                + rf"StaleRecoveryRestart::{action},\s*"
+                + previous_peer.replace(".", r"\.") + r"\s*\)",
+            )
+        owned = source.split("bool deferOwnedStaleScanner(", 1)[1].split(
+            "bool acceptStaleFollowupScan(", 1
+        )[0]
+        self.assertIn("if (!deferStaleRecoveryRestart(restart))", owned)
         self.assertNotIn('record("PROGRESS", "|reason=stale-bond-hub-rescan")', on_link)
         poll_order = source.split("void loop()", 1)[1].split(
             "if (watchdog_channel >= 0", 1

@@ -48,5 +48,69 @@ class ProfileRuntimeTests(unittest.TestCase):
                     self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
 
 
+    def test_stale_recovery_callbacks(self):
+        """! @brief 실제 profile callback으로 한정된 후속 정리와 원형 종료 판정을 검증합니다. """
+
+        compiler = compiler_command()
+        self.assertIsNotNone(compiler)
+        source = (ROOT / "tests/zephyr/m33_profile_hil/src/main.cpp").read_text(encoding="utf-8")
+
+        def function(signature):
+            """! @brief 실제 함수 전체를 추출하며 조건 재구현이나 고정 산출물을 사용하지 않습니다. """
+            begin = source.index("    " + signature)
+            opening = source.index("\n    {", begin) + 1
+            end = source.index("\n    }", opening) + len("\n    }")
+            value = source[begin:end] + "\n"
+            self.assertEqual(value.count("{"), value.count("}"), signature)
+            return value
+
+        declarations = source.split("    constexpr size_t stale_recovery_capacity", 1)[1].split(
+            "    SensorService clock_service", 1
+        )[0]
+        declarations = "    constexpr size_t stale_recovery_capacity" + declarations
+        signatures = (
+            "void fail(", "bool sameAddress(", "bool copyPeerAddress(", "bool staleRecoveryEnabled()",
+            "bool recoverStaleBond(BLEConnectionHandle connection, const PeerAddress &address)",
+            "bool recoverStaleBond(const SecurityEventRecord &event)", "bool staleRecoveryPending(",
+            "bool consumeStaleDisconnect(", "bool deferStaleRecoveryRestart(",
+            "void pollStaleRecoveryRestart()", "void failStaleFollowup(",
+            "bool deferOwnedStaleScanner(", "bool acceptStaleFollowupScan(",
+            "void bindStaleFollowupConnection()", "bool observeStaleFollowupSecurity(",
+            "bool observeStaleFollowupLink(", "void onSecurity(", "void onLink(", "void onScan(",
+        )
+        scenarios = (
+            "normal19", "normal22", "pending_queue", "cleanup", "ready1_direct", "active_pairing",
+            "L2_early_disconnect", "L2_BMS_disconnect", "L2_error", "error_remote19", "error_local22",
+            "disconnect_first", "cross_error", "pairing_first", "retiring_connected", "retiring_pairing",
+            "retired_pairing", "late_events", "late_L2", "late_timeout", "timeout", "security_other",
+            "wrong_peer", "wrong_generation", "H2_62", "unsolicited22", "disconnect_rejected",
+            "H3_error", "H3_62", "foreign_scan", "no_local_prune", "scan_not_running", "primary_second_peer",
+        )
+        with tempfile.TemporaryDirectory(prefix="nu54-profile-stale-") as folder:
+            temporary = Path(folder)
+            (temporary / "stale-declarations.inc").write_text(declarations, encoding="utf-8")
+            (temporary / "stale-functions.inc").write_text(
+                "\n".join(function(signature) for signature in signatures), encoding="utf-8"
+            )
+            for role in ("server", "client"):
+                binary = temporary / ("stale-" + role + ".exe")
+                command = [*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror"]
+                if role == "server":
+                    command.append("-DM33_PROFILE_SERVER=1")
+                for include in (temporary, ROOT / "tests/zephyr/m33_profile_hil/src"):
+                    command += ["-I", str(include)]
+                command += [str(ROOT / "tests/host/m33_profile_stale_recovery_main.cpp"),
+                            "-o", str(binary)]
+                result = subprocess.run(command, capture_output=True, timeout=60)
+                self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
+                for scenario in scenarios:
+                    if role == "client" and scenario == "primary_second_peer":
+                        continue
+                    with self.subTest(role=role, scenario=scenario):
+                        result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
+                        self.assertEqual(result.returncode, 0,
+                                         (result.stdout + result.stderr).decode(errors="replace"))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

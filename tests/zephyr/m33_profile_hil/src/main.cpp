@@ -11,6 +11,7 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/watchdog.h>
 #include <zephyr/bluetooth/conn.h>
+#include <zephyr/bluetooth/hci_types.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
 #include "ExpectedReject.h"
@@ -92,6 +93,36 @@ namespace
     bool stale_recovery_advertiser_ready = false;
     bool stale_recovery_require_advertiser_ready = false;
     bool stale_recovery_wait_reported = false;
+    /** @brief primary 두 peer 기록과 분리된 한 번짜리 후속 정리 상태입니다. */
+    enum class StaleFollowupState : uint8_t
+    {
+        disabled,
+        wait_h2_scan,
+        h2_active,
+        h2_wait_disconnect,
+        wait_peer_ready1,
+        h3_submitted_spent,
+        disarmed_normal,
+        disarmed_l2,
+        failed,
+        cancelled_by_stop,
+    };
+    struct StaleFollowup
+    {
+        StaleFollowupState state = StaleFollowupState::disabled;
+        bool spent = false, h2_ever_l2 = false, h2_retired = false;
+        bool disconnect_requested = false, disconnect_accepted = false;
+        bool h3_submit_used = false;
+        size_t primary_index = 0U;
+        BLEConnectionHandle h1{}, h2{}, h3{};
+        PeerAddress address{};
+        uint8_t h1_reason = 0U, h2_reason = 0U;
+        SecurityEvent first_error = SecurityEvent::error;
+        uint32_t expected_scan_epoch = 0U;
+    };
+    StaleFollowup stale_followup{};
+    bool stale_recovery_local_pruned[stale_recovery_capacity] = {};
+    uint32_t stale_scan_epoch = 0U;
 #endif
     SensorService clock_service(Kind::current_time), temperature(Kind::thermometer),
         cycling(Kind::cycling), running(Kind::running), elapsed(Kind::elapsed_time);
@@ -462,6 +493,14 @@ namespace
         {
             return false;
         }
+#if !defined(M33_PROFILE_NATIVE)
+        /** @note 이미 소비한 H2/H3에는 primary 복구 표를 다시 할당하지 않습니다. */
+        if ((stale_followup.h2.valid() && connection == stale_followup.h2) ||
+            (stale_followup.h3.valid() && connection == stale_followup.h3))
+        {
+            return false;
+        }
+#endif
         for (size_t index = 0U; index < stale_recovery_count; ++index)
         {
             if (stale_recovery_links[index] == connection)
@@ -490,6 +529,10 @@ namespace
         stale_recovery_links[recovery_index] = connection;
         stale_recovery_addresses[recovery_index] = address;
         stale_recovery_disconnected[recovery_index] = false;
+#if !defined(M33_PROFILE_NATIVE)
+        /** @note erase와 scoped 목록 검증을 통과한 local 삭제 사실만 기록합니다. */
+        stale_recovery_local_pruned[recovery_index] = local_stale;
+#endif
         ++stale_recovery_count;
         if (local_stale)
         {
@@ -526,6 +569,14 @@ namespace
     /** @brief stale bond 복구 대상으로 격리한 이전 link인지 확인합니다. */
     bool staleRecoveryPending(BLEConnectionHandle connection)
     {
+#if !defined(M33_PROFILE_NATIVE)
+        if ((stale_followup.h2_retired ||
+             stale_followup.state == StaleFollowupState::h2_wait_disconnect) &&
+            stale_followup.h2.valid() && connection == stale_followup.h2)
+        {
+            return true;
+        }
+#endif
         for (size_t index = 0U; index < stale_recovery_count; ++index)
         {
             if (stale_recovery_links[index] == connection)
@@ -587,6 +638,7 @@ namespace
     {
         if (cleanup_requested)
         {
+            stale_followup.state = StaleFollowupState::cancelled_by_stop;
             stale_recovery_restart = StaleRecoveryRestart::none;
             return;
         }
@@ -636,7 +688,247 @@ namespace
             fail(failure_reason);
             return;
         }
+        if (scanner_restart)
+        {
+            /** @note Scan.start 성공과 내부 queue purge 뒤에만 새 epoch를 엽니다. */
+            ++stale_scan_epoch;
+        }
         record("PROGRESS", progress_reason);
+    }
+    /** @brief 후속 허용 실패를 원형 FAIL/STOP 경로로 전달하며 재사용하지 않습니다. */
+    void failStaleFollowup(const char *reason)
+    {
+        stale_followup.state = StaleFollowupState::failed;
+        fail(reason);
+    }
+    /** @brief 실제 local 삭제와 소비된 H1 성립 실패가 모두 있을 때만 후속을 엽니다. */
+    bool deferOwnedStaleScanner(BLEConnectionHandle connection, uint8_t reason,
+                                StaleRecoveryRestart restart, BLEConnectionHandle previous_peer)
+    {
+        if (stale_followup.state == StaleFollowupState::disabled && bms_persistence_fresh_mode &&
+            startup_bonds_valid && !cleanup_requested && connection == previous_peer &&
+            reason == BT_HCI_ERR_CONN_FAIL_TO_ESTAB)
+        {
+            for (size_t index = 0U; index < stale_recovery_count; ++index)
+            {
+                if (stale_recovery_links[index] == connection &&
+                    stale_recovery_disconnected[index] && stale_recovery_local_pruned[index])
+                {
+                    stale_followup.state = StaleFollowupState::wait_h2_scan;
+                    stale_followup.primary_index = index;
+                    stale_followup.h1 = connection;
+                    stale_followup.address = stale_recovery_addresses[index];
+                    stale_followup.h1_reason = reason;
+                    stale_followup.expected_scan_epoch = stale_scan_epoch + 1U;
+                    break;
+                }
+            }
+        }
+        if (!deferStaleRecoveryRestart(restart))
+        {
+            stale_followup.state = StaleFollowupState::failed;
+            return false;
+        }
+        if (stale_followup.state == StaleFollowupState::wait_h2_scan &&
+            stale_followup.h1 == connection)
+        {
+            stale_recovery_require_advertiser_ready = false;
+        }
+        return true;
+    }
+    /** @brief 새 scan에서 typed peer와 준비 marker를 확인하고 제출 예산을 먼저 소비합니다. */
+    bool acceptStaleFollowupScan(const BLEScanResult &result, bool advertiser_ready)
+    {
+        const bool h2_scan = stale_followup.state == StaleFollowupState::wait_h2_scan;
+        const bool final_scan = stale_followup.state == StaleFollowupState::wait_peer_ready1;
+        if (!h2_scan && !final_scan)
+        {
+            return true;
+        }
+        PeerAddress address{};
+        if (!BLEScan.running() || stale_scan_epoch != stale_followup.expected_scan_epoch ||
+            !copyPeerAddress(result.address, address) ||
+            !sameAddress(address, stale_followup.address))
+        {
+            return false;
+        }
+        if (h2_scan && advertiser_ready)
+        {
+            /** @note 정상 ready1 직행이며 실제 L2를 관측했다는 뜻이 아닙니다. */
+            stale_followup.state = StaleFollowupState::disarmed_normal;
+            stale_followup.spent = true;
+            return true;
+        }
+        if (h2_scan)
+        {
+            if (stale_followup.spent)
+            {
+                failStaleFollowup("|reason=stale-followup-budget");
+                return false;
+            }
+            stale_followup.spent = true;
+            stale_followup.state = StaleFollowupState::h2_active;
+            return true;
+        }
+        if (!advertiser_ready)
+        {
+            return false;
+        }
+        if (stale_followup.h3_submit_used)
+        {
+            failStaleFollowup("|reason=stale-followup-final-budget");
+            return false;
+        }
+        stale_followup.h3_submit_used = true;
+        stale_followup.state = StaleFollowupState::h3_submitted_spent;
+        return true;
+    }
+    /** @brief 연결 제출이 실제 반환한 generation만 별도 슬롯에 고정합니다. */
+    void bindStaleFollowupConnection()
+    {
+        if (stale_followup.state == StaleFollowupState::h2_active && !stale_followup.h2.valid())
+        {
+            stale_followup.h2 = peer;
+        }
+        else if ((stale_followup.state == StaleFollowupState::h3_submitted_spent ||
+                  stale_followup.state == StaleFollowupState::disarmed_normal) &&
+                 !stale_followup.h3.valid())
+        {
+            stale_followup.h3 = peer;
+        }
+    }
+    /** @brief H2의 제한된 security 오류를 보류하되 성공/L2 판정을 대신하지 않습니다. */
+    bool observeStaleFollowupSecurity(const SecurityEventRecord &event)
+    {
+        if (!stale_followup.h2.valid() || event.connection != stale_followup.h2)
+        {
+            return false;
+        }
+        if (stale_followup.h2_ever_l2)
+        {
+            /** @note 예외 권한만 폐기하고 원형 profile/BMS callback 판정을 그대로 수행합니다. */
+            return false;
+        }
+        if (!sameAddress(event.peer, stale_followup.address))
+        {
+            failStaleFollowup("|reason=stale-followup-peer");
+            return true;
+        }
+        if (stale_followup.h2_retired)
+        {
+            if (!((event.event == SecurityEvent::error ||
+                   event.event == SecurityEvent::pairing_failed) &&
+                  event.reason == BT_SECURITY_ERR_UNSPECIFIED))
+            {
+                failStaleFollowup("|reason=stale-followup-retired-security-conflict");
+                return true;
+            }
+            record("PROGRESS", "|reason=stale-followup-retired-security");
+            return true;
+        }
+        if (event.event == SecurityEvent::security_changed &&
+            event.level >= SecurityLevel::encrypted)
+        {
+            if (stale_followup.state == StaleFollowupState::h2_wait_disconnect)
+            {
+                failStaleFollowup("|reason=stale-followup-l2-after-error");
+                return true;
+            }
+            stale_followup.h2_ever_l2 = true;
+            stale_followup.state = StaleFollowupState::disarmed_l2;
+            return false;
+        }
+        const bool error = event.event == SecurityEvent::error ||
+                           event.event == SecurityEvent::pairing_failed ||
+                           event.event == SecurityEvent::timeout;
+        if (stale_followup.state == StaleFollowupState::h2_wait_disconnect && !error)
+        {
+            failStaleFollowup("|reason=stale-followup-retiring-security");
+            return true;
+        }
+        if (!error)
+        {
+            return false;
+        }
+        if (stale_followup.h2_ever_l2 ||
+            (stale_followup.state != StaleFollowupState::h2_active &&
+             stale_followup.state != StaleFollowupState::h2_wait_disconnect) ||
+            event.event == SecurityEvent::timeout || event.reason != BT_SECURITY_ERR_UNSPECIFIED)
+        {
+            failStaleFollowup("|reason=stale-followup-security");
+            return true;
+        }
+        if (stale_followup.state == StaleFollowupState::h2_wait_disconnect)
+        {
+            record("PROGRESS", "|reason=stale-followup-duplicate-security");
+            return true;
+        }
+        stale_followup.state = StaleFollowupState::h2_wait_disconnect;
+        stale_followup.first_error = event.event;
+        if (BLEConnection.connected(event.connection))
+        {
+            stale_followup.disconnect_requested = true;
+            stale_followup.disconnect_accepted = BLEConnection.disconnect(event.connection);
+            if (!stale_followup.disconnect_accepted && BLEConnection.connected(event.connection))
+            {
+                failStaleFollowup("|reason=stale-followup-disconnect");
+            }
+        }
+        record("PROGRESS", "|reason=stale-followup-security-pending");
+        return true;
+    }
+    /** @brief 정확한 H2 종료만 한 번 소비하고 ready1을 요구하는 새 scan을 예약합니다. */
+    bool observeStaleFollowupLink(const BLEEventInfo &event)
+    {
+        if (!stale_followup.h2.valid() || event.connection != stale_followup.h2)
+        {
+            return false;
+        }
+        if (stale_followup.h2_ever_l2)
+        {
+            /** @note 정상 BMS 종료와 비정상 early disconnect는 원래 onLink가 구분합니다. */
+            return false;
+        }
+        if (stale_followup.h2_retired)
+        {
+            if (event.event == BLEEvent::disconnected && event.reason != stale_followup.h2_reason)
+            {
+                failStaleFollowup("|reason=stale-followup-disconnect-conflict");
+            }
+            record("PROGRESS", "|reason=stale-followup-retired-link");
+            return true;
+        }
+        if (event.event != BLEEvent::disconnected)
+        {
+            return false;
+        }
+        if (stale_followup.h2_ever_l2 ||
+            (stale_followup.state != StaleFollowupState::h2_active &&
+             stale_followup.state != StaleFollowupState::h2_wait_disconnect) ||
+            !(event.reason == BT_HCI_ERR_REMOTE_USER_TERM_CONN ||
+              (event.reason == BT_HCI_ERR_LOCALHOST_TERM_CONN &&
+               stale_followup.disconnect_accepted)))
+        {
+            failStaleFollowup("|reason=stale-followup-disconnect-reason");
+            return true;
+        }
+        stale_followup.h2_reason = event.reason;
+        stale_followup.h2_retired = true;
+        stale_followup.state = StaleFollowupState::wait_peer_ready1;
+        stale_followup.expected_scan_epoch = stale_scan_epoch + 1U;
+        peer = {};
+        hub_security_started = false;
+#if defined(M33_PROFILE_SERVER)
+        const StaleRecoveryRestart restart = StaleRecoveryRestart::hub_scan;
+#else
+        const StaleRecoveryRestart restart = StaleRecoveryRestart::client_scan;
+#endif
+        /** @note H1의 0x3e를 전달하지 않으므로 H3에는 원래 ready1 조건이 유지됩니다. */
+        if (!deferStaleRecoveryRestart(restart))
+        {
+            stale_followup.state = StaleFollowupState::failed;
+        }
+        return true;
     }
 #endif
     /** @brief test backend에서 실제 link별 CCC를 읽어 구독되지 않은 전송 폭주를 막습니다. */
@@ -1353,6 +1645,12 @@ namespace
                  static_cast<unsigned>(event.reason),
                  event.connection == peer ? 1U : 0U, peer.valid() ? 1U : 0U);
         record("PROGRESS", detail);
+#if !defined(M33_PROFILE_NATIVE)
+        if (observeStaleFollowupSecurity(event))
+        {
+            return;
+        }
+#endif
         if (event.event == SecurityEvent::pairing_requested)
         {
 #if defined(M33_PROFILE_NATIVE)
@@ -1788,6 +2086,12 @@ namespace
                      BLEDevice.lastDriverError());
             record("PROGRESS", detail);
         }
+#if !defined(M33_PROFILE_NATIVE)
+        if (observeStaleFollowupLink(event))
+        {
+            return;
+        }
+#endif
         /** @note stale bond 정리로 disconnect를 요청한 뒤 늦게 도착한 connected는 재인증하지 않습니다. */
         if (event.event == BLEEvent::connected && staleRecoveryPending(event.connection))
         {
@@ -1909,7 +2213,9 @@ namespace
             {
                 peer = {};
                 hub_security_started = false;
-                static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::hub_scan));
+                static_cast<void>(deferOwnedStaleScanner(event.connection, event.reason,
+                                                         StaleRecoveryRestart::hub_scan,
+                                                         event.connection));
             }
             else
             {
@@ -1939,11 +2245,15 @@ namespace
         if (event.event == BLEEvent::disconnected &&
             consumeStaleDisconnect(event.connection))
         {
+#if !defined(M33_PROFILE_WATCHER)
+            const BLEConnectionHandle previous_peer = peer;
+#endif
             peer = {};
 #if defined(M33_PROFILE_WATCHER)
             static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise));
 #else
-            static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::client_scan));
+            static_cast<void>(deferOwnedStaleScanner(
+                event.connection, event.reason, StaleRecoveryRestart::client_scan, previous_peer));
 #endif
             return;
         }
@@ -2016,6 +2326,13 @@ namespace
         {
             return;
         }
+#if !defined(M33_PROFILE_NATIVE)
+        /** @note 재시작 지연 중의 이전 scan callback은 연결을 제출하지 않습니다. */
+        if (stale_recovery_restart != StaleRecoveryRestart::none)
+        {
+            return;
+        }
+#endif
         size_t cursor = 0U;
         while (cursor < result.payload_length)
         {
@@ -2044,6 +2361,10 @@ namespace
             {
 #if !defined(M33_PROFILE_NATIVE)
                 const bool advertiser_ready = result.payload[cursor + 20U] == 1U;
+                if (!acceptStaleFollowupScan(result, advertiser_ready))
+                {
+                    return;
+                }
                 if (stale_recovery_require_advertiser_ready && !advertiser_ready)
                 {
                     if (!stale_recovery_wait_reported)
@@ -2067,6 +2388,9 @@ namespace
                 }
                 else
                 {
+#if !defined(M33_PROFILE_NATIVE)
+                    bindStaleFollowupConnection();
+#endif
                     record("PROGRESS", "|reason=connect-submitted");
                 }
                 return;
@@ -2114,6 +2438,9 @@ namespace
         stale_recovery_restart = StaleRecoveryRestart::none;
         stale_recovery_restart_at = 0U;
 #if !defined(M33_PROFILE_NATIVE)
+        stale_followup = {};
+        stale_scan_epoch = 0U;
+        memset(stale_recovery_local_pruned, 0, sizeof(stale_recovery_local_pruned));
         stale_recovery_advertiser_ready = false;
         stale_recovery_require_advertiser_ready = false;
         stale_recovery_wait_reported = false;
