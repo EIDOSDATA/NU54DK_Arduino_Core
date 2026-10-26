@@ -46,7 +46,9 @@ class BleGattTests(unittest.TestCase):
             result = subprocess.run(command + ['-o', str(binary)], capture_output=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stderr.decode(errors='replace'))
             for scenario in ['registration_failure', 'server_copy', 'server_overflow', 'server_reentrant',
-                             'notification', 'indication', 'discovery_failure',
+                             'notification', 'indication',
+                             'notification_no_ccc_pending_peer', 'indication_no_ccc_pending_peer',
+                             'discovery_failure',
                              'discovery_uuid_guard', 'client_io', 'client_late',
                              'subscription', 'att_failure', 'mixed_server_route',
                              'm29_long_parallel', 'm29_long_write',

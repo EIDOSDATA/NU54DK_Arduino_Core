@@ -730,6 +730,82 @@ int main(int argc, char **argv)
         BLEDevice.poll();
         assert(server_events[0] == (std::strcmp(scenario, "server_reentrant") == 0 ? 1U : 24U));
     }
+    else if (std::strcmp(scenario, "notification_no_ccc_pending_peer") == 0 ||
+             std::strcmp(scenario, "indication_no_ccc_pending_peer") == 0)
+    {
+        /** @brief 구독한 A와 미구독 B를 동시에 연결하여 다른 peer의 전송 상태를 분리합니다. */
+        const bool indication = std::strcmp(scenario, "indication_no_ccc_pending_peer") == 0;
+        const BLEConnectionHandle peer_a = BLEConnection.handle(BLELinkRole::central);
+        assert(peer_a.valid());
+        assert(BLEAdvertising.clear() && BLEAdvertising.start());
+        mock_conn_callbacks->connected(&mock_connections[1], 0U);
+        BLEDevice.poll();
+        const BLEConnectionHandle peer_b = BLEConnection.handle(BLELinkRole::peripheral);
+        assert(peer_b.valid() && peer_a != peer_b && BLEConnection.count() == 2U);
+        mock_server_ccc_attribute = attribute;
+        mock_server_ccc_bits[0] = indication ? BT_GATT_CCC_INDICATE : BT_GATT_CCC_NOTIFY;
+        mock_server_ccc_bits[1] = 0U;
+        assert(characteristic.setValue(payload, sizeof(payload)));
+        const int peer_a_refs = mock_connections[0].refs;
+        const int peer_b_refs = mock_connections[1].refs;
+        const auto send = [indication](BLEConnectionHandle peer)
+        {
+            return indication ? characteristic.indicate(peer) : characteristic.notify(peer);
+        };
+
+        /** @brief A 전송 전에도 B의 미구독 오류와 연결 참조가 안정적이어야 합니다. */
+        assert(!send(peer_b));
+        assert(BLEDevice.lastDriverError() == -ENOTCONN);
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+        assert(send(peer_a));
+        const bt_gatt_notify_params notification = mock_notification;
+        bt_gatt_indicate_params *const pending_indication = mock_indication;
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+        assert(!send(peer_a));
+        assert(BLEDevice.lastDriverError() == -EBUSY);
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+
+        /** @brief A가 pending이어도 B의 CCC는 같으므로 공개 API의 미구독 판정도 같아야 합니다. */
+        assert(!send(peer_b));
+        assert(BLEDevice.lastDriverError() == -ENOTCONN);
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+        assert(!send(peer_a));
+        assert(BLEDevice.lastDriverError() == -EBUSY);
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+
+        /** @brief B의 거부가 A의 전송을 바꾸지 않았으며 원형 완료 callback으로 정리되는지 확인합니다. */
+        if (indication)
+        {
+            assert(pending_indication != nullptr && mock_indication == pending_indication);
+            assert(mock_indication_connection == connection);
+            assert(pending_indication->func != nullptr && pending_indication->destroy != nullptr);
+            pending_indication->func(connection, pending_indication, 0U);
+            assert(!send(peer_a));
+            assert(BLEDevice.lastDriverError() == -EBUSY);
+            assert(!send(peer_b));
+            assert(BLEDevice.lastDriverError() == -ENOTCONN);
+            assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+            pending_indication->destroy(pending_indication);
+        }
+        else
+        {
+            assert(mock_notification_connection == connection);
+            assert(notification.func != nullptr && notification.user_data != nullptr);
+            assert(mock_notification.func == notification.func &&
+                   mock_notification.user_data == notification.user_data &&
+                   mock_notification.data == notification.data);
+            notification.func(connection, notification.user_data);
+        }
+        BLEDevice.poll();
+        assert(!send(peer_b));
+        assert(BLEDevice.lastDriverError() == -ENOTCONN);
+        assert(mock_connections[0].refs == peer_a_refs && mock_connections[1].refs == peer_b_refs);
+        assert(mock_server_ccc_bits[0] == (indication ? BT_GATT_CCC_INDICATE : BT_GATT_CCC_NOTIFY));
+        assert(mock_server_ccc_bits[1] == 0U);
+        mock_conn_callbacks->disconnected(connection, 0x13U);
+        mock_conn_callbacks->disconnected(&mock_connections[1], 0x13U);
+        BLEDevice.poll();
+    }
     else if (std::strcmp(scenario, "notification") == 0)
     {
         assert(characteristic.setValue(payload, 4));

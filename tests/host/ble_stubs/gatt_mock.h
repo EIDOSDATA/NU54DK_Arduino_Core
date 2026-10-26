@@ -286,9 +286,28 @@ inline ssize_t bt_gatt_attr_write_ccc(bt_conn *, const bt_gatt_attr *, const voi
     return 0;
 }
 inline bool mock_server_subscribed = true;
-inline bool bt_gatt_is_subscribed(bt_conn *, const bt_gatt_attr *, std::uint16_t)
+/** @brief 지정한 attribute에서만 연결별 CCC bit를 사용하며 나머지 시험은 기존 기본값을 유지합니다. */
+inline const bt_gatt_attr *mock_server_ccc_attribute = nullptr;
+inline std::uint16_t mock_server_ccc_bits[sizeof(mock_connections) / sizeof(mock_connections[0])]{};
+inline bool bt_gatt_is_subscribed(bt_conn *connection, const bt_gatt_attr *attribute,
+                                  std::uint16_t requested)
 {
-    return mock_server_subscribed;
+    if (mock_server_ccc_attribute == nullptr)
+    {
+        return mock_server_subscribed;
+    }
+    if (attribute != mock_server_ccc_attribute || requested == 0U)
+    {
+        return false;
+    }
+    for (std::size_t index = 0U; index < sizeof(mock_connections) / sizeof(mock_connections[0]); ++index)
+    {
+        if (connection == &mock_connections[index])
+        {
+            return (mock_server_ccc_bits[index] & requested) == requested;
+        }
+    }
+    return false;
 }
 inline int mock_notify_error = 0, mock_indicate_error = 0, mock_discover_error = 0;
 inline int mock_read_error = 0, mock_write_error = 0, mock_subscribe_error = 0,
