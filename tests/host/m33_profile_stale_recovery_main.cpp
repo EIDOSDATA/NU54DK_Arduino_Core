@@ -95,6 +95,7 @@ namespace
     {
         none = 0,
         busy = 6,
+        driver_error = 7,
     };
     enum class SecurityEvent : uint8_t
     {
@@ -135,6 +136,13 @@ namespace
     bool local_bond = true, erase_ok = true, disconnect_ok = true;
     bool erase_verification_ok = true;
     bool scan_running = true, scan_start_ok = true;
+    bool security_ok = true, advertise_ok = true;
+    SecurityError security_error = SecurityError::none;
+    int security_driver = 0;
+    SecurityLevel security_levels[16] = {};
+    unsigned live_peer_value = 41U;
+    uint8_t live_peer_type = 0U;
+    std::function<void()> security_request_hook;
     bool connected_links[16] = {};
     unsigned connects = 0U, disconnects = 0U, security_requests = 0U, pairing_accepts = 0U;
     unsigned scan_starts = 0U, scan_stops = 0U, advertisements = 0U, bond_erases = 0U;
@@ -256,15 +264,23 @@ namespace
         bool requestSecurity(BLEConnectionHandle)
         {
             ++security_requests;
-            return true;
+            if (security_request_hook)
+            {
+                security_request_hook();
+            }
+            return security_ok;
         }
         SecurityError lastError() const
         {
-            return SecurityError::none;
+            return security_error;
         }
         int lastDriverError() const
         {
-            return 0;
+            return security_driver;
+        }
+        SecurityLevel currentLevel(BLEConnectionHandle handle) const
+        {
+            return security_levels[handle.value];
         }
     } BLESecurity;
     struct ConnectionBoundary
@@ -297,7 +313,17 @@ namespace
         }
         BLELinkRole role(BLEConnectionHandle) const
         {
+#if defined(M33_PROFILE_WATCHER)
+            return BLELinkRole::peripheral;
+#else
             return BLELinkRole::central;
+#endif
+        }
+        BLEAddress peerAddress(BLEConnectionHandle) const
+        {
+            BLEAddress result{};
+            result.bytes = address(live_peer_value, live_peer_type);
+            return result;
         }
     } BLEConnection;
     struct ScanBoundary
@@ -343,7 +369,7 @@ namespace
     bool advertise()
     {
         ++advertisements;
-        return true;
+        return advertise_ok;
     }
 
 #include "stale-functions.inc"
@@ -357,6 +383,11 @@ namespace
         return value;
     }
 #if !defined(M33_PROFILE_WATCHER)
+#if defined(M33_PROFILE_SERVER)
+    constexpr unsigned requests_at_h2 = 1U;
+#else
+    constexpr unsigned requests_at_h2 = 2U;
+#endif
     BLEScanResult frame(bool ready)
     {
         BLEScanResult result{};
@@ -395,6 +426,10 @@ namespace
         value.peer = remote;
         value.reason = reason;
         value.level = level;
+        if (event == SecurityEvent::security_changed)
+        {
+            security_levels[handle] = level;
+        }
         onSecurity(value, nullptr);
     }
     bool prepareH1(uint8_t reason = BT_HCI_ERR_CONN_FAIL_TO_ESTAB)
@@ -436,8 +471,9 @@ namespace
         }
         onScan(frame(false), nullptr);
         link(2U, BLEEvent::connected);
-        return check(!failed && peer.value == 2U && connects == 2U && security_requests == 2U,
-                     "actual_H2_active_connected_requests_security");
+        return check(!failed && peer.value == 2U && connects == 2U &&
+                         security_requests == requests_at_h2,
+                     "actual_H2_server_defers_and_client_preserves_submission");
     }
     bool finalConnection()
     {
@@ -462,7 +498,7 @@ namespace
         }
         onScan(frame(true), nullptr);
         link(3U, BLEEvent::connected);
-        return check(!failed && connects == 3U && security_requests == 3U &&
+        return check(!failed && connects == 3U && security_requests == requests_at_h2 + 1U &&
                          stale_recovery_count == 1U && bond_erases == 1U,
                      "H3_normal_connection_no_extra_primary_or_erase");
     }
@@ -715,8 +751,212 @@ namespace
                          scan_starts == 1U && bond_erases == 0U && disconnects == 0U,
                      "remote_second_failure_has_no_third_connection");
     }
+#if defined(M33_PROFILE_SERVER)
+    /** @brief 실제 scan과 callback을 거쳐 보류와 동시 요청 경계만 비교합니다. */
+    bool runSecurityOrder(const std::string &test)
+    {
+        if (test.rfind("order_h2_", 0U) == 0U)
+        {
+            if (!prepareH1() || !advanceScan())
+            {
+                return false;
+            }
+            onScan(frame(false), nullptr);
+            /** @note 아래 변형은 실제 H1/scan 뒤 권한 predicate의 개별 입력을 훼손합니다. */
+            if (test == "order_h2_no_prune")
+            {
+                stale_recovery_local_pruned[0] = false;
+            }
+            else if (test == "order_h2_wrong_peer")
+            {
+                live_peer_value = 42U;
+            }
+            else if (test == "order_h2_budget")
+            {
+                stale_followup.spent = false;
+            }
+            else if (test == "order_h2_stop")
+            {
+                stop_requested = true;
+                cleanup_requested = true;
+            }
+            else if (test == "order_h2_restored")
+            {
+                bms_persistence_fresh_mode = false;
+                bms_persistence_restored_mode = true;
+            }
+            else if (test == "order_h2_phase")
+            {
+                count = 1U;
+            }
+            const bool positive = test == "order_h2_ready0" ||
+                                  test == "order_h2_stale_ready0_l2" ||
+                                  test == "order_h2_reason4";
+            security_ok = positive;
+            link(test == "order_h2_wrong_generation" ? 3U : 2U, BLEEvent::connected);
+            if (test == "order_h2_wrong_generation" || test == "order_h2_stop")
+            {
+                return check(!failed && security_requests == 1U && !hub_security_started &&
+                                 !hub_advertised && connects == 2U,
+                             "foreign_generation_or_STOP_cannot_claim_H2_deferral");
+            }
+            if (!positive)
+            {
+                return check(failed && cleanup_requested && security_requests == 2U &&
+                                 connects == 2U && !hub_advertised,
+                             "invalid_H2_authority_keeps_original_submit_failure");
+            }
+            link(2U, BLEEvent::connected);
+            if (!check(!failed && security_requests == 1U && hub_security_started &&
+                           !hub_advertised && !move_next && connects == 2U && bond_erases == 1U,
+                       "H2_defers_once_without_security_success_or_extra_budget"))
+            {
+                return false;
+            }
+            if (test == "order_h2_reason4")
+            {
+                security(2U, SecurityEvent::error, BT_SECURITY_ERR_AUTH_REQUIREMENT);
+                return check(failed && connects == 2U && disconnects == 1U,
+                             "reason4_still_fails_owned_H2_without_extra_attempt");
+            }
+            if (test == "order_h2_stale_ready0_l2")
+            {
+                /** @note 선택 frame은 ready0이나 실제 정리된 주변부가 보안을 시작한 경우입니다. */
+                local_bond = true;
+                security(2U, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+                return check(!failed && hub_advertised && stale_followup.h2_ever_l2 &&
+                                 stale_followup.state == StaleFollowupState::disarmed_l2 &&
+                                 security_requests == 1U && connects == 2U,
+                             "stale_ready0_requires_actual_peer_initiated_L2_callback");
+            }
+            link(2U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            return finalConnection();
+        }
+
+        unsigned current = 2U;
+        if (test == "order_busy_initial")
+        {
+            local_bond = false;
+            snapshotBonds();
+            onScan(frame(true), nullptr);
+            current = 1U;
+        }
+        else if (test == "order_remote_busy")
+        {
+            local_bond = false;
+            if (!remoteBegin())
+            {
+                return false;
+            }
+            remoteLink(1U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            if (!advanceScan())
+            {
+                return false;
+            }
+            onScan(frame(true), nullptr);
+        }
+        else if (test == "order_h3_busy")
+        {
+            if (!prepareH2())
+            {
+                return false;
+            }
+            link(2U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            if (!advanceScan())
+            {
+                return false;
+            }
+            onScan(frame(true), nullptr);
+            current = 3U;
+        }
+        else
+        {
+            if (!prepareH1(test == "order_normal19_busy" ? BT_HCI_ERR_REMOTE_USER_TERM_CONN
+                                                        : BT_HCI_ERR_CONN_FAIL_TO_ESTAB) ||
+                !advanceScan())
+            {
+                return false;
+            }
+            onScan(frame(true), nullptr);
+        }
+        security_ok = false;
+        security_error = SecurityError::busy;
+        security_driver = -EBUSY;
+        const unsigned requests_before = security_requests;
+        if (test == "order_busy_wrong_driver")
+        {
+            security_driver = -ENOBUFS;
+        }
+        else if (test == "order_busy_already")
+        {
+            security_driver = -EALREADY;
+        }
+        else if (test == "order_busy_wrong_error")
+        {
+            security_error = SecurityError::driver_error;
+        }
+        else if (test == "order_busy_disconnected")
+        {
+            security_request_hook = [current]()
+            {
+                connected_links[current] = false;
+            };
+        }
+        else if (test == "order_busy_wrong_peer")
+        {
+            live_peer_value = 42U;
+        }
+        else if (test == "order_busy_post_l2")
+        {
+            local_bond = true;
+            security(current, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+        }
+        else if (test == "order_busy_stop")
+        {
+            stop_requested = true;
+            cleanup_requested = true;
+        }
+        link(current, BLEEvent::connected);
+        if (test == "order_busy_stop")
+        {
+            return check(!failed && security_requests == requests_before && !hub_advertised,
+                         "STOP_does_not_submit_or_accept_busy");
+        }
+        const bool accepted = test == "order_ready1_busy" || test == "order_h3_busy" ||
+                              test == "order_normal19_busy" || test == "order_remote_busy" ||
+                              test == "order_busy_async_reason4";
+        if (!accepted)
+        {
+            return check(failed && cleanup_requested && security_requests == requests_before + 1U,
+                         "busy_without_exact_current_recovery_authority_keeps_FAIL");
+        }
+        link(current, BLEEvent::connected);
+        if (!check(!failed && !hub_advertised && !move_next &&
+                       security_requests == requests_before + 1U && count == 0U,
+                   "exact_busy_is_inflight_only_and_duplicate_connected_does_not_resubmit"))
+        {
+            return false;
+        }
+        if (test == "order_busy_async_reason4")
+        {
+            security(current, SecurityEvent::error, BT_SECURITY_ERR_AUTH_REQUIREMENT);
+            return check(failed && cleanup_requested && !hub_advertised,
+                         "synchronous_busy_does_not_allow_asynchronous_reason4");
+        }
+        local_bond = true;
+        security(current, SecurityEvent::security_changed, 0U, SecurityLevel::encrypted);
+        return check(!failed && hub_advertised && security_requests == requests_before + 1U,
+                     "actual_L2_callback_is_still_required_after_busy");
+    }
+#endif
     bool run(const std::string &test)
     {
+#if defined(M33_PROFILE_SERVER)
+        if (test.rfind("order_", 0U) == 0U)
+        {
+            return runSecurityOrder(test);
+        }
+#endif
         if (test.rfind("remote_", 0U) == 0U)
         {
             return runRemote(test);
@@ -926,7 +1166,7 @@ namespace
                 security(2U, SecurityEvent::pairing_failed, BT_SECURITY_ERR_UNSPECIFIED);
                 security(2U, SecurityEvent::error, BT_SECURITY_ERR_UNSPECIFIED);
                 link(2U, BLEEvent::connected);
-                if (!check(!failed && disconnects == 2U && security_requests == 2U,
+                if (!check(!failed && disconnects == 2U && security_requests == requests_at_h2,
                            "RETIRING_duplicate_error_and_connected_no_new_requests"))
                 {
                     return false;
@@ -959,7 +1199,7 @@ namespace
             link(2U, BLEEvent::disconnected, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
             link(2U, BLEEvent::connected, 0U, false);
             link(1U, BLEEvent::connected, 0U, false);
-            if (!check(!failed && disconnects == 2U && security_requests == 2U,
+            if (!check(!failed && disconnects == 2U && security_requests == requests_at_h2,
                        "owned_late_events_do_not_restart_or_authenticate"))
             {
                 return false;
@@ -1032,6 +1272,10 @@ namespace
         value.peer = remote;
         value.level = level;
         value.reason = reason;
+        if (event == SecurityEvent::security_changed)
+        {
+            security_levels[handle] = level;
+        }
         drained_events.push_back(100U + static_cast<unsigned>(event));
         onSecurity(value, nullptr);
     }
@@ -1057,8 +1301,217 @@ namespace
                          stale_recovery_restart == StaleRecoveryRestart::none,
                      "watcher_first_failure_exact_no_retry_or_security_side_effects");
     }
+    /** @brief 실제 후보 삭제·종료·재광고 후 새 주변부 연결의 보안 제출 권한을 검증합니다. */
+    bool runWatcherSecurityOrder(const std::string &test)
+    {
+        local_bond = test != "security_peer_retry";
+        snapshotBonds();
+        watcherLink(1U, BLEEvent::connected);
+        watcherSecurity(local_bond ? SecurityEvent::bond_restored_candidate : SecurityEvent::error,
+                        1U, address(), SecurityLevel::none, local_bond ? 0U : 9U);
+        BLESecurity.poll();
+        watcherLink(1U, BLEEvent::disconnected, BT_HCI_ERR_LOCALHOST_TERM_CONN);
+        if (!check(!failed && !peer.valid() && stale_recovery_disconnected[0] &&
+                       stale_recovery_advertiser_ready && !watcher_recovery_advertised &&
+                       security_requests == 0U && advertisements == 0U,
+                   "actual_candidate_or_peer_retry_has_not_yet_completed_readvertising"))
+        {
+            return false;
+        }
+        if (test != "security_restart_pending")
+        {
+            advertise_ok = test != "security_advertise_failed";
+            now_ms = stale_recovery_restart_at + 250U;
+            pollStaleRecoveryRestart();
+        }
+        /** @note 실제 복구 이력 뒤 개별 provenance 누락은 자연 경로와 별도로 거부를 확인합니다. */
+        if (test == "security_no_prune")
+        {
+            stale_recovery_local_pruned[0] = false;
+        }
+        else if (test == "security_not_disconnected")
+        {
+            stale_recovery_disconnected[0] = false;
+        }
+        else if (test == "security_ready_false")
+        {
+            stale_recovery_advertiser_ready = false;
+        }
+        else if (test == "security_wrong_peer")
+        {
+            live_peer_value = 42U;
+        }
+        else if (test == "security_wrong_type")
+        {
+            live_peer_type = 1U;
+        }
+        else if (test == "security_stop")
+        {
+            stop_requested = true;
+            cleanup_requested = true;
+        }
+        else if (test == "security_restored")
+        {
+            bms_persistence_fresh_mode = false;
+            bms_persistence_restored_mode = true;
+        }
+        else if (test == "security_first_failure")
+        {
+            fail("|reason=prior-failure");
+        }
+        if (test == "security_ready_busy" || test.rfind("security_busy_", 0U) == 0U)
+        {
+            security_ok = false;
+            security_error = test == "security_busy_wrong_error" ? SecurityError::driver_error
+                                                                 : SecurityError::busy;
+            security_driver = test == "security_busy_wrong_driver" ? -ENOBUFS : -EBUSY;
+            if (test == "security_busy_already")
+            {
+                security_driver = -EALREADY;
+            }
+            if (test == "security_busy_disconnected")
+            {
+                security_request_hook = []()
+                {
+                    connected_links[2] = false;
+                };
+            }
+        }
+        const unsigned current = test == "security_same_generation" ? 1U : 2U;
+        watcherLink(current, BLEEvent::connected, 0U,
+                    test == "security_wrong_role" ? BLELinkRole::central : BLELinkRole::peripheral);
+        const bool submitted = test == "security_ready_new" || test == "security_ready_busy" ||
+                               test.rfind("security_busy_", 0U) == 0U ||
+                               test == "security_post_l2" || test == "security_async_reason4" ||
+                               test == "security_second_generation" ||
+                               test == "security_rearm_success_boundary" ||
+                               test == "security_rearm_failed_boundary";
+        const bool rejected = test.rfind("security_busy_", 0U) == 0U;
+        if (rejected)
+        {
+            return check(failed && cleanup_requested && security_requests == 1U && !move_next,
+                         "watcher_only_exact_busy_on_still_live_owned_link_is_pending");
+        }
+        if (!submitted)
+        {
+            return check(security_requests == 0U && !move_next &&
+                             (!failed || test == "security_advertise_failed" ||
+                              test == "security_first_failure"),
+                         "missing_prune_retirement_new_generation_readvertise_or_phase_no_submit");
+        }
+        watcherLink(2U, BLEEvent::connected);
+        if (!check(!failed && security_requests == 1U && !move_next && connects == 0U &&
+                       disconnects == 1U && bond_erases == 1U && advertisements == 1U,
+                   "watcher_request_once_is_not_L2_and_does_not_change_recovery_budget"))
+        {
+            return false;
+        }
+        if (test == "security_async_reason4")
+        {
+            watcherSecurity(SecurityEvent::error, 2U, address(), SecurityLevel::none,
+                            BT_SECURITY_ERR_AUTH_REQUIREMENT);
+            return check(failed && cleanup_requested && security_requests == 1U && !move_next,
+                         "watcher_new_request_does_not_accept_async_reason4");
+        }
+        if (test == "security_second_generation")
+        {
+            watcherLink(3U, BLEEvent::connected);
+            return check(!failed && security_requests == 1U && !move_next,
+                         "one_readvertise_does_not_grant_another_security_submission");
+        }
+        if (test == "security_rearm_success_boundary" ||
+            test == "security_rearm_failed_boundary")
+        {
+            /**
+             * @note 두 번째 restart 호출부터는 함수 경계 시험입니다. 동일 peer의 원형 슬롯을
+             * 재할당하거나 두 번째 전체 profile 복구가 도달 가능하다고 가정하지 않습니다.
+             * 실제 defer와 poll·광고 반환을 사용하며 기존 prune/종료 기록은 바꾸지 않습니다.
+             */
+            std::printf("HOST_BOUNDARY_ONLY:second_readvertise_not_profile_recovery_credit\n");
+            if (!deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise))
+            {
+                return false;
+            }
+            now_ms = stale_recovery_restart_at + 249U;
+            pollStaleRecoveryRestart();
+            if (!check(advertisements == 1U && !watcher_recovery_advertised &&
+                           watcher_security_submitted.value == 2U && security_requests == 1U,
+                       "second_restart_reservation_or_delay_does_not_rearm"))
+            {
+                return false;
+            }
+            advertise_ok = test == "security_rearm_success_boundary";
+            ++now_ms;
+            pollStaleRecoveryRestart();
+            if (!advertise_ok)
+            {
+                watcherLink(3U, BLEEvent::connected);
+                return check(failed && cleanup_requested && !watcher_recovery_advertised &&
+                                 watcher_security_submitted.value == 2U &&
+                                 security_requests == 1U && advertisements == 2U &&
+                                 stale_recovery_count == 1U &&
+                                 bond_erases == 1U && disconnects == 1U,
+                             "failed_actual_second_advertise_does_not_rearm_or_submit");
+            }
+            if (!check(!failed && watcher_recovery_advertised &&
+                           !watcher_security_submitted.valid() && advertisements == 2U,
+                       "successful_actual_second_advertise_rearms_only_submission_latch"))
+            {
+                return false;
+            }
+            watcherLink(3U, BLEEvent::connected);
+            watcherLink(3U, BLEEvent::connected);
+            if (!check(!failed && security_requests == 2U &&
+                           watcher_security_submitted.value == 3U && !move_next &&
+                           stale_recovery_count == 1U && bond_erases == 1U && disconnects == 1U,
+                       "rearmed_exact_new_generation_submits_once_without_new_prune_budget"))
+            {
+                return false;
+            }
+            watcherSecurity(SecurityEvent::security_changed, 3U, address(),
+                            SecurityLevel::encrypted);
+            /** @note 광고 성공 표식이 다시 생겨도 실제 L2 이후에는 새 보안 권한이 없습니다. */
+            if (!deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise))
+            {
+                return false;
+            }
+            now_ms = stale_recovery_restart_at + 250U;
+            pollStaleRecoveryRestart();
+            watcherLink(4U, BLEEvent::connected);
+            if (!check(!failed && move_next && advertisements == 3U && security_requests == 2U &&
+                           !watcher_security_submitted.valid(),
+                       "post_L2_actual_readvertise_does_not_grant_security_permission"))
+            {
+                return false;
+            }
+            if (!deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise))
+            {
+                return false;
+            }
+            stop_requested = true;
+            cleanup_requested = true;
+            now_ms = stale_recovery_restart_at + 250U;
+            pollStaleRecoveryRestart();
+            watcherLink(5U, BLEEvent::connected);
+            return check(!failed && advertisements == 3U && security_requests == 2U &&
+                             !watcher_recovery_advertised && !watcher_security_submitted.valid() &&
+                             stale_recovery_restart == StaleRecoveryRestart::none,
+                         "STOP_cancels_rearm_without_advertise_or_security_submission");
+        }
+        watcherSecurity(SecurityEvent::security_changed, 2U, address(), SecurityLevel::encrypted);
+        if (test == "security_post_l2")
+        {
+            watcherLink(3U, BLEEvent::connected);
+        }
+        return check(!failed && move_next && security_requests == 1U && bond_erases == 1U,
+                     "watcher_actual_L2_required_and_no_post_L2_security_extension");
+    }
     bool run(const std::string &test)
     {
+        if (test.rfind("security_", 0U) == 0U)
+        {
+            return runWatcherSecurityOrder(test);
+        }
         snapshotBonds();
         const char *const pending_detail =
             "|reason=early-disconnect|link_role=2|hci_reason=19|same_peer=1|event_handle_valid=1";

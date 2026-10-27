@@ -132,6 +132,12 @@ namespace
         char detail[160] = {};
     };
     WatcherPendingDisconnect watcher_disconnect{};
+    bool watcher_recovery_advertised = false;
+    BLEConnectionHandle watcher_security_submitted{};
+#endif
+#if defined(M33_PROFILE_SERVER)
+    BLEConnectionHandle recovery_ready_link{};
+    PeerAddress recovery_ready_address{};
 #endif
 #if !defined(M33_PROFILE_WATCHER)
     /** @brief local 삭제 없이 상대의 새 ready1 광고만 기다리는 일회성 상태입니다. */
@@ -681,6 +687,9 @@ namespace
         else
         {
             stale_recovery_advertiser_ready = true;
+#if defined(M33_PROFILE_WATCHER)
+            watcher_recovery_advertised = false;
+#endif
         }
         record("PROGRESS", "|reason=stale-bond-restart-deferred");
         return true;
@@ -743,6 +752,14 @@ namespace
             fail(failure_reason);
             return;
         }
+#if defined(M33_PROFILE_WATCHER)
+        if (restart == StaleRecoveryRestart::watcher_advertise)
+        {
+            /** @note ready 예약과 구분하여 실제 재광고 성공만 새 연결의 근거로 보존합니다. */
+            watcher_recovery_advertised = true;
+            watcher_security_submitted = {};
+        }
+#endif
         if (scanner_restart)
         {
             /** @note Scan.start 성공과 내부 queue purge 뒤에만 새 epoch를 엽니다. */
@@ -2396,6 +2413,124 @@ namespace
                          "advertising-data") &&
                startStep(BLEAdvertising.start(), "advertising-start");
     }
+#if !defined(M33_PROFILE_NATIVE) && \
+    (defined(M33_PROFILE_SERVER) || defined(M33_PROFILE_WATCHER))
+    /** @brief 본문과 L2가 시작되기 전의 fresh 복구에만 보안 시작 순서 교정을 허용합니다. */
+    bool initialRecoverySecurityPhase()
+    {
+        return started && bms_persistence_fresh_mode && !bms_persistence_restored_mode &&
+               startup_bonds_valid && !failed && !done && !cleanup_requested && !stop_requested &&
+               !hub_advertised && index == 0U && phase == 0U && count == 0U && measurements == 0U &&
+               !move_next;
+    }
+    /** @brief 같은 typed peer의 실제 local 삭제와 이전 generation 종료를 함께 확인합니다. */
+    bool retiredLocalPrune(const PeerAddress &address, BLEConnectionHandle current)
+    {
+        if (stale_recovery_count > stale_recovery_capacity || !current.valid())
+        {
+            return false;
+        }
+        for (size_t slot = 0U; slot < stale_recovery_count; ++slot)
+        {
+            if (stale_recovery_links[slot].valid() && stale_recovery_links[slot] != current &&
+                stale_recovery_local_pruned[slot] && stale_recovery_disconnected[slot] &&
+                !BLEConnection.connected(stale_recovery_links[slot]) &&
+                sameAddress(stale_recovery_addresses[slot], address))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    /** @brief 현재 살아 있는 정확한 연결의 정상 connected callback만 새 요청에 사용합니다. */
+    bool currentRecoverySecurityLink(const BLEEventInfo &event, BLELinkRole role,
+                                     PeerAddress &address)
+    {
+        return initialRecoverySecurityPhase() && event.event == BLEEvent::connected &&
+               event.connection.valid() && event.connection == peer && event.role == role &&
+               event.reason == 0U && event.error == BLEError::none && event.driver_error == 0 &&
+               !staleRecoveryPending(event.connection) &&
+               BLEConnection.connected(event.connection) &&
+               BLEConnection.role(event.connection) == role &&
+               BLESecurity.currentLevel(event.connection) < SecurityLevel::encrypted &&
+               copyPeerAddress(BLEConnection.peerAddress(event.connection), address);
+    }
+#if defined(M33_PROFILE_SERVER)
+    /** @brief local 삭제 후 소유한 ready0 H2에서만 상대 정리가 선제 pairing보다 앞서게 합니다. */
+    bool deferOwnedH2Security(const BLEEventInfo &event)
+    {
+        PeerAddress address{};
+        const size_t slot = stale_followup.primary_index;
+        return currentRecoverySecurityLink(event, BLELinkRole::central, address) &&
+               stale_followup.state == StaleFollowupState::h2_active && stale_followup.spent &&
+               event.connection == stale_followup.h2 && !stale_followup.h2_ever_l2 &&
+               !stale_followup.h2_retired && !stale_followup.h3.valid() &&
+               !stale_followup.h3_submit_used && !remote_stale.first_retired &&
+               stale_followup.h1_reason == BT_HCI_ERR_CONN_FAIL_TO_ESTAB &&
+               stale_scan_epoch == stale_followup.expected_scan_epoch &&
+               slot < stale_recovery_count && slot < stale_recovery_capacity &&
+               stale_recovery_links[slot] == stale_followup.h1 &&
+               stale_recovery_local_pruned[slot] && stale_recovery_disconnected[slot] &&
+               stale_followup.h1.valid() && stale_followup.h1 != event.connection &&
+               !BLEConnection.connected(stale_followup.h1) &&
+               sameAddress(stale_recovery_addresses[slot], stale_followup.address) &&
+               sameAddress(address, stale_followup.address) && retiredLocalPrune(address, peer);
+    }
+    /** @brief ready1 연결의 기존 local 또는 remote 일회 복구 소유권만 확인합니다. */
+    bool recoveryReadyPeer(const PeerAddress &address, BLEConnectionHandle connection)
+    {
+        const bool followup = stale_followup.spent && stale_followup.h3 == connection &&
+                              sameAddress(address, stale_followup.address) &&
+                              stale_scan_epoch == stale_followup.expected_scan_epoch &&
+                              (stale_followup.state == StaleFollowupState::disarmed_normal ||
+                               (stale_followup.state == StaleFollowupState::h3_submitted_spent &&
+                                stale_followup.h2_retired && stale_followup.h3_submit_used));
+        const bool local_state = stale_followup.state == StaleFollowupState::disabled || followup;
+        const bool local = local_state && !remote_stale.first_retired &&
+                           !stale_followup.h2_ever_l2 && retiredLocalPrune(address, connection);
+        const bool remote = remote_stale.state == RemoteStaleState::second_submitted &&
+                            remote_stale.first_retired && !remote_stale.second_ever_l2 &&
+                            remote_stale.second == connection &&
+                            remote_stale.first != connection &&
+                            !BLEConnection.connected(remote_stale.first) &&
+                            sameAddress(address, remote_stale.address) &&
+                            stale_recovery_count == 0U && !startupContains(address);
+        return local || remote;
+    }
+    /** @brief 실제 ready1 scan에서 반환된 새 handle만 동시 보안 요청의 소유권에 결합합니다. */
+    void bindRecoveryReadySecurity(const BLEScanResult &result, bool advertiser_ready)
+    {
+        PeerAddress address{};
+        if (initialRecoverySecurityPhase() && advertiser_ready && peer.valid() &&
+            !recovery_ready_link.valid() && copyPeerAddress(result.address, address) &&
+            recoveryReadyPeer(address, peer))
+        {
+            recovery_ready_link = peer;
+            recovery_ready_address = address;
+        }
+    }
+    /** @brief 정확한 ready1 복구 연결의 진행 중 응답은 실제 L2 callback을 기다립니다. */
+    bool recoverySecurityAlreadyPending(const BLEEventInfo &event)
+    {
+        PeerAddress address{};
+        return currentRecoverySecurityLink(event, BLELinkRole::central, address) &&
+               event.connection == recovery_ready_link &&
+               sameAddress(address, recovery_ready_address) && recoveryReadyPeer(address, peer) &&
+               BLESecurity.lastError() == SecurityError::busy &&
+               BLESecurity.lastDriverError() == -EBUSY;
+    }
+#else
+    /** @brief 자기 bond를 삭제하고 재광고한 peer의 실제 새 연결에서만 주변부가 보안을 시작합니다. */
+    bool watcherRecoverySecurityReady(const BLEEventInfo &event)
+    {
+        PeerAddress address{};
+        return currentRecoverySecurityLink(event, BLELinkRole::peripheral, address) &&
+               watcher_recovery_advertised && stale_recovery_advertiser_ready &&
+               stale_recovery_restart == StaleRecoveryRestart::none &&
+               !watcher_disconnect.pending && retiredLocalPrune(address, peer);
+    }
+#endif
+#endif
     void onLink(const BLEEventInfo &event, void *)
     {
 #if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
@@ -2544,9 +2679,25 @@ namespace
             }
             if (event.connection == peer && !hub_security_started)
             {
+#if !defined(M33_PROFILE_NATIVE)
+                if (deferOwnedH2Security(event))
+                {
+                    /** @note 보류는 보안 성공이 아니며 기존 H2 종료 또는 실제 L2만 기다립니다. */
+                    hub_security_started = true;
+                    record("PROGRESS", "|reason=stale-followup-peer-security-pending");
+                    return;
+                }
+#endif
                 hub_security_started = true;
                 if (!BLESecurity.requestSecurity(peer))
                 {
+#if !defined(M33_PROFILE_NATIVE)
+                    if (recoverySecurityAlreadyPending(event))
+                    {
+                        record("PROGRESS", "|reason=recovery-security-already-pending");
+                        return;
+                    }
+#endif
                     fail("|reason=watcher-security");
                     return;
                 }
@@ -2647,6 +2798,26 @@ namespace
         if (event.event == BLEEvent::connected)
         {
             peer = event.connection;
+#if !defined(M33_PROFILE_NATIVE)
+            if (watcherRecoverySecurityReady(event) && !watcher_security_submitted.valid())
+            {
+                /** @note 중복 callback과 진행 중 응답에도 같은 generation은 한 번만 제출합니다. */
+                watcher_security_submitted = peer;
+                if (!BLESecurity.requestSecurity(peer))
+                {
+                    if (watcherRecoverySecurityReady(event) &&
+                        BLESecurity.lastError() == SecurityError::busy &&
+                        BLESecurity.lastDriverError() == -EBUSY)
+                    {
+                        record("PROGRESS", "|reason=recovery-security-already-pending");
+                        return;
+                    }
+                    fail("|reason=watcher-recovery-security-submit");
+                    return;
+                }
+                record("PROGRESS", "|reason=watcher-recovery-security-submitted");
+            }
+#endif
         }
 #endif
 #if !defined(M33_PROFILE_WATCHER)
@@ -2793,6 +2964,9 @@ namespace
 #if !defined(M33_PROFILE_WATCHER)
                     bindRemoteStaleConnection();
 #endif
+#if defined(M33_PROFILE_SERVER)
+                    bindRecoveryReadySecurity(result, advertiser_ready);
+#endif
 #endif
                     record("PROGRESS", "|reason=connect-submitted");
                 }
@@ -2844,6 +3018,12 @@ namespace
         stale_followup = {};
 #if defined(M33_PROFILE_WATCHER)
         watcher_disconnect = {};
+        watcher_recovery_advertised = false;
+        watcher_security_submitted = {};
+#endif
+#if defined(M33_PROFILE_SERVER)
+        recovery_ready_link = {};
+        recovery_ready_address = {};
 #endif
 #if !defined(M33_PROFILE_WATCHER)
         remote_stale = {};

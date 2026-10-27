@@ -188,6 +188,35 @@ class ProfileRuntimeTests(unittest.TestCase):
             "recycled_wrong_driver", "existing_address_live_slot", "existing_consumed_handle",
             "delayed_candidate_late_errors", "candidate_before_disconnect_late_errors",
         )
+        security_order_common = (
+            "bool initialRecoverySecurityPhase()", "bool retiredLocalPrune(",
+            "bool currentRecoverySecurityLink(",
+        )
+        server_security_order = (
+            "bool deferOwnedH2Security(", "bool recoveryReadyPeer(",
+            "void bindRecoveryReadySecurity(", "bool recoverySecurityAlreadyPending(",
+        )
+        server_order_scenarios = (
+            "order_h2_ready0", "order_h2_stale_ready0_l2", "order_h2_reason4",
+            "order_h2_no_prune", "order_h2_wrong_peer", "order_h2_wrong_generation",
+            "order_h2_budget", "order_h2_stop", "order_h2_restored", "order_h2_phase",
+            "order_ready1_busy", "order_h3_busy", "order_normal19_busy", "order_remote_busy",
+            "order_busy_wrong_driver", "order_busy_wrong_error", "order_busy_disconnected",
+            "order_busy_wrong_peer", "order_busy_initial", "order_busy_post_l2",
+            "order_busy_stop", "order_busy_async_reason4",
+            "order_busy_already",
+        )
+        watcher_order_scenarios = (
+            "security_ready_new", "security_ready_busy", "security_busy_wrong_driver",
+            "security_busy_wrong_error", "security_busy_disconnected", "security_ready_false",
+            "security_no_prune", "security_peer_retry", "security_not_disconnected",
+            "security_same_generation", "security_wrong_peer", "security_wrong_type",
+            "security_restart_pending", "security_advertise_failed", "security_stop",
+            "security_restored", "security_post_l2", "security_first_failure",
+            "security_wrong_role", "security_async_reason4",
+            "security_busy_already", "security_second_generation",
+            "security_rearm_success_boundary", "security_rearm_failed_boundary",
+        )
         loop_source = source.split("void loop()\n{", 1)[1]
         self.assertLess(loop_source.index("pollProfileEvents();"),
                         loop_source.index("pollStaleRecoveryRestart();"))
@@ -196,6 +225,17 @@ class ProfileRuntimeTests(unittest.TestCase):
             (temporary / "stale-declarations.inc").write_text(declarations, encoding="utf-8")
             for role in ("server", "client", "watcher"):
                 selected_signatures = watcher_signatures if role == "watcher" else signatures
+                if role != "client":
+                    insertion = selected_signatures.index("void onSecurity(")
+                    added = security_order_common + (
+                        server_security_order if role == "server" else
+                        ("bool watcherRecoverySecurityReady(",)
+                    )
+                    if role == "watcher":
+                        added = ("bool copyPeerAddress(",) + added
+                    selected_signatures = (
+                        selected_signatures[:insertion] + added + selected_signatures[insertion:]
+                    )
                 (temporary / "stale-functions.inc").write_text(
                     "\n".join(function(signature) for signature in selected_signatures),
                     encoding="utf-8",
@@ -212,7 +252,12 @@ class ProfileRuntimeTests(unittest.TestCase):
                             "-o", str(binary)]
                 result = subprocess.run(command, capture_output=True, timeout=60)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-                for scenario in watcher_scenarios if role == "watcher" else scenarios:
+                selected_scenarios = watcher_scenarios if role == "watcher" else scenarios
+                if role == "server":
+                    selected_scenarios += server_order_scenarios
+                elif role == "watcher":
+                    selected_scenarios += watcher_order_scenarios
+                for scenario in selected_scenarios:
                     if role == "client" and scenario == "primary_second_peer":
                         continue
                     with self.subTest(role=role, scenario=scenario):
