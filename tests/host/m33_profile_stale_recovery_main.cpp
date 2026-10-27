@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <string>
 #include <vector>
+#include <functional>
 #include "ExpectedReject.h"
 
 #define BT_HCI_ERR_CONN_FAIL_TO_ESTAB 0x3e
@@ -71,6 +72,7 @@ namespace
         connected = 7,
         disconnected = 8,
         error = 38,
+        connection_recycled = 39,
     };
     enum class BLEError : uint8_t
     {
@@ -129,18 +131,23 @@ namespace
     [[maybe_unused]] unsigned count = 0U, measurements = 0U;
     uint32_t now_ms = 0U;
     [[maybe_unused]] bool failed = false, cleanup_requested = false, done = false;
+    [[maybe_unused]] bool stop_requested = false;
     bool local_bond = true, erase_ok = true, disconnect_ok = true;
+    bool erase_verification_ok = true;
     bool scan_running = true, scan_start_ok = true;
     bool connected_links[16] = {};
     unsigned connects = 0U, disconnects = 0U, security_requests = 0U, pairing_accepts = 0U;
     unsigned scan_starts = 0U, scan_stops = 0U, advertisements = 0U, bond_erases = 0U;
     std::vector<std::string> records;
     [[maybe_unused]] BLEConnectionHandle peer{}, fresh_bond_link{}, bms_request_peer{};
-    PeerAddress startup_bonds[16] = {}, fresh_bond_address{};
-    bool startup_bonds_valid = true, fresh_bond = false;
+    PeerAddress startup_bonds[16] = {};
+    bool startup_bonds_valid = true;
     [[maybe_unused]] size_t startup_bond_count = 1U, maximum_links = 0U;
     bool bms_persistence_fresh_mode = true, bms_persistence_restored_mode = false;
-    bool bms_restored_candidate = false, bms_restored_verified = false;
+#if !defined(M33_PROFILE_WATCHER)
+    PeerAddress fresh_bond_address{};
+    bool fresh_bond = false, bms_restored_candidate = false, bms_restored_verified = false;
+#endif
     [[maybe_unused]] bool hub_advertised = false, hub_security_started = false, move_next = false;
     [[maybe_unused]] bool bms_write_submitted = false, bms_write_acknowledged = false,
                           bms_disconnect_seen = false;
@@ -149,8 +156,24 @@ namespace
     unsigned index = 0U, phase = 0U, alert_slot = 0U, alert_ccc = 0U, alert_sent = 0U;
     [[maybe_unused]] unsigned att_gap_rejects = 0U;
     [[maybe_unused]] ExpectedReject<BLEConnectionHandle> bms_reject, att_reject;
-    uint8_t nonce_bytes[16] = {};
+    [[maybe_unused]] uint8_t nonce_bytes[16] = {};
 #include "stale-declarations.inc"
+#if defined(M33_PROFILE_WATCHER)
+    /** @brief 외부 queue 입력만 제공하고 판정은 추출한 실제 callback과 poll에 맡깁니다. */
+    std::vector<std::function<void()>> gap_inputs, security_inputs;
+    std::function<void()> erase_hook;
+    std::vector<unsigned> drained_events;
+    void onSecurity(const SecurityEventRecord &event, void *);
+    void drainInputs(std::vector<std::function<void()>> &inputs)
+    {
+        while (!inputs.empty())
+        {
+            auto next = inputs.front();
+            inputs.erase(inputs.begin());
+            next();
+        }
+    }
+#endif
 
     uint32_t millis()
     {
@@ -188,7 +211,7 @@ namespace
     }
     bool startupBondsWithout(const PeerAddress &)
     {
-        return !local_bond;
+        return !local_bond && erase_verification_ok;
     }
     void snapshotBonds()
     {
@@ -203,8 +226,27 @@ namespace
             if (erase_ok)
             {
                 local_bond = false;
+#if defined(M33_PROFILE_WATCHER)
+                security_inputs.emplace_back([]()
+                {
+                    SecurityEventRecord removed{};
+                    removed.event = SecurityEvent::bond_removal_requested;
+                    drained_events.push_back(115U);
+                    onSecurity(removed, nullptr);
+                });
+                if (erase_hook)
+                {
+                    erase_hook();
+                }
+#endif
             }
             return erase_ok;
+        }
+        void poll()
+        {
+#if defined(M33_PROFILE_WATCHER)
+            drainInputs(security_inputs);
+#endif
         }
         bool acceptPairing(BLEConnectionHandle, bool)
         {
@@ -280,6 +322,12 @@ namespace
     } BLEScan;
     struct DeviceBoundary
     {
+        void poll()
+        {
+#if defined(M33_PROFILE_WATCHER)
+            drainInputs(gap_inputs);
+#endif
+        }
         int lastDriverError() const
         {
             return 0;
@@ -308,6 +356,7 @@ namespace
         }
         return value;
     }
+#if !defined(M33_PROFILE_WATCHER)
     BLEScanResult frame(bool ready)
     {
         BLEScanResult result{};
@@ -953,6 +1002,350 @@ namespace
                          stale_recovery_links[0].value == 1U && stale_recovery_disconnected[0],
                      "final_original_L2_and_H1_history_preserved");
     }
+#else
+    /** @brief RAM에서 관측한 GAP 역할과 별도 security queue 입력을 그대로 전달합니다. */
+    void watcherLink(unsigned handle, BLEEvent event, uint8_t reason = 0U,
+                     BLELinkRole role = BLELinkRole::peripheral,
+                     BLEError error = BLEError::none, int driver_error = 0)
+    {
+        BLEEventInfo value{};
+        value.connection.value = handle;
+        value.event = event;
+        value.role = role;
+        value.reason = reason;
+        value.error = error;
+        value.driver_error = driver_error;
+        if (handle < 16U && (event == BLEEvent::connected || event == BLEEvent::disconnected))
+        {
+            connected_links[handle] = event == BLEEvent::connected;
+        }
+        drained_events.push_back(static_cast<unsigned>(event));
+        onLink(value, nullptr);
+    }
+    void watcherSecurity(SecurityEvent event = SecurityEvent::bond_restored_candidate,
+                         unsigned handle = 1U, PeerAddress remote = address(),
+                         SecurityLevel level = SecurityLevel::none, uint8_t reason = 0U)
+    {
+        SecurityEventRecord value{};
+        value.event = event;
+        value.connection.value = handle;
+        value.peer = remote;
+        value.level = level;
+        value.reason = reason;
+        drained_events.push_back(100U + static_cast<unsigned>(event));
+        onSecurity(value, nullptr);
+    }
+    bool watcherFailed(const char *expected, unsigned erases = 0U)
+    {
+        unsigned failures = 0U;
+        bool first_exact = false;
+        for (const auto &entry : records)
+        {
+            if (entry.rfind("FAIL", 0U) == 0U)
+            {
+                first_exact =
+                    failures == 0U ? entry == std::string("FAIL") + expected : first_exact;
+                ++failures;
+            }
+        }
+        now_ms += 1000U;
+        pollStaleRecoveryRestart();
+        return check(failed && cleanup_requested && first_exact && failures == 1U &&
+                         !watcher_disconnect.pending && !watcher_disconnect.poll_active &&
+                         bond_erases == erases && connects == 0U && disconnects == 0U &&
+                         security_requests == 0U && pairing_accepts == 0U && advertisements == 0U &&
+                         stale_recovery_restart == StaleRecoveryRestart::none,
+                     "watcher_first_failure_exact_no_retry_or_security_side_effects");
+    }
+    bool run(const std::string &test)
+    {
+        snapshotBonds();
+        const char *const pending_detail =
+            "|reason=early-disconnect|link_role=2|hci_reason=19|same_peer=1|event_handle_valid=1";
+        const bool candidate_before = test == "candidate_before_disconnect" ||
+                                      test == "candidate_before_disconnect_late_errors";
+        if (candidate_before || test == "post_l2")
+        {
+            gap_inputs.emplace_back([]()
+            {
+                watcherLink(1U, BLEEvent::connected);
+            });
+            security_inputs.emplace_back([&test]()
+            {
+                if (test == "post_l2")
+                {
+                    watcherSecurity(SecurityEvent::security_changed, 1U, address(),
+                                    SecurityLevel::encrypted);
+                }
+                else
+                {
+                    watcherSecurity();
+                }
+            });
+            pollProfileEvents();
+            if (!check(!failed && (test == "post_l2" ? move_next : bond_erases == 1U),
+                       "actual_security_callback_precedes_next_poll_disconnect"))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            gap_inputs.emplace_back([]()
+            {
+                watcherLink(1U, BLEEvent::connected);
+            });
+        }
+        if (test == "no_local_bond")
+        {
+            local_bond = false;
+        }
+        if (test == "erase_rejected")
+        {
+            erase_ok = false;
+        }
+        if (test == "erase_verification_failed")
+        {
+            erase_verification_ok = false;
+        }
+        if (test == "existing_address_slot" || test == "capacity_exhausted" ||
+            test == "existing_address_live_slot" || test == "existing_consumed_handle")
+        {
+            stale_recovery_count = test == "capacity_exhausted" ? stale_recovery_capacity : 1U;
+            stale_recovery_links[0].value = test == "existing_consumed_handle" ? 1U : 4U;
+            stale_recovery_addresses[0] = address();
+            stale_recovery_local_pruned[0] = test != "existing_consumed_handle";
+            stale_recovery_disconnected[0] = true;
+            connected_links[4] = test == "existing_address_live_slot";
+            if (test == "existing_consumed_handle")
+            {
+                /** @note 이미 격리한 connected는 peer를 갱신하지 않으므로 현재 peer를 고정합니다. */
+                peer.value = 1U;
+            }
+        }
+        if (test == "stop_before_poll")
+        {
+            stop_requested = true;
+            cleanup_requested = true;
+            done = true;
+        }
+        if (test == "already_failed")
+        {
+            fail("|reason=prior-failure");
+        }
+        if (test == "restored")
+        {
+            bms_persistence_fresh_mode = false;
+            bms_persistence_restored_mode = true;
+        }
+        if (test == "not_started")
+        {
+            started = false;
+        }
+        if (test == "invalid_startup")
+        {
+            startup_bonds_valid = false;
+        }
+        if (test == "profile_started")
+        {
+            index = 1U;
+        }
+        if (test == "reentrant_during_erase")
+        {
+            erase_hook = []()
+            {
+                pollProfileEvents();
+            };
+        }
+        gap_inputs.emplace_back([&test]()
+        {
+            watcherLink(1U, BLEEvent::disconnected,
+                        test == "reason62" ? 62U : test == "reason22" ? 22U : 19U,
+                        test == "wrong_link_role" ? BLELinkRole::central : BLELinkRole::peripheral,
+                        test == "disconnect_error" ? BLEError::not_connected : BLEError::none,
+                        test == "disconnect_driver_error" ? -EIO : 0);
+        });
+        gap_inputs.emplace_back([&test]()
+        {
+            watcherLink(test == "recycled_conflict" ? 1U : 0U,
+                        BLEEvent::connection_recycled,
+                        test == "recycled_wrong_reason" ? 19U : 0U,
+                        test == "recycled_wrong_role" ? BLELinkRole::peripheral : BLELinkRole::none,
+                        test == "recycled_wrong_error" ? BLEError::not_connected : BLEError::none,
+                        test == "recycled_wrong_driver" ? -EIO : 0);
+            if (test == "duplicate_disconnect" || test == "foreign_disconnect")
+            {
+                watcherLink(test == "foreign_disconnect" ? 2U : 1U, BLEEvent::disconnected, 19U);
+            }
+            else if (test == "foreign_connected")
+            {
+                watcherLink(2U, BLEEvent::connected);
+            }
+            else if (test == "gap_error")
+            {
+                watcherLink(1U, BLEEvent::error, 0U, BLELinkRole::none,
+                            BLEError::not_connected, -EIO);
+            }
+            else if (test == "reentrant_poll")
+            {
+                pollProfileEvents();
+            }
+            else if (test == "other_failure")
+            {
+                fail("|reason=later-failure");
+            }
+            else if (test == "stop_pending")
+            {
+                finishWatcherDisconnect();
+                stop_requested = true;
+                cleanup_requested = true;
+                done = true;
+            }
+            else if (test == "cleanup_pending")
+            {
+                cleanup_requested = true;
+            }
+            else if (test == "done_pending")
+            {
+                done = true;
+            }
+        });
+        if (test == "pairing_before_candidate" || test == "error_before_candidate" ||
+            test == "timeout_before_candidate" || test == "l2_before_candidate" ||
+            test == "removal_before_candidate")
+        {
+            security_inputs.emplace_back([&test]()
+            {
+                const SecurityEvent event =
+                    test == "pairing_before_candidate" ? SecurityEvent::pairing_requested :
+                    test == "error_before_candidate" ? SecurityEvent::error :
+                    test == "timeout_before_candidate" ? SecurityEvent::timeout :
+                    test == "l2_before_candidate" ? SecurityEvent::security_changed :
+                    SecurityEvent::bond_removal_requested;
+                watcherSecurity(event, 1U, address(),
+                                test == "l2_before_candidate" ? SecurityLevel::encrypted
+                                                              : SecurityLevel::none);
+            });
+        }
+        if (test != "candidate_absent" && test != "candidate_next_poll" &&
+            !candidate_before)
+        {
+            security_inputs.emplace_back([&test]()
+            {
+                watcherSecurity(SecurityEvent::bond_restored_candidate,
+                                test == "wrong_candidate_handle" ? 2U : 1U,
+                                address(test == "wrong_candidate_address" ? 42U : 41U,
+                                        test == "wrong_candidate_type" ? 1U : 0U),
+                                test == "candidate_wrong_level" ? SecurityLevel::encrypted
+                                                                : SecurityLevel::none,
+                                test == "candidate_wrong_reason" ? 1U : 0U);
+            });
+        }
+        if (test == "duplicate_candidate")
+        {
+            security_inputs.emplace_back([]()
+            {
+                watcherSecurity();
+            });
+        }
+        if (test == "delayed_candidate_late_errors" ||
+            test == "candidate_before_disconnect_late_errors")
+        {
+            security_inputs.emplace_back([]()
+            {
+                watcherSecurity();
+                watcherSecurity(SecurityEvent::error, 1U, address(), SecurityLevel::none, 9U);
+                watcherSecurity(SecurityEvent::timeout);
+                watcherSecurity(SecurityEvent::pairing_failed);
+            });
+        }
+        if (test == "outside_poll")
+        {
+            BLEDevice.poll();
+            BLESecurity.poll();
+        }
+        else
+        {
+            pollProfileEvents();
+        }
+        if (test == "candidate_next_poll")
+        {
+            if (!watcherFailed(pending_detail))
+            {
+                return false;
+            }
+            security_inputs.emplace_back([]()
+            {
+                watcherSecurity();
+            });
+            pollProfileEvents();
+        }
+        if (test == "stop_before_poll")
+        {
+            pollStaleRecoveryRestart();
+            return check(!failed && stop_requested && cleanup_requested && done &&
+                             !watcher_disconnect.pending && !watcher_disconnect.poll_active &&
+                             bond_erases == 0U && advertisements == 0U && pairing_accepts == 0U,
+                         "STOP_before_poll_preserves_original_cleanup_without_arming");
+        }
+        if (test == "already_failed")
+        {
+            return watcherFailed("|reason=prior-failure");
+        }
+        if (test == "delayed_candidate" || candidate_before ||
+            test == "duplicate_candidate" || test == "resolved_stop" ||
+            test == "delayed_candidate_late_errors")
+        {
+            if (!check(!failed && !cleanup_requested && !watcher_disconnect.pending &&
+                           !watcher_disconnect.poll_active && !peer.valid() &&
+                           stale_recovery_count == 1U && stale_recovery_links[0].value == 1U &&
+                           stale_recovery_local_pruned[0] && stale_recovery_disconnected[0] &&
+                           bond_erases == 1U && !local_bond && connects == 0U &&
+                           security_requests == 0U && pairing_accepts == 0U &&
+                           advertisements == 0U &&
+                           disconnects == (candidate_before ? 1U : 0U) &&
+                           stale_recovery_restart == StaleRecoveryRestart::watcher_advertise,
+                       "exact_new_candidate_prune_consumes_existing_watcher_restart_only"))
+            {
+                return false;
+            }
+            if (test == "delayed_candidate")
+            {
+                if (!check(drained_events == std::vector<unsigned>{7U, 8U, 39U, 109U, 115U},
+                           "GAP_drained_then_candidate_and_own_removal_without_failure"))
+                {
+                    return false;
+                }
+            }
+            now_ms = stale_recovery_restart_at + 249U;
+            pollStaleRecoveryRestart();
+            if (!check(advertisements == 0U, "existing_advertiser_250ms_delay_unchanged"))
+            {
+                return false;
+            }
+            if (test == "resolved_stop")
+            {
+                stop_requested = true;
+                cleanup_requested = true;
+                done = true;
+            }
+            ++now_ms;
+            pollStaleRecoveryRestart();
+            pollStaleRecoveryRestart();
+            return check(!failed && advertisements == (test == "resolved_stop" ? 0U : 1U) &&
+                             stale_recovery_restart == StaleRecoveryRestart::none,
+                         "existing_restart_once_or_STOP_cancels");
+        }
+        const bool immediate = test == "restored" || test == "not_started" ||
+            test == "invalid_startup" || test == "profile_started" || test == "post_l2" ||
+            test == "wrong_link_role" || test == "disconnect_driver_error" ||
+            test == "disconnect_error" || test == "reason62" || test == "reason22" ||
+            test == "outside_poll" || test == "existing_consumed_handle";
+        const unsigned erases = test == "erase_rejected" || test == "erase_verification_failed" ||
+            test == "reentrant_during_erase" ? 1U : 0U;
+        return watcherFailed(immediate ? "|reason=early-disconnect" : pending_detail, erases);
+    }
+#endif
 } // namespace
 
 int main(int argc, char **argv)

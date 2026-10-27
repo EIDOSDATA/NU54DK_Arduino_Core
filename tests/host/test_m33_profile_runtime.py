@@ -157,24 +157,62 @@ class ProfileRuntimeTests(unittest.TestCase):
             "remote_second_wrong_peer",
             "remote_second_l2_disconnect",
         )
+        watcher_signatures = tuple(signature for signature in signatures if signature in (
+            "void fail(", "bool sameAddress(", "bool staleRecoveryEnabled()",
+            "bool recoverStaleBond(BLEConnectionHandle connection, const PeerAddress &address)",
+            "bool recoverStaleBond(const SecurityEventRecord &event)",
+            "bool staleRecoveryPending(", "bool consumeStaleDisconnect(",
+            "bool deferStaleRecoveryRestart(", "void pollStaleRecoveryRestart()",
+            "void failStaleFollowup(", "bool observeStaleFollowupSecurity(",
+            "bool observeStaleFollowupLink(",
+        )) + (
+            "bool deferWatcherDisconnect(", "bool consumeWatcherPendingSecurity(",
+            "void finishWatcherDisconnect()", "void onSecurity(", "void onLink(",
+            "void pollProfileEvents()",
+        )
+        watcher_scenarios = (
+            "delayed_candidate", "candidate_before_disconnect", "candidate_absent",
+            "candidate_next_poll", "no_local_bond", "wrong_candidate_handle",
+            "wrong_candidate_type", "wrong_candidate_address", "candidate_wrong_level",
+            "candidate_wrong_reason", "pairing_before_candidate", "error_before_candidate",
+            "timeout_before_candidate", "l2_before_candidate", "removal_before_candidate",
+            "duplicate_disconnect", "foreign_disconnect", "foreign_connected", "gap_error",
+            "recycled_conflict", "reentrant_poll", "other_failure", "stop_pending",
+            "cleanup_pending", "done_pending", "erase_rejected", "erase_verification_failed",
+            "existing_address_slot", "capacity_exhausted", "duplicate_candidate",
+            "stop_before_poll", "already_failed", "restored", "not_started", "invalid_startup",
+            "profile_started", "post_l2", "wrong_link_role", "disconnect_driver_error",
+            "disconnect_error", "reason62", "reason22", "outside_poll",
+            "reentrant_during_erase", "resolved_stop",
+            "recycled_wrong_role", "recycled_wrong_reason", "recycled_wrong_error",
+            "recycled_wrong_driver", "existing_address_live_slot", "existing_consumed_handle",
+            "delayed_candidate_late_errors", "candidate_before_disconnect_late_errors",
+        )
+        loop_source = source.split("void loop()\n{", 1)[1]
+        self.assertLess(loop_source.index("pollProfileEvents();"),
+                        loop_source.index("pollStaleRecoveryRestart();"))
         with tempfile.TemporaryDirectory(prefix="nu54-profile-stale-") as folder:
             temporary = Path(folder)
             (temporary / "stale-declarations.inc").write_text(declarations, encoding="utf-8")
-            (temporary / "stale-functions.inc").write_text(
-                "\n".join(function(signature) for signature in signatures), encoding="utf-8"
-            )
-            for role in ("server", "client"):
+            for role in ("server", "client", "watcher"):
+                selected_signatures = watcher_signatures if role == "watcher" else signatures
+                (temporary / "stale-functions.inc").write_text(
+                    "\n".join(function(signature) for signature in selected_signatures),
+                    encoding="utf-8",
+                )
                 binary = temporary / ("stale-" + role + ".exe")
                 command = [*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror"]
                 if role == "server":
                     command.append("-DM33_PROFILE_SERVER=1")
+                elif role == "watcher":
+                    command.append("-DM33_PROFILE_WATCHER=1")
                 for include in (temporary, ROOT / "tests/zephyr/m33_profile_hil/src"):
                     command += ["-I", str(include)]
                 command += [str(ROOT / "tests/host/m33_profile_stale_recovery_main.cpp"),
                             "-o", str(binary)]
                 result = subprocess.run(command, capture_output=True, timeout=60)
                 self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
-                for scenario in scenarios:
+                for scenario in watcher_scenarios if role == "watcher" else scenarios:
                     if role == "client" and scenario == "primary_second_peer":
                         continue
                     with self.subTest(role=role, scenario=scenario):

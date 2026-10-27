@@ -123,6 +123,16 @@ namespace
     StaleFollowup stale_followup{};
     bool stale_recovery_local_pruned[stale_recovery_capacity] = {};
     uint32_t stale_scan_epoch = 0U;
+#if defined(M33_PROFILE_WATCHER)
+    /** @brief 같은 GAP/security poll 안의 현재 peer 종료 한 건만 보존합니다. */
+    struct WatcherPendingDisconnect
+    {
+        bool poll_active = false, pending = false;
+        BLEConnectionHandle connection{};
+        char detail[160] = {};
+    };
+    WatcherPendingDisconnect watcher_disconnect{};
+#endif
 #if !defined(M33_PROFILE_WATCHER)
     /** @brief local 삭제 없이 상대의 새 ready1 광고만 기다리는 일회성 상태입니다. */
     enum class RemoteStaleState : uint8_t
@@ -206,6 +216,15 @@ namespace
     }
     void fail(const char *reason)
     {
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        if (watcher_disconnect.pending)
+        {
+            /** @note 뒤늦은 다른 오류가 먼저 관측한 종료의 원인을 덮어쓰지 않습니다. */
+            reason = watcher_disconnect.detail;
+            watcher_disconnect.pending = false;
+            watcher_disconnect.connection = {};
+        }
+#endif
         if (!failed)
         {
             record("FAIL", reason);
@@ -1884,8 +1903,88 @@ namespace
             move_next = true;
         }
     }
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+    /** @brief fresh 초기 HCI 19의 판정을 현재 poll의 security queue 끝까지만 보류합니다. */
+    bool deferWatcherDisconnect(const BLEEventInfo &event)
+    {
+        if (!watcher_disconnect.poll_active || watcher_disconnect.pending || !started || failed ||
+            done || cleanup_requested || stop_requested || !bms_persistence_fresh_mode ||
+            bms_persistence_restored_mode || !startup_bonds_valid || index != 0U || phase != 0U ||
+            count != 0U || measurements != 0U || move_next ||
+            stale_recovery_restart != StaleRecoveryRestart::none ||
+            event.event != BLEEvent::disconnected ||
+            event.reason != BT_HCI_ERR_REMOTE_USER_TERM_CONN ||
+            event.role != BLELinkRole::peripheral || event.error != BLEError::none ||
+            event.driver_error != 0 || !event.connection.valid() || event.connection != peer ||
+            BLEConnection.connected(event.connection) || staleRecoveryPending(event.connection))
+        {
+            return false;
+        }
+        watcher_disconnect.connection = event.connection;
+        snprintf(watcher_disconnect.detail, sizeof(watcher_disconnect.detail),
+                 "|reason=early-disconnect|link_role=%u|hci_reason=%u|same_peer=%u|"
+                 "event_handle_valid=%u",
+                 static_cast<unsigned>(event.role), static_cast<unsigned>(event.reason),
+                 event.connection == peer ? 1U : 0U, event.connection.valid() ? 1U : 0U);
+        watcher_disconnect.pending = true;
+        return true;
+    }
+    /** @brief 정확한 candidate가 이번 호출에서 만든 scoped 삭제 기록만 종료와 결합합니다. */
+    bool consumeWatcherPendingSecurity(const SecurityEventRecord &event)
+    {
+        if (!watcher_disconnect.pending)
+        {
+            return false;
+        }
+        const size_t previous_count = stale_recovery_count;
+        const BLEConnectionHandle connection = watcher_disconnect.connection;
+        if (!watcher_disconnect.poll_active || failed || done || cleanup_requested ||
+            stop_requested || event.event != SecurityEvent::bond_restored_candidate ||
+            event.connection != connection ||
+            event.level != SecurityLevel::none || event.reason != 0U ||
+            !bms_persistence_fresh_mode || bms_persistence_restored_mode || !startup_bonds_valid ||
+            connection != peer || BLEConnection.connected(connection) ||
+            stale_recovery_restart != StaleRecoveryRestart::none ||
+            previous_count >= stale_recovery_capacity || !startupContains(event.peer))
+        {
+            fail(watcher_disconnect.detail);
+            return true;
+        }
+        const bool recovered = recoverStaleBond(event);
+        if (!recovered || failed || cleanup_requested ||
+            stale_recovery_count != previous_count + 1U ||
+            stale_recovery_links[previous_count] != connection ||
+            !sameAddress(stale_recovery_addresses[previous_count], event.peer) ||
+            !stale_recovery_local_pruned[previous_count] ||
+            stale_recovery_disconnected[previous_count] || !consumeStaleDisconnect(connection))
+        {
+            fail(watcher_disconnect.detail);
+            return true;
+        }
+        watcher_disconnect.pending = false;
+        watcher_disconnect.connection = {};
+        peer = {};
+        static_cast<void>(deferStaleRecoveryRestart(StaleRecoveryRestart::watcher_advertise));
+        return true;
+    }
+    /** @brief STOP 또는 현재 poll 종료 전에 미해결 종료를 원형 FAIL로 확정합니다. */
+    void finishWatcherDisconnect()
+    {
+        if (watcher_disconnect.pending)
+        {
+            fail(watcher_disconnect.detail);
+        }
+    }
+#endif
     void onSecurity(const SecurityEventRecord &event, void *)
     {
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        if (watcher_disconnect.pending && (cleanup_requested || stop_requested || failed || done))
+        {
+            finishWatcherDisconnect();
+            return;
+        }
+#endif
         if (cleanup_requested)
         {
             return;
@@ -1898,6 +1997,12 @@ namespace
                  static_cast<unsigned>(event.reason),
                  event.connection == peer ? 1U : 0U, peer.valid() ? 1U : 0U);
         record("PROGRESS", detail);
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        if (consumeWatcherPendingSecurity(event))
+        {
+            return;
+        }
+#endif
 #if !defined(M33_PROFILE_NATIVE)
 #if !defined(M33_PROFILE_WATCHER)
         if (observeRemoteStaleSecurity(event))
@@ -2293,6 +2398,21 @@ namespace
     }
     void onLink(const BLEEventInfo &event, void *)
     {
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        if (watcher_disconnect.pending)
+        {
+            if (!cleanup_requested && !stop_requested && !failed && !done &&
+                event.event == BLEEvent::connection_recycled && !event.connection.valid() &&
+                event.role == BLELinkRole::none && event.error == BLEError::none &&
+                event.driver_error == 0 && event.reason == 0U)
+            {
+                /** @note native slot 반환 알림은 새 연결이나 candidate 증거가 아닙니다. */
+                return;
+            }
+            finishWatcherDisconnect();
+            return;
+        }
+#endif
         if (cleanup_requested)
         {
             return;
@@ -2581,6 +2701,12 @@ namespace
 #endif
         )
         {
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+            if (deferWatcherDisconnect(event))
+            {
+                return;
+            }
+#endif
             fail("|reason=early-disconnect");
         }
 #endif
@@ -2716,6 +2842,9 @@ namespace
         stale_recovery_restart_at = 0U;
 #if !defined(M33_PROFILE_NATIVE)
         stale_followup = {};
+#if defined(M33_PROFILE_WATCHER)
+        watcher_disconnect = {};
+#endif
 #if !defined(M33_PROFILE_WATCHER)
         remote_stale = {};
 #endif
@@ -3096,6 +3225,9 @@ namespace
                      native_disconnects, authenticated_links, passkey_events);
             record("NATIVE_STATS", detail);
 #endif
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+            finishWatcherDisconnect();
+#endif
             cleanup_requested = true;
             stop_requested = true;
             done = true;
@@ -3104,6 +3236,24 @@ namespace
         {
             fail("|reason=invalid-start-command");
         }
+    }
+    /** @brief GAP 전체와 security 전체를 순서대로 처리하고 같은 poll의 보류를 끝냅니다. */
+    void pollProfileEvents()
+    {
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        if (watcher_disconnect.poll_active)
+        {
+            fail("|reason=watcher-poll-reentrant");
+            return;
+        }
+        watcher_disconnect.poll_active = true;
+#endif
+        BLEDevice.poll();
+        BLESecurity.poll();
+#if defined(M33_PROFILE_WATCHER) && !defined(M33_PROFILE_NATIVE)
+        finishWatcherDisconnect();
+        watcher_disconnect.poll_active = false;
+#endif
     }
 } // namespace
 void setup()
@@ -3134,8 +3284,7 @@ void loop()
             }
         }
     }
-    BLEDevice.poll();
-    BLESecurity.poll();
+    pollProfileEvents();
 #if !defined(M33_PROFILE_NATIVE)
     pollStaleRecoveryRestart();
 #endif
