@@ -4,6 +4,42 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "review_date": "2026-10-29",
+      "baseline_commit": "6c57d38e87e6410b2a8f56fc50a4cf365e87aa85",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "공통 ACL 흐름 제어 변경 후보의 API 문서에 대한 한정 정적 검토 기록. 2026-10-29 작성 시점의 후보·미실행 상태와 후속 판정 소유자를 구분한다.",
+      "scope": {
+        "reviewed_markdown_count": 1,
+        "historical_documents_count": 484,
+        "historical_documents_modified": 0,
+        "existing_follow_up_reviews_modified": 0,
+        "full_document_reaudit": false
+      },
+      "documents": [
+        {
+          "path": "00_Docs/03_펌웨어 설계/07_BLE_Core_GAP_API.md",
+          "classification": "current_reference",
+          "action": "append_candidate_policy_and_dated_status_ownership",
+          "sha256_utf8_lf": "d6bf706317f90723f212d6335957d9b9967f5df41cc969a5d681cf2670092446",
+          "review_depth": "기존 본문 보존, NCSDK-30959 적용 범위·RX EXTRA+2·상한·명시값 거부·RAM 재검증·원인 미확정 및 공식 고정 링크의 정적 대조",
+          "status_ownership": "후보·미실행 표현은 이 작성 시점의 기록이다. 후속 적용 source·실제 시험·최종 판정은 M33_HANDOFF.md, TODO_M33.md와 번호별 검증 기록이 소유한다."
+        }
+      ],
+      "checks": {
+        "original_document_prefix": "PRESERVED",
+        "docs2_delta": "작성 시점·후속 판정 소유자 문단만 추가",
+        "relative_link_targets": "M33_HANDOFF.md, TODO_M33.md, 04_검증 기록/README.md 실제 존재 확인",
+        "official_reference": "https://github.com/nrfconnect/sdk-nrf/blob/bc4fe62c3a30b541691e5752b659d5e86d16b4c9/doc/nrf/releases_and_maturity/known_issues.rst#L479-L484",
+        "markdown_validator": "NOT_RUN",
+        "unit_tests": "NOT_RUN",
+        "build": "NOT_RUN",
+        "hardware": "NOT_RUN",
+        "root_cause": "UNKNOWN",
+        "W06_credit": 0
+      },
+      "preservation": "295번 M32 감사 기록의 documents 전체484행과 기존 follow_up_reviews7개를 보존한다. 기존 PASS/FAIL 및 완료 TODO를 소급 변경하지 않는다."
+    },
+    {
       "review_date": "2026-10-11",
       "baseline_commit": "d9090f22c258303660c3bb6d288b7580c0d2a453",
       "branch": "Dev-0.6.0-M33",

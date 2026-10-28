@@ -28,6 +28,7 @@ on:
       - "tests/host/test_m33_regression.py"
       - "tests/host/test_m29_ble_cache.py"
       - "tests/host/test_m29_ble_cache_parser.py"
+      - "tests/sdk/test_m33_ble_flow_control.py"
       - "tools/bluetooth/m33_diagnostics.py"
       - "tools/bluetooth/m33_diagnostics_campaign.py"
       - "tools/bluetooth/m33_ecosystem_hil.py"
@@ -160,6 +161,33 @@ jobs:
           -NcsRoot "$env:NUCODE_NCS_INSTALL_ROOT"
       - name: Verify installed SDK revisions
         run: python tools/ci/verify_ci_lock.py --workspace "$env:NUCODE_NCS_ROOT"
+      - name: Check common BLE flow control against the pinned SDK
+        shell: pwsh
+        env:
+          PYTHONUTF8: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          $flowPython = (Get-Command python -CommandType Application -ErrorAction Stop).Source
+          $env:ZEPHYR_BASE = Join-Path $env:NUCODE_NCS_ROOT 'zephyr'
+          $env:PYTHONPATH = Join-Path $env:ZEPHYR_BASE 'scripts\kconfig'
+          $flowCmake = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'opt\bin\cmake.exe'
+          if (!(Test-Path -LiteralPath (Join-Path $env:PYTHONPATH 'kconfiglib.py') -PathType Leaf) -or
+              !(Test-Path -LiteralPath $flowCmake -PathType Leaf) -or
+              !(Test-Path -LiteralPath 'tests/sdk/test_m33_ble_flow_control.py' -PathType Leaf))
+          {
+              throw 'Pinned SDK configuration-test inputs are missing.'
+          }
+          $env:PATH = (Split-Path -Parent $flowCmake) + [IO.Path]::PathSeparator + $env:PATH
+          $flowTmp = 'D:\m33-w06-plan\flow-control-tmp'
+          New-Item -ItemType Directory -Path $flowTmp -Force | Out-Null
+          $env:TEMP = $flowTmp
+          $env:TMP = $flowTmp
+          $env:TMPDIR = $flowTmp
+          & $flowPython -B -m unittest discover -s tests/sdk -p test_m33_ble_flow_control.py -v
+          if ($LASTEXITCODE -ne 0)
+          {
+              throw 'Common BLE flow-control SDK configuration regression failed.'
+          }
       - name: Verify live M33 readiness and W05 exact evidence
         run: python tools/bluetooth/m33_contract.py --sdk-root "$env:NUCODE_NCS_ROOT" --check
       - name: Freeze plan and four-shard action/recipe contract

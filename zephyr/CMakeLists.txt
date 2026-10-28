@@ -56,6 +56,8 @@ if(CONFIG_NUCODE_ARDUINO_CORE)
     )
   endif()
 
+  include("${CMAKE_CURRENT_LIST_DIR}/cmake/ble_flow_control.cmake")
+
   include("${CMAKE_CURRENT_LIST_DIR}/cmake/source_selection.cmake")
 
   zephyr_library_named(nucode_arduino_core)

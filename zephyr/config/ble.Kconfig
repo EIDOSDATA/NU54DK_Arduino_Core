@@ -1,3 +1,87 @@
+# @brief NCSDK-30959 공식 우회책을 연결형 Arduino Host+SDC 구성에 적용합니다.
+config NUCODE_BLE_HOST_ACL_FLOW_CONTROL
+    bool
+    default y
+    depends on NUCODE_ARDUINO_API && BT && BT_CONN && BT_HCI_HOST
+    depends on HAS_BT_CTLR && BT_LL_SOFTDEVICE && !BT_HCI_RAW
+    select BT_HCI_ACL_FLOW_CONTROL
+    help
+      Host callback이 설정 저장 등에서 대기할 수 있으므로 controller-to-host
+      ACL 흐름 제어를 사용합니다. 순수 SDK 앱, Host-only, raw controller 및
+      비연결 구성은 이 공통 Arduino 정책의 적용 대상이 아닙니다.
+
+# @brief Kconfig는 심볼 값의 덧셈을 지원하지 않아 EXTRA+2의 최소값을 나열합니다.
+# @details 고정 SDK의 RX_COUNT는 EXTRA+1이고 CMD 상한은 64입니다.
+#          더 큰 사용자 CMD 값은 유지하며, 부족한 값과 EXTRA>=63은
+#          최종 구성 guard 및 원형 SDK BUILD_ASSERT가 거부합니다.
+if NUCODE_BLE_HOST_ACL_FLOW_CONTROL
+
+config BT_BUF_CMD_TX_COUNT
+    default 3 if BT_BUF_ACL_RX_COUNT_EXTRA = 1
+    default 4 if BT_BUF_ACL_RX_COUNT_EXTRA = 2
+    default 5 if BT_BUF_ACL_RX_COUNT_EXTRA = 3
+    default 6 if BT_BUF_ACL_RX_COUNT_EXTRA = 4
+    default 7 if BT_BUF_ACL_RX_COUNT_EXTRA = 5
+    default 8 if BT_BUF_ACL_RX_COUNT_EXTRA = 6
+    default 9 if BT_BUF_ACL_RX_COUNT_EXTRA = 7
+    default 10 if BT_BUF_ACL_RX_COUNT_EXTRA = 8
+    default 11 if BT_BUF_ACL_RX_COUNT_EXTRA = 9
+    default 12 if BT_BUF_ACL_RX_COUNT_EXTRA = 10
+    default 13 if BT_BUF_ACL_RX_COUNT_EXTRA = 11
+    default 14 if BT_BUF_ACL_RX_COUNT_EXTRA = 12
+    default 15 if BT_BUF_ACL_RX_COUNT_EXTRA = 13
+    default 16 if BT_BUF_ACL_RX_COUNT_EXTRA = 14
+    default 17 if BT_BUF_ACL_RX_COUNT_EXTRA = 15
+    default 18 if BT_BUF_ACL_RX_COUNT_EXTRA = 16
+    default 19 if BT_BUF_ACL_RX_COUNT_EXTRA = 17
+    default 20 if BT_BUF_ACL_RX_COUNT_EXTRA = 18
+    default 21 if BT_BUF_ACL_RX_COUNT_EXTRA = 19
+    default 22 if BT_BUF_ACL_RX_COUNT_EXTRA = 20
+    default 23 if BT_BUF_ACL_RX_COUNT_EXTRA = 21
+    default 24 if BT_BUF_ACL_RX_COUNT_EXTRA = 22
+    default 25 if BT_BUF_ACL_RX_COUNT_EXTRA = 23
+    default 26 if BT_BUF_ACL_RX_COUNT_EXTRA = 24
+    default 27 if BT_BUF_ACL_RX_COUNT_EXTRA = 25
+    default 28 if BT_BUF_ACL_RX_COUNT_EXTRA = 26
+    default 29 if BT_BUF_ACL_RX_COUNT_EXTRA = 27
+    default 30 if BT_BUF_ACL_RX_COUNT_EXTRA = 28
+    default 31 if BT_BUF_ACL_RX_COUNT_EXTRA = 29
+    default 32 if BT_BUF_ACL_RX_COUNT_EXTRA = 30
+    default 33 if BT_BUF_ACL_RX_COUNT_EXTRA = 31
+    default 34 if BT_BUF_ACL_RX_COUNT_EXTRA = 32
+    default 35 if BT_BUF_ACL_RX_COUNT_EXTRA = 33
+    default 36 if BT_BUF_ACL_RX_COUNT_EXTRA = 34
+    default 37 if BT_BUF_ACL_RX_COUNT_EXTRA = 35
+    default 38 if BT_BUF_ACL_RX_COUNT_EXTRA = 36
+    default 39 if BT_BUF_ACL_RX_COUNT_EXTRA = 37
+    default 40 if BT_BUF_ACL_RX_COUNT_EXTRA = 38
+    default 41 if BT_BUF_ACL_RX_COUNT_EXTRA = 39
+    default 42 if BT_BUF_ACL_RX_COUNT_EXTRA = 40
+    default 43 if BT_BUF_ACL_RX_COUNT_EXTRA = 41
+    default 44 if BT_BUF_ACL_RX_COUNT_EXTRA = 42
+    default 45 if BT_BUF_ACL_RX_COUNT_EXTRA = 43
+    default 46 if BT_BUF_ACL_RX_COUNT_EXTRA = 44
+    default 47 if BT_BUF_ACL_RX_COUNT_EXTRA = 45
+    default 48 if BT_BUF_ACL_RX_COUNT_EXTRA = 46
+    default 49 if BT_BUF_ACL_RX_COUNT_EXTRA = 47
+    default 50 if BT_BUF_ACL_RX_COUNT_EXTRA = 48
+    default 51 if BT_BUF_ACL_RX_COUNT_EXTRA = 49
+    default 52 if BT_BUF_ACL_RX_COUNT_EXTRA = 50
+    default 53 if BT_BUF_ACL_RX_COUNT_EXTRA = 51
+    default 54 if BT_BUF_ACL_RX_COUNT_EXTRA = 52
+    default 55 if BT_BUF_ACL_RX_COUNT_EXTRA = 53
+    default 56 if BT_BUF_ACL_RX_COUNT_EXTRA = 54
+    default 57 if BT_BUF_ACL_RX_COUNT_EXTRA = 55
+    default 58 if BT_BUF_ACL_RX_COUNT_EXTRA = 56
+    default 59 if BT_BUF_ACL_RX_COUNT_EXTRA = 57
+    default 60 if BT_BUF_ACL_RX_COUNT_EXTRA = 58
+    default 61 if BT_BUF_ACL_RX_COUNT_EXTRA = 59
+    default 62 if BT_BUF_ACL_RX_COUNT_EXTRA = 60
+    default 63 if BT_BUF_ACL_RX_COUNT_EXTRA = 61
+    default 64 if BT_BUF_ACL_RX_COUNT_EXTRA = 62
+
+endif
+
 config NUCODE_BLE_NUS
 	bool "NUCODE BLE Nordic UART Service 활성화"
 	default n
