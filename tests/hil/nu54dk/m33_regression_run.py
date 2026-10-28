@@ -414,6 +414,21 @@ def _preparation_roles(expected: dict) -> tuple[str, ...]:
     return roles
 
 
+def _inventory_transport(row: dict) -> dict:
+    """! @brief J-Link slot만 완전한 descriptor와 실제 무 MSD 연결로 인정합니다. """
+    if "transport" not in row:
+        return {"kind": "cmsis-dap-v2"}
+    from m33_probe_transport import validate_descriptor
+    descriptor = validate_descriptor(row["transport"])
+    require(descriptor["kind"] == "jlink-swd" and "volume" in row and row["volume"] is None
+            and all(isinstance(row.get(key), str) and
+                    re.fullmatch(r"COM[1-9][0-9]*", row[key]) is not None
+                    for key in ("port", "app", "aux"))
+            and row["port"] == row["app"] and row["aux"] != row["app"],
+            "explicit J-Link inventory requires exact APP/AUX and no MSD")
+    return descriptor
+
+
 def _board_inventory(document: dict, revision: str,
                      plan: dict) -> dict[str, dict[str, dict]]:
     """! @brief 논리 역할을 최대 3개 hash-only 물리 slot에 campaign별로 결합합니다.
@@ -473,7 +488,8 @@ def _board_inventory(document: dict, revision: str,
             isinstance(document["campaign_bindings"], list),
             "board inventory schema mismatch")
     slots = {}
-    allowed_slot = {"slot", "probe_sha256"} | allowed_io
+    allowed_slot = {"slot", "probe_sha256", "transport"} | allowed_io
+    descriptors = []
     for row in document["physical_slots"]:
         require(isinstance(row, dict) and set(row).issubset(allowed_slot) and
                 set(row) >= {"slot", "probe_sha256"} and
@@ -483,12 +499,22 @@ def _board_inventory(document: dict, revision: str,
                 "physical board slot identity mismatch")
         require(all(value is None or isinstance(value, str) and value
                     for key, value in row.items()
-                    if key not in {"slot", "probe_sha256"}),
+                    if key not in {"slot", "probe_sha256", "transport"}),
                 "physical board slot optional value mismatch")
+        descriptor = _inventory_transport(row)
+        if descriptor["kind"] == "jlink-swd":
+            require(set(row) == allowed_slot, "complete J-Link physical slot required")
+        descriptors.append(descriptor)
         slots[row["slot"]] = row
     require(1 <= len(slots) <= 3 and
             len({row["probe_sha256"] for row in slots.values()}) == len(slots),
             "physical board inventory requires one to three distinct probes")
+    require(all(value == descriptors[0] for value in descriptors),
+            "physical board inventory transport mismatch")
+    if descriptors[0]["kind"] == "jlink-swd":
+        require(len(slots) == 3 and
+                len({row[key].casefold() for row in slots.values() for key in ("app", "aux")}) == 6,
+                "J-Link inventory requires three distinct boards and six distinct UARTs")
     _reject_raw_probe_identity_bytes(
         json.dumps(document, ensure_ascii=False, sort_keys=True).encode("utf-8"),
         "board inventory", {row["probe_sha256"] for row in slots.values()}
@@ -542,6 +568,7 @@ def _board_inventory(document: dict, revision: str,
                 "role": row["role"],
                 "probe_sha256": physical["probe_sha256"],
                 **{key: physical[key] for key in allowed_io if key in physical},
+                **({"transport": dict(physical["transport"])} if "transport" in physical else {}),
             }
     for expected in plan["campaigns"]:
         by_campaign.setdefault(expected["id"], {})
@@ -567,6 +594,9 @@ def _prepared_arguments(expected: dict, boards: dict[str, dict],
 
     for role in expected["roles"]:
         require(role in boards, f"board inventory lacks role: {role}")
+    descriptors = [_inventory_transport(boards[role]) for role in expected["roles"]]
+    require(not descriptors or all(value == descriptors[0] for value in descriptors),
+            "prepared campaign transport mismatch")
     output_base = output_root / "native" / campaign_id
     if "--evidence" in options:
         native = output_base.with_suffix(".json")
@@ -631,6 +661,8 @@ def _prepared_arguments(expected: dict, boards: dict[str, dict],
                               ("aux", "aux")):
             option = f"--{cli_role}-{suffix}"
             if option in options:
+                if field == "volume" and _inventory_transport(board)["kind"] == "jlink-swd":
+                    continue
                 require(board.get(field), f"board inventory lacks {role}.{field}")
                 add(option, board[field])
         for option in (f"--hex-{cli_role}", f"--{cli_role}-hex",
@@ -2791,6 +2823,51 @@ def _legacy_transcript(native_path: Path, reference: dict,
     return path.read_bytes()
 
 
+def _validate_native_endpoint_transport(
+    boards: dict, roles, *, strict_legacy: bool = False,
+    fields: tuple[str, str, str] = ("probe_sha256", "msd_root", "uart_port"),
+    extra_fields: tuple[str, ...] = (),
+) -> dict:
+    """! @brief 기존 DAP endpoint와 MSD 없는 명시 DK endpoint를 조건별로 검증합니다. """
+    from m33_probe_transport import validate_descriptor
+
+    require(isinstance(boards, dict) and set(boards) == set(roles)
+            and all(isinstance(row, dict) for row in boards.values()),
+            "native endpoint role denominator mismatch")
+    identity_field, volume_field, port_field = fields
+    typed = any("transport" in row for row in boards.values())
+    if not typed:
+        if strict_legacy:
+            require(all(set(row) == set(fields) | set(extra_fields)
+                        and SHA.fullmatch(row.get(identity_field, ""))
+                        and isinstance(row.get(volume_field), str) and row[volume_field]
+                        and isinstance(row.get(port_field), str) and row[port_field]
+                        for row in boards.values()),
+                    "legacy multi hash-only endpoint mismatch")
+        else:
+            require(all(volume_field not in row or row[volume_field] is not None
+                        for row in boards.values()),
+                    "MSD-free native endpoint requires explicit J-Link transport")
+        return {"kind": "cmsis-dap-v2"}
+    descriptors = []
+    for row in boards.values():
+        require(set(row) == set(fields) | set(extra_fields) | {"transport"}
+                and isinstance(row.get(identity_field), str)
+                and SHA.fullmatch(row.get(identity_field, ""))
+                and row.get(volume_field) is None
+                and isinstance(row.get(port_field), str)
+                and re.fullmatch(r"COM[1-9][0-9]*", row[port_field]) is not None,
+                "J-Link native endpoint identity or no-MSD mismatch")
+        selected = validate_descriptor(row["transport"])
+        require(selected["kind"] == "jlink-swd", "explicit J-Link native endpoint required")
+        descriptors.append(selected)
+    require(descriptors and all(value == descriptors[0] for value in descriptors)
+            and len({row[identity_field] for row in boards.values()}) == len(boards)
+            and len({row[port_field].casefold() for row in boards.values()}) == len(boards),
+            "J-Link native endpoint transport drift or duplicate identity")
+    return descriptors[0]
+
+
 def _validate_legacy_native_raw(native: dict, native_path: Path,
                                 expected: dict, revision: str) -> None:
     """! @brief legacy runner의 기존 strict parser로 UART byte와 typed result를 재구성합니다. """
@@ -2835,11 +2912,6 @@ def _validate_legacy_native_raw(native: dict, native_path: Path,
                 set(native["transcripts"]) == set(expected["roles"]) and
                 isinstance(native.get("boards"), dict) and
                 set(native["boards"]) == set(expected["roles"]) and
-                all(set(board) == {"probe_sha256", "msd_root", "uart_port"} and
-                    SHA.fullmatch(board.get("probe_sha256", "")) and
-                    isinstance(board.get("msd_root"), str) and board["msd_root"] and
-                    isinstance(board.get("uart_port"), str) and board["uart_port"]
-                    for board in native["boards"].values()) and
                 native.get("coverage", {}).get("independent_sessions") == 20 and
                 native.get("termination") == {
                     "serial_closed": {
@@ -2849,6 +2921,9 @@ def _validate_legacy_native_raw(native: dict, native_path: Path,
                 } and
                 "daplink_uid" not in json.dumps(native, sort_keys=True),
                 "legacy multi hash-only identity or cleanup mismatch")
+        _validate_native_endpoint_transport(
+            native["boards"], expected["roles"], strict_legacy=True
+        )
         cycles = native.get("cycles")
         require(isinstance(cycles, list) and len(cycles) == module.CYCLE_COUNT and
                 [row.get("cycle") for row in cycles] ==
@@ -2916,6 +2991,10 @@ def _validate_legacy_native_raw(native: dict, native_path: Path,
                     for board in boards.values()) and
                 "daplink_uid" not in json.dumps(native, sort_keys=True),
                 "legacy native hash-only board identity mismatch")
+        _validate_native_endpoint_transport(
+            boards, expected["roles"],
+            extra_fields=("debug_identity",) if parser_kind == "m28_three" else (),
+        )
     parsed = {}
     for role in expected["roles"]:
         raw = _legacy_transcript(
@@ -3788,6 +3867,11 @@ def _validate_m30_native_raw(native: dict, native_path: Path,
     campaign_id = expected["id"]
     require(campaign_id in M30_NATIVE_CAMPAIGNS,
             "M30 raw validator campaign mismatch")
+    if "endpoints" in native:
+        _validate_native_endpoint_transport(
+            native["endpoints"], expected["roles"],
+            fields=("board_id_sha256", "volume", "port"),
+        )
     denominator = validate_m30_native_evidence(
         campaign_id, native, native_path
     )
@@ -4883,6 +4967,29 @@ def _validate_completed_matrix_group(
     return result
 
 
+def _validate_execution_inventory_transport(document: dict, revision: str,
+                                            plan: dict) -> None:
+    """! @brief 새 matrix 실행 직전에 inventory를 현재 고정 transport와 결합합니다. """
+
+    import m33_probe_transport as transport
+
+    _board_inventory(document, revision, plan)
+    selected = transport.validate_descriptor(transport.descriptor())
+    rows = (document["physical_slots"] if document["schema_version"] == 2
+            else document["boards"])
+    require(all(_inventory_transport(row) == selected for row in rows),
+            "campaign inventory differs from selected probe transport")
+    if selected["kind"] == "jlink-swd":
+        fixture = transport.load_fixture()
+        require(isinstance(fixture, dict), "selected J-Link fixture is missing")
+        expected = {row["probe_sha256"]: row["port"]
+                    for row in fixture["boards"]}
+        require({row["probe_sha256"] for row in rows} == set(expected) and
+                all(row["port"] == row["app"] == expected[row["probe_sha256"]]
+                    for row in rows),
+                "campaign inventory probe/UART differs from selected fixture")
+
+
 def _execute_campaign_matrix(
     board_inventory: Path,
     artifact_root: Path,
@@ -4991,6 +5098,9 @@ def _execute_campaign_matrix(
             require(attempt == attempts[-1],
                     "campaign matrix has attempts after a completed group")
         else:
+            _validate_execution_inventory_transport(
+                inventory, revision, campaign_plan(field, identifier, root)
+            )
             attempt = len(attempts) + 1
             spec_path, result_path = _matrix_group_paths(
                 output_root, ordinal, field, identifier, attempt

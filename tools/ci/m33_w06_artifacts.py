@@ -1386,14 +1386,23 @@ def board_uart_channels(raw_uid: str, ports: Sequence[Any]) -> dict[str, str]:
     return channels
 
 
-def discover_current_boards() -> list[dict[str, str]]:
-    """! @brief Windows의 현재 DAPLink volume·VCOM을 읽고 UID는 hash로만 반환합니다. """
+def discover_current_boards() -> list[dict[str, Any]]:
+    """! @brief 명시 DK 또는 기존 DAPLink의 실제 연결을 읽고 UID는 hash로만 반환합니다. """
 
+    transport = inventory_probe_transport()
+    fixture = transport.load_fixture()
     module = runpy.run_path(
         str(REPOSITORY / "tests/hil/nu54dk/m31_w07_hil_campaign.py")
     )
     _serial, list_ports = module["import_pyserial"]()
     ports = list(list_ports.comports())
+    if fixture is not None:
+        pnp = transport.serial_pnp_snapshot()
+        descriptor = transport.descriptor()
+        return [{"probe_sha256": row["probe_sha256"], "volume": None,
+                 "transport": dict(descriptor),
+                 **jlink_board_uart_channels(row, ports, pnp)}
+                for row in fixture["boards"]]
     boards = []
     for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
         volume = Path(f"{letter}:/")
@@ -1426,6 +1435,43 @@ def discover_current_boards() -> list[dict[str, str]]:
     return boards
 
 
+def inventory_probe_transport():
+    """! @brief 장치를 열지 않는 중앙 선택·descriptor 검증 모듈만 불러옵니다. """
+    tools = REPOSITORY / "tools/bluetooth"
+    if str(tools) not in sys.path:
+        sys.path.insert(0, str(tools))
+    import m33_probe_transport
+    return m33_probe_transport
+
+
+def jlink_board_uart_channels(row: dict, ports: Sequence[Any],
+                              pnp: list[dict]) -> dict[str, str]:
+    """! @brief 같은 exact USB serial의 MI02 APP와 MI00 AUX를 실제 CIM 목록으로 결합합니다. """
+    candidates = [port for port in ports
+                  if getattr(port, "serial_number", None) == row["usb_serial"]]
+    require(len(candidates) == 2 and all(
+        getattr(port, "vid", None) == 0x1366 and getattr(port, "pid", None) == 0x1069
+        and isinstance(getattr(port, "device", None), str)
+        and re.fullmatch(r"COM[1-9][0-9]*", port.device) is not None
+        for port in candidates), "현재 DK의 exact USB serial/VID/PID/두 VCOM이 필요합니다")
+    channels = {}
+    for port in candidates:
+        entries = [entry for entry in pnp
+                   if str(entry.get("DeviceID", "")).casefold() == port.device.casefold()]
+        require(len(entries) == 1 and entries[0].get("Status") == "OK",
+                "현재 DK VCOM의 CIM 연결이 없거나 중복됩니다")
+        device_id = str(entries[0].get("PNPDeviceID", "")).upper()
+        matches = [name for name, interface in (("app", "02"), ("aux", "00"))
+                   if device_id.startswith("USB\\VID_1366&PID_1069&MI_" + interface + "\\")]
+        require(len(matches) == 1 and matches[0] not in channels,
+                "현재 DK APP/AUX interface가 중복되거나 다릅니다")
+        channels[matches[0]] = port.device
+    require(set(channels) == {"app", "aux"} and channels["app"] == row["port"]
+            and channels["app"].casefold() != channels["aux"].casefold(),
+            "현재 DK APP와 고정 fixture 또는 AUX가 다릅니다")
+    return {"port": channels["app"], **channels}
+
+
 def current_board_inventory(
     plan: dict[str, Any],
     discoverer: Callable[[], list[dict[str, Any]]] = discover_current_boards,
@@ -1445,16 +1491,25 @@ def current_board_inventory(
         "현재 board probe/port 연결이 서로 달라야 합니다",
     )
     slots = []
+    descriptors = []
     for index, row in enumerate(rows, 1):
         probe = row.get("probe_sha256")
         port = row.get("port")
         volume = row.get("volume")
         app = row.get("app")
         aux = row.get("aux")
+        descriptor = row.get("transport")
+        if "transport" in row:
+            inventory_probe_transport().validate_descriptor(descriptor)
+            require(descriptor["kind"] == "jlink-swd" and volume is None
+                    and set(row) == {"probe_sha256", "port", "volume", "app", "aux", "transport"}
+                    and all(isinstance(value, str) and re.fullmatch(r"COM[1-9][0-9]*", value)
+                            for value in (port, app, aux)), "명시 DK inventory 연결 형식이 다릅니다")
+        descriptors.append(descriptor)
         require(
             SHA256.fullmatch(str(probe)) is not None
             and isinstance(port, str) and port
-            and isinstance(volume, str) and volume
+            and (descriptor is not None or isinstance(volume, str) and volume)
             and isinstance(app, str) and app == port
             and isinstance(aux, str) and aux and aux.casefold() != app.casefold(),
             f"현재 board connection 정보가 불완전합니다: board_{index}",
@@ -1466,7 +1521,10 @@ def current_board_inventory(
             "volume": volume,
             "app": app,
             "aux": aux,
+            **({"transport": dict(descriptor)} if descriptor is not None else {}),
         })
+    require(all(value == descriptors[0] for value in descriptors),
+            "현재 board inventory의 transport가 혼합되거나 다릅니다")
     require(len({slot[key].casefold() for slot in slots for key in ("app", "aux")}) == 6,
             "현재 세 보드의 APP/AUX 포트는 모두 달라야 합니다")
     hil_directory = REPOSITORY / "tests/hil/nu54dk"
