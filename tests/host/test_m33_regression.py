@@ -4666,6 +4666,8 @@ class RegressionTests(unittest.TestCase):
                     mock.patch.object(MODULE, "CAMPAIGN_REGISTRIES", registries), \
                     mock.patch.object(RUNNER, "_git_identity",
                                       return_value=(REVISION, True)), \
+                    mock.patch.object(RUNNER, "campaign_plan", return_value={}), \
+                    mock.patch.object(RUNNER, "_validate_execution_inventory_transport") as live_binding, \
                     mock.patch.object(RUNNER, "prepare_execution_spec",
                                       side_effect=prepare), \
                     mock.patch.object(RUNNER, "execute_campaign_spec",
@@ -4683,6 +4685,7 @@ class RegressionTests(unittest.TestCase):
                  ("resources", "three")], prepared
             )
             self.assertEqual(3, len(executed))
+            self.assertEqual(3, live_binding.call_count)
             self.assertEqual(result, resumed)
             self.assertEqual(
                 ".campaign-attempts/campaign-group.01.families.one."
@@ -4708,6 +4711,8 @@ class RegressionTests(unittest.TestCase):
                     mock.patch.object(MODULE, "CAMPAIGN_REGISTRIES", registries), \
                     mock.patch.object(RUNNER, "_git_identity",
                                       return_value=(REVISION, True)), \
+                    mock.patch.object(RUNNER, "campaign_plan", return_value={}), \
+                    mock.patch.object(RUNNER, "_validate_execution_inventory_transport") as live_binding, \
                     mock.patch.object(RUNNER, "prepare_execution_spec",
                                       side_effect=prepare), \
                     mock.patch.object(RUNNER, "execute_campaign_spec",
@@ -4719,6 +4724,7 @@ class RegressionTests(unittest.TestCase):
                 )
             self.assertEqual("partial-attempt\n",
                              partial.read_text(encoding="utf-8"))
+            self.assertEqual(3, live_binding.call_count)
             self.assertEqual(2, retried["groups"][0]["attempt"])
             self.assertEqual(["INCOMPLETE", "PASS"], [
                 row["status"] for row in retried["groups"][0]["attempts"]
@@ -4750,6 +4756,8 @@ class RegressionTests(unittest.TestCase):
                     mock.patch.object(MODULE, "CAMPAIGN_REGISTRIES", registries), \
                     mock.patch.object(RUNNER, "_git_identity",
                                       return_value=(REVISION, True)), \
+                    mock.patch.object(RUNNER, "campaign_plan", return_value={}), \
+                    mock.patch.object(RUNNER, "_validate_execution_inventory_transport") as live_binding, \
                     mock.patch.object(RUNNER, "prepare_execution_spec",
                                       side_effect=prepare), \
                     mock.patch.object(RUNNER, "execute_campaign_spec",
@@ -4767,6 +4775,7 @@ class RegressionTests(unittest.TestCase):
                              failed_result.read_text(encoding="utf-8"))
             self.assertEqual([], executed)
             self.assertEqual([], prepared)
+            live_binding.assert_not_called()
 
     def test_matrix_failure_receipt_preserves_log_and_resumes_next_attempt(self):
         """! @brief 실패 byte를 봉인하고 손상·안전 실패는 다음 group 실행 전에 차단합니다. """
@@ -4791,6 +4800,8 @@ class RegressionTests(unittest.TestCase):
                 with mock.patch.object(RUNNER, "CAMPAIGN_REGISTRIES", registries), \
                         mock.patch.object(MODULE, "CAMPAIGN_REGISTRIES", registries), \
                         mock.patch.object(RUNNER, "_git_identity", return_value=(REVISION, True)), \
+                        mock.patch.object(RUNNER, "campaign_plan", return_value={}), \
+                        mock.patch.object(RUNNER, "_validate_execution_inventory_transport") as live_binding, \
                         mock.patch.object(RUNNER, "prepare_execution_spec", return_value=spec), \
                         mock.patch.object(RUNNER, "_validate_completed_matrix_group", return_value={}):
                     with mock.patch.object(RUNNER, "execute_campaign_spec", side_effect=fail), \
@@ -4811,6 +4822,7 @@ class RegressionTests(unittest.TestCase):
                             with self.assertRaises(ValueError):
                                 RUNNER.execute_campaign_matrix(inventory, base, base, base, base, ROOT)
                             run.assert_not_called()
+                    self.assertEqual(2 if mode == "resume" else 1, live_binding.call_count)
                     self.assertEqual(original, failure_path.read_bytes())
 
     def test_campaign_timeout_keeps_partial_output(self):

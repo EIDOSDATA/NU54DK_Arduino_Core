@@ -45,8 +45,16 @@ class InventoryTransportTests(unittest.TestCase):
                     vid=0x1366, pid=0x1069, hwid='USB VID:PID=1366:1069'))
                 self.pnp.append({'DeviceID': port, 'Status': 'OK',
                     'PNPDeviceID': 'USB\\VID_1366&PID_1069&MI_' + interface + '\\synthetic'})
-        self.plan = {'source': {'source_revision': REVISION},
-                     'campaigns': [{'id': 'm30_multi', 'roles': ['peripheral', 'mixed', 'central']}]}
+        self.plan = {'source': {
+            'source_revision': REVISION, 'source_clean': True,
+            'board_revision': '2' * 40, 'board_clean': True,
+            'ncs_version': '3.4.0', 'ncs_revision': '3' * 40, 'ncs_clean': True,
+            'zephyr_revision': '4' * 40, 'zephyr_clean': True, 'zephyr_patches': [],
+            'toolchain_bundle_id': 'dcbdc366a1',
+            'sdk_root': 'D:/w06/fake-sdk',
+            'toolchain_root': 'D:/w06/fake-toolchain/dcbdc366a1/opt/zephyr-sdk',
+            'lock_sha256': '5' * 64,
+        }, 'campaigns': [{'id': 'm30_multi', 'roles': ['peripheral', 'mixed', 'central']}]}
 
     def inventory(self, rows=None):
         return artifacts.current_board_inventory(self.plan, lambda: self.rows if rows is None else rows)
