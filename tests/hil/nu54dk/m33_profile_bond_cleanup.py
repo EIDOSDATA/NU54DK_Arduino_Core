@@ -16,6 +16,7 @@ from ble_pair_hil_common import flash_image_pyocd
 from m32_ble_capability_run import discover_live
 from m6_serial_echo import import_pyserial
 from m33_profile_run import fields, validate_results, validate_stop_record
+from m33_profile_idle_fixture import read_only_session
 from v04_protocol import ProbeLocks
 
 
@@ -155,7 +156,6 @@ def validate_ownership_chain(path: Path, original: dict) -> dict:
 
 def audit_live_chain(boards: dict, chain: dict, live_images: list) -> dict:
     """! @brief 이전 native image와 STOP RAM을 쓰기 없이 읽어 chain의 현재 끝점을 확인합니다. """
-    from pyocd.core.helpers import ConnectHelper
     sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools/bluetooth"))
     from m33_diagnostics import inspect_hex
     if len(live_images) != 2 or {item[0] for item in live_images} != {"server", "client"}:
@@ -177,13 +177,8 @@ def audit_live_chain(boards: dict, chain: dict, live_images: list) -> dict:
             if match is None or int(match[2], 16) != len(value):
                 raise ValueError("chain live RAM symbol mismatch")
             locations[name] = int(match[1], 16)
-        session = ConnectHelper.session_with_chosen_probe(unique_id=boards[role]["uid"], target_override="nrf54l", frequency=500000,
-            options={"connect_mode": "attach", "auto_unlock": False, "resume_on_disconnect": False,
-                     "cmsis_dap.limit_packets": True, "cmsis_dap.prefer_v1": False})
-        if session is None:
-            raise ValueError("chain read-only attach unavailable")
         ranges = []
-        with session:
+        with read_only_session(boards[role]["uid"]) as session:
             for start, value in image["ranges"]:
                 actual = bytes(session.target.read_memory_block8(start, len(value)))
                 if actual != value:

@@ -65,7 +65,17 @@ def validate_pair(dut: str, peer: str) -> tuple[str, str]:
 class ProbeLocks:
     """OS-held byte locks, released on process death; lock files need not be deleted."""
     def __init__(self, uids, directory: Path | None = None):
-        self.uids = sorted(set(uid.lower() for uid in uids))
+        values = list(uids)
+        if ("NU54_HIL_JLINK_FIXTURE" in os.environ
+                or "NU54_HIL_JLINK_FIXTURE_SHA256" in os.environ):
+            ## @brief 명시 DK 실행은 caller의 lock 경로를 유지하며 같은 세 물리 probe를 모두 잠급니다.
+            import sys
+            tools = str(Path(__file__).resolve().parents[3] / "tools/bluetooth")
+            if tools not in sys.path:
+                sys.path.insert(0, tools)
+            from m33_probe_transport import lock_identities
+            values = lock_identities(values)
+        self.uids = sorted(set(uid.lower() for uid in values))
         self.directory = directory or Path(tempfile.gettempdir()) / "nu54dk-hil-locks"
         self.streams = []
 

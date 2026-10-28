@@ -786,6 +786,8 @@ def validate_debug_identity(values: dict) -> None:
 
 def map_live_probes(probes: list, ports: list, hashes: list[str], serial_ports: list[str]) -> list:
     """! @brief 현재 세 USB probe와 두 VCOM의 full UID 대응만 받아 suffix 추정을 금지합니다. """
+    from m33_probe_transport import load_fixture, canonical_serial
+    jlink = load_fixture() is not None
     mapped = {}
     for probe in probes:
         identity = probe_hash(probe.unique_id)
@@ -796,9 +798,19 @@ def map_live_probes(probes: list, ports: list, hashes: list[str], serial_ports: 
         raise ValueError("현재 probe 3개와 지정 SHA가 정확히 일치하지 않습니다")
     for identity, port_name in zip(hashes, serial_ports):
         matches = [port for port in ports if port.device.casefold() == port_name.casefold()]
-        if len(matches) != 1 or not matches[0].serial_number or probe_hash(matches[0].serial_number) != identity:
+        if len(matches) != 1 or not matches[0].serial_number:
+            raise ValueError("현재 VCOM serial_number와 probe SHA가 일치하지 않습니다")
+        serial_identity = (canonical_serial(matches[0].serial_number) if jlink
+                           else matches[0].serial_number)
+        if probe_hash(serial_identity) != identity:
             raise ValueError("현재 VCOM serial_number와 probe SHA가 일치하지 않습니다")
     return [mapped[identity] for identity in hashes]
+
+
+def create_preparation_backend():
+    """! @brief 기본 CMSIS-DAP 또는 명시 고정한 DK transport를 선택합니다. """
+    from m33_probe_transport import create_backend
+    return create_backend(PyocdPreparationBackend)
 
 
 class PyocdPreparationBackend:
@@ -1297,7 +1309,7 @@ def prepare_pair(args: argparse.Namespace, backend=None) -> None:
         with ExitStack() as resources:
             resources.enter_context(HashedProbeLocks(hashes))
             resources.enter_context(private_debug_output())
-            backend = backend or PyocdPreparationBackend()
+            backend = backend or create_preparation_backend()
             report["stage"] = "live_mapping"
             probes, live_ports = backend.discover()
             mapped = map_live_probes(probes, live_ports, hashes, ports)
@@ -1402,7 +1414,8 @@ def prepare_pair(args: argparse.Namespace, backend=None) -> None:
 class HashedProbeLocks:
     """! @brief 기존 HIL과 같은 hash 파일에 OS lock을 걸어 probe 동시 사용을 차단한다. """
     def __init__(self, hashes: list[str]):
-        self.hashes = sorted(hashes)
+        from m33_probe_transport import lock_identities
+        self.hashes = sorted(lock_identities(hashes, hashed=True))
         self.streams = []
 
     def __enter__(self):
@@ -1533,7 +1546,7 @@ def run_pair(args: argparse.Namespace) -> None:
         with ExitStack() as resources:
             resources.enter_context(HashedProbeLocks([item["probe_sha256"] for item in fixture["boards"]]))
             resources.enter_context(private_debug_output())
-            backend = PyocdPreparationBackend()
+            backend = create_preparation_backend()
             sessions, guard = open_prepared_pair(resources, args.fixture, fixture, backend)
             try:
                 for index, board in enumerate(fixture["boards"][:2]):

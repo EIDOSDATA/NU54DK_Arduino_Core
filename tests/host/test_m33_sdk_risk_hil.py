@@ -166,6 +166,7 @@ class ReadbackStateRestorationTests(unittest.TestCase):
             fake_diagnostics = SimpleNamespace(
                 IdleAuditFailure=DIAGNOSTICS.IdleAuditFailure,
                 PyocdPreparationBackend=FakeReadbackBackend,
+                create_preparation_backend=FakeReadbackBackend,
                 halt_and_wait=lambda value: DIAGNOSTICS.halt_and_wait(
                     value, timeout=halt_timeout
                 ),

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -17,6 +18,38 @@ from m33_profile_run import (fields, resolve_build_record_artifact,
 from v04_protocol import ProbeLocks
 
 ROOT = Path(__file__).resolve().parents[3]
+
+
+@contextmanager
+def read_only_session(uid: str):
+    """! @brief 명시된 J-Link는 선택 backend로, 기본 DAP은 기존 attach로만 엽니다. """
+    sys.path.insert(0, str(ROOT / "tools/bluetooth"))
+    import m33_probe_transport as transport
+
+    if transport.descriptor()["kind"] == "jlink-swd":
+        from m33_diagnostics import create_preparation_backend, private_debug_output
+
+        with private_debug_output():
+            backend = create_preparation_backend()
+            probes, _ports = backend.discover()
+            matches = [probe for probe in probes
+                       if probe.unique_id.strip().lower() == uid.strip().lower()]
+            if len(matches) != 1:
+                raise ValueError("exact read-only J-Link probe unavailable")
+            with backend.session(matches[0]) as session:
+                yield session
+    else:
+        from pyocd.core.helpers import ConnectHelper
+
+        session = ConnectHelper.session_with_chosen_probe(
+            unique_id=uid, target_override="nrf54l", frequency=500000,
+            options={"connect_mode": "attach", "auto_unlock": False,
+                     "resume_on_disconnect": False, "cmsis_dap.limit_packets": True,
+                     "cmsis_dap.prefer_v1": False})
+        if session is None:
+            raise ValueError("read-only attach unavailable")
+        with session:
+            yield session
 
 
 def resolve_idle_build_sources(path: Path, build: dict) -> dict[str, Path]:
@@ -56,7 +89,6 @@ def audit_idle_ram(target, symbols: dict, nonce: str) -> list[dict]:
 
 def export(args: argparse.Namespace) -> dict:
     """! @brief STOP 이후 halt/reset/resume 없이 모든 HEX load byte를 읽어 대조합니다. """
-    from pyocd.core.helpers import ConnectHelper
     sys.path.insert(0, str(ROOT / "tools/bluetooth"))
     from m33_diagnostics import inspect_hex, load_watcher_fixture, watcher_symbols
     evidence = json.loads(args.evidence.read_text(encoding="utf-8"))
@@ -103,12 +135,7 @@ def export(args: argparse.Namespace) -> dict:
     symbols = watcher_symbols(sources["elf"].read_bytes())
     ranges, readback = [], []
     with ProbeLocks([uid]):
-        session = ConnectHelper.session_with_chosen_probe(unique_id=uid, target_override="nrf54l", frequency=500000,
-            options={"connect_mode": "attach", "auto_unlock": False, "resume_on_disconnect": False,
-                     "cmsis_dap.limit_packets": True, "cmsis_dap.prefer_v1": False})
-        if session is None:
-            raise ValueError("watcher read-only attach unavailable")
-        with session:
+        with read_only_session(uid) as session:
             for start, expected in image["ranges"]:
                 observed = bytes(session.target.read_memory_block8(start, len(expected)))
                 expected_hash = hashlib.sha256(expected).hexdigest()

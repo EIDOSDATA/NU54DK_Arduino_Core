@@ -3,12 +3,22 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **M33-W01~W05 완료, W06 개발 집중 49/49 완료·최종 검증 중단 — 완료 5/8 작업 묶음** |
+| 현재 구현 상태 | **M33-W01~W05 완료, W06 개발 집중 49/49 완료·최종 #29 재검증 준비 중 — 완료 5/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-23 |
+| 최종 갱신일 | 2026-10-29 |
+
+2026-10-29 현재 사용자가 연결한 nRF54L15 DK 3개에서 source `2482eeade61d071ffecb6021a8c8d48e44a8699a`의
+추가 관측을 포함한 #29 fresh 진단 1회가 PASS했다. 이 결과는 정식 focused20 또는 W06 실적으로
+합산하지 않는다. 원래 a557 client HCI62의 근본원인은 아직 미확정이다. 명시 J-Link transport,
+정확한 USB/UART/target identity, checked close, phase별 UART 원문·watcher reset 후 readback을
+추적 가능한 검증 코드로 통합하고 있다. 기존 CMSIS-DAP v2 경로와 STOP·보안·실패·retry 조건은 유지한다.
+새 clean source의 세 역할을 다시 빌드한 뒤 focused20 fresh/restored 40구간을 실제 실행한다.
+이후 같은 source로 Host·Actions·ecosystem·runtime/stage·matrix49(#30~49 포함)·1,800초 soak·
+resource/support/risk/qualification·strict closure/export와 최종 문서·CI를 마감한다.
+현재 증거와 연결 방법은 [M33 인계](M33_HANDOFF.md)를 따른다. 아래의 과거 중단 경과는 당시 기록이다.
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.

@@ -153,6 +153,10 @@ def discover_role_endpoint(
     endpoint = discover_endpoint_sha256(
         probe_digest, explicit_volume, explicit_port, list_ports
     )
+    if common.validate_endpoint_transports((endpoint,)) == "jlink-swd":
+        if flash_backend != "pyocd-sector":
+            raise BlePairHilFailure("J-Link endpoint는 명시 pyOCD sector 경로만 허용합니다.")
+        return endpoint
     if flash_backend != "pyocd-sector":
         return endpoint
     return RoleEndpoint(
@@ -275,6 +279,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
 
 ## @brief 세 role이 서로 다른 UID·MSD·UART에 정확히 결합됐는지 검사합니다.
 def validate_three_board_identity(endpoints: dict[str, RoleEndpoint]) -> None:
+    kind = common.validate_endpoint_transports(endpoints.values())
     for attribute, label in (
         ("board_id", "DAPLink UID"),
         ("port_name", "UART"),
@@ -282,9 +287,10 @@ def validate_three_board_identity(endpoints: dict[str, RoleEndpoint]) -> None:
         values = [str(getattr(endpoints[role], attribute)).casefold() for role in ROLES]
         if len(set(values)) != len(ROLES):
             raise BlePairHilFailure(f"세 role의 {label}가 서로 달라야 합니다.")
-    volumes = [str(endpoints[role].volume.root.resolve()).casefold() for role in ROLES]
-    if len(set(volumes)) != len(ROLES):
-        raise BlePairHilFailure("세 role의 DAPLink MSD가 서로 달라야 합니다.")
+    if kind == "cmsis-dap-v2":
+        volumes = [str(endpoints[role].volume.root.resolve()).casefold() for role in ROLES]
+        if len(set(volumes)) != len(ROLES):
+            raise BlePairHilFailure("세 role의 DAPLink MSD가 서로 달라야 합니다.")
 
 
 ## @brief evidence와 세 raw transcript의 신규 출력 경로를 준비합니다.

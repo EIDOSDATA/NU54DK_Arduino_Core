@@ -23,6 +23,7 @@ from m33_sdk_risk_common import (ACTIVE_TARGET_STATES,
                                 reserve_sidecars,
                                 validate_programming_receipt)
 from v04_protocol import ProbeLocks
+import m33_profile_transport as profile_transport
 
 ROOT = Path(__file__).resolve().parents[3]
 PROTOCOL = "M33PROFILE|1"
@@ -385,6 +386,7 @@ def validate_exact_program_bundle(path: Path, evidence: dict) -> None:
     if hashlib.sha256(transcript.read_bytes()).hexdigest() != evidence.get(
             "transcript_sha256"):
         raise ValueError("profile transcript hash mismatch")
+    profile_transport.validate_evidence(path, evidence)
 
 
 def validate_native_predecessor(path: Path, revisions: dict, boards: dict,
@@ -726,10 +728,15 @@ def execute(args: argparse.Namespace) -> dict:
         if args.bms_persistence_phase is None and args.bms_prior_evidence is not None:
             raise ValueError("BMS predecessor requires a persistence phase")
     prefix = args.output_prefix.resolve()
+    selected_transport = profile_transport.descriptor()
     json_path = prefix.with_suffix(".json")
     log_path = prefix.with_suffix(".transcript.log")
     if json_path.exists() or log_path.exists():
         raise ValueError("existing attempt must not be overwritten")
+    if selected_transport["kind"] == "jlink-swd":
+        for path in profile_transport.extra_sidecars(prefix):
+            if path.exists() or path.is_symlink():
+                raise ValueError("existing profile transport sidecar")
     lock = json.loads((ROOT / "tools/ci/ncs-3.4.0.lock.json").read_text(encoding="utf-8"))
     sdk = args.sdk_root.resolve()
     revisions = {"core": git_revision(ROOT), "board": git_revision(BOARD_ROOT),
@@ -764,6 +771,14 @@ def execute(args: argparse.Namespace) -> dict:
         bms_predecessor_sha256 = validate_bms_predecessor(
             args.bms_prior_evidence.resolve(), revisions, boards, build_identity,
             bool(dirty))
+    for predecessor in (args.native_prior_evidence, args.bms_prior_evidence):
+        if predecessor is not None:
+            predecessor_path = predecessor.resolve()
+            profile_transport.validate_evidence(
+                predecessor_path,
+                json.loads(predecessor_path.read_text(encoding="utf-8")),
+                selected_transport,
+            )
     if not args.execute:
         return {"status": "NOT_RUN", "reason": "preflight only; --execute authorizes selected image sector flash",
                 "family": args.family, "native_security_phase": args.native_security_phase,
@@ -811,6 +826,11 @@ def execute(args: argparse.Namespace) -> dict:
     flash_records = {}
     readback_records = {}
     programming_receipt = None
+    transport_evidence = {}
+    transport_context = None
+    if selected_transport["kind"] == "jlink-swd":
+        transport_context = profile_transport.ProfileTransport(serial, boards, prefix)
+        serial = transport_context.serial
 
     def consume(role: str, kind: str, value: dict) -> None:
         nonlocal target_failure, bms_stage, identity_release_requested
@@ -937,11 +957,16 @@ def execute(args: argparse.Namespace) -> dict:
                 sidecars,
             )
             ## @brief watcher는 readback까지 halt한 뒤 승인된 software reset으로 시작합니다.
+            watcher_reset_started = time.monotonic()
             watcher_reset = reset_target_pyocd_sha256(
                 "watcher", boards["watcher"]["probe_sha256"], 120.0
             )
-            if watcher_reset != "pyocd-v2-sw-reset":
+            if watcher_reset != profile_transport.transport_module().reset_mode():
                 raise ValueError("watcher software reset mode mismatch")
+            if transport_context is not None:
+                transport_context.observe_watcher(readback_programmed_images)
+                if time.monotonic() - watcher_reset_started >= 120.0:
+                    raise ValueError("watcher reset and observation timeout")
             boards["watcher"]["flash_mode"] = "pyocd-sector-sw-reset"
             flash_records["watcher"]["mode"] = "pyocd-sector-sw-reset"
             time.sleep(2.0)
@@ -1048,6 +1073,13 @@ def execute(args: argparse.Namespace) -> dict:
                         cleanup.setdefault(role, {})["serial_close"] = "PASS"
                     except Exception as error:
                         reason = reason or f"{role}: serial close failed: {error}"
+            if transport_context is not None:
+                try:
+                    transport_evidence = transport_context.finish()
+                except Exception as error:
+                    reason = reason or f"profile transport close failed: {type(error).__name__}"
+                    transport_evidence = {"transport": selected_transport,
+                                          "transport_capture_errors": [type(error).__name__]}
     if reason is None:
         try:
             validate_programming_receipt(
@@ -1131,6 +1163,13 @@ def execute(args: argparse.Namespace) -> dict:
     prefix.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("xb") as output:
         output.write(raw)
+    if transport_context is not None:
+        evidence.update(transport_evidence)
+        try:
+            profile_transport.validate_evidence(json_path, evidence, selected_transport)
+        except (KeyError, OSError, TypeError, ValueError) as error:
+            evidence["status"] = "FAIL"
+            evidence["reason"] = evidence["reason"] or str(error)
     with json_path.open("x", encoding="utf-8") as output:
         json.dump(evidence, output, indent=2)
         output.write("\n")

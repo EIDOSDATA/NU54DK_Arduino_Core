@@ -109,13 +109,15 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
 def validate_three_board_identity(endpoints: dict[str, RoleEndpoint]) -> None:
     """! @brief 세 role의 UID·MSD·UART가 모두 다른지 확인합니다. """
 
+    kind = common.validate_endpoint_transports(endpoints.values())
     for attribute, label in (("board_id", "DAPLink UID"), ("port_name", "UART")):
         values = [str(getattr(endpoints[role], attribute)).casefold() for role in ROLES]
         if len(set(values)) != len(ROLES):
             raise BlePairHilFailure(f"세 role의 {label}가 서로 달라야 합니다.")
-    volumes = [str(endpoints[role].volume.root.resolve()).casefold() for role in ROLES]
-    if len(set(volumes)) != len(ROLES):
-        raise BlePairHilFailure("세 role의 DAPLink MSD가 서로 달라야 합니다.")
+    if kind == "cmsis-dap-v2":
+        volumes = [str(endpoints[role].volume.root.resolve()).casefold() for role in ROLES]
+        if len(set(volumes)) != len(ROLES):
+            raise BlePairHilFailure("세 role의 DAPLink MSD가 서로 달라야 합니다.")
 
 
 def prepare_output_paths(

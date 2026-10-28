@@ -46,6 +46,7 @@ from m28_ble_3board import (  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
 from m33_regression import intel_hex_ranges, read_json  # noqa: E402
+import m33_probe_transport as probe_transport  # noqa: E402
 sys.path.insert(0, str(APPLICATION_ROOT))
 from m33_w06_manifest import current_source_digests  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
@@ -330,6 +331,9 @@ def _write_json(path: Path, value: dict) -> None:
 
 def _load_pyocd_site_packages() -> None:
     """! @brief 고정 NCS bundle의 pyOCD를 readback에만 불러옵니다. """
+    if probe_transport.descriptor()["kind"] == "jlink-swd":
+        probe_transport.ensure_pyocd_available()
+        return
     try:
         __import__("pyocd")
         return
@@ -368,7 +372,7 @@ def _readback_programmed_images(endpoints: dict[str, RoleEndpoint], images: dict
     _load_pyocd_site_packages()
     from m33_diagnostics import (
         IdleAuditFailure,
-        PyocdPreparationBackend,
+        create_preparation_backend,
         halt_and_wait,
         private_debug_output,
         readback_ranges,
@@ -376,7 +380,7 @@ def _readback_programmed_images(endpoints: dict[str, RoleEndpoint], images: dict
     )
 
     with private_debug_output():
-        backend = PyocdPreparationBackend()
+        backend = create_preparation_backend()
         probes, _ = backend.discover()
         by_uid = {probe.unique_id.strip().lower(): probe for probe in probes}
         if len(probes) != len(by_uid) or set(by_uid) != {endpoint.board_id for endpoint in endpoints.values()}:
@@ -513,22 +517,30 @@ def execute(args: argparse.Namespace) -> dict:
     endpoints: dict[str, RoleEndpoint] = {}
     public_boards: dict[str, dict] = {}
     raw_uids: list[str] = []
+    transport = probe_transport.descriptor()
+    transport_fields = ({"transport": transport} if transport["kind"] == "jlink-swd"
+                        else {"cmsis_dap": "v2-only"})
     for role in ROLES:
         digest = getattr(args, f"probe_{role}_sha256")
-        uid, volume, vcom = discover(digest, list_ports)
-        details = read_details(Path(volume))
-        if details is None:
-            raise RegressionSoakFailure(f"{role} DAPLink details 누락")
-        endpoints[role] = RoleEndpoint(
-            uid,
-            DaplinkVolume(Path(volume), details),
-            vcom,
-        )
+        selected = probe_transport.resolve_endpoint(digest, None, None, list_ports)
+        if selected is None:
+            uid, volume, vcom = discover(digest, list_ports)
+            details = read_details(Path(volume))
+            if details is None:
+                raise RegressionSoakFailure(f"{role} DAPLink details 누락")
+            endpoints[role] = RoleEndpoint(uid, DaplinkVolume(Path(volume), details), vcom)
+        else:
+            if selected["transport"] != transport or transport["kind"] != "jlink-swd":
+                raise RegressionSoakFailure("soak endpoint transport mismatch")
+            uid, volume, vcom = selected["board_id"], None, selected["port_name"]
+            endpoints[role] = RoleEndpoint(uid, None, vcom, transport=transport)
         public_boards[role] = {
             "probe_sha256": digest,
             "volume": volume,
             "vcom": vcom,
         }
+        if selected is not None:
+            public_boards[role]["transport"] = transport
         raw_uids.append(uid)
     if len(set(raw_uids)) != len(ROLES):
         raise RegressionSoakFailure("세 역할이 서로 다른 probe에 매핑되지 않음")
@@ -563,7 +575,8 @@ def execute(args: argparse.Namespace) -> dict:
             for role in ROLES:
                 public_boards[role]["registers"] = collect_register_identity(
                     endpoints[role].board_id,
-                    endpoints[role].volume.root.as_posix(),
+                    (endpoints[role].volume.root.as_posix()
+                     if endpoints[role].volume is not None else None),
                 )
             def record_active_interval(started_ns: int, finished_ns: int) -> None:
                 """! @brief central START부터 세 FINAL까지의 host monotonic 구간만 저장합니다. """
@@ -614,7 +627,7 @@ def execute(args: argparse.Namespace) -> dict:
                 _write_json(artifact_paths[role]["readback"], readback)
                 flash = {"schema_version": 2, "status": "PASS", "role": role,
                          "source_revision": identity.core, "probe_sha256": public_boards[role]["probe_sha256"],
-                         "cmsis_dap": "v2-only", "mode": flash_records[role]["mode"], "erase": "sector",
+                         **transport_fields, "mode": flash_records[role]["mode"], "erase": "sector",
                          "auto_unlock": False, "automatic_recover": False, "mass_erase": False,
                          "source_manifest_sha256": build_identity["sha256"],
                          "image_sha256": image_hashes[role], "programmed_bytes": int(flash_records[role]["bytes"]),
@@ -685,7 +698,7 @@ def execute(args: argparse.Namespace) -> dict:
         "results": results,
         "reason": reason,
         "safety": {
-            "cmsis_dap": "v2-only",
+            **transport_fields,
             "auto_unlock": False,
             "erase": "sector",
             "reset": "software",

@@ -35,6 +35,7 @@ from ble_pair_hil_common import (  # noqa: E402
     file_sha256,
     flash_image_pyocd_sha256,
     git_revision,
+    public_endpoint,
     transcript_record,
     validate_board_revision,
     validate_build_record,
@@ -736,9 +737,17 @@ def mutate_truncated(source: ImageArtifact, output: Path) -> ImageArtifact:
     return ImageArtifact(path, path.stat().st_size, file_sha256(path), source.version, source.image_hash)
 
 
-def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, str]:
+def endpoint_evidence(endpoint: RoleEndpoint) -> dict[str, Any]:
     """! @brief raw probe UID 없이 물리 endpoint identity를 기록합니다. """
 
+    public = public_endpoint(endpoint)
+    if "transport" in public:
+        return {
+            "board_id_sha256": public["probe_sha256"],
+            "volume": None,
+            "port": endpoint.port_name,
+            "transport": public["transport"],
+        }
     match = re.match(r"^([A-Za-z]):(?:[\\/]|$)", str(endpoint.volume.root))
     if match is None:
         raise M30DfuFailure("DAPLink volume이 Windows drive root가 아닙니다.")

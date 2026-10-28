@@ -45,6 +45,7 @@ from ble_pair_hil_common import (  # noqa: E402
     transcript_record,
     validate_board_revision,
     validate_build_record,
+    validate_endpoint_transports,
     validate_hex_image,
     validate_image_unchanged,
     validate_pair_identity,
@@ -284,6 +285,11 @@ def execute_long_pair(
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 600.0:
         raise BlePairHilFailure("--result-timeout은 30..600초여야 합니다.")
+    endpoints = (peripheral_endpoint, central_endpoint)
+    if any(getattr(endpoint, "transport", None) is not None for endpoint in endpoints):
+        kind = validate_endpoint_transports(endpoints)
+        if kind == "jlink-swd" and flash_backend != "pyocd-sector":
+            raise BlePairHilFailure("J-Link endpoint에는 pyocd-sector만 허용합니다.")
     captures = {"peripheral": bytearray(), "central": bytearray()}
     pending = {"peripheral": bytearray(), "central": bytearray()}
     flashes = {
@@ -337,7 +343,9 @@ def execute_long_pair(
                         probe_sha256(endpoint.board_id),
                         flash_timeout,
                     )
-                    if reset_mode != "pyocd-v2-sw-reset":
+                    from m33_probe_transport import reset_mode as selected_reset_mode
+
+                    if reset_mode != selected_reset_mode():
                         raise BlePairHilFailure(
                             f"{role} software reset mode가 다릅니다: {reset_mode}"
                         )

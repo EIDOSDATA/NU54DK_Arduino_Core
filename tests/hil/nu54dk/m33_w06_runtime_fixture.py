@@ -457,7 +457,7 @@ def audit_third_board(
         digest(fixture_path),
         hashes["third"],
     )
-    backend = backend or diagnostics.PyocdPreparationBackend()
+    backend = backend or diagnostics.create_preparation_backend()
     with diagnostics.private_debug_output():
         probes, live_ports = backend.discover()
         mapped = diagnostics.map_live_probes(

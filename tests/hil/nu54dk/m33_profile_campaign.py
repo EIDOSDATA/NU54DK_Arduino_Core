@@ -91,6 +91,9 @@ def phase_reference(path: Path, evidence: dict) -> dict:
     """! @brief phase JSON의 실제 byte·nonce·시각을 aggregate record에 결합합니다. """
     if not path.is_file() or evidence.get("status") != "PASS":
         raise ValueError("profile campaign phase did not pass")
+    phase_runner.profile_transport.validate_evidence(
+        path, evidence, phase_runner.profile_transport.descriptor()
+    )
     return {
         "path": path.name,
         "sha256": digest(path),
@@ -186,6 +189,13 @@ def execute_phase_with_retry(
         if (last_evidence.get("status") == "PASS"
                 or not retryable_initial_disconnect(last_evidence)):
             break
+        if phase_runner.profile_transport.descriptor()["kind"] == "jlink-swd":
+            try:
+                phase_runner.profile_transport.validate_evidence(
+                    last_path, last_evidence, phase_runner.profile_transport.descriptor()
+                )
+            except (KeyError, OSError, TypeError, ValueError):
+                break
     if last_evidence is None or last_path is None:
         raise ValueError("profile phase attempt가 실행되지 않았습니다")
     return last_evidence, last_path
@@ -214,6 +224,8 @@ def planned_phase_prefixes(output: Path, family: str) -> dict[tuple[int, str], P
                 paths.extend(
                     path for values in sidecars.values() for path in values.values()
                 )
+                if phase_runner.profile_transport.descriptor()["kind"] == "jlink-swd":
+                    paths.extend(phase_runner.profile_transport.extra_sidecars(attempt_prefix))
                 for path in paths:
                     key = str(path).casefold()
                     if key in used or path.exists() or path.is_symlink():
@@ -249,6 +261,8 @@ def validate_campaign_evidence(path: Path, expected_family: str,
     """! @brief aggregate가 참조한 모든 phase byte와 raw 분모를 재검증합니다. """
     path = path.resolve()
     campaign = json.loads(path.read_text(encoding="utf-8"))
+    campaign_transport = campaign.get("transport", {"kind": "cmsis-dap-v2"})
+    phase_runner.profile_transport.transport_module().validate_descriptor(campaign_transport)
     revision = expected_revision or git_revision(ROOT)
     expected_revisions = release_revisions(revision)
     if (campaign.get("schema") != SCHEMA or campaign.get("family") != expected_family
@@ -293,6 +307,9 @@ def validate_campaign_evidence(path: Path, expected_family: str,
                 or value.get("observed_utc") != reference.get("observed_utc")):
             raise ValueError("profile phase release evidence mismatch")
         phase_runner.validate_exact_program_bundle(phase_path, value)
+        phase_runner.profile_transport.validate_evidence(
+            phase_path, value, campaign_transport
+        )
         cleanup = value.get("cleanup", {})
         if set(cleanup) != {"server", "client", "watcher"}:
             raise ValueError("profile phase cleanup denominator mismatch")
@@ -417,6 +434,7 @@ def execute_campaign(args: argparse.Namespace, execute_phase=phase_runner.execut
     if not source_is_clean():
         raise ValueError("profile campaign requires clean source")
     revision = git_revision(ROOT)
+    selected_transport = phase_runner.profile_transport.descriptor()
     output = args.output.resolve()
     if output.exists() or output.suffix.lower() != ".json":
         raise ValueError("new profile campaign JSON output required")
@@ -532,7 +550,8 @@ def execute_campaign(args: argparse.Namespace, execute_phase=phase_runner.execut
             "phases": phases,
         })
 
-    if not source_is_clean() or git_revision(ROOT) != revision:
+    if (not source_is_clean() or git_revision(ROOT) != revision
+            or phase_runner.profile_transport.descriptor() != selected_transport):
         raise ValueError("profile campaign source changed during execution")
     attestation = {
         "schema_version": 1,
@@ -560,6 +579,8 @@ def execute_campaign(args: argparse.Namespace, execute_phase=phase_runner.execut
         "cycle_records": cycle_records,
         "m33_dispatch_attestation": attestation,
     }
+    if selected_transport["kind"] == "jlink-swd":
+        result["transport"] = selected_transport
     with output.open("x", encoding="utf-8") as stream:
         stream.write(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     return validate_campaign_evidence(output, args.family, revision)

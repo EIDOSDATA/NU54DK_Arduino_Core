@@ -635,7 +635,15 @@ class ProfileHilTests(unittest.TestCase):
         self.assertLess(readback, watcher_reset)
         self.assertLess(watcher_reset, serial_open)
         self.assertIn('flash_records["watcher"]["mode"] = "pyocd-sector-sw-reset"', source)
-        self.assertIn('watcher_reset != "pyocd-v2-sw-reset"', source)
+        self.assertIn(
+            'watcher_reset != profile_transport.transport_module().reset_mode()', source
+        )
+        transport = PROFILE_RUN.profile_transport.transport_module()
+        with mock.patch.object(transport, "load_fixture", return_value=None):
+            self.assertEqual(transport.reset_mode(), "pyocd-v2-sw-reset")
+        with mock.patch.object(transport, "load_fixture", return_value={"board": "nrf54l15dk"}):
+            self.assertEqual(transport.reset_mode(), "pyocd-jlink-sw-reset")
+        self.assertIn('raise ValueError("watcher software reset mode mismatch")', source)
 
     def test_partial_serial_line_waits_for_newline(self):
         """! @brief timeout으로 나뉜 protocol 줄을 완성 전에는 해석하지 않는지 검사합니다. """
@@ -694,7 +702,14 @@ class ProfileHilTests(unittest.TestCase):
         poll_order = source.split("void loop()", 1)[1].split(
             "if (watchdog_channel >= 0", 1
         )[0]
-        self.assertLess(poll_order.index("BLESecurity.poll();"),
+        profile_poll = source.split("void pollProfileEvents()", 1)[1].split(
+            "} // namespace", 1
+        )[0]
+        self.assertLess(profile_poll.index("BLEDevice.poll();"),
+                        profile_poll.index("BLESecurity.poll();"))
+        self.assertLess(profile_poll.index("BLESecurity.poll();"),
+                        profile_poll.index("finishWatcherDisconnect();"))
+        self.assertLess(poll_order.index("pollProfileEvents();"),
                         poll_order.index("pollStaleRecoveryRestart();"))
         deferred = source.split("void pollStaleRecoveryRestart()", 1)[1].split(
             "/** @brief test backend", 1
@@ -719,7 +734,7 @@ class ProfileHilTests(unittest.TestCase):
             source,
         )
         self.assertIn(
-            "BLESecurity.poll();\n"
+            "pollProfileEvents();\n"
             "#if !defined(M33_PROFILE_NATIVE)\n"
             "    pollStaleRecoveryRestart();\n"
             "#endif",

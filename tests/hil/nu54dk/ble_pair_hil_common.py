@@ -109,11 +109,12 @@ class PairExecutionFailure(BlePairHilFailure):
 
 @dataclass(frozen=True)
 class RoleEndpoint:
-    """! @brief 한 role에 결합한 DAPLink UID·MSD·UART endpoint입니다. """
+    """! @brief 한 role의 실제 probe·선택적 MSD·UART·명시 transport 결합입니다. """
 
     board_id: str
-    volume: DaplinkVolume
+    volume: DaplinkVolume | None
     port_name: str
+    transport: dict[str, str] | None = None
 
 
 @dataclass(frozen=True)
@@ -149,6 +150,11 @@ def discover_endpoint(
     list_ports: Any,
 ) -> RoleEndpoint:
     normalized = normalize_board_id(board_id)
+    selected = resolve_transport_endpoint(
+        probe_sha256(normalized), explicit_volume, explicit_port, list_ports
+    )
+    if selected is not None:
+        return selected
     return RoleEndpoint(
         normalized,
         find_daplink_volume(normalized, explicit_volume),
@@ -160,6 +166,65 @@ def discover_endpoint(
 def probe_sha256(board_id: str) -> str:
     normalized = normalize_board_id(board_id)
     return hashlib.sha256(normalized.encode("ascii")).hexdigest()
+
+
+def probe_transport():
+    """! @brief native import 없이 명시 transport 설정 모듈에 접근합니다. """
+    tools = REPOSITORY / "tools" / "bluetooth"
+    if str(tools) not in sys.path:
+        sys.path.insert(0, str(tools))
+    import m33_probe_transport
+
+    return m33_probe_transport
+
+
+def resolve_transport_endpoint(
+    digest: str, explicit_volume: str | None, explicit_port: str, list_ports: Any
+) -> RoleEndpoint | None:
+    """! @brief 명시 J-Link fixture만 선택하며 기본 CMSIS discovery는 호출자에게 남깁니다. """
+    selected = probe_transport().resolve_endpoint(
+        digest, explicit_volume, explicit_port, list_ports
+    )
+    if selected is None:
+        return None
+    endpoint = RoleEndpoint(
+        selected["board_id"], selected["volume"], selected["port_name"],
+        dict(selected["transport"]),
+    )
+    validate_endpoint_transports((endpoint,))
+    if probe_sha256(endpoint.board_id) != digest:
+        raise BlePairHilFailure("명시 transport의 probe SHA-256이 다릅니다.")
+    return endpoint
+
+
+def validate_endpoint_transports(endpoints) -> str:
+    """! @brief 혼합 transport·가짜 MSD·서로 다른 J-Link fixture 결합을 거부합니다. """
+    values = list(endpoints)
+    if not values:
+        raise BlePairHilFailure("endpoint transport 검증 대상이 없습니다.")
+    descriptors = []
+    for endpoint in values:
+        descriptor = getattr(endpoint, "transport", None)
+        if descriptor is None:
+            descriptor = {"kind": "cmsis-dap-v2"}
+        if descriptor == {"kind": "cmsis-dap-v2"}:
+            if endpoint.volume is None:
+                raise BlePairHilFailure("CMSIS endpoint의 MSD 결합이 없습니다.")
+        elif (isinstance(descriptor, dict)
+              and set(descriptor) == {"kind", "fixture_sha256", "dll_sha256", "board"}
+              and descriptor.get("kind") == "jlink-swd"
+              and descriptor.get("board") == "nrf54l15dk"
+              and all(isinstance(descriptor.get(name), str)
+                      and re.fullmatch(r"[0-9a-f]{64}", descriptor[name])
+                      for name in ("fixture_sha256", "dll_sha256"))):
+            if endpoint.volume is not None:
+                raise BlePairHilFailure("J-Link endpoint에 가짜 MSD를 결합할 수 없습니다.")
+        else:
+            raise BlePairHilFailure("알 수 없는 endpoint transport 증거입니다.")
+        descriptors.append(descriptor)
+    if any(descriptor != descriptors[0] for descriptor in descriptors[1:]):
+        raise BlePairHilFailure("서로 다른 transport 또는 fixture를 혼합할 수 없습니다.")
+    return descriptors[0]["kind"]
 
 
 ## @brief pyOCD 진단 문자열에서 raw probe UID를 외부 출력 전에 제거합니다.
@@ -182,6 +247,9 @@ def discover_endpoint_sha256(
 ) -> RoleEndpoint:
     if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
         raise BlePairHilFailure("probe identity는 64자리 소문자 SHA-256이어야 합니다.")
+    selected = resolve_transport_endpoint(digest, explicit_volume, explicit_port, list_ports)
+    if selected is not None:
+        return selected
     roots = (
         (Path(explicit_volume).resolve(),)
         if explicit_volume is not None
@@ -253,12 +321,16 @@ def discover_endpoint_sha256(
 
 
 ## @brief raw UID 없이 외부 직렬화가 가능한 board identity를 만듭니다.
-def public_endpoint(endpoint: RoleEndpoint) -> dict[str, str]:
-    return {
+def public_endpoint(endpoint: RoleEndpoint) -> dict[str, Any]:
+    kind = validate_endpoint_transports((endpoint,))
+    value = {
         "probe_sha256": probe_sha256(endpoint.board_id),
-        "msd_root": str(endpoint.volume.root),
+        "msd_root": str(endpoint.volume.root) if kind == "cmsis-dap-v2" else None,
         "uart_port": endpoint.port_name,
     }
+    if kind == "jlink-swd":
+        value["transport"] = dict(endpoint.transport)
+    return value
 
 
 def _load_private_pyocd_backend(digest: str):
@@ -266,20 +338,10 @@ def _load_private_pyocd_backend(digest: str):
 
     if re.fullmatch(r"[0-9a-f]{64}", digest) is None:
         raise BlePairHilFailure("probe identity는 64자리 소문자 SHA-256이어야 합니다.")
-    try:
-        __import__("pyocd")
-    except ModuleNotFoundError:
-        from pyocd_launcher import _resolve_site_packages
+    probe_transport().ensure_pyocd_available()
+    from m33_diagnostics import create_preparation_backend, private_debug_output
 
-        site_packages = _resolve_site_packages()
-        if site_packages is not None and str(site_packages) not in sys.path:
-            sys.path.insert(0, str(site_packages))
-    tools = REPOSITORY / "tools" / "bluetooth"
-    if str(tools) not in sys.path:
-        sys.path.insert(0, str(tools))
-    from m33_diagnostics import PyocdPreparationBackend, private_debug_output
-
-    backend = PyocdPreparationBackend()
+    backend = create_preparation_backend()
     with private_debug_output():
         probes, _ports = backend.discover()
     matches = [probe for probe in probes
@@ -306,7 +368,9 @@ def collect_register_identity_sha256(
                 values = backend.identity(session)
                 validate_debug_identity(values)
     except Exception as error:
-        raise BlePairHilFailure("CMSIS-DAP V2 DP/AP register query failure") from error
+        label = ("CMSIS-DAP V2" if probe_transport().descriptor()["kind"] == "cmsis-dap-v2"
+                 else "J-Link SWD")
+        raise BlePairHilFailure(f"{label} DP/AP register query failure") from error
     return {
         "dp_idcode": f"0x{values['dp_idcode']:08x}",
         "dp_targetid_observed": f"0x{values['target_id']:08x}",
@@ -496,7 +560,7 @@ def reset_target_pyocd_sha256(
         raise
     except Exception as error:
         raise BlePairHilFailure(f"{role} pyOCD software reset 실패") from error
-    return "pyocd-v2-sw-reset"
+    return probe_transport().reset_mode()
 
 
 def erase_nrf54l_rram_pyocd_sha256(
@@ -640,9 +704,11 @@ def clear_nrf54l_rram_pyocd_sha256(
 
 ## @brief 두 role이 서로 다른 UID·MSD·UART인지 검사합니다.
 def validate_pair_identity(peripheral: RoleEndpoint, central: RoleEndpoint) -> None:
+    kind = validate_endpoint_transports((peripheral, central))
     if peripheral.board_id == central.board_id:
         raise BlePairHilFailure("peripheral과 central DAPLink UID가 같습니다.")
-    if peripheral.volume.root.resolve() == central.volume.root.resolve():
+    if (kind == "cmsis-dap-v2"
+            and peripheral.volume.root.resolve() == central.volume.root.resolve()):
         raise BlePairHilFailure("peripheral과 central DAPLink MSD가 같습니다.")
     if peripheral.port_name.casefold() == central.port_name.casefold():
         raise BlePairHilFailure("peripheral과 central UART가 같습니다.")

@@ -32,6 +32,7 @@ from m33_regression import (CAMPAIGNS, CAMPAIGN_REGISTRIES, REV, SHA,
                              _validate_campaign_receipt,
                              adjacent_evidence_file, campaign_matrix_paths,
                              campaign_plan, digest, hil_contract,
+                             evidence_transport,
                             intel_hex_ranges, integer,
                             read_json, require, validate_campaign_evidence,
                             validate_image_evidence, validate_peer,
@@ -166,9 +167,11 @@ def validate_soak(path: Path, revision: str, development: bool = False,
             SOAK_HOST_MINIMUM_MS <= evidence["host_monotonic_elapsed_ms"] <= SOAK_HOST_MAXIMUM_MS,
             "host monotonic soak duration outside fixed range")
     safety = evidence.get("safety", {})
-    require(set(safety) == {"cmsis_dap", "auto_unlock", "erase", "reset", "automatic_recover",
+    transport = evidence_transport(safety)
+    transport_key = "transport" if transport["kind"] == "jlink-swd" else "cmsis_dap"
+    require(set(safety) == {transport_key, "auto_unlock", "erase", "reset", "automatic_recover",
                             "mass_erase", "termination", "stop_token"}, "soak safety fields")
-    require(safety.get("cmsis_dap") == "v2-only" and safety.get("erase") == "sector" and
+    require(safety.get("erase") == "sector" and
             safety.get("reset") == "software", "soak safety mode")
     require(all(safety.get(key) is False for key in ("auto_unlock", "automatic_recover", "mass_erase")), "unsafe soak operation")
     require(safety["termination"] == "autonomous_finite_cleanup_final" and safety["stop_token"] is False,
@@ -195,6 +198,12 @@ def validate_soak(path: Path, revision: str, development: bool = False,
         )
         require(validated_image["probe_sha256"] == board["probe_sha256"],
                 "flash record probe does not match role board")
+        require(validated_image.get("transport", {"kind": "cmsis-dap-v2"}) == transport and
+                board.get("transport", {"kind": "cmsis-dap-v2"}) == transport,
+                "soak board/flash/safety transport mismatch")
+        if transport["kind"] == "jlink-swd":
+            require("volume" in board and board["volume"] is None,
+                    "J-Link soak must not claim a DAPLink volume")
         require(image["source_manifest"] == source_manifest and
                 image["source_manifest"]["firmware_source_sha256"] == firmware_source_sha256,
                 "image embedded identity is not bound to cleanup source")
@@ -3117,6 +3126,8 @@ def _validate_cs_acl_radio_risk_native_raw(native: dict, native_path: Path,
                                            revision: str) -> None:
     """! @brief DRGN-29669의 source·20회 복구·정리 원시 증거를 검증합니다. """
 
+    from m33_cs_acl_radio_risk_run import validate_start_transport
+
     roles = set(expected["roles"])
     identity = native.get("identity")
     lock = read_json(ROOT / "tools/ci/ncs-3.4.0.lock.json")
@@ -3149,6 +3160,7 @@ def _validate_cs_acl_radio_risk_native_raw(native: dict, native_path: Path,
             all(SHA.fullmatch(value) for value in
                 native["image_sha256"].values()),
             "CS ACL radio-risk hash identity mismatch")
+    start_transports = []
     for role in roles:
         flash = native["flash"][role]
         start = native["start"][role]
@@ -3162,6 +3174,9 @@ def _validate_cs_acl_radio_risk_native_raw(native: dict, native_path: Path,
                 start.get("auto_unlock") is False and
                 start.get("mass_erase_requested") is False,
                 f"CS ACL radio-risk {role} start safety mismatch")
+        start_transports.append(validate_start_transport(start))
+    require(all(value == start_transports[0] for value in start_transports),
+            "CS ACL radio-risk start transport drift")
     require(native.get("cleanup") == {
                 "required": True,
                 "commands": {

@@ -24,6 +24,8 @@ from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
     flash_image_pyocd,
     git_revision,
+    probe_transport,
+    _load_private_pyocd_backend,
     validate_build_record,
 )
 from m33_sdk_risk_common import (  # noqa: E402
@@ -35,7 +37,7 @@ from m33_sdk_risk_common import (  # noqa: E402
     reserve_sidecars,
     validate_programming_receipt,
 )
-from onboard_start import reset_halted_start  # noqa: E402
+from onboard_start import prepare_dap_uart_idle_inputs, reset_halted_start  # noqa: E402
 from p2_gatt_memory_run import import_pyserial, read_lines, require_mapping  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -143,20 +145,113 @@ def validate_cycle(lines: dict[str, list[str]], cycle: int) -> dict[str, Any]:
 def resolve_probes(expected: dict[str, str]) -> dict[str, str]:
     """! @brief SHA-256 identity 두 개를 현재 exact probe UID에 결합합니다. """
 
-    from pyocd.core.helpers import ConnectHelper
+    probe_transport().ensure_pyocd_available()
+    from m33_diagnostics import create_preparation_backend, private_debug_output
 
-    connected = {
-        hashlib.sha256(probe.unique_id.lower().encode("ascii")).hexdigest():
-            probe.unique_id
-        for probe in ConnectHelper.get_all_connected_probes(
-            blocking=False, print_wait_message=False
-        )
-    }
+    with private_debug_output():
+        backend = create_preparation_backend()
+        probes, _ports = backend.discover()
+    connected = {hashlib.sha256(probe.unique_id.lower().encode("ascii")).hexdigest():
+                 probe.unique_id for probe in probes}
+    if len(connected) != len(probes):
+        raise CsAclRadioRiskFailure("duplicate live probe identity")
     if len(set(expected.values())) != len(ROLES) or any(
         digest not in connected for digest in expected.values()
     ):
         raise CsAclRadioRiskFailure("exact two-probe SHA mapping is not present")
     return {role: connected[digest] for role, digest in expected.items()}
+
+
+def require_role_ports(ports: dict[str, str], uid: str) -> None:
+    """! @brief DK의 app MI02와 보조 MI00를 같은 실제 USB 신원에 결합합니다. """
+    transport = probe_transport()
+    if transport.descriptor()["kind"] == "cmsis-dap-v2":
+        for port in ports.values():
+            require_mapping(port, uid)
+        return
+    fixture = transport.load_fixture()
+    identities = [row for row in fixture["boards"] if row["serial"] == uid]
+    if (len(identities) != 1 or set(ports) != {"app", "aux"}
+            or ports["app"].casefold() == ports["aux"].casefold()):
+        raise CsAclRadioRiskFailure("exact DK app/aux UART mapping required")
+    board = identities[0]
+    _serial, list_ports = import_pyserial()
+    transport.resolve_endpoint(board["probe_sha256"], None, ports["app"], list_ports)
+    auxiliary = [port for port in list_ports.comports()
+                 if str(getattr(port, "device", "")).casefold() == ports["aux"].casefold()]
+    pnp = [row for row in transport.serial_pnp_snapshot()
+           if str(row.get("DeviceID", "")).casefold() == ports["aux"].casefold()]
+    if (len(auxiliary) != 1 or len(pnp) != 1
+            or getattr(auxiliary[0], "serial_number", None) != board["usb_serial"]
+            or getattr(auxiliary[0], "vid", None) != board["vid"]
+            or getattr(auxiliary[0], "pid", None) != board["pid"]
+            or pnp[0].get("Status") != "OK"
+            or not pnp[0].get("PNPDeviceID", "").upper().startswith(
+                "USB\\VID_1366&PID_1069&MI_00\\")):
+        raise CsAclRadioRiskFailure("exact DK auxiliary MI00 identity mismatch")
+
+
+def start_role(streams: dict[str, Any], uid: str) -> dict[str, Any]:
+    """! @brief DK에서만 고정 SWD와 software reset으로 기존 halt·drain·resume을 수행합니다. """
+    transport = probe_transport()
+    selected = transport.descriptor()
+    if selected["kind"] == "cmsis-dap-v2":
+        return reset_halted_start(streams, uid)
+    if set(streams) != {"app", "aux"}:
+        raise CsAclRadioRiskFailure("two exact DK UART streams required")
+    digest = hashlib.sha256(uid.encode("ascii")).hexdigest()
+    backend, probe, private_output = _load_private_pyocd_backend(digest)
+    with private_output():
+        with backend.session(probe) as session:
+            target = session.target
+            target.reset_and_halt(reset_type=backend.target_type.ResetType.SYSRESETREQ)
+            if target.get_state().name != "HALTED":
+                raise CsAclRadioRiskFailure("DK target did not halt before UART drain")
+            cpuid = target.read32(0xE000ED00)
+            if cpuid != 0x411FD210:
+                raise CsAclRadioRiskFailure("DK target CPUID mismatch")
+            idle_bias = prepare_dap_uart_idle_inputs(target)
+            time.sleep(0.05)
+            for stream in streams.values():
+                stream.reset_input_buffer()
+                stream.reset_output_buffer()
+            target.resume()
+    return {"method": "reset-halt-drain-resume", "cpuid": f"0x{cpuid:08x}",
+            "frequency_hz": 500000, "target_uart_idle_bias": idle_bias,
+            "auto_unlock": False, "mass_erase_requested": False,
+            "reset_type": "SYSRESETREQ", "transport": selected}
+
+
+def validate_start_transport(start: dict) -> dict:
+    """! @brief DK 시작 증거는 software reset·고정 주파수·실제 target bias를 함께 요구합니다. """
+    if "transport" not in start:
+        if "reset_type" in start or "target_uart_idle_bias" in start:
+            raise CsAclRadioRiskFailure("DK start transport descriptor missing")
+        return {"kind": "cmsis-dap-v2"}
+    selected = probe_transport().validate_descriptor(start["transport"])
+    if (selected["kind"] != "jlink-swd"
+            or set(start) != {"method", "cpuid", "frequency_hz", "target_uart_idle_bias",
+                              "auto_unlock", "mass_erase_requested", "reset_type", "transport"}
+            or start["method"] != "reset-halt-drain-resume"
+            or start["cpuid"] != "0x411fd210" or start["frequency_hz"] != 500000
+            or start["auto_unlock"] is not False or start["mass_erase_requested"] is not False
+            or start["reset_type"] != "SYSRESETREQ"):
+        raise CsAclRadioRiskFailure("DK start transport safety mismatch")
+    bias = start["target_uart_idle_bias"]
+    if (not isinstance(bias, list) or len(bias) != 2
+            or [(row.get("pin"), row.get("pin_cnf_address")) for row in bias]
+               != [("P0.00", "0x5010a080"), ("P1.04", "0x500d8290")]):
+        raise CsAclRadioRiskFailure("DK target UART bias denominator mismatch")
+    for row in bias:
+        if (set(row) != {"pin", "pin_cnf_address", "before", "after", "mode"}
+                or row["mode"] != "input-pullup"
+                or re.fullmatch(r"0x[0-9a-f]{8}", str(row["before"])) is None
+                or re.fullmatch(r"0x[0-9a-f]{8}", str(row["after"])) is None):
+            raise CsAclRadioRiskFailure("DK target UART bias record mismatch")
+        before, after = int(row["before"], 16), int(row["after"], 16)
+        if before & 1 or after != ((before & ~0xC) | 0xC):
+            raise CsAclRadioRiskFailure("DK target UART bias readback mismatch")
+    return selected
 
 
 def wait_for_new(
@@ -330,6 +425,9 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         }
         for role in ROLES
     }
+    if (probe_transport().descriptor()["kind"] == "jlink-swd"
+            and len({port.casefold() for mapping in ports.values() for port in mapping.values()}) != 4):
+        raise CsAclRadioRiskFailure("four distinct DK app/aux UART ports required")
     applications = {
         "initiator": REPOSITORY / "tests/arduino-cli/p2_cs_initiator",
         "reflector": REPOSITORY / "tests/arduino-cli/p2_cs_reflector",
@@ -338,8 +436,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     for role in ROLES:
         if not images[role].is_file() or images[role].suffix.lower() != ".hex":
             raise CsAclRadioRiskFailure(f"{role} exact HEX가 없습니다")
-        for port in ports[role].values():
-            require_mapping(port, probe_ids[role])
+        require_role_ports(ports[role], probe_ids[role])
         build_records[role] = validate_build_record(
             images[role], identity["core"], identity["board"], applications[role]
         )
@@ -390,7 +487,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 marker_start = len(lines[role])
                 if role == "initiator":
                     initial_active = len(lines["reflector"])
-                start[role] = reset_halted_start(
+                start[role] = start_role(
                     {"app": streams[role], "aux": auxiliary[role]}, probe_ids[role]
                 )
                 wait_for_new(

@@ -21,6 +21,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import m33_execution as execution
+from m33_probe_transport import validate_descriptor
 
 ROOT = Path(__file__).resolve().parents[2]
 SHA = re.compile(r"[0-9a-f]{64}\Z")
@@ -641,6 +642,18 @@ def require(condition: bool, message: str) -> None:
         raise ValueError(message)
 
 
+def evidence_transport(record: dict) -> dict:
+    """! @brief 기존 v2 전용 필드 또는 정확한 J-Link descriptor 중 하나만 허용합니다. """
+    require(isinstance(record, dict), "transport evidence must be an object")
+    if "transport" in record:
+        require("cmsis_dap" not in record, "mixed probe transport evidence")
+        descriptor = validate_descriptor(record["transport"])
+        require(descriptor["kind"] == "jlink-swd", "explicit J-Link transport required")
+        return descriptor
+    require(record.get("cmsis_dap") == "v2-only", "CMSIS-DAP v2 evidence required")
+    return {"kind": "cmsis-dap-v2"}
+
+
 def digest(path: Path) -> str:
     """! @brief 실제 evidence byte의 SHA-256을 계산합니다. """
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -1043,16 +1056,17 @@ def validate_image_evidence(image: dict, base: Path, revision: str, lock: dict,
 
     flash_path = adjacent_evidence_file(image["flash_record"], base)
     flash = read_json(flash_path)
+    transport = evidence_transport(flash)
+    transport_key = "transport" if transport["kind"] == "jlink-swd" else "cmsis_dap"
     required_flash = {"schema_version", "status", "role", "source_revision", "probe_sha256",
-                      "cmsis_dap", "mode", "erase", "auto_unlock", "automatic_recover",
+                      transport_key, "mode", "erase", "auto_unlock", "automatic_recover",
                       "mass_erase", "source_manifest_sha256", "image_sha256",
                       "programmed_bytes", "readback_sha256"}
     require(set(flash) == required_flash and flash["schema_version"] == 2 and flash["status"] == "PASS",
             "flash evidence fields/status")
     require(flash["role"] == role and flash["source_revision"] == revision and
             flash["probe_sha256"] == readback["probe_sha256"] and
-            flash["source_manifest_sha256"] == manifest["sha256"] and
-            flash["cmsis_dap"] == "v2-only",
+            flash["source_manifest_sha256"] == manifest["sha256"],
             "flash role/revision/probe mismatch")
     require(flash["mode"] == "pyocd-sector-sw-reset" and flash["erase"] == "sector" and
             flash["auto_unlock"] is False and flash["automatic_recover"] is False and
@@ -1065,7 +1079,8 @@ def validate_image_evidence(image: dict, base: Path, revision: str, lock: dict,
     return {"role": role, "image_sha256": image["file"]["sha256"],
             "readback_sha256": image["readback"]["sha256"],
             "probe_sha256": flash["probe_sha256"], "ranges": expected_ranges,
-            "source_manifest_sha256": manifest["sha256"]}
+            "source_manifest_sha256": manifest["sha256"],
+            **({"transport": transport} if transport["kind"] == "jlink-swd" else {})}
 
 
 def campaign_plan(field: str, identifier: str, root: Path = ROOT) -> dict:
@@ -2164,13 +2179,20 @@ def validate_raw_evidence(raw: dict, raw_path: Path, field: str, identifier: str
             "raw board-role denominator mismatch")
     board_map = {}
     for board in boards:
-        require(set(board) == {"role", "probe_sha256", "registers", "image_sha256"} and
+        board_fields = {"role", "probe_sha256", "registers", "image_sha256"}
+        if "transport" in board:
+            board_fields.add("transport")
+            require(validate_descriptor(board["transport"])["kind"] == "jlink-swd",
+                    "raw explicit J-Link transport required")
+        require(set(board) == board_fields and
                 SHA.fullmatch(board.get("probe_sha256", "")) and
                 isinstance(board.get("registers"), dict) and board["registers"] and
                 SHA.fullmatch(board.get("image_sha256", "")), "raw live board identity fields")
         board_map[board["role"]] = board
     require(len({board["probe_sha256"] for board in boards}) == len(expected_roles),
             "raw distinct probe denominator")
+    require(len({json.dumps(board.get("transport", {"kind": "cmsis-dap-v2"}), sort_keys=True)
+                 for board in boards}) == 1, "raw mixed probe transports")
     images = raw.get("images")
     require(isinstance(images, list) and len(images) == len(expected_roles),
             "bound image-role denominator")
@@ -2190,6 +2212,9 @@ def validate_raw_evidence(raw: dict, raw_path: Path, field: str, identifier: str
         require(validated["probe_sha256"] == board["probe_sha256"] and
                 validated["image_sha256"] == board["image_sha256"],
                 "raw board/image/live-readback binding mismatch")
+        require(validated.get("transport", {"kind": "cmsis-dap-v2"}) ==
+                board.get("transport", {"kind": "cmsis-dap-v2"}),
+                "raw board/flash transport mismatch")
         target_manifest = target_manifests[image["role"]]
         measurement_addresses = (raw["measurement_addresses"][image["role"]]
                                  if field == "resources" else None)

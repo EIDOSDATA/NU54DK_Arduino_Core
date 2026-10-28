@@ -27,6 +27,8 @@ from ble_pair_hil_common import (  # noqa: E402
     flash_image_pyocd_sha256,
     git_revision,
     probe_sha256,
+    probe_transport,
+    resolve_transport_endpoint,
 )
 from m6_serial_echo import (  # noqa: E402
     DAPLINK_PID,
@@ -57,10 +59,13 @@ def sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
+def discover(probe_sha256: str, list_ports: object) -> tuple[str, str | None, str]:
     """! @brief SHA-256 identity 하나에 정확히 하나의 MSD 또는 VCOM을 결합합니다. """
     if len(probe_sha256) != 64 or any(character not in "0123456789abcdef" for character in probe_sha256):
         raise ExecutionFailure("--probe-sha256은 소문자 SHA-256이어야 합니다")
+    selected = resolve_transport_endpoint(probe_sha256, None, "auto", list_ports)
+    if selected is not None:
+        return selected.board_id, None, selected.port_name
     candidates = []
     for letter in string.ascii_uppercase:
         volume = Path(f"{letter}:/")
@@ -109,22 +114,28 @@ def _read_line(port: object, deadline: float) -> bytes:
 
 def collect_register_identity_sha256(
     digest: str,
-    volume: str,
+    volume: str | None,
 ) -> dict[str, str]:
     """! @brief SHA-256 probe를 pyOCD API로 선택해 DP/AP identity를 읽습니다. """
 
-    details = read_details(Path(volume))
-    if details is None and volume != MSD_UNAVAILABLE:
-        raise ExecutionFailure("DAPLink target identity 불일치")
-    if details is not None and detail_value(details, "Target Detect") != DAPLINK_TARGET:
-        raise ExecutionFailure("DAPLink target identity 불일치")
+    if probe_transport().descriptor()["kind"] == "jlink-swd":
+        if volume is not None:
+            raise ExecutionFailure("J-Link identity에 MSD를 결합할 수 없습니다")
+    else:
+        if volume is None:
+            raise ExecutionFailure("DAPLink target identity 불일치")
+        details = read_details(Path(volume))
+        if details is None and volume != MSD_UNAVAILABLE:
+            raise ExecutionFailure("DAPLink target identity 불일치")
+        if details is not None and detail_value(details, "Target Detect") != DAPLINK_TARGET:
+            raise ExecutionFailure("DAPLink target identity 불일치")
     try:
         return collect_register_identity_backend(digest, volume)
     except BlePairHilFailure as error:
         raise ExecutionFailure(str(error)) from error
 
 
-def collect_register_identity(raw_uid: str, volume: str) -> dict[str, str]:
+def collect_register_identity(raw_uid: str, volume: str | None) -> dict[str, str]:
     """! @brief legacy 내부 UID를 hash한 뒤 argv 없는 API helper로 위임합니다. """
 
     return collect_register_identity_sha256(probe_sha256(raw_uid), volume)

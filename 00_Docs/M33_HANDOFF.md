@@ -1,9 +1,37 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-25**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자의 연속 진행 요청으로 최종 검증을 재개했으며, 디버그 접근 진단과 qualification·Host 시각 검증 정정을 진행했다.
+최종 갱신: **2026-10-29**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+### 2026-10-29 DK 전환과 현재 검증 범위
+
+- source `2482eeade61d071ffecb6021a8c8d48e44a8699a`의 추가 관측을 포함한 fresh 진단 1회는 PASS했다.
+  `D:\w06\p29dk-fresh3\result.json`의 SHA-256은
+  `a821b406214315991aa4955129fde7e3f04bbe42472aa5a403456dbf1a5b2c85`다.
+  세 역할의 최신 STOP 6개 항목 0·UART 전체 capture·close와 debug session 11개 종료를 확인했다.
+  공식 focused20·W06 실적은 0이며 원래 a557 client HCI62의 근본원인은 미확정이다.
+- 기존 UART 무응답과 중복 STOP 실패는 원본 FAIL로 보존한다. 추가 reset 후 watcher 관측은
+  연결 절차의 명시된 조건이며 HCI62 원인 확정이나 결함 해결 판정이 아니다.
+- 새 host 경로는 `NU54_HIL_JLINK_FIXTURE`와 `NU54_HIL_JLINK_FIXTURE_SHA256`을 함께 명시한다.
+  private fixture에는 세 DK의 정확한 serial·USB VID/PID·MI02·COM·target UID hash와 DLL pin을 둔다.
+  실행 증거는 raw serial 대신 transport descriptor와 hash만 사용한다. 기본 CMSIS-DAP v2 검사는 유지한다.
+  `NU54_HIL_JLINK_AUDIT_DIR`은 기존 `D:\w06` 하위 디렉터리이며, 각 session의 실제 close 증거를 보존한다.
+- J-Link는 firmware 자동 갱신과 unsecure를 금지하고 SWD 500kHz·attach·sector program·명시
+  SYSRESETREQ만 사용한다. 여러 probe의 native 상태는 hash 확인한 개별 DLL 사본으로 분리한다.
+  profile phase는 마지막 watcher reset 후 별도 full readback·동일 monitor의 strict idle 전후 관측을
+  수행한다. 원래 all3 programming receipt는 보존하며 새 관측으로 대체하지 않는다.
+- 소스 고정 후 세 역할을 모두 다시 빌드하고 focused20 fresh/restored 40구간을 실제 실행한다.
+  그 뒤 같은 소스로 Host651와 추가 회귀, 새 Actions141·D ecosystem2, runtime9/stage150,
+  matrix49(#30~49 포함), 1,800초 soak, resource/support/risk7/qualification3, strict closure/export,
+  문서·원형 validator와 승인된 `Dev-0.6.0-M33` commit/push·exact CI를 마감한다.
+  과거 source의 성공을 새 source의 실적으로 승계하지 않는다.
+- 최신 상세 증거는 `D:\w06\final-57624a4c-actions61-attempt1\unattended-continuation-handoff.json`의
+  `latest_DK_checkpoint`를 따른다. 단일 writer·공통 3lock·단일 heavy job, 모든 출력/TMP `D:\w06`,
+  여유 4GiB 하한을 유지한다. 자동점검 `w06`은 PAUSED이며 사용자 부재 중에도 승인된 범위의 작업을 진행한다.
+
+아래의 10월 25일 checkpoint는 이후 DK 전환 이전의 경과다.
 
 ## 현행 재개 지점 — 2026-10-25
 

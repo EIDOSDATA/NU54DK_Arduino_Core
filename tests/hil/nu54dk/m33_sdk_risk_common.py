@@ -172,6 +172,11 @@ def copy_program_inputs(
 def _load_pyocd_site_packages() -> None:
     """! @brief 고정 workspace pyOCD를 readback 시점에만 불러옵니다. """
 
+    from m33_probe_transport import descriptor, ensure_pyocd_available
+
+    if descriptor()["kind"] == "jlink-swd":
+        ensure_pyocd_available()
+        return
     try:
         __import__("pyocd")
     except ModuleNotFoundError:
@@ -215,7 +220,7 @@ def readback_programmed_images(
     _load_pyocd_site_packages()
     from m33_diagnostics import (
         IdleAuditFailure,
-        PyocdPreparationBackend,
+        create_preparation_backend,
         halt_and_wait,
         private_debug_output,
         readback_ranges,
@@ -225,7 +230,7 @@ def readback_programmed_images(
     records: dict[str, dict[str, Any]] = {}
     fingerprints: list[str] = []
     with private_debug_output():
-        backend = PyocdPreparationBackend()
+        backend = create_preparation_backend()
         probes, _ports = backend.discover()
         by_uid = {probe.unique_id.strip().lower(): probe for probe in probes}
         for role in roles:
@@ -332,10 +337,10 @@ def readback_programmed_images_by_hash(
             SHA256.fullmatch(value) is None for value in probe_hashes.values()):
         raise ExactProgrammingFailure("hashed readback probes must be distinct SHA-256 values")
     _load_pyocd_site_packages()
-    from m33_diagnostics import PyocdPreparationBackend, private_debug_output
+    from m33_diagnostics import create_preparation_backend, private_debug_output
 
     with private_debug_output():
-        probes, _ports = PyocdPreparationBackend().discover()
+        probes, _ports = create_preparation_backend().discover()
     by_hash = {
         hashlib.sha256(probe.unique_id.strip().lower().encode("ascii")).hexdigest():
         probe.unique_id
