@@ -167,11 +167,13 @@ jobs:
           PYTHONUTF8: "1"
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
-          $flowPython = (Get-Command python -CommandType Application -ErrorAction Stop).Source
+          $flowPython = (Get-Command python -CommandType Application -ErrorAction Stop |
+              Select-Object -First 1).Source
           $env:ZEPHYR_BASE = Join-Path $env:NUCODE_NCS_ROOT 'zephyr'
           $env:PYTHONPATH = Join-Path $env:ZEPHYR_BASE 'scripts\kconfig'
           $flowCmake = Join-Path $env:NUCODE_TOOLCHAIN_ROOT 'opt\bin\cmake.exe'
-          if (!(Test-Path -LiteralPath (Join-Path $env:PYTHONPATH 'kconfiglib.py') -PathType Leaf) -or
+          if (!(Test-Path -LiteralPath $flowPython -PathType Leaf) -or
+              !(Test-Path -LiteralPath (Join-Path $env:PYTHONPATH 'kconfiglib.py') -PathType Leaf) -or
               !(Test-Path -LiteralPath $flowCmake -PathType Leaf) -or
               !(Test-Path -LiteralPath 'tests/sdk/test_m33_ble_flow_control.py' -PathType Leaf))
           {
