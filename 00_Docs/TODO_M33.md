@@ -8,7 +8,14 @@
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-29 |
+| 최종 갱신일 | 2026-10-30 |
+
+2026-10-30 D 초기화 후 clean `4e48bdb159e8aa4eeb82968fec6e5e2a7629c0e3`에서 focused20의
+40구간·Host651·Actions63 build141을 확인했으나 runtime 준비에서 PC의 J-Link serial 매핑 결함을
+발견했다. 해당 host 경로를 교정하고 관련 회귀 67개를 통과했다. 기존 runtime FAIL과 원본은 보존하며
+수정 소스의 실제 runtime·최종 matrix는 아직 미실행이다. 4e48의 성공을 수정 source에 승계하지 않고
+새 clean source의 focused20부터 최종 gate를 다시 생성한다. 자세한 경과와 현재 작업 정본은
+[M33 인계](M33_HANDOFF.md#2026-10-30-d-재구성과-j-link-runtime-매핑-교정)를 따른다.
 
 2026-10-29 현재 사용자가 연결한 nRF54L15 DK 3개에서 source `2482eeade61d071ffecb6021a8c8d48e44a8699a`의
 추가 관측을 포함한 #29 fresh 진단 1회가 PASS했다. 이 결과는 정식 focused20 또는 W06 실적으로

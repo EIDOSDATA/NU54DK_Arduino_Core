@@ -238,13 +238,59 @@ class PreparationTests(unittest.TestCase):
         self.assertEqual(self.backend.trace, [])
 
     def test_live_mapping_rejects_wrong_missing_extra_or_duplicate_probe(self):
-        for probes in (self.backend.probes[:2], self.backend.probes + [SimpleNamespace(unique_id="f" * 32)],
-                       self.backend.probes[:2] + [self.backend.probes[0]]):
+        """! @brief CMSIS와 명시 J-Link의 전체 serial 대응·정규화·오류 거부를 검사합니다. """
+        import m33_probe_transport as transport
+
+        with patch.object(transport, "load_fixture", return_value=None):
+            self.assertEqual(DIAG.map_live_probes(
+                self.backend.probes, self.backend.ports, HASHES, ["COM1", "COM2"]), self.backend.probes)
+            for probes in (self.backend.probes[:2], self.backend.probes + [SimpleNamespace(unique_id="f" * 32)],
+                           self.backend.probes[:2] + [self.backend.probes[0]],
+                           [SimpleNamespace(unique_id="1057700001"), *self.backend.probes[1:]]):
+                with self.assertRaises(ValueError):
+                    DIAG.map_live_probes(probes, self.backend.ports, HASHES, ["COM1", "COM2"])
+            self.backend.ports[0].serial_number = UIDS[1]
             with self.assertRaises(ValueError):
-                DIAG.map_live_probes(probes, self.backend.ports, HASHES, ["COM1", "COM2"])
-        self.backend.ports[0].serial_number = UIDS[1]
-        with self.assertRaises(ValueError):
-            DIAG.map_live_probes(self.backend.probes, self.backend.ports, HASHES, ["COM1", "COM2"])
+                DIAG.map_live_probes(self.backend.probes, self.backend.ports, HASHES, ["COM1", "COM2"])
+
+        ## @brief 실제 장비와 무관한 10자리 serial로 DK의 canonical·12자리 USB 표기를 검사합니다.
+        serials = [str(1057700001 + index) for index in range(3)]
+        padded = ["00" + value for value in serials]
+        hashes = [hashlib.sha256(value.encode("ascii")).hexdigest() for value in serials]
+        fixture = {"kind": "nu54-hil-jlink-fixture", "version": 1, "board": "nrf54l15dk"}
+        with patch.object(transport, "load_fixture", return_value=fixture), \
+                patch.object(transport, "create_backend", side_effect=AssertionError("Host mapping must not open hardware")):
+            for probe_serials, port_serials in ((serials, serials), (serials, padded),
+                                                (padded, serials), (padded, padded)):
+                with self.subTest(probe_serials=probe_serials, port_serials=port_serials):
+                    probes = [SimpleNamespace(unique_id=value) for value in probe_serials]
+                    ports = [SimpleNamespace(device=f"COM{index + 1}", serial_number=value)
+                             for index, value in enumerate(port_serials)]
+                    self.assertEqual(DIAG.map_live_probes(
+                        list(reversed(probes)), ports, hashes, ["com1", "COM2"]), probes)
+            probes = [SimpleNamespace(unique_id=value) for value in serials]
+            ports = [SimpleNamespace(device=f"COM{index + 1}", serial_number=value)
+                     for index, value in enumerate(padded)]
+            wrong = SimpleNamespace(unique_id="1057700099")
+            for name, invalid_probes in (
+                    ("missing", probes[:2]), ("extra", probes + [wrong]),
+                    ("wrong", [wrong, *probes[1:]]),
+                    ("duplicate", [*probes[:2], probes[0]]),
+                    ("canonical_duplicate", [*probes[:2], SimpleNamespace(unique_id=padded[0])])):
+                with self.subTest(probes=name), self.assertRaises(ValueError):
+                    DIAG.map_live_probes(invalid_probes, ports, hashes, ["COM1", "COM2"])
+            for malformed in ("", "0", "4294967296", "1057700001x", " 1057700001", "１２３", "f" * 32):
+                with self.subTest(probe_serial=malformed), self.assertRaises(ValueError):
+                    DIAG.map_live_probes([SimpleNamespace(unique_id=malformed), *probes[1:]],
+                                         ports, hashes, ["COM1", "COM2"])
+            for malformed in (None, "", "0", "4294967296", "1057700001x", " 1057700001", "１２３", "f" * 32, serials[1]):
+                with self.subTest(port_serial=malformed), self.assertRaises(ValueError):
+                    DIAG.map_live_probes(probes, [SimpleNamespace(device="COM1", serial_number=malformed),
+                                                 *ports[1:]], hashes, ["COM1", "COM2"])
+            for name, invalid_ports in (("missing", ports[1:]), ("duplicate", ports + [ports[0]])):
+                with self.subTest(ports=name), self.assertRaises(ValueError):
+                    DIAG.map_live_probes(probes, invalid_ports, hashes, ["COM1", "COM2"])
+        self.assertEqual(self.backend.trace, [])
 
     def test_dp_ap_protection_or_identity_is_not_unlocked(self):
         for key in DEBUG_IDENTITY:

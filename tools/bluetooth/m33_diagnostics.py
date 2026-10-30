@@ -788,9 +788,16 @@ def map_live_probes(probes: list, ports: list, hashes: list[str], serial_ports: 
     """! @brief 현재 세 USB probe와 두 VCOM의 full UID 대응만 받아 suffix 추정을 금지합니다. """
     from m33_probe_transport import load_fixture, canonical_serial
     jlink = load_fixture() is not None
+
+    def identity_hash(raw: str) -> str:
+        """! @brief 명시한 transport의 전체 probe·VCOM serial을 같은 규칙으로 hash합니다. """
+        if jlink:
+            return digest_bytes(canonical_serial(raw).encode("ascii"))
+        return probe_hash(raw)
+
     mapped = {}
     for probe in probes:
-        identity = probe_hash(probe.unique_id)
+        identity = identity_hash(probe.unique_id)
         if identity in mapped:
             raise ValueError("중복 USB probe identity")
         mapped[identity] = probe
@@ -800,9 +807,7 @@ def map_live_probes(probes: list, ports: list, hashes: list[str], serial_ports: 
         matches = [port for port in ports if port.device.casefold() == port_name.casefold()]
         if len(matches) != 1 or not matches[0].serial_number:
             raise ValueError("현재 VCOM serial_number와 probe SHA가 일치하지 않습니다")
-        serial_identity = (canonical_serial(matches[0].serial_number) if jlink
-                           else matches[0].serial_number)
-        if probe_hash(serial_identity) != identity:
+        if identity_hash(matches[0].serial_number) != identity:
             raise ValueError("현재 VCOM serial_number와 probe SHA가 일치하지 않습니다")
     return [mapped[identity] for identity in hashes]
 

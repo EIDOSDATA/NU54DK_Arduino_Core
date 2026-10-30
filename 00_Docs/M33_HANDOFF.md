@@ -1,9 +1,35 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-29**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+최종 갱신: **2026-10-30**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
 사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+### 2026-10-30 D 재구성과 J-Link runtime 매핑 교정
+
+- 사용자가 D를 초기화한 뒤 GitHub의 clean `4e48bdb159e8aa4eeb82968fec6e5e2a7629c0e3`와
+  고정 SDK로 환경을 재구성했다. 삭제된 과거 D 자료를 현재 증거로 사용하지 않는다.
+  이 source에서 focused20 fresh/restored 40구간, Host651·skip0, Actions63
+  (run `40836140490`, attempt1)의 4개 shard·build141을 실제 검증했다.
+  원본은 `D:\w06\f29a1`, `D:\w06\final4e48`, `D:\w06\ci63`에 보존한다.
+- 같은 source의 ecosystem client·peer 두 build와 BAP flash 준비는 통과했다.
+  `D:\w06\r1`의 runtime 준비는 native cleanup·fresh·후속 cleanup 세 phase와
+  두 ecosystem image의 전체 readback·READY를 통과한 뒤 third probe 매핑에서 FAIL했다.
+  최종 runtime9·stage150·matrix49·soak·W06 완료로 승격하지 않는다.
+- PC의 `map_live_probes()`가 명시 J-Link decimal serial에도 DAPLink의 32자리 hex 검사를
+  적용하는 결함을 장비 없는 동일 입력 재현으로 확인했다. probe와 VCOM 양쪽을 기존
+  J-Link canonical serial SHA 규약에 맞췄으며 CMSIS 검사·세 probe 집합·중복 거부·포트 대응은 유지한다.
+  관련 준비40·transport12·runtime15, 총 67개 회귀가 PASS했다. 최초 독립 시험의 모듈 경로
+  누락 FAIL은 보존하고 올바른 import 경로의 후속 결과와 구분했다. 수정본의 실기 수리는 아직 미검증이다.
+- 최초 runtime FAIL과 봉인된 114파일, debug 40세션의 close 기록을 보존한다.
+  실패 경로는 최초 ecosystem READY transcript를 저장하지 못했다. 새 상태 관측으로 이 과거 capture를
+  복구했다고 주장하지 않으며, 보드 reset·재기록 전에 현재 RAM·image·identity·idle을 별도로 확인한다.
+  이 PC 결함은 과거 a557 HCI62 근본원인 증명이 아니다.
+- 본 교정 이후 새 clean source의 증거를 다시 생성한다. 위 4e48의 PASS를 새 source의 실적으로
+  승계하지 않는다. 최종 순서는 focused20 → Host651와 추가 회귀 → 새 Actions141·ecosystem2 →
+  runtime9/stage150 → 전체 matrix49 → 1,800초 soak → resource/support/risk7/qualification3 →
+  strict closure/export·문서·원형 validator → 승인된 branch commit/push·exact CI다.
+  현재 작업 정본은 `D:\w06\control\continuation.json`이며 자동점검 w06은 PAUSED다.
 
 ### 2026-10-29 DK 전환과 현재 검증 범위
 
