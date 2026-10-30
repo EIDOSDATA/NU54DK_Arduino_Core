@@ -884,11 +884,12 @@ class PyocdPreparationBackend:
                                  io.StringIO(image["raw"].decode("ascii")), file_format="hex")
 
     def start(self, session):
-        """! @brief 명시적 run 승인 경로에서만 SYSRESETREQ를 사용하고 hardware reset으로 우회하지 않습니다. """
+        """! @brief 명시적 SYSRESETREQ 후 실행 상태를 확인하며 추가 reset으로 우회하지 않습니다. """
         session.target.reset_and_halt(reset_type=self.target_type.ResetType.SYSRESETREQ)
         if session.target.get_state().name != "HALTED":
             raise ValueError("명시적 software reset 후 halt 실패")
         session.target.resume()
+        wait_for_target_state(session.target, {"RUNNING", "SLEEPING"}, timeout=1.0)
 
 
 @contextmanager

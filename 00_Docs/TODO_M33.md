@@ -8,7 +8,14 @@
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-30 |
+| 최종 갱신일 | 2026-10-31 |
+
+2026-10-31 clean `206bc0ec…`에서 focused20의 40구간·Host651·Actions64 build141·ecosystem2·
+runtime9·stage150을 확인했다. 최종 matrix 첫 그룹은 READY 대기에서 실패했다. PC의 reset-resume
+직후 실행 상태 확인이 빠진 경로를 교정하며, 같은 image의 변경 조건 진단은 RUNNING과 READY를
+확인했다. 원래 FAIL과 과거 a557 HCI62 원인 미확정 상태는 유지한다. 수정본의 focused20부터
+새 exact source로 최종 검증을 생성하며 W06은 미완료다. 근거는
+[M33 인계](M33_HANDOFF.md#2026-10-31-matrix-부팅-상태-확인-교정)를 따른다.
 
 2026-10-30 D 초기화 후 clean `4e48bdb159e8aa4eeb82968fec6e5e2a7629c0e3`에서 focused20의
 40구간·Host651·Actions63 build141을 확인했으나 runtime 준비에서 PC의 J-Link serial 매핑 결함을

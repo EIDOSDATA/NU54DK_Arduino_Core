@@ -1,9 +1,30 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-30**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+최종 갱신: **2026-10-31**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
 사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+### 2026-10-31 matrix 부팅 상태 확인 교정
+
+- clean `206bc0ec8ea3dff83338d7500621d0065d77f306`에서 focused20 fresh/restored 40구간,
+  Host651·skip0, Actions64(run `40997782666`, attempt1)의 build141, ecosystem2,
+  runtime9·stage150을 실제 검증했다. 최종 matrix는 첫 `families/gap_links`의 peripheral
+  READY 대기에서 FAIL하여 완료 group은 0/49다. `D:\w06\final206b`의 실패 bundle은 보존한다.
+- PC 도구의 명시적 reset-halt-resume 경로가 resume 뒤 실제 실행 상태를 확인하지 않은 채
+  debug session을 닫는 빈틈을 확인했다. 같은 M28 image에서 reset만 수행한 진단은 READY가 없었고,
+  resume 직후 기존 상태 확인 함수를 추가한 단일 진단은 RUNNING과 exact READY를 관측했다.
+  최신 전체 RAM·image·identity·idle, UART capture·close, debug close와 OS·공통 세 잠금을 확인했다.
+  수용 근거는 `D:\w06\control\matrix2-resume-ready1-acceptance.json`이며 SHA-256은
+  `e5abb2200e662decf2d49c70b6f8b9b0af540677d3f06274e6ae0c5329f2082f`다.
+- 공통 시작 경로와 CS 위험 검사의 별도 시작 경로에 RUNNING/SLEEPING 확인을 추가한다.
+  reset·resume 횟수와 STOP·capture·보안·retry 조건은 유지한다. 이는 J-Link DLL 내부 원인이나
+  과거 a557 HCI62 근본원인 확정이 아니며, 원래 FAIL과 진단 결과를 공식 matrix PASS로 바꾸지 않는다.
+- 관련 9개 suite·184개 회귀와 문서·계약 검사를 통과했다. 준비 시험의 모듈 경로 누락으로 발생한
+  첫 FAIL은 보존하고, 해당 시험에 명시적 import 경로를 넣은 후속 결과와 구분했다.
+  근거는 `D:\w06\control\s3-resume-regression1`과 `s3-resume-regression2`다.
+- 수정 후 새 clean source의 focused20부터 최종 gate를 다시 생성한다. 위 206bc0의 성공은
+  해당 소스의 기록으로만 보존한다. 현재 실행 정본은 `D:\w06\control\continuation.json`이다.
 
 ### 2026-10-30 D 재구성과 J-Link runtime 매핑 교정
 

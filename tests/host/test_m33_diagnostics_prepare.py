@@ -9,6 +9,7 @@ import io
 import json
 import os
 import struct
+import sys
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -16,6 +17,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools/bluetooth"))
 SPEC = importlib.util.spec_from_file_location("m33_diagnostics_prepare_tested", ROOT / "tools/bluetooth/m33_diagnostics.py")
 DIAG = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(DIAG)
@@ -794,10 +796,71 @@ class PreparationTests(unittest.TestCase):
         adapter = object.__new__(DIAG.PyocdPreparationBackend)
         adapter.target_type = SimpleNamespace(ResetType=SimpleNamespace(SYSRESETREQ="software-only"))
         target = SimpleNamespace(reset_and_halt=MagicMock(), resume=MagicMock(),
-                                 get_state=lambda: SimpleNamespace(name="HALTED"))
+                                 get_state=MagicMock(side_effect=[SimpleNamespace(name="HALTED"),
+                                                                 SimpleNamespace(name="RUNNING")]))
         adapter.start(SimpleNamespace(target=target))
         target.reset_and_halt.assert_called_once_with(reset_type="software-only")
         target.resume.assert_called_once()
+
+    def start_adapter(self, states):
+        """! @brief 실제 start의 상태 읽기·reset·resume 순서를 장치 없이 기록합니다. """
+        trace = []
+        observed = iter(states)
+        def state():
+            """! @brief 지정한 상태 또는 읽기 오류를 실제 대기 함수로 전달합니다. """
+            trace.append("state")
+            value = next(observed)
+            if isinstance(value, Exception):
+                raise value
+            return SimpleNamespace(name=value)
+        target = SimpleNamespace(
+            reset_and_halt=lambda **kwargs: trace.append(("reset", kwargs)),
+            resume=lambda: trace.append("resume"), get_state=state)
+        adapter = object.__new__(DIAG.PyocdPreparationBackend)
+        adapter.target_type = SimpleNamespace(ResetType=SimpleNamespace(SYSRESETREQ="software-only"))
+        return adapter, SimpleNamespace(target=target), trace
+
+    def test_start_verifies_running_or_sleeping_after_single_resume(self):
+        for active in ("RUNNING", "SLEEPING"):
+            with self.subTest(active=active):
+                adapter, session, trace = self.start_adapter(["HALTED", active])
+                adapter.start(session)
+                self.assertEqual(trace, [("reset", {"reset_type": "software-only"}),
+                                         "state", "resume", "state"])
+
+    def test_start_rejects_halt_timeout_without_another_reset_or_resume(self):
+        adapter, session, trace = self.start_adapter(["HALTED", "HALTED"])
+        with (patch.object(DIAG.time, "monotonic", side_effect=[0.0, 1.0]),
+              self.assertRaises(DIAG.IdleAuditFailure) as raised):
+            adapter.start(session)
+        self.assertEqual(raised.exception.evidence["kind"], "target_state_timeout")
+        self.assertEqual(trace, [("reset", {"reset_type": "software-only"}),
+                                 "state", "resume", "state"])
+
+    def test_start_rejects_reset_or_lockup_after_resume(self):
+        for invalid in ("RESET", "LOCKUP"):
+            with self.subTest(invalid=invalid):
+                adapter, session, trace = self.start_adapter(["HALTED", invalid])
+                with self.assertRaises(DIAG.IdleAuditFailure) as raised:
+                    adapter.start(session)
+                self.assertEqual(raised.exception.evidence["kind"], "target_state_invalid")
+                self.assertEqual(trace, [("reset", {"reset_type": "software-only"}),
+                                         "state", "resume", "state"])
+
+    def test_start_preserves_post_resume_state_read_failure(self):
+        failure = RuntimeError("state read failed")
+        adapter, session, trace = self.start_adapter(["HALTED", failure])
+        with self.assertRaises(RuntimeError) as raised:
+            adapter.start(session)
+        self.assertIs(raised.exception, failure)
+        self.assertEqual(trace, [("reset", {"reset_type": "software-only"}),
+                                 "state", "resume", "state"])
+
+    def test_start_failed_initial_halt_never_resumes(self):
+        adapter, session, trace = self.start_adapter(["RUNNING"])
+        with self.assertRaisesRegex(ValueError, "halt 실패"):
+            adapter.start(session)
+        self.assertEqual(trace, [("reset", {"reset_type": "software-only"}), "state"])
 
 
 if __name__ == "__main__":

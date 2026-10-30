@@ -134,8 +134,10 @@ class CsTransportTests(unittest.TestCase):
         start.assert_called_once_with(streams, 'old-uid')
         backend.assert_not_called()
 
-    def startup(self, *, close_failure=False, halted=True):
-        calls = []
+    def startup(self, *, close_failure=False, halted=True, post_state='RUNNING', calls=None):
+        """! @brief 실제 시작 경로의 resume 전후 상태와 세션 종료를 모의합니다. """
+        calls = [] if calls is None else calls
+        resumed = False
         registers = {0x5010A080: 2, 0x500D8290: 2}
         def read(address):
             calls.append(('read', address))
@@ -143,11 +145,24 @@ class CsTransportTests(unittest.TestCase):
         def write(address, value):
             calls.append(('write', address, value))
             registers[address] = value
+        def state():
+            """! @brief resume 후에만 후속 상태나 읽기 오류를 반환합니다. """
+            calls.append(('state',))
+            if resumed:
+                if isinstance(post_state, Exception):
+                    raise post_state
+                return SimpleNamespace(name=post_state)
+            return SimpleNamespace(name='HALTED' if halted else 'RUNNING')
+        def resume():
+            """! @brief 추가 reset 없이 실행 상태 전이를 기록합니다. """
+            nonlocal resumed
+            resumed = True
+            calls.append(('resume',))
         target = SimpleNamespace(
             reset_and_halt=lambda **kwargs: calls.append(('reset', kwargs)),
-            get_state=lambda: SimpleNamespace(name='HALTED' if halted else 'RUNNING'),
+            get_state=state,
             read32=read, write32=write, flush=lambda: calls.append(('flush',)),
-            resume=lambda: calls.append(('resume',)),
+            resume=resume,
         )
         @contextmanager
         def session(probe):
@@ -187,8 +202,50 @@ class CsTransportTests(unittest.TestCase):
             self.startup(close_failure=True)
 
     def test_failed_halt_prevents_drain_and_success(self):
+        calls = []
         with self.assertRaisesRegex(subject.CsAclRadioRiskFailure, 'did not halt'):
-            self.startup(halted=False)
+            self.startup(halted=False, calls=calls)
+        self.assertFalse(any(row[0] in ('resume', 'input', 'output') for row in calls))
+        self.assertEqual(calls[-1], ('close',))
+
+    def test_dk_confirms_running_or_sleeping_before_close(self):
+        for active in ('RUNNING', 'SLEEPING'):
+            with self.subTest(active=active):
+                _result, calls = self.startup(post_state=active)
+                self.assertEqual(calls[-3:], [('resume',), ('state',), ('close',)])
+                self.assertEqual(sum(row[0] == 'reset' for row in calls), 1)
+                self.assertEqual(calls.count(('resume',)), 1)
+
+    def test_dk_still_halted_times_out_closes_without_retry(self):
+        calls = []
+        with (patch.object(diagnostics.time, 'monotonic', side_effect=[0.0, 1.0]),
+              self.assertRaises(diagnostics.IdleAuditFailure) as raised):
+            self.startup(post_state='HALTED', calls=calls)
+        self.assertEqual(raised.exception.evidence['kind'], 'target_state_timeout')
+        self.assertEqual(calls[-3:], [('resume',), ('state',), ('close',)])
+        self.assertEqual(sum(row[0] == 'reset' for row in calls), 1)
+        self.assertEqual(calls.count(('resume',)), 1)
+
+    def test_dk_reset_or_lockup_after_resume_closes_and_rejects(self):
+        for invalid in ('RESET', 'LOCKUP'):
+            with self.subTest(invalid=invalid):
+                calls = []
+                with self.assertRaises(diagnostics.IdleAuditFailure) as raised:
+                    self.startup(post_state=invalid, calls=calls)
+                self.assertEqual(raised.exception.evidence['kind'], 'target_state_invalid')
+                self.assertEqual(calls[-3:], [('resume',), ('state',), ('close',)])
+                self.assertEqual(sum(row[0] == 'reset' for row in calls), 1)
+                self.assertEqual(calls.count(('resume',)), 1)
+
+    def test_dk_post_resume_read_error_propagates_after_close(self):
+        calls = []
+        failure = RuntimeError('state read failed')
+        with self.assertRaises(RuntimeError) as raised:
+            self.startup(post_state=failure, calls=calls)
+        self.assertIs(raised.exception, failure)
+        self.assertEqual(calls[-3:], [('resume',), ('state',), ('close',)])
+        self.assertEqual(sum(row[0] == 'reset' for row in calls), 1)
+        self.assertEqual(calls.count(('resume',)), 1)
 
     def test_start_receipt_rejects_wrong_reset_frequency_or_bias(self):
         original, _calls = self.startup()

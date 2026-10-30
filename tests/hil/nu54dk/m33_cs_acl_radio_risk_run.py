@@ -192,7 +192,7 @@ def require_role_ports(ports: dict[str, str], uid: str) -> None:
 
 
 def start_role(streams: dict[str, Any], uid: str) -> dict[str, Any]:
-    """! @brief DK에서만 고정 SWD와 software reset으로 기존 halt·drain·resume을 수행합니다. """
+    """! @brief DK의 halt·drain·resume 뒤 실행 상태를 확인하고 세션을 닫습니다. """
     transport = probe_transport()
     selected = transport.descriptor()
     if selected["kind"] == "cmsis-dap-v2":
@@ -201,6 +201,8 @@ def start_role(streams: dict[str, Any], uid: str) -> dict[str, Any]:
         raise CsAclRadioRiskFailure("two exact DK UART streams required")
     digest = hashlib.sha256(uid.encode("ascii")).hexdigest()
     backend, probe, private_output = _load_private_pyocd_backend(digest)
+    from m33_diagnostics import wait_for_target_state
+
     with private_output():
         with backend.session(probe) as session:
             target = session.target
@@ -216,6 +218,7 @@ def start_role(streams: dict[str, Any], uid: str) -> dict[str, Any]:
                 stream.reset_input_buffer()
                 stream.reset_output_buffer()
             target.resume()
+            wait_for_target_state(target, {"RUNNING", "SLEEPING"}, timeout=1.0)
     return {"method": "reset-halt-drain-resume", "cpuid": f"0x{cpuid:08x}",
             "frequency_hz": 500000, "target_uart_idle_bias": idle_bias,
             "auto_unlock": False, "mass_erase_requested": False,
