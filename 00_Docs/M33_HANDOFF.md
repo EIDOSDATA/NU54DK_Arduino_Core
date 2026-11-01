@@ -33,6 +33,10 @@ S7 `9e1a33ecfaa2096ada698a19fd8184610d11b2e5`의 새 image로 cache 대상 실�
 
 S7의 exact M12 CI run `41322027307`는 M32 soak 단위시험의 임시 경로 fixture에서 FAIL했다. manifest는 자식 경로를 정규화하지만 시험은 lexical 부모 경로를 전달하여 `relative_to()`가 실패했다. fixture의 `root = Path(temporary)` 한 줄에만 `resolve()`를 추가하고 원형 generator·판정·assertion은 유지한다. 원본 CI FAIL을 보존하며 수정 소스의 8시험·문서·계약과 exact CI 결과는 별도로 생성한다.
 
+S8 `5e920ec88a61ca64ab0c9eb19aa20d7fcd8ebc31`의 exact M12 CI run `41334717255`/attempt 1은 `test_reuse_route_symlink_cannot_escape_to_sdk`에서 FAIL했다. 시험 mock은 정규화 전 임시 경로와 비교하지만 제품은 재사용 root를 정규화하므로, 경로 별칭이 있으면 탈출 mock이 적용되지 않고 `source validation must not run` assertion에 도달한다. 동일 디렉터리를 가리키는 비정규 경로로 같은 실패를 재현했으며 시험의 기준 경로 한 줄만 `resolve()`로 정규화한다. SDK·source·toolchain 경계, symlink/junction 탈출 거부와 기존 assertion은 유지한다. 원본 CI FAIL과 재현 로그는 보존하고 수정 소스의 회귀·exact CI 결과를 별도로 생성한다.
+
+최신 사용자 결정에 따라 별도 선행 #29 focused20은 실행하지 않는다. 수정 소스의 exact CI → Host651 → 새 Actions 4개 shard·141개 산출물과 ecosystem2 → runtime9·stage150 → 공식 #1~#49 순차 matrix → 1800초 soak → 자원·지원·risk7·qualification3 → strict closure/export·문서·원형 validator → 마감 commit/push·해당 commit CI·최종 기록 순서로 진행한다. 공식 #29는 원형 standard20회 fresh/restored 총40구간과 native 검증을 그대로 수행하며 #30~#49도 포함한다. 과거 source의 PASS를 새 source 실적으로 승계하거나 실패 cycle에 이어 쓰지 않는다.
+
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 
 ### 2026-10-31 matrix 부팅 상태 확인 교정

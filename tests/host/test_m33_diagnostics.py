@@ -210,7 +210,7 @@ class DiagnosticsTests(unittest.TestCase):
     def test_reuse_route_symlink_cannot_escape_to_sdk(self):
         """! @brief route symlink/junction의 resolve 결과가 SDK이면 build 전에 거부합니다. """
         with tempfile.TemporaryDirectory(prefix="m33-diagnostics-link-") as temporary:
-            base = Path(temporary)
+            base = Path(temporary).resolve()
             sdk = base / "sdk"
             sdk.mkdir()
             toolchain = base / DIAG.LOCK["windows_toolchain"]["bundle_id"]
