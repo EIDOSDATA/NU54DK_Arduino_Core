@@ -242,7 +242,7 @@ class M32MeshDfuBuildTests(unittest.TestCase):
                 {"PYTHONHOME": "foreign", "PYTHONPATH": "foreign"},
             )
 
-        self.assertEqual(str(python.parent), environment["PYTHONHOME"])
+        self.assertEqual(str(python.parent.resolve()), environment["PYTHONHOME"])
         self.assertEqual("1", environment["PYTHONNOUSERSITE"])
         self.assertNotIn("foreign", environment["PYTHONPATH"])
 

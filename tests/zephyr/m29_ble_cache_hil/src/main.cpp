@@ -1224,7 +1224,8 @@ void loop()
         startScan();
     }
     driveSecurity();
-    if (central_stage == CentralStage::finishing && !BLEClient.busy(connection_handle))
+    if (!protocol_finished && central_stage == CentralStage::finishing &&
+        !BLEClient.busy(connection_handle))
     {
         printCentralResult();
     }

@@ -23,6 +23,10 @@ UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 �
 
 같은 로컬 검사에서 M9 합성 configure/cache fixture가 실제 설치 경계 검사를 호출하는 의존성 누락도 확인했다. 세 fixture 시험의 SDK patch 의존성만 격리하고 가짜 SDK drive를 임시 경로와 다르게 선택한다. 실제 타 설치 Core 거부 경로는 변경하지 않으며 별도 음성시험으로 patch 접근 전 거부를 확인한다. 기존 cache·복구·실패 판정 assertion은 유지한다.
 
+중간 소스 `becd1a2b9dd6a889ec7943704279004e40710f38`의 M12 CI run `41319721949`는 M32 Mesh DFU 단위시험의 Windows 경로 표기 비교에서 FAIL했다. 실제 함수는 `RUNNER~1`을 정규 경로로 해석하지만 시험 기대값은 짧은 표기를 유지했다. 기대 경로에만 `resolve()`를 적용하여 exact 일치 검사를 유지하며, interpreter·환경 격리의 제품 코드와 보안 조건은 변경하지 않는다. 원본 CI FAIL과 로컬 전체 Host 결과는 해당 소스의 기록으로 보존하고 수정본의 결과와 구분한다.
+
+2026-11-02 추가 검토에서 cache HIL central의 종료 후 반복 출력 경로를 확인했다. `loop()`의 finishing 조건은 `protocol_finished`를 확인하지 않았고, `printCentralResult()`는 완료 표시만 설정하여 다음 loop에서도 RESULT/END와 resume key 삭제를 반복할 수 있었다. 해당 조건에 완료 상태 검사를 추가한다. 기존 cache 수집기는 첫 END에서 반환하므로 보존된 cache 로그의 결과 한 쌍만으로 그 이후 출력이 없었다고 판정하지 않는다. 이 소스 결함은 다음 CoC에 섞인 cache 출력 꼬리와 관련된 원인 후보이며, 당시 USB/driver 버퍼 경로와 과거 a557 HCI62의 근본원인을 확정한 것은 아니다. 실제 함수 기반 회귀와 새 image의 cache→CoC 실기 결과를 별도로 확인한다.
+
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 
 ### 2026-10-31 matrix 부팅 상태 확인 교정
