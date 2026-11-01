@@ -37,6 +37,8 @@ S8 `5e920ec88a61ca64ab0c9eb19aa20d7fcd8ebc31`의 exact M12 CI run `41334717255`/
 
 S9 `bf18039b9c33c33f93a868f8342c5fbac025d532`의 exact M12 CI run `41336500619`/attempt 1에서는 위 symlink 탈출 시험이 통과했고, 뒤의 `test_immediate_and_asynchronous_security_errors`가 `CXX` 환경 변수 누락으로 FAIL했다. 로컬에서도 `CXX`만 제거하여 같은 assertion을 재현했다. workflow가 이미 사용하는 `g++`의 실제 실행 파일 경로를 Host 실행 단계의 `CXX`에 명시한다. 컴파일러 탐색 실패는 즉시 거부하고 기존 보안 시험·assertion·컴파일 및 실행 결과 검사는 유지한다. 원본 CI FAIL은 별도로 보존하며 새 소스의 결과를 다시 생성한다.
 
+S10 `3b7c389ab2339b7f22d7e10cf721c8571b6083e5`의 로컬 원형 M12 Host는 264 suite·2369시험·기존 선택 skip 3개로 PASS했으나 exact CI run `41337988496`/attempt 1은 FAIL했다. CI의 두 `g++` 경로를 `Get-Command -CommandType Application`이 모두 반환하여 `CXX`에 공백으로 연결한 것이 원인이다. 두 실행 파일 검색 경로를 둔 로컬 조건에서 같은 거부를 재현했으며 첫 번째 실제 application 하나만 선택하도록 정정한다. 잘못된 명시 경로의 거부와 모든 기존 assertion을 유지하고 원본 FAIL을 보존한다. 이 로컬 M12 결과는 공식 Host651 또는 새 소스의 실적으로 승계하지 않는다.
+
 최신 사용자 결정에 따라 별도 선행 #29 focused20은 실행하지 않는다. 수정 소스의 exact CI → Host651 → 새 Actions 4개 shard·141개 산출물과 ecosystem2 → runtime9·stage150 → 공식 #1~#49 순차 matrix → 1800초 soak → 자원·지원·risk7·qualification3 → strict closure/export·문서·원형 validator → 마감 commit/push·해당 commit CI·최종 기록 순서로 진행한다. 공식 #29는 원형 standard20회 fresh/restored 총40구간과 native 검증을 그대로 수행하며 #30~#49도 포함한다. 과거 source의 PASS를 새 source 실적으로 승계하거나 실패 cycle에 이어 쓰지 않는다.
 
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
