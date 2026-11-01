@@ -2482,6 +2482,8 @@ def test_example_discovery(cli: Path, config: Path, root: Path, repository: Path
         "SPI": {"SPITransaction"},
         "Wire": {"WirePmicId"},
         "NUCODE BLE": {
+            "BeaconAdvertiser",
+            "BeaconObserver",
             "CustomGattCentral",
             "CustomGattPeripheral",
             "ExtendedAdvertising",

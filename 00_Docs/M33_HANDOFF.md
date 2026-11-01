@@ -15,6 +15,8 @@ S3 `4bfcc56c536b842b094526901d93853fb72cbf35`에서 focused 20회/40구간, Host
 
 UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 통과했다. 새 소스의 대상 재시험과 전체 최종 검증은 미완료이며 S3의 PASS를 새 소스 실적으로 승계하지 않는다. 새 exact source에서 필요한 focused 검증, Host 651 → Actions 141·ecosystem 2 → runtime 9·stage 150 → 전체 #1~#49 matrix → 1800초 soak → 자원·지원·risk 7·qualification 3 → strict closure·export → 문서·원형 validator → 승인된 Dev-0.6.0-M33 commit/push와 해당 commit의 CI → 최종 기록까지 수행해야 한다.
 
+중간 교정 소스 `dd5aef3f2e280585e6f565fc33206a8ff5fc8460`의 exact M12 CI run `41313878419`는 예제 기대 목록 두 곳의 불일치로 FAIL했다. READY 교정과 무관하게 기존 목록에서 빠져 있던 Beacon 2개와 Companion 2개·Peripheral Fabric 6개를 실제 제공 예제 및 sidecar 부재와 대조하여 명시적으로 추가한다. exact 집합 일치와 sidecar 금지 검사는 유지하며, 최초 CI FAIL을 보존한다. 후속 소스의 실제 CI와 HIL 검증은 별도 생성한다.
+
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 
 ### 2026-10-31 matrix 부팅 상태 확인 교정

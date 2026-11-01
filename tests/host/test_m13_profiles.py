@@ -178,6 +178,14 @@ class M13ProfileContractTests(unittest.TestCase):
                 "SecureMouse",
                 "SecureDfuPeripheral",
                 "FabricCapabilities",
+                "AdcContinuousDma",
+                "PwmSequencePlayback",
+                "SpiAsyncLoopback",
+                "ResourceConflictDemo",
+                "UarteAsyncEcho",
+                "TwisTargetDoubleBuffer",
+                "AppleNotificationClient",
+                "AppleMediaClient",
             },
         )
         for sketch in examples:
