@@ -1,6 +1,6 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-11-01**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+최종 갱신: **2026-11-02**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
 사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
@@ -26,6 +26,12 @@ UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 �
 중간 소스 `becd1a2b9dd6a889ec7943704279004e40710f38`의 M12 CI run `41319721949`는 M32 Mesh DFU 단위시험의 Windows 경로 표기 비교에서 FAIL했다. 실제 함수는 `RUNNER~1`을 정규 경로로 해석하지만 시험 기대값은 짧은 표기를 유지했다. 기대 경로에만 `resolve()`를 적용하여 exact 일치 검사를 유지하며, interpreter·환경 격리의 제품 코드와 보안 조건은 변경하지 않는다. 원본 CI FAIL과 로컬 전체 Host 결과는 해당 소스의 기록으로 보존하고 수정본의 결과와 구분한다.
 
 2026-11-02 추가 검토에서 cache HIL central의 종료 후 반복 출력 경로를 확인했다. `loop()`의 finishing 조건은 `protocol_finished`를 확인하지 않았고, `printCentralResult()`는 완료 표시만 설정하여 다음 loop에서도 RESULT/END와 resume key 삭제를 반복할 수 있었다. 해당 조건에 완료 상태 검사를 추가한다. 기존 cache 수집기는 첫 END에서 반환하므로 보존된 cache 로그의 결과 한 쌍만으로 그 이후 출력이 없었다고 판정하지 않는다. 이 소스 결함은 다음 CoC에 섞인 cache 출력 꼬리와 관련된 원인 후보이며, 당시 USB/driver 버퍼 경로와 과거 a557 HCI62의 근본원인을 확정한 것은 아니다. 실제 함수 기반 회귀와 새 image의 cache→CoC 실기 결과를 별도로 확인한다.
+
+S7 `9e1a33ecfaa2096ada698a19fd8184610d11b2e5`의 새 image로 cache 대상 실기를 통과했고 원형 RESULT/END, UART 수집, debug 및 OS 종료를 확인했다. 이어 cache 두 보드와 세 번째 보드의 현재 image·UID 및 각 262144바이트 RAM을 보존했다. cache 두 역할의 started/finished=1, resume_pending=0과 실제 결과 nonce 일치를 확인했다. 이는 해당 시점의 비원자적 상태 관측이며 NVS 정리 성공이나 과거 UART 복구를 뜻하지 않는다.
+
+같은 S7의 cache→CoC 대상 실기는 native `87307`, exit 0으로 통과했다. 두 역할의 program은 각각 첫 시도에 성공했고, 두 채널에서 채널별·방향별 512바이트 SDU 1000개, negative 5종 각 20회와 자원 복구를 원형 parser로 확인했다. payload 오류·unexpected accept·recovery failure는 모두 0이며 양쪽 END가 PASS다. 출력 완전 수집, debug 7세션 종료와 새 OS·6 COM·공통 3lock 확인도 통과했다. 근거는 `D:/w06/control/s7-transition1-coc-acceptance.json`(SHA-256 `44202c758b7887fa9dc5d14a26211714f1a8c45511395dbbd8e400100cfceb11`)이다. 원래 S3 matrix FAIL은 보존하며 이 대상 진단을 후속 소스의 focused20 또는 공식 matrix 실적으로 승계하지 않는다.
+
+S7의 exact M12 CI run `41322027307`는 M32 soak 단위시험의 임시 경로 fixture에서 FAIL했다. manifest는 자식 경로를 정규화하지만 시험은 lexical 부모 경로를 전달하여 `relative_to()`가 실패했다. fixture의 `root = Path(temporary)` 한 줄에만 `resolve()`를 추가하고 원형 generator·판정·assertion은 유지한다. 원본 CI FAIL을 보존하며 수정 소스의 8시험·문서·계약과 exact CI 결과는 별도로 생성한다.
 
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 

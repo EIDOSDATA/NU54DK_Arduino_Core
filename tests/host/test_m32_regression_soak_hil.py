@@ -173,7 +173,7 @@ class M32RegressionSoakHilTests(unittest.TestCase):
     def test_single_manifest_generator_includes_overlay_and_matches_outputs(self) -> None:
         """! @brief CMake/runner가 공유하는 generator가 overlay byte를 record에 반영합니다. """
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             core, board, application = root / "core", root / "board", root / "app"
             firmware = root / "firmware.cpp"
             for path in (core / "cores/arduino", board / "boards/nucode/nu54dk",
