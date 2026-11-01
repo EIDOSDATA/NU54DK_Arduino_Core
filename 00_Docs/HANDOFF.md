@@ -50,6 +50,8 @@
 | 필요한 근거 | 문서 |
 | --- | --- |
 | v0.5.0 공개·지원 경계 | [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) · [v0.5.0 Testing](<05_릴리스/v0.5.0/TESTING.md>) |
+| M29-W01~W08 8/8 완료와 M30 인계 | [ATT/GATT·L2CAP 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) · [고정 readiness 원장](../variants/nu54dk/m29-ble-readiness.json) |
+| M30-W01~W08 완료와 M30-POWER-01 원본 근거 | [Security·Profile·DFU 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) · [고정 readiness 원장](../variants/nu54dk/m30-ble-readiness.json) |
 | M32 완료 | [M32 완료 TODO](TODO_M32.md) · [287번](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
 | M33 W01~W05 완료 | [M33 TODO](TODO_M33.md)와 연결된 296·298~301번 기록 |
 | M32 통합·이력 보관 | [295번](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>) · [이력 보관](M33_HANDOFF.md#m32-원본-이력-보관) |

@@ -7,6 +7,9 @@ from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
+TOOLS = ROOT / "tools/bluetooth"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
 HIL = ROOT / "tests/hil/nu54dk"
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))

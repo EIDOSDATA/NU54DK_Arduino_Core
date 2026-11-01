@@ -17,6 +17,12 @@ UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 �
 
 중간 교정 소스 `dd5aef3f2e280585e6f565fc33206a8ff5fc8460`의 exact M12 CI run `41313878419`는 예제 기대 목록 두 곳의 불일치로 FAIL했다. READY 교정과 무관하게 기존 목록에서 빠져 있던 Beacon 2개와 Companion 2개·Peripheral Fabric 6개를 실제 제공 예제 및 sidecar 부재와 대조하여 명시적으로 추가한다. exact 집합 일치와 sidecar 금지 검사는 유지하며, 최초 CI FAIL을 보존한다. 후속 소스의 실제 CI와 HIL 검증은 별도 생성한다.
 
+중간 소스 `52c3de7e1d369eba5ceddb2cdf0c6b785b87ebbe`의 M12 CI run `41315067344`에서는 예제 발견 검사가 통과했으나 Host 단위시험의 `m33_probe_transport` import가 실패했다. 해당 시험이 실제 reset을 mock하면서 원래 경로 초기화도 건너뛴 것이 원인이다. 격리 시험에 `tools/bluetooth` 검색 경로를 명시하며 reset mode 검증과 기존 assertion은 유지한다. 앞선 private 회귀는 이 경로를 주입했으므로 CI의 격리 실행 조건까지 검증한 것으로 확대하지 않는다. 원본 CI FAIL을 보존하고 수정한 소스에서 격리 시험과 원형 Host gate를 다시 실행한다.
+
+후속 로컬 원형 Host 검사에서는 축약된 공통 인계의 M29·M30 과거 계약/readiness 링크 누락도 확인했다. `HANDOFF.md`의 과거 결과 표에 두 근거를 복원하며 완료 TODO·원장·기존 검사는 변경하지 않는다. 각 최초 FAIL과 이후 수정본의 검사 결과를 별도로 보존한다.
+
+같은 로컬 검사에서 M9 합성 configure/cache fixture가 실제 설치 경계 검사를 호출하는 의존성 누락도 확인했다. 세 fixture 시험의 SDK patch 의존성만 격리하고 가짜 SDK drive를 임시 경로와 다르게 선택한다. 실제 타 설치 Core 거부 경로는 변경하지 않으며 별도 음성시험으로 patch 접근 전 거부를 확인한다. 기존 cache·복구·실패 판정 assertion은 유지한다.
+
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 
 ### 2026-10-31 matrix 부팅 상태 확인 교정
