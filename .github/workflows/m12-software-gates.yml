@@ -105,6 +105,10 @@ jobs:
           -r tools/ci/requirements-host.txt
       - name: Run host unit tests
         run: |
+          New-Item -ItemType Directory -Path 'D:\w06\tmp' -Force | Out-Null
+          $env:TMP = 'D:\w06\tmp'
+          $env:TEMP = $env:TMP
+          $env:TMPDIR = $env:TMP
           $env:CXX = (Get-Command g++ -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
           gcc --version
           g++ --version
