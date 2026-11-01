@@ -229,6 +229,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
     if peripheral_sha256 == central_sha256:
         raise BlePairHilFailure("W04 role HEX가 동일하여 오배치를 거부했습니다.")
     nonce = build_nonce()
+    prequery_evidence = {}
     try:
         execution = execute_long_pair(
             serial_module=serial_module,
@@ -245,6 +246,8 @@ def main(arguments: Sequence[str] | None = None) -> int:
             protocol=PROTOCOL,
             flash_label="M29W04",
             ready_query=f"{PROTOCOL}|READY?\r\n".encode("ascii"),
+            prequery_evidence_path=evidence_path,
+            prequery_evidence_reference=prequery_evidence,
         )
         validate_image_unchanged(peripheral_image, peripheral_size, peripheral_sha256)
         validate_image_unchanged(central_image, central_size, central_sha256)
@@ -265,6 +268,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             "board_revision": board_revision,
             "board_target": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
             "nonce": nonce,
+            "prequery_observation": prequery_evidence,
             "boards": {
                 "peripheral": _board(peripheral_endpoint),
                 "central": _board(central_endpoint),

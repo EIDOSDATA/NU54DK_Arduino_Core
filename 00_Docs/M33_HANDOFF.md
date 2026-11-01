@@ -1,9 +1,21 @@
 # M33 개발 인계 — W06 재설계 구현
 
-최종 갱신: **2026-10-31**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
+최종 갱신: **2026-11-01**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
 사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+### 2026-11-01 UART 수신 경계 교정
+
+S3 `4bfcc56c536b842b094526901d93853fb72cbf35`에서 focused 20회/40구간, Host 651, Actions 산출물 141개, ecosystem 2개, runtime 9개, stage 150개 검증 실적을 확보했다. 이 기록은 해당 S3의 실적으로 보존한다.
+
+최종 matrix4는 #1~#10을 완료한 뒤 #11 CoC의 START 전 READY 확인에서 실패했다. central 수신 기록에 앞선 cache 출력 꼬리와 새 READY 일부가 섞였다. 원본 `D:/w06/final4bfc2`와 native 94895/exit 1의 FAIL을 보존하며 실패 cycle에 이어 쓰지 않는다. 과거 HCI62의 근본원인과 이번 바이트 혼합이 발생한 구체적인 버퍼 계층은 여전히 UNKNOWN이다.
+
+실패 후 세 보드의 현재 image·UID를 확인하고 RAM을 각각 262144바이트 보존했다. 두 CoC 보드의 ELF 심볼은 읽기 전·RAM·읽기 후 모두 started/finished/command_length=0이었고, central의 phase/connected_channels도 0이었다. 별도 READY 전용 진단에서는 두 포트의 질의 전 반환 바이트가 각각 0이었고, READY?를 각 1회 전송하여 정확한 READY 78/75바이트와 정상 close를 확인했다. 이 관측은 비원자적 현재 상태 및 해당 open 이후 수신 범위에 한정된다. 원래 실패의 완전 UART capture를 복구했거나 과거 원인을 확정한 것으로 판정하지 않는다.
+
+UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 통과했다. 새 소스의 대상 재시험과 전체 최종 검증은 미완료이며 S3의 PASS를 새 소스 실적으로 승계하지 않는다. 새 exact source에서 필요한 focused 검증, Host 651 → Actions 141·ecosystem 2 → runtime 9·stage 150 → 전체 #1~#49 matrix → 1800초 soak → 자원·지원·risk 7·qualification 3 → strict closure·export → 문서·원형 validator → 승인된 Dev-0.6.0-M33 commit/push와 해당 commit의 CI → 최종 기록까지 수행해야 한다.
+
+최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
 
 ### 2026-10-31 matrix 부팅 상태 확인 교정
 

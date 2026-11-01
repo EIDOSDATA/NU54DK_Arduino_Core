@@ -2891,6 +2891,28 @@ def _validate_legacy_native_raw(native: dict, native_path: Path,
             "legacy native identity mismatch")
     module_name, test_id, parser_kind = parser_plan[campaign_id]
     module = __import__(module_name, fromlist=["parse_role_transcript"])
+    if campaign_id in {"m29_reliable_write", "m29_descriptor", "m29_coc"}:
+        from m29_ble_long import validate_prequery_observation
+
+        observation_path = _adjacent_native_file(
+            native.get("prequery_observation"), native_path.parent, "prequery observation"
+        )
+        observation = read_json(observation_path)
+        require(isinstance(observation.get("raw"), dict)
+                and set(observation["raw"]) == {"peripheral", "central"},
+                "prequery role evidence mismatch")
+        prequery_raw = {}
+        for role, row in observation["raw"].items():
+            require(isinstance(row, dict) and set(row) == {"path", "sha256", "returned_bytes"},
+                    "prequery raw reference mismatch")
+            raw_path = _adjacent_native_file(
+                {"path": row["path"], "sha256": row["sha256"]},
+                native_path.parent, f"{role} prequery raw",
+            )
+            prequery_raw[role] = _read_regular_bytes(raw_path, f"{role} prequery raw")
+        validate_prequery_observation(
+            observation, prequery_raw, module.PROTOCOL, native.get("nonce"), revision
+        )
     if campaign_id in HASH_ONLY_LEGACY_CAMPAIGNS:
         identity_boards = native.get("boards", {})
         probe_hashes = {

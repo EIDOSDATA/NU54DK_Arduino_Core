@@ -8,6 +8,7 @@ from contextlib import ExitStack
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 import json
+import math
 from pathlib import Path
 import sys
 import threading
@@ -261,6 +262,287 @@ def _collect_end(
         raise
 
 
+PREQUERY_QUIET_SECONDS = 1.0
+PREQUERY_MAX_SECONDS = 8.0
+PREQUERY_MAX_BYTES = 65536
+PREQUERY_ROLES = ("peripheral", "central")
+
+
+def _prequery_paths(evidence_path: Path) -> tuple[Path, dict[str, Path]]:
+    """! @brief 질의 전 관측 증거를 기존 native 파일 옆에 별도로 배치합니다. """
+
+    return (
+        evidence_path.with_name(evidence_path.stem + ".prequery.json"),
+        {
+            role: evidence_path.with_name(
+                evidence_path.stem + f".{role}.prequery.transcript.log"
+            )
+            for role in PREQUERY_ROLES
+        },
+    )
+
+
+def _prequery_failure_marker(raw: bytes) -> bool:
+    """! @brief 관측된 명시적 실패 표식을 새 질의로 숨기지 않습니다. """
+
+    upper = raw.upper()
+    return any(token in upper for token in (
+        b"|FAIL|", b"HARD FAULT", b"MPU FAULT", b"BUS FAULT",
+        b"USAGE FAULT", b"ASSERTION FAIL", b"ZEPHYR FATAL ERROR",
+    ))
+
+
+def _query_ready_after_quiet(
+    ports: dict[str, Any], query: bytes, evidence_path: Path,
+    evidence_reference: dict[str, str], deadline: float,
+    protocol: str, nonce: str, core_revision: str,
+) -> None:
+    """! @brief 제한된 RX 관측을 보존한 뒤 각 보드에 READY?를 한 번만 보냅니다.
+    @details quiet는 관측 구간의 무수신이며 USB 전체 비움이나 응답 인과 증명이 아닙니다.
+    """
+
+    metadata_path, raw_paths = _prequery_paths(evidence_path)
+    started = time.monotonic()
+    boundary_deadline = min(deadline, started + PREQUERY_MAX_SECONDS)
+    last_data = started
+    captures = {role: bytearray() for role in PREQUERY_ROLES}
+    record = {
+        "schema": "nucode-m29-prequery-observation-v1",
+        "status": "OBSERVATION_INCOMPLETE",
+        "protocol": protocol,
+        "nonce": nonce,
+        "core_revision": core_revision,
+        "quiet_seconds": PREQUERY_QUIET_SECONDS,
+        "max_seconds": PREQUERY_MAX_SECONDS,
+        "max_bytes_per_role": PREQUERY_MAX_BYTES,
+        "started_monotonic": started,
+        "result_deadline_monotonic": deadline,
+        "boundary_deadline_monotonic": boundary_deadline,
+        "quiet_started_monotonic": None,
+        "quiet_observed_monotonic": None,
+        "finished_monotonic": None,
+        "returned_byte_capture_complete": False,
+        "capture_error": None,
+        "raw_close_error": None,
+        "query_error": None,
+        "preservation_errors": [],
+        "query_attempts": {role: 0 for role in PREQUERY_ROLES},
+        "query_written_bytes": {role: None for role in PREQUERY_ROLES},
+        "query_started_monotonic": {role: None for role in PREQUERY_ROLES},
+        "read_events": [],
+        "raw": {},
+        "interpretation": "observed_quiet_only_no_usb_flush_or_response_causality_claim",
+    }
+    handles = {}
+    failure = None
+    phase = "capture"
+
+    def preservation_error(operation: str, error: Exception) -> None:
+        """! @brief 후속 저장 오류를 추가하되 최초 실패 객체와 원인을 유지합니다. """
+
+        nonlocal failure
+        record["preservation_errors"].append({
+            "operation": operation, "type": type(error).__name__, "message": str(error),
+        })
+        if failure is None:
+            failure = error
+
+    try:
+        for role in PREQUERY_ROLES:
+            handles[role] = raw_paths[role].open("xb")
+        while True:
+            empty_round = True
+            for role in PREQUERY_ROLES:
+                if time.monotonic() >= boundary_deadline:
+                    raise TimeoutError("READY 질의 전 RX 관측 시간 제한을 넘었습니다.")
+                waiting = ports[role].in_waiting
+                remaining = PREQUERY_MAX_BYTES - len(captures[role])
+                chunk = ports[role].read(min(max(waiting, 1), remaining + 1))
+                observed = time.monotonic()
+                record["read_events"].append({
+                    "role": role, "observed_monotonic": observed,
+                    "offset": len(captures[role]), "bytes": len(chunk),
+                })
+                if chunk:
+                    captures[role].extend(chunk)
+                    written = handles[role].write(chunk)
+                    handles[role].flush()
+                    if written != len(chunk):
+                        raise OSError("READY 질의 전 raw capture가 일부만 저장됐습니다.")
+                    last_data = observed
+                    empty_round = False
+                    if len(captures[role]) > PREQUERY_MAX_BYTES:
+                        raise BlePairHilFailure("READY 질의 전 RX 크기 제한을 넘었습니다.")
+                    if _prequery_failure_marker(bytes(captures[role])):
+                        raise BlePairHilFailure("READY 질의 전 명시적 FAIL/fault가 관측됐습니다.")
+                if observed >= boundary_deadline:
+                    raise TimeoutError("READY 질의 전 RX 관측 시간 제한을 넘었습니다.")
+            observed = time.monotonic()
+            if observed >= boundary_deadline:
+                raise TimeoutError("READY 질의 전 quiet 판정 시간 제한을 넘었습니다.")
+            if empty_round and observed - last_data >= PREQUERY_QUIET_SECONDS:
+                record["quiet_started_monotonic"] = last_data
+                record["quiet_observed_monotonic"] = observed
+                break
+        phase = "query"
+        for role in PREQUERY_ROLES:
+            query_started = time.monotonic()
+            if query_started >= boundary_deadline:
+                raise TimeoutError("READY 질의 직전 boundary 시간 제한이 만료됐습니다.")
+            record["query_attempts"][role] = 1
+            record["query_started_monotonic"][role] = query_started
+            written = ports[role].write(query)
+            record["query_written_bytes"][role] = written
+            ports[role].flush()
+            if written != len(query):
+                raise BlePairHilFailure(f"{role} READY query가 일부만 기록됐습니다.")
+            if time.monotonic() >= boundary_deadline:
+                raise TimeoutError("READY 질의 중 boundary 시간 제한이 만료됐습니다.")
+    except Exception as error:
+        record["query_error" if phase == "query" else "capture_error"] = (
+            f"{type(error).__name__}: {error}"
+        )
+        failure = error
+    finally:
+        for role, handle in handles.items():
+            try:
+                handle.close()
+            except Exception as error:
+                record["raw_close_error"] = f"{role}: {type(error).__name__}: {error}"
+                preservation_error(f"{role}_raw_close", error)
+        record["finished_monotonic"] = time.monotonic()
+        for role in handles:
+            try:
+                record["raw"][role] = {
+                    "path": raw_paths[role].name,
+                    "sha256": file_sha256(raw_paths[role]),
+                    "returned_bytes": len(captures[role]),
+                }
+            except Exception as error:
+                preservation_error(f"{role}_raw_hash", error)
+        if failure is None:
+            record["returned_byte_capture_complete"] = True
+            record["status"] = "OBSERVED_QUIET_QUERY_WRITTEN"
+        try:
+            payload = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
+            with metadata_path.open("x", encoding="utf-8", newline="\n") as output:
+                if output.write(payload) != len(payload):
+                    raise OSError("READY 질의 전 metadata가 일부만 저장됐습니다.")
+            evidence_reference.update({
+                "path": metadata_path.name, "sha256": file_sha256(metadata_path),
+            })
+        except Exception as error:
+            preservation_error("metadata_write_close_or_hash", error)
+    if failure is not None:
+        if record["preservation_errors"]:
+            summary = json.dumps(record["preservation_errors"], ensure_ascii=False)
+            raise BlePairHilFailure(
+                f"최초 오류 {type(failure).__name__}: {failure}; 증거 보존 오류: {summary}"
+            ) from failure
+        raise failure
+
+
+def validate_prequery_observation(
+    record: dict, raw: dict[str, bytes], protocol: str,
+    nonce: str, core_revision: str,
+) -> None:
+    """! @brief 보존된 질의 전 관측을 strict protocol 실적과 분리해 재검증합니다. """
+
+    def require_boundary(value: bool) -> None:
+        """! @brief 누락되거나 변조된 관측을 성공 증거로 허용하지 않습니다. """
+
+        if not value:
+            raise BlePairHilFailure("READY prequery observation 불일치")
+
+    require_boundary(
+        isinstance(record, dict)
+        and record.get("schema") == "nucode-m29-prequery-observation-v1"
+        and record.get("status") == "OBSERVED_QUIET_QUERY_WRITTEN"
+        and record.get("protocol") == protocol
+        and record.get("nonce") == nonce
+        and record.get("core_revision") == core_revision
+        and record.get("quiet_seconds") == PREQUERY_QUIET_SECONDS
+        and record.get("max_seconds") == PREQUERY_MAX_SECONDS
+        and record.get("max_bytes_per_role") == PREQUERY_MAX_BYTES
+        and record.get("returned_byte_capture_complete") is True
+        and all(key in record and record[key] is None for key in (
+            "capture_error", "raw_close_error", "query_error"
+        ))
+        and type(record.get("preservation_errors")) is list
+        and not record["preservation_errors"]
+        and record.get("interpretation") ==
+            "observed_quiet_only_no_usb_flush_or_response_causality_claim"
+        and set(raw) == set(PREQUERY_ROLES)
+        and set(record.get("raw", {})) == set(PREQUERY_ROLES)
+    )
+    time_keys = (
+        "started_monotonic", "result_deadline_monotonic", "boundary_deadline_monotonic",
+        "quiet_started_monotonic", "quiet_observed_monotonic", "finished_monotonic",
+    )
+    require_boundary(all(
+        type(record.get(key)) in (int, float) and math.isfinite(record[key])
+        for key in time_keys
+    ))
+    started = record["started_monotonic"]
+    quiet_start = record["quiet_started_monotonic"]
+    quiet_end = record["quiet_observed_monotonic"]
+    require_boundary(
+        started <= quiet_start <= quiet_end <= record["finished_monotonic"]
+        < record["result_deadline_monotonic"]
+        and quiet_end < record["boundary_deadline_monotonic"]
+        and record["boundary_deadline_monotonic"] == min(
+            record["result_deadline_monotonic"], started + PREQUERY_MAX_SECONDS
+        )
+        and quiet_end - quiet_start >= PREQUERY_QUIET_SECONDS
+    )
+    events = record.get("read_events")
+    require_boundary(isinstance(events, list) and len(events) >= 2)
+    offsets = {role: 0 for role in PREQUERY_ROLES}
+    last_data = started
+    previous_time = started
+    for index, event in enumerate(events):
+        require_boundary(isinstance(event, dict) and set(event) == {
+            "role", "observed_monotonic", "offset", "bytes"
+        })
+        role = PREQUERY_ROLES[index % 2]
+        observed = event["observed_monotonic"]
+        require_boundary(
+            event["role"] == role
+            and type(event["offset"]) is int and event["offset"] == offsets[role]
+            and type(event["bytes"]) is int and event["bytes"] >= 0
+            and type(observed) in (int, float) and math.isfinite(observed)
+            and previous_time <= observed <= quiet_end
+        )
+        previous_time = observed
+        offsets[role] += event["bytes"]
+        if event["bytes"]:
+            last_data = observed
+    require_boundary(
+        len(events) % 2 == 0 and all(row["bytes"] == 0 for row in events[-2:])
+        and last_data == quiet_start
+    )
+    for key in ("query_attempts", "query_written_bytes", "query_started_monotonic"):
+        require_boundary(isinstance(record.get(key), dict)
+                         and set(record[key]) == set(PREQUERY_ROLES))
+    for role in PREQUERY_ROLES:
+        row = record["raw"][role]
+        when = record["query_started_monotonic"][role]
+        require_boundary(
+            isinstance(row, dict) and set(row) == {"path", "sha256", "returned_bytes"}
+            and type(row["returned_bytes"]) is int
+            and row["returned_bytes"] == len(raw[role]) == offsets[role]
+            and len(raw[role]) <= PREQUERY_MAX_BYTES
+            and not _prequery_failure_marker(raw[role])
+            and type(record["query_attempts"][role]) is int
+            and record["query_attempts"][role] == 1
+            and type(record["query_written_bytes"][role]) is int
+            and record["query_written_bytes"][role] == len(f"{protocol}|READY?\r\n".encode("ascii"))
+            and type(when) in (int, float) and math.isfinite(when)
+            and quiet_end <= when <= record["finished_monotonic"]
+            and when < record["boundary_deadline_monotonic"]
+        )
+
+
 def execute_long_pair(
     *,
     serial_module: Any,
@@ -277,6 +559,8 @@ def execute_long_pair(
     protocol: str = PROTOCOL,
     flash_label: str = "M29W02",
     ready_query: bytes | None = None,
+    prequery_evidence_path: Path | None = None,
+    prequery_evidence_reference: dict[str, str] | None = None,
     peripheral_advertise_fields: str = "status=pass",
 ) -> PairExecution:
     """! @brief 두 image를 flash하고 peripheral 광고 뒤 central을 시작합니다. """
@@ -285,6 +569,15 @@ def execute_long_pair(
         raise BlePairHilFailure(f"기준선은 {DEFAULT_BAUD_RATE} baud만 허용합니다.")
     if not 30.0 <= result_timeout <= 600.0:
         raise BlePairHilFailure("--result-timeout은 30..600초여야 합니다.")
+    if ready_query is not None:
+        if (not isinstance(prequery_evidence_path, Path)
+                or not isinstance(prequery_evidence_reference, dict)
+                or prequery_evidence_reference
+                or ready_query != f"{protocol}|READY?\r\n".encode("ascii")):
+            raise BlePairHilFailure("READY 질의에는 새 prequery evidence가 필요합니다.")
+        metadata_path, raw_paths = _prequery_paths(prequery_evidence_path)
+        if any(path.exists() for path in (metadata_path, *raw_paths.values())):
+            raise BlePairHilFailure("기존 prequery evidence 덮어쓰기를 거부했습니다.")
     endpoints = (peripheral_endpoint, central_endpoint)
     if any(getattr(endpoint, "transport", None) is not None for endpoint in endpoints):
         kind = validate_endpoint_transports(endpoints)
@@ -350,16 +643,12 @@ def execute_long_pair(
                             f"{role} software reset mode가 다릅니다: {reset_mode}"
                         )
                     flashes[role] = ("pyocd-sector-sw-reset", flashes[role][1])
-            if ready_query is not None:
-                for role in ("peripheral", "central"):
-                    ports[role].reset_input_buffer()
-                    written = ports[role].write(ready_query)
-                    ports[role].flush()
-                    if written != len(ready_query):
-                        raise BlePairHilFailure(
-                            f"{role} READY query가 일부만 기록됐습니다."
-                        )
             deadline = time.monotonic() + result_timeout
+            if ready_query is not None:
+                _query_ready_after_quiet(
+                    ports, ready_query, prequery_evidence_path,
+                    prequery_evidence_reference, deadline, protocol, nonce, core_revision,
+                )
             for role in ("peripheral", "central"):
                 _wait_ready(
                     ports[role],
