@@ -105,6 +105,7 @@ jobs:
           -r tools/ci/requirements-host.txt
       - name: Run host unit tests
         run: |
+          $env:CXX = (Get-Command g++ -CommandType Application -ErrorAction Stop).Source
           gcc --version
           g++ --version
           ld.lld --version

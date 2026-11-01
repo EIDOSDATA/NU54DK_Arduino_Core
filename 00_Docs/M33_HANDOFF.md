@@ -35,6 +35,8 @@ S7의 exact M12 CI run `41322027307`는 M32 soak 단위시험의 임시 경로 f
 
 S8 `5e920ec88a61ca64ab0c9eb19aa20d7fcd8ebc31`의 exact M12 CI run `41334717255`/attempt 1은 `test_reuse_route_symlink_cannot_escape_to_sdk`에서 FAIL했다. 시험 mock은 정규화 전 임시 경로와 비교하지만 제품은 재사용 root를 정규화하므로, 경로 별칭이 있으면 탈출 mock이 적용되지 않고 `source validation must not run` assertion에 도달한다. 동일 디렉터리를 가리키는 비정규 경로로 같은 실패를 재현했으며 시험의 기준 경로 한 줄만 `resolve()`로 정규화한다. SDK·source·toolchain 경계, symlink/junction 탈출 거부와 기존 assertion은 유지한다. 원본 CI FAIL과 재현 로그는 보존하고 수정 소스의 회귀·exact CI 결과를 별도로 생성한다.
 
+S9 `bf18039b9c33c33f93a868f8342c5fbac025d532`의 exact M12 CI run `41336500619`/attempt 1에서는 위 symlink 탈출 시험이 통과했고, 뒤의 `test_immediate_and_asynchronous_security_errors`가 `CXX` 환경 변수 누락으로 FAIL했다. 로컬에서도 `CXX`만 제거하여 같은 assertion을 재현했다. workflow가 이미 사용하는 `g++`의 실제 실행 파일 경로를 Host 실행 단계의 `CXX`에 명시한다. 컴파일러 탐색 실패는 즉시 거부하고 기존 보안 시험·assertion·컴파일 및 실행 결과 검사는 유지한다. 원본 CI FAIL은 별도로 보존하며 새 소스의 결과를 다시 생성한다.
+
 최신 사용자 결정에 따라 별도 선행 #29 focused20은 실행하지 않는다. 수정 소스의 exact CI → Host651 → 새 Actions 4개 shard·141개 산출물과 ecosystem2 → runtime9·stage150 → 공식 #1~#49 순차 matrix → 1800초 soak → 자원·지원·risk7·qualification3 → strict closure/export·문서·원형 validator → 마감 commit/push·해당 commit CI·최종 기록 순서로 진행한다. 공식 #29는 원형 standard20회 fresh/restored 총40구간과 native 검증을 그대로 수행하며 #30~#49도 포함한다. 과거 source의 PASS를 새 source 실적으로 승계하거나 실패 cycle에 이어 쓰지 않는다.
 
 최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
