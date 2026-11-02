@@ -1,579 +1,72 @@
-# M33 개발 인계 — W06 재설계 구현
+# M33 개발 인계 — W06 현행 상태
 
-최종 갱신: **2026-11-02**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자가 연결한 nRF54L15 DK 3개로 공식 matrix #1의 flash 준비 경계 실패를 교정 중이다.
-개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
-구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+최종 갱신: **2026-11-02**. 개발 집중 #1~#49 누적 PASS는 완료 기록으로 보존한다.
+W06 마감은 미완료다. **전체49 연속 재시작을 필수로 전제하지 않고**, 기존 독립 증거·수정 회귀와
+실제 남은 마감 입력을 확인한다. 최신 사용자 지시에 따라 문서 정리 후 아래 1~7을 자율 진행한다.
 
-### 2026-11-02 flash 진입 상태 교정
+## 현재 기준선
 
-S13 `27bfb72b07c8e9d46f4e2049a14f85bc97b81708`의 exact M12 CI `41372106554`/attempt 1,
-Host 64 suite·651시험·skip 0, Actions 4 shard·141개, ecosystem 2개, runtime 9개와 stage 150개는
-통과했다. 공식 cycle `D:/w06/final27bf`는 #1 `m28_link`의 mixed sector program에서 START 전에
-FAIL했고 완료 group은 0/49다. 이전 S12의 #1 PASS에도 program 첫 시도 실패와 허용된 재시도가
-있었다. 두 소스의 #1 HEX 3개는 byte 단위로 같으며 과거 PASS를 현재 source의 실적으로 승계하지 않는다.
-
-새 채팅에서 실패 상태의 image·UID·RAM·debug·OS·6 COM·공통 3lock 종료를 확인했다. 사용자의
-임시 순서 지시에 따라 별도 survey의 #2를 PASS와 완전 종료까지 수행했으나, 최신 지시는 오류를 먼저
-교정하고 새 #1부터 순서대로 진행하는 것이다. survey는 #2 뒤 종료했으며 원래 FAIL cycle에 이어 쓰거나
-공식 49/49로 재분류하지 않는다.
-
-동일 S13의 별도 진단 A에서 이전 앱의 `MPU_CTRL=5`, `CONTROL=2` 상태를 물려받은 RAM flash init
-(`PC=0x20000015`)이 약 30초 뒤 timeout했다. 이어 `IPSR=3`, `HFSR.FORCED=1`,
-이전 앱의 `arch_system_halt` PC와 instruction-access fault에 해당하는 `r0=20`을 관측했다.
-pyOCD의 내부 VERIFY→ERASE fallback으로 후속 init이 HardFault 문맥에서 성공할 수 있으므로 최종
-program 반환만으로 첫 init의 정상 여부를 판정하지 않는다. 진단 B에서는 기존
-`reset_and_halt_before_program=True`만 적용하여 `MPU_CTRL=0`, `CONTROL=0`, `IPSR=0`에서
-init 3회가 각각 약 0.1초에 반환값 0으로 완료했다. 직접 MPU 설정·보안 설정·firmware는 변경하지 않았다.
-A와 B의 선행 image는 다르고 계측 시간은 원래 제한 시간을 소비한다. 원래 #1의 마지막 11.5초 실패는
-당시 subtype 로그가 없어 이 진단과 동일 원인이라고 소급 확정하지 않는다.
-
-공통 HEX program의 기존 정상 reset-and-halt 옵션을 기본값으로 설정하여 이전 앱 실행 상태를
-초기화하고 HALTED를 확인한다. `defer_reset`은 계속 program 이후 실행만 지연하며 sector 범위,
-exact HEX 검사, 유한 retry, 시간 제한과 security 조건은 유지한다. J-Link 실패 기록은 기존 helper로
-허용된 flash 원인 분류와 정수만 보존하고 raw UID·임의 예외 문자열은 저장하지 않는다. 원래 예외와 FAIL,
-close 및 receipt pin 계약은 유지한다. 원본 FAIL과 진단 결과는 공식 PASS로 승격하지 않는다.
-
-진단 종료 수락은 `D:/w06/control/s13-flash-observe1-acceptance.json`
-(`f7ef3a09be56c691ebf061677b40002261dd7de0e92fe681a5a40916ce2b55d9`)과
-`D:/w06/control/s13-flash-reset-compare1-acceptance.json`
-(`7085a494ab58126ec1dc781946794e2e6e22b9145a5b136152b91fa53782e242`)에 고정한다.
-교정 전 경계 회귀의 실패를 재현했고 교정 후 관련 242시험·skip 0, M33 계약과 문서 509개 검사를
-통과했다. 공식 Host의 64 suite·651시험 계약은 유지하며, 이 중 이름을 바꾼 경계 시험의 ID hash는
-실제 verbose 로그로 갱신했다. 별도 J-Link 회귀는 36시험이다. 새 소스의 commit/push·exact CI와
-전체 공식 실행은 별도 생성한다. 선행 #29 focused20을
-재실행하지 않으며 공식 #29 안에서 20회 fresh/restored 총 40구간을 검증한다.
-
-### 2026-11-01 UART 수신 경계 교정
-
-S3 `4bfcc56c536b842b094526901d93853fb72cbf35`에서 focused 20회/40구간, Host 651, Actions 산출물 141개, ecosystem 2개, runtime 9개, stage 150개 검증 실적을 확보했다. 이 기록은 해당 S3의 실적으로 보존한다.
-
-최종 matrix4는 #1~#10을 완료한 뒤 #11 CoC의 START 전 READY 확인에서 실패했다. central 수신 기록에 앞선 cache 출력 꼬리와 새 READY 일부가 섞였다. 원본 `D:/w06/final4bfc2`와 native 94895/exit 1의 FAIL을 보존하며 실패 cycle에 이어 쓰지 않는다. 과거 HCI62의 근본원인과 이번 바이트 혼합이 발생한 구체적인 버퍼 계층은 여전히 UNKNOWN이다.
-
-실패 후 세 보드의 현재 image·UID를 확인하고 RAM을 각각 262144바이트 보존했다. 두 CoC 보드의 ELF 심볼은 읽기 전·RAM·읽기 후 모두 started/finished/command_length=0이었고, central의 phase/connected_channels도 0이었다. 별도 READY 전용 진단에서는 두 포트의 질의 전 반환 바이트가 각각 0이었고, READY?를 각 1회 전송하여 정확한 READY 78/75바이트와 정상 close를 확인했다. 이 관측은 비원자적 현재 상태 및 해당 open 이후 수신 범위에 한정된다. 원래 실패의 완전 UART capture를 복구했거나 과거 원인을 확정한 것으로 판정하지 않는다.
-
-UART 수신 경계 교정 후보는 오프라인 105시험과 독립 검토를 통과했다. 새 소스의 대상 재시험과 전체 최종 검증은 미완료이며 S3의 PASS를 새 소스 실적으로 승계하지 않는다. 새 exact source에서 필요한 focused 검증, Host 651 → Actions 141·ecosystem 2 → runtime 9·stage 150 → 전체 #1~#49 matrix → 1800초 soak → 자원·지원·risk 7·qualification 3 → strict closure·export → 문서·원형 validator → 승인된 Dev-0.6.0-M33 commit/push와 해당 commit의 CI → 최종 기록까지 수행해야 한다.
-
-중간 교정 소스 `dd5aef3f2e280585e6f565fc33206a8ff5fc8460`의 exact M12 CI run `41313878419`는 예제 기대 목록 두 곳의 불일치로 FAIL했다. READY 교정과 무관하게 기존 목록에서 빠져 있던 Beacon 2개와 Companion 2개·Peripheral Fabric 6개를 실제 제공 예제 및 sidecar 부재와 대조하여 명시적으로 추가한다. exact 집합 일치와 sidecar 금지 검사는 유지하며, 최초 CI FAIL을 보존한다. 후속 소스의 실제 CI와 HIL 검증은 별도 생성한다.
-
-중간 소스 `52c3de7e1d369eba5ceddb2cdf0c6b785b87ebbe`의 M12 CI run `41315067344`에서는 예제 발견 검사가 통과했으나 Host 단위시험의 `m33_probe_transport` import가 실패했다. 해당 시험이 실제 reset을 mock하면서 원래 경로 초기화도 건너뛴 것이 원인이다. 격리 시험에 `tools/bluetooth` 검색 경로를 명시하며 reset mode 검증과 기존 assertion은 유지한다. 앞선 private 회귀는 이 경로를 주입했으므로 CI의 격리 실행 조건까지 검증한 것으로 확대하지 않는다. 원본 CI FAIL을 보존하고 수정한 소스에서 격리 시험과 원형 Host gate를 다시 실행한다.
-
-후속 로컬 원형 Host 검사에서는 축약된 공통 인계의 M29·M30 과거 계약/readiness 링크 누락도 확인했다. `HANDOFF.md`의 과거 결과 표에 두 근거를 복원하며 완료 TODO·원장·기존 검사는 변경하지 않는다. 각 최초 FAIL과 이후 수정본의 검사 결과를 별도로 보존한다.
-
-같은 로컬 검사에서 M9 합성 configure/cache fixture가 실제 설치 경계 검사를 호출하는 의존성 누락도 확인했다. 세 fixture 시험의 SDK patch 의존성만 격리하고 가짜 SDK drive를 임시 경로와 다르게 선택한다. 실제 타 설치 Core 거부 경로는 변경하지 않으며 별도 음성시험으로 patch 접근 전 거부를 확인한다. 기존 cache·복구·실패 판정 assertion은 유지한다.
-
-중간 소스 `becd1a2b9dd6a889ec7943704279004e40710f38`의 M12 CI run `41319721949`는 M32 Mesh DFU 단위시험의 Windows 경로 표기 비교에서 FAIL했다. 실제 함수는 `RUNNER~1`을 정규 경로로 해석하지만 시험 기대값은 짧은 표기를 유지했다. 기대 경로에만 `resolve()`를 적용하여 exact 일치 검사를 유지하며, interpreter·환경 격리의 제품 코드와 보안 조건은 변경하지 않는다. 원본 CI FAIL과 로컬 전체 Host 결과는 해당 소스의 기록으로 보존하고 수정본의 결과와 구분한다.
-
-2026-11-02 추가 검토에서 cache HIL central의 종료 후 반복 출력 경로를 확인했다. `loop()`의 finishing 조건은 `protocol_finished`를 확인하지 않았고, `printCentralResult()`는 완료 표시만 설정하여 다음 loop에서도 RESULT/END와 resume key 삭제를 반복할 수 있었다. 해당 조건에 완료 상태 검사를 추가한다. 기존 cache 수집기는 첫 END에서 반환하므로 보존된 cache 로그의 결과 한 쌍만으로 그 이후 출력이 없었다고 판정하지 않는다. 이 소스 결함은 다음 CoC에 섞인 cache 출력 꼬리와 관련된 원인 후보이며, 당시 USB/driver 버퍼 경로와 과거 a557 HCI62의 근본원인을 확정한 것은 아니다. 실제 함수 기반 회귀와 새 image의 cache→CoC 실기 결과를 별도로 확인한다.
-
-S7 `9e1a33ecfaa2096ada698a19fd8184610d11b2e5`의 새 image로 cache 대상 실기를 통과했고 원형 RESULT/END, UART 수집, debug 및 OS 종료를 확인했다. 이어 cache 두 보드와 세 번째 보드의 현재 image·UID 및 각 262144바이트 RAM을 보존했다. cache 두 역할의 started/finished=1, resume_pending=0과 실제 결과 nonce 일치를 확인했다. 이는 해당 시점의 비원자적 상태 관측이며 NVS 정리 성공이나 과거 UART 복구를 뜻하지 않는다.
-
-같은 S7의 cache→CoC 대상 실기는 native `87307`, exit 0으로 통과했다. 두 역할의 program은 각각 첫 시도에 성공했고, 두 채널에서 채널별·방향별 512바이트 SDU 1000개, negative 5종 각 20회와 자원 복구를 원형 parser로 확인했다. payload 오류·unexpected accept·recovery failure는 모두 0이며 양쪽 END가 PASS다. 출력 완전 수집, debug 7세션 종료와 새 OS·6 COM·공통 3lock 확인도 통과했다. 근거는 `D:/w06/control/s7-transition1-coc-acceptance.json`(SHA-256 `44202c758b7887fa9dc5d14a26211714f1a8c45511395dbbd8e400100cfceb11`)이다. 원래 S3 matrix FAIL은 보존하며 이 대상 진단을 후속 소스의 focused20 또는 공식 matrix 실적으로 승계하지 않는다.
-
-S7의 exact M12 CI run `41322027307`는 M32 soak 단위시험의 임시 경로 fixture에서 FAIL했다. manifest는 자식 경로를 정규화하지만 시험은 lexical 부모 경로를 전달하여 `relative_to()`가 실패했다. fixture의 `root = Path(temporary)` 한 줄에만 `resolve()`를 추가하고 원형 generator·판정·assertion은 유지한다. 원본 CI FAIL을 보존하며 수정 소스의 8시험·문서·계약과 exact CI 결과는 별도로 생성한다.
-
-S8 `5e920ec88a61ca64ab0c9eb19aa20d7fcd8ebc31`의 exact M12 CI run `41334717255`/attempt 1은 `test_reuse_route_symlink_cannot_escape_to_sdk`에서 FAIL했다. 시험 mock은 정규화 전 임시 경로와 비교하지만 제품은 재사용 root를 정규화하므로, 경로 별칭이 있으면 탈출 mock이 적용되지 않고 `source validation must not run` assertion에 도달한다. 동일 디렉터리를 가리키는 비정규 경로로 같은 실패를 재현했으며 시험의 기준 경로 한 줄만 `resolve()`로 정규화한다. SDK·source·toolchain 경계, symlink/junction 탈출 거부와 기존 assertion은 유지한다. 원본 CI FAIL과 재현 로그는 보존하고 수정 소스의 회귀·exact CI 결과를 별도로 생성한다.
-
-S9 `bf18039b9c33c33f93a868f8342c5fbac025d532`의 exact M12 CI run `41336500619`/attempt 1에서는 위 symlink 탈출 시험이 통과했고, 뒤의 `test_immediate_and_asynchronous_security_errors`가 `CXX` 환경 변수 누락으로 FAIL했다. 로컬에서도 `CXX`만 제거하여 같은 assertion을 재현했다. workflow가 이미 사용하는 `g++`의 실제 실행 파일 경로를 Host 실행 단계의 `CXX`에 명시한다. 컴파일러 탐색 실패는 즉시 거부하고 기존 보안 시험·assertion·컴파일 및 실행 결과 검사는 유지한다. 원본 CI FAIL은 별도로 보존하며 새 소스의 결과를 다시 생성한다.
-
-S10 `3b7c389ab2339b7f22d7e10cf721c8571b6083e5`의 로컬 원형 M12 Host는 264 suite·2369시험·기존 선택 skip 3개로 PASS했으나 exact CI run `41337988496`/attempt 1은 FAIL했다. CI의 두 `g++` 경로를 `Get-Command -CommandType Application`이 모두 반환하여 `CXX`에 공백으로 연결한 것이 원인이다. 두 실행 파일 검색 경로를 둔 로컬 조건에서 같은 거부를 재현했으며 첫 번째 실제 application 하나만 선택하도록 정정한다. 잘못된 명시 경로의 거부와 모든 기존 assertion을 유지하고 원본 FAIL을 보존한다. 이 로컬 M12 결과는 공식 Host651 또는 새 소스의 실적으로 승계하지 않는다.
-
-S11 `eec5ff008831fdfe51777127073d603124f14241`의 exact M12 CI run `41338278484`/attempt 1에서는 컴파일러 선택과 보안 시험이 통과했다. 뒤의 J-Link 순수 단위시험 35개 중 11개는 합성 fixture를 만드는 `D:/w06/tmp`가 CI에 없어 setup에서 FAIL했다. 기존 D 임시 경로를 건드리지 않은 별도 경로에서 같은 tempfile 생성 함수의 부모 디렉터리 의존성을 확인했다. Host workflow가 `D:/w06/tmp`를 준비하고 TMP·TEMP·TMPDIR로 명시한다. 실제 DLL·장비를 여는 시험으로 바꾸거나 경로·DLL pin·close·보안 assertion을 완화하지 않으며 원본 CI FAIL은 보존한다.
-
-S12 `5b98e4077441b4192e4835a10377510cc922b200`의 exact M12 CI run `41339048842`/attempt 1은 PASS했고, 같은 소스에서 원형 Host 64 suite·651시험·skip 0, 새 Actions run `41340377309`의 4 shard·141개 build, ecosystem 2개, runtime 9개와 stage 150개를 확인했다. 공식 matrix native `74233`/exit 1은 #1~#11 완료 뒤 #12 `m29_signed_eatt`에서 FAIL했다. 실패 cycle `D:/w06/final5b98`은 보존하며 이어 쓰지 않는다.
-
-중앙 보드의 현재 RAM에서 CLEAR 앞의 `0xFE`와 일치하는 명령·실패 상태를 보존했고, 실제 target parser로 `start_record` 거부를 재현했다. 세 보드의 UID·현재 image·RAM 및 debug close, 실제 native 종료·OS·6 COM·공통 3lock을 확인했다. 이 비원자적 현재 관측은 원래 UART의 완전 복구나 `0xFE` 유입 계층 확정, 물리 idle 또는 복원 허가를 뜻하지 않는다. 근거는 `D:/w06/control/matrixa-native-completion.json`, `matrixa-state1-acceptance.json`, `matrixa-signed-parser-repro1/result.json`이다.
-
-이번 최소 교정은 target의 최초 READY 직전에만 192바이트 이내 잔여 RX를 비우고, host가 두 boot READY를 모두 검증한 뒤 각 READY?를 한 번씩 보내도록 한다. boot와 query 응답을 모두 원형 transcript에 보존하고 두 초기 READY의 exact 일치를 요구한다. READY 이후 parser·nonce/core·security·20회 signing reboot/replay·EATT·STOP·retry 조건은 유지한다. 교정 전 새 경계 회귀의 실패를 확인했고, 교정 후 관련 M29 224시험·skip 0이 통과했다. 새 소스의 exact CI 및 대상 실기는 아직 확인 전이며 S12 실적을 승계하지 않는다.
-
-최신 사용자 결정에 따라 별도 선행 #29 focused20은 실행하지 않는다. 수정 소스의 exact CI → Host651 → 새 Actions 4개 shard·141개 산출물과 ecosystem2 → runtime9·stage150 → 공식 #1~#49 순차 matrix → 1800초 soak → 자원·지원·risk7·qualification3 → strict closure/export·문서·원형 validator → 마감 commit/push·해당 commit CI·최종 기록 순서로 진행한다. 공식 #29는 원형 standard20회 fresh/restored 총40구간과 native 검증을 그대로 수행하며 #30~#49도 포함한다. 과거 source의 PASS를 새 source 실적으로 승계하거나 실패 cycle에 이어 쓰지 않는다.
-
-최신 재개 상태는 `D:/w06/control/continuation.json`과 같은 디렉터리의 실제 완료·수락 기록을 확인한다. 상태 보존 증거는 `matrix4-state1`, READY 진단 증거는 `matrix4-coc-ready-diag2`에 있다. 단일 writer·단일 heavy job·공통 3lock, 출력/TMP의 D:/w06 사용과 최소 4GiB 여유, 기존 STOP·close·retry·security 조건을 유지한다.
-
-### 2026-10-31 matrix 부팅 상태 확인 교정
-
-- clean `206bc0ec8ea3dff83338d7500621d0065d77f306`에서 focused20 fresh/restored 40구간,
-  Host651·skip0, Actions64(run `40997782666`, attempt1)의 build141, ecosystem2,
-  runtime9·stage150을 실제 검증했다. 최종 matrix는 첫 `families/gap_links`의 peripheral
-  READY 대기에서 FAIL하여 완료 group은 0/49다. `D:\w06\final206b`의 실패 bundle은 보존한다.
-- PC 도구의 명시적 reset-halt-resume 경로가 resume 뒤 실제 실행 상태를 확인하지 않은 채
-  debug session을 닫는 빈틈을 확인했다. 같은 M28 image에서 reset만 수행한 진단은 READY가 없었고,
-  resume 직후 기존 상태 확인 함수를 추가한 단일 진단은 RUNNING과 exact READY를 관측했다.
-  최신 전체 RAM·image·identity·idle, UART capture·close, debug close와 OS·공통 세 잠금을 확인했다.
-  수용 근거는 `D:\w06\control\matrix2-resume-ready1-acceptance.json`이며 SHA-256은
-  `e5abb2200e662decf2d49c70b6f8b9b0af540677d3f06274e6ae0c5329f2082f`다.
-- 공통 시작 경로와 CS 위험 검사의 별도 시작 경로에 RUNNING/SLEEPING 확인을 추가한다.
-  reset·resume 횟수와 STOP·capture·보안·retry 조건은 유지한다. 이는 J-Link DLL 내부 원인이나
-  과거 a557 HCI62 근본원인 확정이 아니며, 원래 FAIL과 진단 결과를 공식 matrix PASS로 바꾸지 않는다.
-- 관련 9개 suite·184개 회귀와 문서·계약 검사를 통과했다. 준비 시험의 모듈 경로 누락으로 발생한
-  첫 FAIL은 보존하고, 해당 시험에 명시적 import 경로를 넣은 후속 결과와 구분했다.
-  근거는 `D:\w06\control\s3-resume-regression1`과 `s3-resume-regression2`다.
-- 수정 후 새 clean source의 focused20부터 최종 gate를 다시 생성한다. 위 206bc0의 성공은
-  해당 소스의 기록으로만 보존한다. 현재 실행 정본은 `D:\w06\control\continuation.json`이다.
-
-### 2026-10-30 D 재구성과 J-Link runtime 매핑 교정
-
-- 사용자가 D를 초기화한 뒤 GitHub의 clean `4e48bdb159e8aa4eeb82968fec6e5e2a7629c0e3`와
-  고정 SDK로 환경을 재구성했다. 삭제된 과거 D 자료를 현재 증거로 사용하지 않는다.
-  이 source에서 focused20 fresh/restored 40구간, Host651·skip0, Actions63
-  (run `40836140490`, attempt1)의 4개 shard·build141을 실제 검증했다.
-  원본은 `D:\w06\f29a1`, `D:\w06\final4e48`, `D:\w06\ci63`에 보존한다.
-- 같은 source의 ecosystem client·peer 두 build와 BAP flash 준비는 통과했다.
-  `D:\w06\r1`의 runtime 준비는 native cleanup·fresh·후속 cleanup 세 phase와
-  두 ecosystem image의 전체 readback·READY를 통과한 뒤 third probe 매핑에서 FAIL했다.
-  최종 runtime9·stage150·matrix49·soak·W06 완료로 승격하지 않는다.
-- PC의 `map_live_probes()`가 명시 J-Link decimal serial에도 DAPLink의 32자리 hex 검사를
-  적용하는 결함을 장비 없는 동일 입력 재현으로 확인했다. probe와 VCOM 양쪽을 기존
-  J-Link canonical serial SHA 규약에 맞췄으며 CMSIS 검사·세 probe 집합·중복 거부·포트 대응은 유지한다.
-  관련 준비40·transport12·runtime15, 총 67개 회귀가 PASS했다. 최초 독립 시험의 모듈 경로
-  누락 FAIL은 보존하고 올바른 import 경로의 후속 결과와 구분했다. 수정본의 실기 수리는 아직 미검증이다.
-- 최초 runtime FAIL과 봉인된 114파일, debug 40세션의 close 기록을 보존한다.
-  실패 경로는 최초 ecosystem READY transcript를 저장하지 못했다. 새 상태 관측으로 이 과거 capture를
-  복구했다고 주장하지 않으며, 보드 reset·재기록 전에 현재 RAM·image·identity·idle을 별도로 확인한다.
-  이 PC 결함은 과거 a557 HCI62 근본원인 증명이 아니다.
-- 본 교정 이후 새 clean source의 증거를 다시 생성한다. 위 4e48의 PASS를 새 source의 실적으로
-  승계하지 않는다. 최종 순서는 focused20 → Host651와 추가 회귀 → 새 Actions141·ecosystem2 →
-  runtime9/stage150 → 전체 matrix49 → 1,800초 soak → resource/support/risk7/qualification3 →
-  strict closure/export·문서·원형 validator → 승인된 branch commit/push·exact CI다.
-  현재 작업 정본은 `D:\w06\control\continuation.json`이며 자동점검 w06은 PAUSED다.
-
-### 2026-10-29 DK 전환과 현재 검증 범위
-
-- source `2482eeade61d071ffecb6021a8c8d48e44a8699a`의 추가 관측을 포함한 fresh 진단 1회는 PASS했다.
-  `D:\w06\p29dk-fresh3\result.json`의 SHA-256은
-  `a821b406214315991aa4955129fde7e3f04bbe42472aa5a403456dbf1a5b2c85`다.
-  세 역할의 최신 STOP 6개 항목 0·UART 전체 capture·close와 debug session 11개 종료를 확인했다.
-  공식 focused20·W06 실적은 0이며 원래 a557 client HCI62의 근본원인은 미확정이다.
-- 기존 UART 무응답과 중복 STOP 실패는 원본 FAIL로 보존한다. 추가 reset 후 watcher 관측은
-  연결 절차의 명시된 조건이며 HCI62 원인 확정이나 결함 해결 판정이 아니다.
-- 새 host 경로는 `NU54_HIL_JLINK_FIXTURE`와 `NU54_HIL_JLINK_FIXTURE_SHA256`을 함께 명시한다.
-  private fixture에는 세 DK의 정확한 serial·USB VID/PID·MI02·COM·target UID hash와 DLL pin을 둔다.
-  실행 증거는 raw serial 대신 transport descriptor와 hash만 사용한다. 기본 CMSIS-DAP v2 검사는 유지한다.
-  `NU54_HIL_JLINK_AUDIT_DIR`은 기존 `D:\w06` 하위 디렉터리이며, 각 session의 실제 close 증거를 보존한다.
-- J-Link는 firmware 자동 갱신과 unsecure를 금지하고 SWD 500kHz·attach·sector program·명시
-  SYSRESETREQ만 사용한다. 여러 probe의 native 상태는 hash 확인한 개별 DLL 사본으로 분리한다.
-  profile phase는 마지막 watcher reset 후 별도 full readback·동일 monitor의 strict idle 전후 관측을
-  수행한다. 원래 all3 programming receipt는 보존하며 새 관측으로 대체하지 않는다.
-- 소스 고정 후 세 역할을 모두 다시 빌드하고 focused20 fresh/restored 40구간을 실제 실행한다.
-  그 뒤 같은 소스로 Host651와 추가 회귀, 새 Actions141·D ecosystem2, runtime9/stage150,
-  matrix49(#30~49 포함), 1,800초 soak, resource/support/risk7/qualification3, strict closure/export,
-  문서·원형 validator와 승인된 `Dev-0.6.0-M33` commit/push·exact CI를 마감한다.
-  과거 source의 성공을 새 source의 실적으로 승계하지 않는다.
-- 최신 상세 증거는 `D:\w06\final-57624a4c-actions61-attempt1\unattended-continuation-handoff.json`의
-  `latest_DK_checkpoint`를 따른다. 단일 writer·공통 3lock·단일 heavy job, 모든 출력/TMP `D:\w06`,
-  여유 4GiB 하한을 유지한다. 자동점검 `w06`은 PAUSED이며 사용자 부재 중에도 승인된 범위의 작업을 진행한다.
-
-아래의 10월 25일 checkpoint는 이후 DK 전환 이전의 경과다.
-
-## 현행 재개 지점 — 2026-10-25
-
-- clean `49103850345a24e0e7b2dae05b26a973a02f29ad`에서 전체 Host 64 suite·648 test·skip 0,
-  ecosystem client·peer 두 역할 build와 qualification 근거 3개를 완료했다. 원본은
-  `D:\w06\final-49103850-host-attempt2`, `D:\w06\final-49103850-actions60-attempt1`, `D:\w06\rt60`이다.
-  Host attempt1의 compiler 경로 누락 실패는 보존했고, CC/CXX/PATH를 명시한 attempt2에서 해결했다.
-- 독립 저장 증거 재검사에서 Host 로그·ID·command·source·hash와 qualification 3행은 일치했으나,
-  마감 validator가 `monotonic_ns`를 32비트 정수 범위로 제한하여 64개 process 기록을 모두 거부했다.
-  실제 첫 시작 시각은 `800396744185600`ns다. `host-qualification-independent-replay.json`의 FAIL은
-  보존하며 Host 나노초 필드만 signed 64-bit 범위로 정정했다. PID·반복 횟수의 기존 상한과 시각 순서 검사는 유지한다.
-  실제 subprocess를 사용하는 긍정·부정 회귀를 추가해 해당 suite 94개·skip 0과 계약 검사를 통과했다.
-  원본 로그·검증 기록은 `D:\w06\host-clock-range-fix-20261025`에 보존한다.
-  Actions 60(run `40174462009`)과 위 491 source 결과는 수정 전 근거이며 새 source의 PASS로 바꾸지 않는다.
-- COM3의 마지막 이미지가 watcher라는 추정은 이후 기록을 누락한 오류였다. `D:\w06\mx8c7a1`의
-  #06 `families:link_control`은 source `8c7dafbc…` central 이미지를 실제 program/readback했고,
-  뒤 #07~18에는 COM3 재프로그램 기록이 없다. 정상 pin reset 후 UART의 `M28B3 central/CTRL`
-  응답도 이 기록과 정합하지만 현재 flash byte 동일성까지 확인한 것은 아니다.
-- debug 전원 REQ/ACK 0 확인 후 정상 pin reset의 요청·해제 readback은 성공했다. 이후 연결은
-  실패했고, 실제 HID 경로에서도 No ACK가 발생했다. 모든 probe는 닫았으며 현재 CPU halt·strict
-  idle은 미확인이다. reset으로 이전 STOP 실패를 PASS로 바꾸지 않았고 전체 삭제·LED 진단도 반복하지 않았다.
-  사용자 제공 `C:\Users\eidos\GitHub\FW_DAP_nRF52820_DedicatedDev`의 디버거 소스를 대조 중이다.
-  이 트리에는 `.git`이 없어 설치된 Build ID와 Git commit이 같다고 추정하지 않는다.
-- 직전 clean `a0ab02e6f49b460f5d26004c9f5e493afa06a299`에서 전체 Host 64 suite·646 test·skip 0,
-  Actions 59(run `40156447719`)의 build 141개와 runtime용 ecosystem 두 역할 build를 완료했다.
-  원본은 `D:\w06\final-a0ab02e6-host-attempt1`, `D:\w06\final-a0ab02e6-actions59-attempt1`,
-  `D:\w06\rt59`에 보존한다. 현재 실기 최종 runtime 0/9·matrix 0/49·soak 미실행이며 W06 미완료다.
-- COM3/board_3는 DP/AP 접근에서 No ACK가 발생한다. pyOCD와 별도 probe-rs의 실패를 보존했으며,
-  보드·케이블 고장이나 제품 firmware 결함으로 확정하지 않는다. 제어 AP를 통한 정상 soft reset은
-  사전 identity를 통과하지 못해 실제 요청하지 않았다. 전체 삭제와 LED 진단은 반복하지 않았다.
-  `debugger-assessment-20261025-0744.json`은 당시 실패 경계와 미확정 상태를 기록한다.
-- 기존 build의 119개 ELF/HEX·map/config 정적 감사는 일치와 공통 메모리 한도를 확인했다.
-  이는 a0ab 산출물의 정적 근거이며 live stack/heap peak나 실제 radio 소유권 PASS가 아니다.
-  `resource-audit-draft/resource-evidence-summary-attempt4.json`의 미관측 항목을 그대로 유지한다.
-- 2026-10-21 갱신된 Nordic 공식 DN 표의 병합 셀을 확인했다. 오래된 `NO_DN` 상수와 중복 판정을
-  공통 DN 선택지·각주·사양 메타데이터로 정정하고 제품 자격·DN 선택은 `NOT_ASSESSED`로 유지했다.
-  관련 회귀 92개·readiness 31개·skip 0, `m33_contract.py --check`를 통과했다.
-  정본은 [qualification 적용성](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>)이다.
-- 이 검증 도구 변경 후에는 새 clean source를 고정해야 한다. a0ab의 Host/build·정적 감사에 새 SHA를
-  붙이지 않는다. 새 source의 Host/build/runtime/stage와 전체 실기 증거를 각각 실제 생성·검증한다.
-- 같은 source·입력·조건의 campaign 재사용 초안은 49개 논리 group/82개 참조/48개 고유 campaign을
-  구분한다. 오프라인 검사만 완료했으며 실제 최종 matrix에는 아직 적용하지 않았다. D helper는 각각
-  a0ab 또는 491 source로 고정되어 있으므로 다음 source에서 그대로 실행하지 않는다. 원본·복사본의 공식 replay와
-  별도 불변 정책·원장 검증을 통과해야 하며 복사본을 추가 실기 횟수로 세지 않는다.
-- 남은 순서는 디버그 접근 복구 → 새 source 입력 검증과 runtime 9 → stage/validate 150 → 전체
-  33 family+8 resource+8 peer → 1,800초 soak → 실제 자원 증거 결합·SDK risk 7·qualification 3 →
-  strict closure/export → 최종 기록 commit/push·CI 확인이다. 과거 full PASS 36종의 시간과 soak만
-  합쳐 약 14시간 30분이며, 나머지 12종·준비·마감·문제 해결 시간은 포함하지 않은 부분 산정이다.
-
-## 이전 중단 지점 — 2026-10-23
-
-- 개발 집중 검증 #1~#49는 모두 PASS했다. #39~#43의 주요 실기는 clean `e944a7cc…`,
-  #44~#49와 #40 ecosystem의 최종 재확인은 clean `c6fc5764…`에 귀속된다. 이 source별 PASS를
-  합쳐 최종 동일 source 49/49로 선언하지 않는다.
-- 마지막 #49 `resources:radio`는 clean `c6fc5764…`에서 Host 124개·skip 0, 필요한 build,
-  standalone radio154/ESB와 세 coexistence scenario 실제 HIL·독립 replay를 PASS했다. 최종 replay
-  `D:\w06\focused-resource49-radio-replay-c6fc5764-attempt1.json`의 SHA-256은
-  `3f018cd4a083d30983713ae7c227a98e6bdc9b1be6c7d6274d7c12b7117e2447`이다.
-- 최종 clean `c6fc5764…` build에서 Twister 54/54·40/40과 `arduino-07eba4b91392`를 PASS했다.
-  긴 root에서 발생한 두 Arduino FAIL은 실제 존재하는 260자 초과 object를 번들 `ar`가 열지 못한
-  Windows MAX_PATH 환경 문제다. 짧은 root `D:\w06\f5`에서 첫 Arduino action 408/408을 통과해
-  우회를 확인했다.
-- 다음 `arduino-141392f7c7a0`의 220/463에서 사용자가 중지를 요청했다. 실행 writer는 종료했고
-  이 action을 PASS로 승격하지 않았다. build index 141·runtime 9·stage 150·동일 source matrix
-  49/49·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
-- 중단 원본과 SHA는 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)을
-  따른다. D의 현재 final root와 `D:\w06\f5`는 삭제하지 않는다.
-
-## 이전 재개 지점 — 2026-10-19
-
-- #37 `resources:df_cs`는 clean `74398d4ebfda015173ef9afa4bf1fd170275d3f1`에서 DF 20회,
-  CS RAS 100 procedure·재시작 20회·재연결 20회, CS·scan 동시 ACL 종료·복구 20회를
-  순차 실제 PASS했다. 원본 raw/schema/semantic·정규화·exact image/readback을 독립 재검증했다.
-  실제 UART는 DF 1개·CS 2개·CS 위험 app 2개/aux 2개의 종료를 확인했고,
-  최종 HALTED readback은 1+2+2역할 PASS다. 마감 때 새 읽기 전용 세 보드 identity·HALTED·
-  RADIO0·DPPI 차단·WDT30/31 정지도 PASS했다. DF는 controller acceptance이며 over-air IQ,
-  CS는 bounded sanity이며 보정된 거리 정확도 PASS로 확대하지 않는다.
-- 직접 검사는 등록 Host 고유 126개·별도 counter/security 5개, 총 131개·skip 0 PASS다.
-  등록한 suite의 독립 count/hash도 일치했다. 외부 실행 경계 10개와 archive 경로 단위검사 1개는
-  별도이며 전체 Host·물리 시험 분모에 합산하지 않는다. 필요한 공개 DF 1·CS 2·P2 위험 2역할만
-  빌드했다. 기존 `1fb198ea`의 진행 중 보안 callback 대기와 `4aeb45ce`의 native revision 추출
-  수정을 현재 후보에서 검증했고, 추가 firmware·runner·oracle·SDK pin 수정은 하지 않았다.
-- CS 위험 첫 build는 실제 생성된 261자 object 경로를 번들 `ar`가 읽지 못해 FAIL했다.
-  동일 byte의 긴 경로 FAIL/짧은 경로 PASS를 직접 재현한 뒤 새 build/cache root `D:\w06\k37`만
-  짧게 바꿔 두 역할 build를 PASS했다. 최초 실패·log·cache는 `D:\w06\r37-74398d4e-cs-risk`에
-  보존했다. 공식 SDK patch context 원복도 검증했고 CLEAR·자동 재시도는 하지 않았다.
-- 통합 원본 재검증은 `D:\w06\focused-resource37-final-replay-74398d4e.json`, SHA-256은
-  `f3dc451959f4ad47ed0d55b2ef2d761303335b406b813526b34400ee6c5cfdd9`다.
-  진행은 `D:\w06\targeted-resource37-74398d4e-progress.json`, 세 원본은
-  `D:\w06\targeted-74398d4e-resource37-df`, `targeted-74398d4e-resource37-cs`,
-  `targeted-74398d4e-resource37-cs-risk`에 있다. 과거 d909·8b1·c1 source의 PASS는 합치지 않았다.
-  개발 집중 집계는 37/49이며 다음은 #38 `resources:mesh`다. 최종 동일 후보의 공식 49/49·
-  별도 resource measurement closure·141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·
-  qualification 3·strict closure·최종 문서 마감은 미완료다.
-
-### #37의 최초 Host 등록 실패 — 해결 완료·원본 보존
-
-- #37 `resources:df_cs`의 clean `8b1b132a9942bdac4a5f47eef4e5f6c6145e8028`에서 DF 설정 1개·
-  회귀 89개·skip 0은 PASS했다. 이어 직접 attestation 기능 검사 9개·skip 0도 모두 PASS했지만
-  Host registry가 과거 5개여서 집계는 FAIL했다. 원본은
-  `D:\w06\resource37-df-attestation-host-8b1b132a\result.json`, SHA-256은
-  `6e736945842ad8693583715aa4ee49ab6c275a55b86cdb1d6f610c484bda5d44`다.
-  이 등록 한 항목의 count/hash만 실제 9개 verbose ID에 맞춰 정정하고 직접 회귀 뒤 새 clean
-  후보에서 DF→CS RAS→CS ACL 위험을 순차 검증했다. #37 build·flash·실기는 이 등록 실패 전에 시작하지 않았다.
-  과거 d909의 DF 20회 PASS·CS 재연결 FAIL과 아래 c1의 #36 PASS는 각 source로 보존한다.
-  수정 전 commit의 dirty 직접 검사 99개·skip 0·각 suite의 독립 등록 count/hash 일치도 PASS했다.
-  이 등록 오류는 `74398d4e`에서 해결 완료했으며 새 clean 후보의 세 캠페인은 위와 같이 실제 검증했다.
-
-### #36 집중 검증 완료 — 당시 증거
-
-- #36 `resources:iso_audio`는 clean `c1f7e8ce1c0217b0fe529da7ecbf349398bcb957`에서
-  combined ISO·BAP duplex·CIS ACL 위험 세 캠페인을 각각 20회 순차 실제 PASS했다.
-  combined의 CIS 수신·BIS 전달·BIS 수신은 각각 2,000건이다. BAP는 매 회차 양쪽 송수신
-  각 100 frame 이상·energy 양수·drop 0·stream STOP·ACL disconnect를 확인했다.
-  CIS 위험은 양쪽 NSE 최소 2·load tick 최소 29·active payload 25 이상에서 ACL을 먼저 종료했다.
-- 세 캠페인의 등록 raw/schema/semantic·정규화·exact image/readback을 독립 재검증했다.
-  combined 실제 UART 3개, BAP flash 준비와 본 시험 각각 실제 UART 2개, CIS 실제 UART 2개의
-  종료를 따로 확인했다. 캠페인별 최종 HALTED readback 3+2+2개와 세 보드 STOP/idle도 PASS다.
-  마감 때 새 읽기 전용 identity·HALTED·RADIO0·DPPI 차단·WDT30/31 정지를 다시 확인했다.
-- 직접 관련 검사는 등록 Host 127개·skip 0·독립 count/hash 일치와 별도 CIS parser 4개 PASS다.
-  외부 실행 경계 3+3+4개는 별도이며 전체 최종 Host나 물리 PASS 분모에 합산하지 않는다.
-  필요한 combined 3·BAP 공개 Arduino 2·일반 CIS 2역할만 빌드했고 SDK patch context 원복을 검증했다.
-  아래 registry 두 항목만 실제 ID에 맞춰 정정했다. firmware·runner·oracle·SDK pin은 바꾸지 않았다.
-  과거 CIS 8회차의 reason 62·7/20·cleanup FAIL도 보존하며 하위 원인이 해결됐다고 추정하지 않는다.
-  현재의 엄격한 20회 실제 PASS와 과거 원인 미확정 기록은 구분한다. CLEAR·자동 재시도는 하지 않았다.
-- 통합 원본 검증은 `D:\w06\focused-resource36-final-replay-c1f7e8ce.json`, SHA-256은
-  `5a2d94156806a4edb76d093d47220bc0d3422a2ba8eb4cd5b11bbf651c90afa3`다.
-  진행은 `D:\w06\targeted-resource36-c1f7e8ce-progress.json`, 세 캠페인 원본은
-  `D:\w06\targeted-c1f7e8ce-resource36-combined`, `targeted-c1f7e8ce-resource36-bap`,
-  `targeted-c1f7e8ce-resource36-cis-risk`에 보존한다. 이전 8096cc7f의 combined PASS는 합치지 않았다.
-  다음은 #37 `resources:df_cs`다. 개발 집중 집계는 36/49이며 최종 동일 후보의 공식 49/49·
-  별도 resource measurement closure·141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·
-  qualification 3·strict closure·최종 문서 마감은 미완료다.
-
-### #36의 이전 source와 최초 실패 — 원본 보존
-
-- #36 clean `8096cc7f29922d5f6354c8a761dfaf74cc857351`의 combined ISO 20회는 CIS 수신·BIS 전달·
-  BIS 수신 각각 2,000건, 실제 UART 3개 종료·exact image/readback·세 보드 STOP/idle과 독립 원본
-  재검증까지 PASS했다. 증거는 `D:\w06\focused-resource36-combined-final-replay-8096cc7f.json`이다.
-  이어 BAP 직접 기능 9개·skip 0은 PASS했으나 flat 증거 검사 등록부 7개와 실제 8개가 불일치해
-  집계 FAIL했다. 원본 `D:\w06\resource36-bap-host-8096cc7f\result.json`, SHA-256
-  `275b1a71e7cc8a272c227a73464926a7a2e3b7fe5dbbdadb949be96d3ef06282`를 보존한다.
-  이 등록 한 항목의 count/hash만 실제 ID에 맞춰 수정한다. BAP build·flash·실기는 시작하지 않았으며,
-  새 clean 후보에서 combined부터 다시 순차 검증한다. 8096cc7f의 combined PASS를 새 후보에 합치지 않는다.
-  수정 전 commit의 dirty 직접 검사 108개·skip 0·각 suite의 등록 count/hash 일치는 PASS했다.
-
-- #36 `resources:iso_audio` 첫 combined ISO의 clean `4948cec95f01b9b96c54f06446d87da3697c340f`에서
-  parser 5개·build provenance 5개·skip 0은 모두 PASS했지만 Host registry가 과거 parser 4개여서
-  집계가 FAIL했다. 원본은 `D:\w06\resource36-combined-host-4948cec9\result.json`이며 SHA-256은
-  `1409ef01c979f5e88fe35566e103529d69262e54cc2d79cb891cbd73e04c29c1`이다.
-  이 등록 한 항목의 count/hash만 실제 5개 verbose ID에 맞춰 정정하고 직접 회귀 뒤 새 clean
-  후보에서 #36 세 캠페인을 순차 검증한다. #36 build·flash·실기는 이 실패 전에 시작하지 않았다.
-  수정 전 commit의 dirty 직접 검사는 parser 5·provenance 5·회귀 89, 합계 99개·skip 0·등록 일치 PASS다.
-  과거 d909 combined의 software reset 증적을 hardware reset으로 오판한 원인은 `e8b5be12`에서
-  이미 수정됐다. 새 speculative firmware/SDK 수정이나 과거 PASS 승계는 하지 않는다.
-
-### #35 집중 검증 완료 — 당시 증거
-
-- #35 `resources:security_dfu`는 clean `64ec9a874c265e05a19b4c4e3d10239c91418773`에서
-  M30 multi 20회·cleanup 60건과 signed DFU 10회·negative 5종별 20회·unconfirmed rollback을
-  순차 실제 PASS했다. multi 실제 UART 3개와 DFU 실제 UART 2개 종료를 검증했다.
-  두 캠페인의 등록 raw/schema/semantic·정규화·exact image/readback·종료 증거를 독립 재검증했고,
-  DFU 5개 program phase와 9개 typed 분모도 그대로 검증했다. 최종 현재 세 보드의 읽기 전용
-  identity·HALTED·RADIO0·DPPI 차단·WDT30/31 정지도 PASS다. bond CLEAR·물리 전원 차단은 하지 않았다.
-- 직접 관련 Host 고유 113개·skip 0·registry count/hash 일치와 선택한 입력 recipe 검사 1개를
-  PASS했다. 외부 실행 경계 multi 3개·DFU 3개는 별도이며 전체 최종 Host나 물리 PASS에 합산하지 않는다.
-  필요 multi 3역할과 DFU confirmed/unconfirmed/central 3개 sysbuild만 수행했다. 동일 MCUboot·
-  canonical signed image·trust public key 입력을 검증했고 공식 SDK patch context 원복도 확인했다.
-  아래 최초 registry FAIL만 실제 16개 ID/count/hash에 맞춰 수정했으며 firmware·runner·oracle은 그대로다.
-- 통합 원본 검증은 `D:\w06\focused-resource35-final-replay-64ec9a87.json`, SHA-256은
-  `3bd5da224ff4599995ab1318d9f4e232b35c4aada1d18ec4185db1e7d9ae363d`다.
-  진행은 `D:\w06\targeted-resource35-64ec9a87-progress.json`, 캠페인 증거는
-  `D:\w06\targeted-64ec9a87-resource35-multi`와 `targeted-64ec9a87-resource35-dfu`에 보존한다.
-  이전 fe84a247 multi PASS는 합치지 않았다. 당시 다음은 #36 `resources:iso_audio`였다.
-  이는 개발 집중 캠페인 집계 35/49이며 최종 동일 후보의 공식 49/49·별도 resource measurement closure·
-  141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
-
-### #35의 이전 source와 최초 실패 — 원본 보존
-
-- #35 `resources:security_dfu`의 clean `fe84a2478436bfb22d80823e2fced0e3f2beb08f`에서
-  M30 multi 20회·cleanup 60건·UART 3개 종료·exact readback·세 보드 STOP/idle과 독립 원본
-  재검증은 PASS했다. 다음 DFU 기능 검사 16개·skip 0도 PASS했지만 Host registry는 과거
-  11개여서 집계가 FAIL했다. 원본은 `D:\w06\resource35-dfu-host-fe84a247\result.json`에 보존한다.
-  이 등록 한 항목의 count/hash만 실제 16개 ID에 맞춰 정정하고 직접 회귀 뒤 새 clean 후보로
-  #35 두 캠페인을 위와 같이 새 clean 후보에서 순차 검증했다. fe84a247의 multi PASS는 합치지 않았다.
-  DFU build·flash·runtime은 이 registry 실패 전에 시작하지 않았다. 과거 d909의 원본 실패는
-  power용 unconfirmed 입력과 unsigned direct image 선택이었으며 관련 수정은 이미 현재 코드에 있다.
-
-- #34 `resources:gap_gatt`는 clean `d19a02d674d724eb823138906f5068a905542398`에서
-  multi 20회·PAST 20회·signed 재부팅 20회/replay 거부/EATT를 순차 실제 PASS했다.
-  multi cleanup 60건·UART 3개 종료, PAST 1,000/1,000 수신·손실 0·실제 UART 3개 종료,
-  signed counter 21·replay accept 0·EATT 두 bearer별 1,000회·실제 UART 2개 종료를 검증했다.
-  각 캠페인의 raw/schema/semantic·exact image/readback과 세 보드 STOP/idle을 독립 재검증했고,
-  최종 현재 세 보드의 읽기 전용 identity·HALTED·RADIO0·DPPI 차단·WDT30/31 정지도 확인했다.
-- 직접 관련 Host는 고유 166개·skip 0·registry count/hash 일치다. 외부 실행 경계 검사는
-  multi 3개·PAST 3개·signed 5개이며 물리 PASS나 전체 최종 Host 분모에 합산하지 않는다.
-  필요 역할만 3+3+2개 빌드했고 공식 SDK patch context 원복을 확인했다. Firmware·runner·
-  oracle은 그대로이며, 아래 최초 parser registry FAIL만 실제 18개 ID/count/hash에 맞춰 정정했다.
-- 사용자가 위임한 초기화 선택은 signed 시험 두 보드의 기본 identity CLEAR 각 1회로 실행됐다.
-  실제 전달 시도 각 1회와 원본 CLEAR ACK를 검증했으며 세 번째 보드·다른 identity·자동 재시도로
-  확대하지 않았다. 이 사용된 범위를 후속 반복 CLEAR의 포괄적 권한으로 재사용하지 않는다.
-- 통합 원본 검증은 `D:\w06\focused-resource34-final-replay-d19a02d6.json`, SHA-256은
-  `d559895b55af58af5e13460f2d8f67b549c295ee47abf59a6b4c757ed7d4d1bc`다.
-  진행은 `D:\w06\targeted-resource34-d19a02d6-progress.json`이며 세 캠페인의 원본·정규화·
-  readback·실제 UART 종료·정지 증거는 `D:\w06\targeted-d19a02d6-resource34-*`에 보존한다.
-  이전 fb8832 PASS는 합치지 않았다. 당시 다음은 #35 `resources:security_dfu`였다. 이는 개발 집중
-  캠페인 집계 34/49이며 최종 동일 후보의 공식 49/49·별도 resource measurement closure·
-  141/9/150·R3 전달/재개·1,800초 soak·전체 Host·risk 7·qualification 3·strict closure는 미완료다.
-
-### #34의 이전 source와 최초 실패 — 원본 보존
-
-- #34 `resources:gap_gatt`의 clean `fb8832a21ba5f326b2d9c5239078c2ffcf6a2987`에서
-  multi-link 20회와 PAST 20회를 실제 PASS했다. 두 캠페인 모두 원본·정규화·exact image/readback·
-  실제 serial 종료·세 보드 STOP/idle을 재검증했다. PAST는 1,000/1,000 수신·손실 0이다.
-  multi의 수동적 PHYEND→DISABLE SHORTS를 외부 helper가 잘못 거부한 원본 FAIL은 보존했고,
-  기존 수동 bit 계약만 재사용해 모든 다른 정지 조건을 유지했다. 펌웨어·SDK는 바꾸지 않았다.
-- signed/EATT의 기존 runner가 시험 두 보드에서 기본 identity 전체 bond 초기화를 요구하여
-  먼저 승인 경계를 알렸다. 사용자는 제시한 초기화와 무삭제 최소 수정 중 편한 방법을 선택해
-  W06을 계속 마무리하도록 지시했다. 기존 runner 유지와 시험 두 보드의 시작 초기화 각 1회를
-  선택했으며 세 번째 보드·다른 identity·금지된 erase/unlock/recover로 확대하지 않는다.
-- signed/EATT 직접 기능 테스트 17+18개는 PASS했으나 parser Host 등록부가 과거 16개여서
-  집계는 FAIL했다. 원본은 `D:\w06\resource34-signed-host-fb8832a2`에 보존한다.
-  실제 verbose ID에 맞춰 그 등록 수와 hash 한 항목만 정정했다. 빌드·실기·bond 삭제는
-  이 실패 전에 시작하지 않았다. 이후 직접 검사와 새 clean source의 #34 세 캠페인을 위와 같이
-  완료했다. 위 fb8832의 PASS는 별도 개발 증거이며 새 source의 #34 PASS에 합치지 않았다.
-  이전 진행 `D:\w06\targeted-resource34-progress.json`은 현재 source 진행을 가리키며 원본은 보존한다.
-
-- #33 `families:diagnostic_templates`는 clean source
-  `a8de62883831398deb5bc68ef629006934cf920b`에서 two-wire 12개·H4 12개 실기와 두 등록
-  캠페인의 독립 원본 재검증을 PASS했다. DTM 두 경로·동일 source idle 준비 세 역할과
-  controller/scan-request 두 역할만 빌드했으며 SDK 원복도 확인했다. 뒤의 두 역할은
-  build-semantic 2개이며 물리 runtime·외부 상호운용 PASS로 세지 않는다.
-- DTM runtime의 WDT31 `RUNSTATUS=1`, `CONFIG=65`와 3초 RF lease를 유지했다.
-  최종 Test End 뒤 별도 terminal handover에서만 정상 watchdog 해제·ACK·명령 종료를 수행한다.
-  양쪽 STOP·WDT30/31 정지·CPU halt·RADIO idle·DPPI/timeout·serial close 및 세 번째 보드
-  연속 guard를 원본에서 재검증했다. 고정 nrfx가 정상 해제 event를 소비하므로 ACK 뒤
-  STOPPED event는 정확히 0이다. 두 transport × 두 역할의 program/readback은 4건이고,
-  최종 H4 상태의 campaign identity는 2개다. 두 분모를 각각 검증했으며 기준은 완화하지 않았다.
-- 직접 영향 Host는 진단 12·campaign 7·prepare 40·회귀 89, 합계 148/148·skip 0이며
-  등록 suite의 독립 test ID count/hash도 일치한다. 원본·정규화·semantic·exact image/readback·
-  cleanup 재검증은 `D:\w06\focused-diagnostic33-final-replay-a8de6288.json`에 있다.
-  SHA-256은 `c0fdb0eafc4e1578b20d24e7de7df39291a7cbc30b10199d2672971f86ec8556`이다.
-  진행은 `D:\w06\targeted-diagnostics33-progress.json`, 두 캠페인은
-  `targeted-a8de6288-diagnostic33-dtm`과 `targeted-a8de6288-diagnostic33-build`에 보존한다.
-- 2026-10-18 #33의 two-wire→H4 전환에서 실행 중인 WDT31이 software reset 뒤에도 남는
-  원인을 좁혔다. 사용자 승인으로 현재 RX에 정상 STOP을 한 번만 수행했으며
-  `RUNSTATUS=0`, `STOPPED=1`, `TSEN=0` readback을 확인했다. TX·세 번째 보드는 변경하지 않았다.
-  원본 FAIL·두 bounded 진단은 보존하며 이 복구를 #33 PASS로 세지 않는다.
-  정상 STOP 영수증은 `D:\w06\diagnostic33-rx-approved-wdt31-stop-20261018\result.json`이다.
-  이 정지 상태의 미소비 event=1과 위 firmware 정상 API 뒤의 event=0은 다른 관측이다.
-  수동 STOP을 반복하지 않았다. 잘못 선택한 Windows PowerShell의 사전 launch 실패와 외부
-  집계 helper의 최종 identity/phase 분모 혼동도 별도 원본에 보존했다. 실행 정책·실기 source·
-  원본 byte는 변경하지 않았으며, 기존 허용 PowerShell 7과 수정된 오프라인 helper로 검증했다.
-
-- 개발 집중 검증의 #27 `families:mesh`는 실기 source
-  `3168868b6077cf5a24c7ce113ca0a952d17be313`에서 base 20회, management 10회×두 target,
-  BLOB update 10회×두 target, signed DFU 5회×두 target을 실제 PASS했다.
-  DFU rollback 9회와 세 역할 cleanup·serial close도 PASS다.
-- 네 native/child 영수증의 원본 로그·semantic·image·build-record·readback을 공통 판정기로
-  재검증했다. DFU UART raw의 `0x1c` 14개와 `0x1e` 2개를 `splitlines()`가 LF 기록 경계로
-  잘못 나누는 소비자 오류를 수정했다. 저장된 원본 byte·hash·실기 source는 변경하지 않았다.
-  이 소비자 수정 뒤의 재검증을 새 source에서 수행한 HIL로 표시하지 않는다.
-- 직접 관련 Host 세 suite는 회귀 89, Mesh 21, Mesh DFU 14, 합계 124/124·skip 0이다.
-  세 suite의 독립 test ID count/hash 목록도 실제 verbose 결과와 일치시켰다.
-  전체 최종 Host 검사를 대신하지 않는다.
-- 로컬 진행·증거 위치는 `D:\w06\targeted-3168868b-mesh27-progress.json`, 네
-  `targeted-3168868b-mesh27-*` 디렉터리, `D:\w06\mesh27-native-transcript-fix-checks`다.
-  네 역할의 DFU bound build는 `D:\w06\dfu316`이다. 첫 DFU 호출의 출력 폴더 누락은
-  플래시 전에 실패했으며 원본 launch failure와 새 attempt-2를 분리 보존했다.
-- #28 `families:radio_coexistence`는 clean source
-  `f62d311dc64276474e9304a99cf95fc8b1d42855`에서 두 캠페인 모두 실제 PASS했다.
-  독립 IEEE 802.15.4·ESB는 각각 20회·2,000 packet의 ACK/고유 수신 2,000개, 최종 손실 0개다.
-  BLE+802.15.4·BLE+ESB·BLE+Mesh 공존은 각각 20회, 두 transport 수신 4,000개씩,
-  손실·corrupt·starvation 0이며 아홉 scenario-role의 STOP·serial close와 exact readback을
-  원본에서 재검증했다. 증거는 `D:\w06\focused-radio28-final-replay-f62d311d.json`과
-  `D:\w06\targeted-f62d311d-radio28-progress.json`에 있다. 과거 d909 실패는 보존했다.
-- #29 표준 프로필 준비 시 Host C++ compiler PATH 누락을 실제 설치된 MSYS2 UCRT compiler로
-  바로잡았다. 관련 HIL oracle 26개와 campaign 6개, 합계 32/32·skip 0을 통과했다.
-  기존 clean 초기 연결 실패 한 번 재시도 검사의 두 test ID를 독립 registry에 반영했다.
-  최초 환경 실패 원본과 별도 attempt-2를 `D:\w06\profile29-host-*`에 보존한다.
-  준비 당시 단위검사만으로 실기 PASS를 주장하지 않았으며, 아래는 이후 실제 완료 결과다.
-- #29~#32는 clean source `8185c55d1c915446765980df62a0fcd53cc2e241`에서 완료했다.
-  #29 표준 20개 fresh/restored chain과 네이티브 20개 fresh/restored/second-peer chain,
-  #30 비콘 20 cycle·두 session, #31 합성 ANCS 20·AMS 20·access denied 1·malformed 4개를
-  실제 PASS했다. 세 그룹 모두 raw·semantic·exact image·readback·STOP·serial close와
-  해당 runner-owned bond 정리를 원본에서 독립 재검증했다. 실제 Apple/Google 상호운용은 `NOT_RUN`이다.
-- #32 Fast Pair input/locator·EnOcean·MDS 네 template의 실제 build와 credential negative 4개,
-  manifest·log·ELF/HEX/config·exact command 재검증이 PASS다. 계약상 build-semantic이며
-  보드 runtime·외부 peer PASS가 아니다. 실패 시에도 private 원본 build 자료를 보존하도록
-  외부 실행 helper의 임시 폴더 자동 삭제만 해제했으며, 등록 runner의 source·명령·판정은 바꾸지 않았다.
-  네 그룹의 증거는 `D:\w06\focused-profile29-final-replay-8185c55d.json`,
-  `D:\w06\focused-beacon30-final-replay-8185c55d.json`,
-  `D:\w06\focused-ecosystem31-final-replay-8185c55d.json`,
-  `D:\w06\focused-template32-final-replay-8185c55d.json`이다.
-- #33 최초 준비의 직접 테스트는 진단 11·campaign 6·prepare 40개가 모두 성공했지만 독립 Host registry가
-  campaign을 과거 3개로 등록해 집계 검사는 FAIL했다. 실제 verbose ID 6개와 hash에 맞춰
-  그 registry 한 항목을 수정했다. 최초 FAIL은 `D:\w06\diagnostic33-host-8185c55d`에 보존한다.
-  이후 terminal handover 검사 추가에 따른 현재 12·7개도 실제 verbose ID로 검증했다.
-- 개발 집중 집계는 36/49이며 다음 항목은 #37 `resources:df_cs`다. 이 집계는 서로 다른 개발
-  수정 단계의 누적이며 최종 동일 source의 공식 49/49나 W06 전체 완료율이 아니다.
-  40~49번을 포함한 후속 범위와 정본의 최종 gate를 계속 수행한다.
-- 아래 d909의 40개 판정·17 PASS/23 FAIL은 2026-10-11 원본 조사 기록으로 보존한다.
-  현재 HEAD·실행·결과를 그 원본 source로 되돌리거나 과거 FAIL을 덮어쓰지 않는다.
-
-## 1. 지금의 정본
-
-| 항목 | 상태 |
+| 항목 | 현재 상태 |
 | --- | --- |
-| 작업 저장소 | `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`; build·artifact·실행·log·cache·tmp는 `D:\w06` 전용 |
-| 브랜치 | `Dev-0.6.0-M33`, origin의 같은 브랜치 추적; 사용자 요청으로 main 이후 87개 commit을 하나로 정리 |
-| 2026-10-11 문서 정리 전 개발 source | `d9090f22c258303660c3bb6d288b7580c0d2a453`; 원본 조사 기준선이며 최종 검증 완료 source가 아님 |
-| 첫 전수 조사 | `c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a`: 49개 중 PASS 16 / FAIL 33, 후속 source의 PASS로 승계하지 않음 |
-| squash 전 구현 source | `f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`; 원본 시험의 identity, 현재 HEAD와 구분 |
-| board gitlink | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| SDK·toolchain | NCS 3.4.0 / `dcbdc366a1`; C 설치본은 읽기 입력 전용 |
-| 완료 상태 | M32 12/12, M33 W01~W05 **5/8**, HOST **3/8** |
-| W06 | 미완료; d909 조사 40개 그룹 판정: PASS 17 / FAIL 23. 40번 하위 일부·41~49번·19/22번 누락 범위 미완료 |
-| 현재 제품 | Windows stable/source version 0.5.0; v0.6.0 미공개 |
+| 저장소 | `D:/w06/a/user/hardware/nucode/zephyr` |
+| 브랜치·구현 source | `Dev-0.6.0-M33` · `93fc19f14ea54d8002b61fba81366d964a4071d7`(S14), push 확인 |
+| 이번 변경 | HIL pre-program reset 기본값·안전한 flash 오류 기록·회귀시험·문서; 제품 C/C++·SDK·board 변경 없음 |
+| 수정 검증 | S13의 reset 비교 진단과 S14 관련 Host242·skip0. 새 S14 실기 PASS로 합산하지 않음 |
+| S14 exact CI | [41405732886/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41405732886), 9 job success·job skip0 |
+| S14 Actions | [41405696091/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41405696091), 최신 API 관측은 진행 중; 전체141 수락 전 |
+| 개발49 | source별 누적 PASS. [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)의 당시 기록 |
+| 마지막 공식 cycle | S13 `D:/w06/final27bf`, #1 flash 단계 FAIL·완료0/49. 원본 보존·이어쓰기 금지 |
+| 앞선 유효 실적 | S13 Host651·Actions141·ecosystem2·runtime9·stage150 PASS; S13 실적으로 보존 |
+| 실제 종료 상태 | 11/02 새 OS·COM·공통3lock 확인. debug/flash/UART 실행0; 현재3보드 firmware·RAM·STOP 재검증을 뜻하지 않음 |
+| 자동점검 | w06 PAUSED 유지 지시, 재활성화하지 않음 |
+| 로컬 실행 정본 | `D:/w06/control/continuation.json`; 오래된 S8 새채팅 prompt는 역사로 보존 |
 
-기존 결과의 source를 이번 문서 commit SHA로 바꾸지 않는다. d909 조사 당시 작업 트리는 clean이었다.
-재개 시 HEAD·원격·미커밋 변경·submodule을 실제 확인한다.
-이전 미커밋 idle-fixture 4개 변경은 이미 이력에 반영됐으며 현재 다시 적용할 미커밋 패치가 아니다.
+## 판단 정정과 증거 경계
 
-### 2026-10-11 중단 지점과 개발 후보
+상세 경위·J-Link 공식 자료·오류별 원인·회귀 범위는
+[307번 기록](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)에 모았다.
 
-- d909 원본 조사: 40개 판정 / 17 PASS / 23 FAIL. 40번의 ecosystem 하위 campaign,
-  41~49번 9개 그룹, 19번·22번에서 건너뛴 하위 8개는 남아 있다. 49개 완료로 보고하지 않는다.
-- 40번 native의 첫 cycle fresh/restored는 PASS였으나 second-peer의 `security-submit` 및
-  후속 인증 실패로 종료했다. 원래 FAIL과 cleanup HOLD는 보존한다.
-- 뒤의 독립 idle 복구는 2026-10-11 19:47:29 KST 종료했다. 저장된 commit 해시와 종료 journal을
-  확인했고 19:52 KST 관련 실행 프로세스는 0개였다. 이는 재개 시 현재 보드 안전 상태를 대신하지 않는다.
-- 자세한 로컬 상태는 `D:\w06\d909-survey-continuation.current.json`, 원본 실행은
-  `D:\w06\d909-final-matrix`, 후속 원본 자료는 `D:\w06\d909-survey-*`에 보존한다.
-- `D:\w06\proposals`의 수정 후보는 **저장소 미적용**이다. ORDERED51 및 추가 후보 전체를
-  일괄 적용하지 말고 현재 실패에 필요한 부분만 재검토한다. 외부 후보 검사를 제품 PASS로 세지 않는다.
-- 외부 ORDERED50 Host 검사 결과는 828개 시작 / 827 성공 / 환경 오류 1개다. 전체 PASS가 아니다.
-  추가 후보의 74 suite / 862 ID는 등록 예정 정적 분모이며 전체 실행 결과가 아니다.
-- 첫 집중 대상은 5번 `privacy`: PAwR 송신 예약 100개 대비 수신 93개로 실패했다.
-  원인은 아직 확정하지 않았으며 수정 후 PASS도 없다. 기준을 낮춰 해결하지 않는다.
+- 정상 J-Link 업로드의 reset과 custom J-Link/pyOCD `attach`·`no_reset=True` 경로를 혼동했다.
+  관측된 결함은 시험 도구의 program 전 reset 준비 누락이며, 일반 사용자의 업로드나 장비 한계가 아니다.
+- 원형 `assemble --campaign-evidence`는 독립49 증거를 지원한다. matrix registry의 순서와
+  동일 source·완전성 조건을 무중단 연속 실행 의무로 확대하지 않는다.
+- 원래 #1 마지막 약11.5초 FlashFailure subtype과 진단 A의 MPU init 문제의 동일성은 미확인이다.
+  원본 FAIL, 부분 PASS, 진단, 실제 새 실행을 구분한다.
+- 개발 누적49와 일부 옛 raw 경로는 기록으로 남지만 모두 현재 존재하는 것은 아니다.
+  과거 source의 결과를 최신 source로 바꿔 strict closure에 넣지 않는다.
+- 별도 #1 재실기, #30~49 일괄, 전체49 재시작, 선행 #29 focused20은 기본 실행 목록에 없다.
+  필요한 시험의 고유 cycles·negative·security·STOP·retry 조건은 줄이지 않는다.
 
-## 2. 정리한 실행과 남은 검증
+## 다음 작업 1~7
 
-| source/root | 실제 결과 | 사용 경계 |
-| --- | --- | --- |
-| `846f2993…` / e10 | build 141, Host 62/547, runtime 9, stage 150, matrix 11/49 뒤 signed-write FAIL | 과거 source의 결과; 새 source에 승계 금지 |
-| dirty focused 진단 / e10 | orphan GATT 삭제·재부팅 지속성·sign/replay/EATT와 cache 재개 handshake 확인 | 개발 진단; 최종 W06 PASS 아님 |
-| `f9f1cd28…` / e11 | clean Host **63 suite / 564 test / skip 0**, ecosystem 역할 build 2개, inventory·debugger 확인 | local aggregate/runtime/matrix/soak/closure 미실행 |
-| Actions `37581357663` attempt 1 | 사용자 전환 요청으로 **CANCELLED**. plan·shard 1/3 성공, shard 0/2 취소, aggregate는 미완성 upstream 거부 | 전체 build PASS 아님; 취소로 인한 aggregate 실패를 제품 결함으로 단정하지 않음 |
+1. **현재 상태 확인:** 소유권·프로세스·COM·3lock·마지막 종료 기록과 D 여유를 확인한다.
+2. **기존 CI·Actions 확인:** 실행 중인 exact run의 실제 종료·artifact를 수집한다. 중복 dispatch하지 않는다.
+3. **기존 실적 정리:** 개발49·진단B·회귀242·CI를 각 source와 범위에 결합한다.
+4. **파이프라인 잔여 처리:** Host651·Actions141·ecosystem2·runtime9·stage150의 유효 입력과 미충족을 구분한다.
+5. **남은 마감 처리:** 1800초 soak·자원/지원·risk7·qualification3의 실제 미완료 입력만 처리한다.
+6. **원형 판정·export:** 독립 actual evidence를 원형 validator·strict closure/export로 검증한다.
+   source 또는 원본 누락은 그대로 보고하고 완료를 합성하지 않는다.
+7. **마감 기록:** 문서·증거·검사 결과를 commit/push하고 해당 commit CI를 확인한다.
+   문서 마감과 W06 실제 완료 여부를 분리한다.
 
-2026-10-07 16:08 KST에 세 보드 모두 HALTED 유지·RADIO 유휴·상태 복원을 실제 확인했다.
-이는 프로그램의 STOP 완료나 f9 firmware 실행 PASS가 아니다. 이후 장치 상태는 다시 확인해야 한다.
-정리·자료 가용성·검사 원본은 [304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>)을 따른다.
+이 목록은 모두 새로 실행하라는 뜻이 아니다. 확인된 실패·누락·변경 영향에 필요한 범위만 진행한다.
+원형이 요구하는 같은 source의 원본 증거가 없는데 재실행도 제외된 경우, 충돌하는 구체 입력과
+가능한 마감 범위를 제시한다. 조건을 임의 완화하거나 전체 재실행으로 자동 되돌리지 않는다.
 
-2026-10-08 exact `c21b2716…`에서 Actions build 141, runtime 9, stage 150, Host 64 suite/584 test,
-R3 bundle export/import/relocation과 실물 20-cycle cleanup/resume를 통과했다. production matrix는
-1~13 group PASS 후 14번 `families:pairing_security`의 round 전환 경계에서 FAIL했다. 해당 수정안은
-미커밋으로 보류한 채 동일 clean source의 15~49 group을 `D:\w06\r\survey22`에 append-only로
-끝까지 실행했다. 최종 group 집계는 PASS 16 / FAIL 33이다. group 내부 fail-fast 때문에
-건너뛴 하위 campaign도 `D:\w06\r\survey23-skipped`에서 별도로 실행해 자료를 채웠다. 이 조사
-PASS/FAIL은 새 최종 source의 완료 증거가 아니다.
+## 운영·보존 경계
 
-당시 개발 수정본은 Host 64 suite / 597 test / skip 0을 통과했다. 수정 전 Mesh image로
-`friend_clear_confirm_timeout`을 한 번 재현했고, 공식 Zephyr 수정 3564414a3b27…을 NCS 3.4.0
-고정 patch로 적용한 새 세 역할 image는 build 3/3과 1-cycle 표적검증 뒤 **20/20 cycle**
-Friend Clear·traffic·cleanup을 통과했다. dirty 개발 source의 `PASS_CANDIDATE`이므로 clean S의
-최종 분모로 승격하지 않으며, 나머지 영향 회귀와 clean S 전체 검증은 아직 완료 전이다.
+단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:/w06`, 여유4GiB를 유지한다.
+정상 sector program·software reset·halt/resume·읽기 진단은 기존 승인 범위다.
+DAP/J-Link firmware 작업, Defender 보호 해제·예외·우회, mass erase·unlock·recover는 금지한다.
+공개 tag/Release/main 변경과 외부 제품 interop PASS 승격은 이 작업 범위가 아니다.
 
-2026-10-10 native cleanup runtime 표적검증에서는 이전 실패가 남긴 비대칭 bond를 실제로
-복구했다. 첫 개발 attempt는 peer 한정 stale bond 삭제 뒤 격리한 이전 link의 지연
-`bond_restored_candidate`를 identity 실패로 잘못 판정했다. 이를 이전 link와 새 연결의 판정에서
-분리하고 역할별 광고/scan을 유한 1회 재개하도록 수정한 두 번째 attempt는 양쪽 fresh pairing,
-authenticated level 4, scoped bond 삭제, 기존 bond 불변, STOP 자원 0으로 `DEVELOPMENT_PASS`했다.
-실패·성공 transcript SHA-256은 각각 `5c35654d246e137550cd327a694915a6c0283f322b2357cacd95b9ac644576cc`,
-`665aa126a2dcc70e08f523161e63d7932b80b4da65f6c8dddb550ff0a8bc0455`다. 전체 bond 삭제·무한
-재시도·지연 event 전역 무시는 사용하지 않았다. 이 결과도 clean S의 최종 49-group 증거는 아니다.
-
-## 3. 현재 연속 실행 순서
-
-1. 이번 문서 전수 검토·정리를 마치고 문서/링크·보존 범위 검사 후 같은 브랜치에 commit/push한다.
-   기존 미푸시 코드 commit 2개도 함께 원격에 포함된다. `[skip ci]`로 공식 대규모 빌드는 유예하며,
-   이 개발 push를 최종 source 또는 W06 완료 승인으로 해석하지 않는다.
-2. 실패 수정 재개 시 한 항목만 선택하고 원본 오류·합격 기준·필요 변경 범위를 고정한다.
-3. 그 항목에 필요한 코드만 수정하고 로컬 단위 검사·필요 역할 build·같은 항목 실기를 실행한다.
-4. 실패하면 같은 항목에서 근거를 보강해 수정·재검증한다. 실제 PASS 확인 후 다음 실패로 이동한다.
-   공통 코드의 직접 영향 회귀는 포함하되 관련 없는 실패·전체 49개를 동시에 진행하지 않는다.
-5. 전체 49개·Actions·1,800초 soak·최종 Host·risk 7·qualification 3·closure는 별도 최종 단계다.
-   개별 개발 PASS만으로 생략하거나 완료로 표시하지 않는다. 최종 Host 분모는 당시 registry에서 검증한다.
-
-첫 조사 16/33, 현재 중단 조사 17/23, 앞으로의 수정 후 결과를 별도 집계한다. 새 결과로 과거 FAIL을
-덮어쓰지 않으며, 알 수 없는 원인을 SDK 결함이나 상태 오염으로 단정하지 않는다.
-
-실행 정본은 저장소의 `tests/hil/nu54dk/m33_regression_run.py`와 registry·evidence 계약이다.
-[기존 artifact 안내](../tools/ci/m33_w06_artifacts.md)는 전달·복원 reference로 사용한다.
-
-## 4. D 자료와 보존
-
-- 새 checkout/build/artifact/log/cache/temp는 모두 `D:\w06` 아래에 둔다.
-- `e1`~`e11`, `artifacts`, `archive`는 서로 다른 source·attempt의 자료다. 이름만 바꿔 합치지 않는다.
-- e2/e4/e7/e10의 중복 shard extraction과 e2~e10의 재생성 가능한 clean Arduino clone은 검증 후 정리했다.
-  원본 ZIP·receipt·실패 진단·local runtime은 보존했다. 삭제한 extraction의 절대경로를 바로 실행하지 않는다.
-- 사용자가 추가 ZIP 삭제를 취소했으므로 이 문서 정비에서 원본 artifact ZIP을 추가 삭제하지 않는다.
-- GitHub artifact는 만료될 수 있다. 재사용 시 같은 source/run/attempt의 가용성·권한·hash를 확인한다.
-  기존 4-shard 계약은 byte-bearing shard를 각각 받아 aggregate-shards로 결합해야 한다.
-- private RRAM backup·signing key·credential·firmware/raw bundle은 공개 문서나 GitHub에 올리지 않는다.
-  closure 공개 export는 허용된 metadata만 사용한다.
-- 삭제된 옛 C/D 자료는 Git/원격에 없는 local Host·runtime·cleanup까지 복구된다고 가정하지 않는다.
+현행 인계에서 삭제한 날짜별 중복 지시와 긴 source 일지는
+[정리 전 고정 Git 버전](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/93fc19f14ea54d8002b61fba81366d964a4071d7/00_Docs/M33_HANDOFF.md)에 남아 있다.
+원본 실행·FAIL/PASS/HOLD/NOT_RUN·완료 TODO는 삭제하지 않는다. 과거 source와 경로는 현재 상태로 간주하지 않는다.
 
 ## M33 원본 이력 보관 — 2026-10-07 squash
 
-사용자 요청 범위는 **현재 M33 브랜치만**이다. 분기 기준 `main`과 공개 release/tag는 바꾸지 않는다.
+아래는 **2026-10-07에 완료된 이력 정리의 역사 기록**이다. 당시 요청 범위는 M33 브랜치만이었다. 분기 기준 `main`과 공개 release/tag는 바꾸지 않는다.
 기존 코드·설정·board gitlink는 유지하고, 이력 정리·복구 안내만 문서에 추가한다. W06 완료나 새 구현 승인이 아니다.
 
 | 항목 | 고정값 |
@@ -585,9 +78,9 @@ authenticated level 4, scoped bond 삭제, 기존 bond 불변, STOP 자원 0으�
 | bundle SHA-256 | `b95cbd07520c080c76c0a15bd03b480668a1ed79add8e13bbd300c7d25e7b6c5` |
 | bundle 크기·검사 | 152,774,333 byte; `git bundle verify` PASS, complete history·선행 bundle 불필요 |
 
-원격 변경은 원본 tip을 기대값으로 한 `--force-with-lease`로 현재 M33 ref에만 적용한다.
-새 HEAD의 parent·변경 범위·원격 일치를 검증하며, 새 exact build/HIL은 실행하거나 PASS로 승계하지 않는다.
-문서/이력 정리 commit은 `[skip ci]`로 저장하여 중단한 긴 build를 자동 재시작하지 않는다.
+당시 원격 변경은 원본 tip을 기대값으로 한 `--force-with-lease`로 M33 ref에만 적용했다. 현재 추가 이력 변경 지시가 아니다.
+당시 parent·변경 범위·원격 일치를 검증했다. 새 build/HIL PASS로 승계하지 않았다.
+당시 문서/이력 commit의 `[skip ci]` 사용은 과거 사실이며, 현재 마감 commit CI를 생략하는 지시가 아니다.
 
 기존 checkout은 미커밋 작업과 별도 commit을 먼저 보존한다. squash 전 M33를 새 M33에 일반 merge하거나
 그대로 `pull`해 원본 87개 이력을 다시 섞지 않는다. 원본 SHA 재현이 필요할 때는 이 bundle의 존재·hash를
@@ -609,33 +102,3 @@ M32 브랜치는 삭제됐고 최종 내용은 M33 분기 기준 main에 남아 
 당시 감사는 [295번](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)과
 [302번 §7](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md#7-로컬-자료-삭제-후-후속-인계--2026-10-05>)을 따른다.
 실제 복구 필요 시 파일 존재·hash·bundle prerequisite를 다시 확인한다.
-
-## 5. 변하지 않는 경계
-
-- 실기 writer와 로컬 무거운 build/HIL은 하나씩. 이번에 승인한 병렬 문서/파일 검토는 허용하되
-  다른 실패의 수정·실기를 동시에 벌이지 않는다. 후속 병렬 범위는 최신 사용자 지시를 따른다.
-- NCS 3.4.0 유지. 3.4.1은 v0.7.0 전용. SDK·board·공개 API를 문서 정비로 바꾸지 않는다.
-- NCS 3.4.0의 확정된 SDK 결함을 보정해야 하면 공식 upstream patch의 byte·base revision·변경 파일을
-  lock에 고정하고 build 동안만 적용·원상복구한다. Windows CRLF로 stat만 바뀐 경우도 있으므로 staged·
-  정규화 tracked diff·untracked 파일을 함께 검사하며 `git status` 한 줄만으로 SDK 오염을 단정하지 않는다.
-- 현재 승인 patch는 NCS 3.4.1 조사에서 확인한 Zephyr
-  3564414a3b27ae52718efe5244261ebd00102f56 한 건이다. 배포 자산은
-  tools/nu54-builder/sdk-patches/zephyr/3564414a3b27-friend-clear-confirm.patch,
-  patchset SHA-256은 0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf다.
-  build record나 Arduino manifest에 이 값이 없으면 W06 exact image로 승격하지 않는다.
-- 승인된 정상 sector program·software reset·halt/resume는 재개 범위에서 수행할 수 있다.
-  erase/unlock/recover 허용 이력은 일반 자동 retry 허가가 아니며 필요성을 먼저 진단한다.
-- 현재 보드 연결·결선·firmware·STOP은 과거 기록으로 추정하지 않는다. symlink 권한 우회·임의 승격 금지.
-- 완료 TODO 6개·과거 PASS/FAIL/HOLD/NOT_RUN과 공개 자산은 보존한다.
-- 외부 Apple/Google·장치 실기는 사용자 후속 NOT_RUN. Linux SSH/Mac 접근을 가정하지 않는다.
-  Ubuntu/macOS 실제 지원 검증은 RC 단계다.
-- W06 실제 완료 후 다음 범위를 확인한다. HOST → RC/실제 OS → M33-W07 완료 → 별도 공개 승인 순서를 유지한다.
-
-## 6. 원본을 찾는 곳
-
-W01~W05 완료 결과는 [M33 TODO](TODO_M33.md)의 해당 절과 296·298~301번 기록에서 찾는다.
-W06의 삭제 전/후 경계는 [302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>),
-D 재개와 개별 실패·교정은 [303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>),
-이번 중단·정비는 [304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>)이 소유한다.
-축약 전 인계·TODO 전체 문장은 위 M33 bundle에 보존한 Git commit
-`f9f1cd283ee39bcf0609e047473e0e8c5c9930c1`에서 복원할 수 있다. 새 원격 clone에 원본 중간 SHA가 있다고 가정하지 않는다.

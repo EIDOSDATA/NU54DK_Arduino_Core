@@ -3,36 +3,19 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **M33-W01~W05 완료, W06 개발 집중 49/49 완료·최종 #29 재검증 준비 중 — 완료 5/8 작업 묶음** |
+| 현재 구현 상태 | **M33-W01~W05 완료, W06 개발 집중 49/49 완료·기존 증거와 남은 마감 정리 중 — 완료 5/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-10-31 |
+| 최종 갱신일 | 2026-11-02 |
 
-2026-10-31 clean `206bc0ec…`에서 focused20의 40구간·Host651·Actions64 build141·ecosystem2·
-runtime9·stage150을 확인했다. 최종 matrix 첫 그룹은 READY 대기에서 실패했다. PC의 reset-resume
-직후 실행 상태 확인이 빠진 경로를 교정하며, 같은 image의 변경 조건 진단은 RUNNING과 READY를
-확인했다. 원래 FAIL과 과거 a557 HCI62 원인 미확정 상태는 유지한다. 수정본의 focused20부터
-새 exact source로 최종 검증을 생성하며 W06은 미완료다. 근거는
-[M33 인계](M33_HANDOFF.md#2026-10-31-matrix-부팅-상태-확인-교정)를 따른다.
-
-2026-10-30 D 초기화 후 clean `4e48bdb159e8aa4eeb82968fec6e5e2a7629c0e3`에서 focused20의
-40구간·Host651·Actions63 build141을 확인했으나 runtime 준비에서 PC의 J-Link serial 매핑 결함을
-발견했다. 해당 host 경로를 교정하고 관련 회귀 67개를 통과했다. 기존 runtime FAIL과 원본은 보존하며
-수정 소스의 실제 runtime·최종 matrix는 아직 미실행이다. 4e48의 성공을 수정 source에 승계하지 않고
-새 clean source의 focused20부터 최종 gate를 다시 생성한다. 자세한 경과와 현재 작업 정본은
-[M33 인계](M33_HANDOFF.md#2026-10-30-d-재구성과-j-link-runtime-매핑-교정)를 따른다.
-
-2026-10-29 현재 사용자가 연결한 nRF54L15 DK 3개에서 source `2482eeade61d071ffecb6021a8c8d48e44a8699a`의
-추가 관측을 포함한 #29 fresh 진단 1회가 PASS했다. 이 결과는 정식 focused20 또는 W06 실적으로
-합산하지 않는다. 원래 a557 client HCI62의 근본원인은 아직 미확정이다. 명시 J-Link transport,
-정확한 USB/UART/target identity, checked close, phase별 UART 원문·watcher reset 후 readback을
-추적 가능한 검증 코드로 통합하고 있다. 기존 CMSIS-DAP v2 경로와 STOP·보안·실패·retry 조건은 유지한다.
-새 clean source의 세 역할을 다시 빌드한 뒤 focused20 fresh/restored 40구간을 실제 실행한다.
-이후 같은 source로 Host·Actions·ecosystem·runtime/stage·matrix49(#30~49 포함)·1,800초 soak·
-resource/support/risk/qualification·strict closure/export와 최종 문서·CI를 마감한다.
-현재 증거와 연결 방법은 [M33 인계](M33_HANDOFF.md)를 따른다. 아래의 과거 중단 경과는 당시 기록이다.
+2026-11-02 최신 결정은 기존 개발49 PASS를 보존하고 수정 회귀와 실제 남은 마감 입력을 확인하는 것이다.
+전체49 연속 재시작·#30~49 일괄·별도 선행 #29 focused20은 기본 일정에서 제외한다.
+S14 `93fc19f1…`의 HIL flash 준비 교정은 관련242시험과 exact CI 9 job을 통과했다.
+진단·과거 source PASS·새 실행을 구분하며 W06은 아직 미완료다. 현재 1~7 순서는
+[M33 인계](M33_HANDOFF.md), 상세 판단 오류와 근거는
+[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)을 따른다.
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
@@ -43,15 +26,15 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
 1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **5/8이며
 W01 전체 원장, W02 표준 GATT·Beacon, W03 외부 ecosystem companion, W04 DTM/HCI 진단,
-W05 전체 예제·설치 경로를 완료했고 W06은 실패별 개발 집중 검증 49/49를 완료한 뒤 최종 전체 검증의
-build 단계에서 사용자 요청으로 중단**했다.
+W05 전체 예제·설치 경로를 완료했고 W06은 실패별 개발 집중 검증 49/49를 완료한 뒤
+기존 증거와 최종 마감 입력을 정리 중**이다.
 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 
-2026-10-23 최신 사용자 결정은 실행을 중지하고 현재 결과를 같은 브랜치에 기록·commit/push하는 것이다.
-개발 집중 49/49는 source별 근거로 보존하며 최종 동일 source 49/49로 합치지 않는다. 현재 중단점은
-[306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>), 방법·최종 gate는
-[검증 설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 따른다.
+개발 집중49는 source별 기록으로 보존하며 최신 source의 actual PASS로 합치지 않는다.
+원형은 독립49 증거 조립을 지원한다. 과거 개발 완료 이력은
+[306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>), 현재 실행과 원본 충족 여부는
+[M33 인계](M33_HANDOFF.md)에서 관리한다.
 
 M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
 삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
@@ -95,7 +78,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 집중 49/49 PASS. clean `c6fc5764…` 최종 build는 Twister 94개와 첫 Arduino action PASS, 다음 action 220/463 사용자 중지. build 141·runtime 9·stage 150·동일 source HIL 49/49·soak·Host/risk/qualification/closure 미완료. [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 누적49/49 PASS 보존. S14 회귀242·exact CI PASS, source별 원본과 soak/risk/qualification/closure 미충족 확인 중. [현재 순서](M33_HANDOFF.md) |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
@@ -239,7 +222,7 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 
 ### M33-W06 — 자원·회귀·상호운용
 
-**상태: 미완료·실패별 집중 검증 진행.** 개발 검증과 최종 gate의 기준은
+**상태: 미완료·개발49 기록 보존 및 마감 입력 확인.** 개발 검증과 최종 gate의 기준은
 [W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)다.
 개발 탐색과 최종 완료 검증을 분리하되 아래 완료 조건과 분모는 줄이지 않는다.
 
@@ -247,7 +230,7 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 | --- | --- |
 | 입력 | 같은 clean source S, 고정 board/SDK/toolchain·runner·실제 image |
 | build/runtime/stage | 141 build · 실제 runtime 9 · stage/validate 150 |
-| 기능·자원·자동 peer | 33 + 8 + 8 = 49개 전체 group |
+| 기능·자원·자동 peer | 33 + 8 + 8 = 49개 유효 증거; 독립 실행 결과 조립 가능, 연속 실행 필수 아님 |
 | 장시간 검증 | 별도 세 보드 1,800초 soak |
 | 최종 마감 | 전체 Host·SDK risk 7개·qualification 3개·지원표·strict closure |
 
@@ -278,12 +261,12 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 - [x] R1: 전체 입력·runner·oracle·소비 파일·비용 지도와 새 schema를 확정한다.
 - [x] R2: 보드 없는 계획·판정·중단/재개·손상 주입 회귀를 통과한다.
 - [x] R3: c21b2716에서 작은 전달 bundle과 한 그룹의 실제 cleanup→resume 수직 연결을 검증했다.
-- [ ] R4: 모든 group의 짧은 탐색과 고위험 구성 전환을 검증하고 결함을 해결한다.
+- [ ] R4: 기존 개발49 기록을 보존하고, 확인된 실패·누락·직접 영향에 필요한 검증만 판단한다.
 - [ ] R5: 영향 선택·안전한 cache/보존·시간 측정의 정합성을 검증한다.
 - [ ] R6: clean S에서 위 필수 전체 gate를 통과하고 완료 문서를 마감한다.
 
 R1~R6은 별도 M33 작업 분모가 아니다. 이전 source의 R3 결과를 수정본 전체 PASS로 승격하지 않는다.
-현재는 실패별 집중 검증으로 R4/R5의 문제를 좁혀 해결한다. 이번 요청은 문서 정리·검사·commit/push까지다.
+현행 1~7 순서로 증거와 미충족을 확인한다. 과거 문서 작업 한정 지시나 전체 재실행 지시를 자동 재개하지 않는다.
 
 #### 과거 실행과 실패 기록
 
