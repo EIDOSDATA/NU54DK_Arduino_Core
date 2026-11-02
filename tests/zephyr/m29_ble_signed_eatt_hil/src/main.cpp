@@ -1262,6 +1262,29 @@ namespace
         }
     }
 
+    /** @brief 최초 READY 전에만 제한된 잔여 UART 입력을 비우고 명령 경계를 엽니다. */
+    bool prepareHostCommandBoundary()
+    {
+        std::size_t discarded = 0U;
+        while (Serial.available() > 0)
+        {
+            if (discarded >= sizeof(command))
+            {
+                fail("startup_rx_overflow");
+                return false;
+            }
+            if (Serial.read() < 0)
+            {
+                fail("startup_rx_read");
+                return false;
+            }
+            ++discarded;
+        }
+        command_length = 0U;
+        command[0] = '\0';
+        return true;
+    }
+
     /** @brief UART의 newline command를 fixed buffer로 조립합니다. */
     void pollHostCommand()
     {
@@ -1525,6 +1548,10 @@ void setup()
     if (!BLEDevice.begin(roleName()))
     {
         fail("device_begin", BLEDevice.lastDriverError());
+        return;
+    }
+    if (!prepareHostCommandBoundary())
+    {
         return;
     }
     printReady();

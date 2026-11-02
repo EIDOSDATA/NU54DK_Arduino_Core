@@ -30,6 +30,7 @@ def build_transcript(role: str) -> bytes:
 
     lines = [
         f"{PROTOCOL}|READY|role={role}|bond_count=0|core={REVISION}",
+        f"{PROTOCOL}|READY|role={role}|bond_count=0|core={REVISION}",
         f"{PROTOCOL}|CLEAR|role={role}|bond_count=0|nonce={NONCE}|core={REVISION}",
         f"{PROTOCOL}|REBOOTING|role={role}|nonce={NONCE}|core={REVISION}",
         f"{PROTOCOL}|READY|role={role}|bond_count=0|core={REVISION}",

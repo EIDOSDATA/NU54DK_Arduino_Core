@@ -1,7 +1,7 @@
 # M33 개발 인계 — W06 재설계 구현
 
 최종 갱신: **2026-11-02**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자가 연결한 nRF54L15 DK 3개로 최종 #29 검증을 이어가며, 명시 J-Link 경로를 통합하고 있다.
+사용자가 연결한 nRF54L15 DK 3개로 공식 matrix #12 signed write/EATT의 최초 명령 실패를 교정 중이다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
 
@@ -40,6 +40,12 @@ S9 `bf18039b9c33c33f93a868f8342c5fbac025d532`의 exact M12 CI run `41336500619`/
 S10 `3b7c389ab2339b7f22d7e10cf721c8571b6083e5`의 로컬 원형 M12 Host는 264 suite·2369시험·기존 선택 skip 3개로 PASS했으나 exact CI run `41337988496`/attempt 1은 FAIL했다. CI의 두 `g++` 경로를 `Get-Command -CommandType Application`이 모두 반환하여 `CXX`에 공백으로 연결한 것이 원인이다. 두 실행 파일 검색 경로를 둔 로컬 조건에서 같은 거부를 재현했으며 첫 번째 실제 application 하나만 선택하도록 정정한다. 잘못된 명시 경로의 거부와 모든 기존 assertion을 유지하고 원본 FAIL을 보존한다. 이 로컬 M12 결과는 공식 Host651 또는 새 소스의 실적으로 승계하지 않는다.
 
 S11 `eec5ff008831fdfe51777127073d603124f14241`의 exact M12 CI run `41338278484`/attempt 1에서는 컴파일러 선택과 보안 시험이 통과했다. 뒤의 J-Link 순수 단위시험 35개 중 11개는 합성 fixture를 만드는 `D:/w06/tmp`가 CI에 없어 setup에서 FAIL했다. 기존 D 임시 경로를 건드리지 않은 별도 경로에서 같은 tempfile 생성 함수의 부모 디렉터리 의존성을 확인했다. Host workflow가 `D:/w06/tmp`를 준비하고 TMP·TEMP·TMPDIR로 명시한다. 실제 DLL·장비를 여는 시험으로 바꾸거나 경로·DLL pin·close·보안 assertion을 완화하지 않으며 원본 CI FAIL은 보존한다.
+
+S12 `5b98e4077441b4192e4835a10377510cc922b200`의 exact M12 CI run `41339048842`/attempt 1은 PASS했고, 같은 소스에서 원형 Host 64 suite·651시험·skip 0, 새 Actions run `41340377309`의 4 shard·141개 build, ecosystem 2개, runtime 9개와 stage 150개를 확인했다. 공식 matrix native `74233`/exit 1은 #1~#11 완료 뒤 #12 `m29_signed_eatt`에서 FAIL했다. 실패 cycle `D:/w06/final5b98`은 보존하며 이어 쓰지 않는다.
+
+중앙 보드의 현재 RAM에서 CLEAR 앞의 `0xFE`와 일치하는 명령·실패 상태를 보존했고, 실제 target parser로 `start_record` 거부를 재현했다. 세 보드의 UID·현재 image·RAM 및 debug close, 실제 native 종료·OS·6 COM·공통 3lock을 확인했다. 이 비원자적 현재 관측은 원래 UART의 완전 복구나 `0xFE` 유입 계층 확정, 물리 idle 또는 복원 허가를 뜻하지 않는다. 근거는 `D:/w06/control/matrixa-native-completion.json`, `matrixa-state1-acceptance.json`, `matrixa-signed-parser-repro1/result.json`이다.
+
+이번 최소 교정은 target의 최초 READY 직전에만 192바이트 이내 잔여 RX를 비우고, host가 두 boot READY를 모두 검증한 뒤 각 READY?를 한 번씩 보내도록 한다. boot와 query 응답을 모두 원형 transcript에 보존하고 두 초기 READY의 exact 일치를 요구한다. READY 이후 parser·nonce/core·security·20회 signing reboot/replay·EATT·STOP·retry 조건은 유지한다. 교정 전 새 경계 회귀의 실패를 확인했고, 교정 후 관련 M29 224시험·skip 0이 통과했다. 새 소스의 exact CI 및 대상 실기는 아직 확인 전이며 S12 실적을 승계하지 않는다.
 
 최신 사용자 결정에 따라 별도 선행 #29 focused20은 실행하지 않는다. 수정 소스의 exact CI → Host651 → 새 Actions 4개 shard·141개 산출물과 ecosystem2 → runtime9·stage150 → 공식 #1~#49 순차 matrix → 1800초 soak → 자원·지원·risk7·qualification3 → strict closure/export·문서·원형 validator → 마감 commit/push·해당 commit CI·최종 기록 순서로 진행한다. 공식 #29는 원형 standard20회 fresh/restored 총40구간과 native 검증을 그대로 수행하며 #30~#49도 포함한다. 과거 source의 PASS를 새 source 실적으로 승계하거나 실패 cycle에 이어 쓰지 않는다.
 

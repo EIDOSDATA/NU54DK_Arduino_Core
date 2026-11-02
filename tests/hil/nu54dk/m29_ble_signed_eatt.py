@@ -163,6 +163,7 @@ def parse_role_transcript(
         )
     )
     cursor, _ = _take_pattern(lines, cursor, ready_pattern)
+    cursor = _take_exact(lines, cursor, lines[cursor - 1])
     cursor = _take_exact(
         lines,
         cursor,
@@ -431,12 +432,10 @@ def _query_ready(
     core_revision: str,
     deadline: float,
 ) -> None:
-    """! @brief flash 뒤 입력을 비우고 현재 image READY만 질의합니다. """
+    """! @brief 두 boot READY를 먼저 검증한 뒤 같은 image의 READY를 한 번씩 질의합니다. """
 
+    boot_ready = {}
     for role in ("peripheral", "central"):
-        ports[role].reset_input_buffer()
-        pending[role].clear()
-        _write_line(ports[role], f"{PROTOCOL}|READY?")
         pattern = re.compile(
             rf"{re.escape(PROTOCOL)}\|READY\|role={role}\|bond_count=[01]\|core={core_revision}".encode(
                 "ascii"
@@ -446,6 +445,13 @@ def _query_ready(
         print(f"[{role}] {line.decode('ascii', errors='backslashreplace')}")
         if pattern.fullmatch(line) is None:
             raise BlePairHilFailure(f"{role} W07 READY 불일치: {line!r}")
+        boot_ready[role] = line
+
+    for role in ("peripheral", "central"):
+        _write_line(ports[role], f"{PROTOCOL}|READY?")
+        _read_expected(
+            ports[role], role, pending[role], captures[role], deadline, boot_ready[role]
+        )
 
 
 def _clear_bonds(
