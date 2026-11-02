@@ -3839,8 +3839,8 @@ class RegressionTests(unittest.TestCase):
             inspect.getsource(common.clear_nrf54l_rram_pyocd_sha256),
         )
 
-    def test_bootloader_flash_resets_and_halts_before_program(self):
-        """! @brief vector 소거 전 reset-and-halt로 기존 앱 interrupt를 차단합니다. """
+    def test_flash_resets_and_halts_before_program_by_default(self):
+        """! @brief 이전 앱 상태를 초기화하며 실행 지연과 halt 실패 경계를 유지합니다. """
 
         import ble_pair_hil_common as common
 
@@ -3897,18 +3897,39 @@ class RegressionTests(unittest.TestCase):
             )
             with mock.patch.object(
                     common, "_run_flash_session_with_retry", side_effect=run):
-                common.flash_image_pyocd_sha256(
-                    "bootloader",
-                    "a" * 64,
-                    image,
-                    5.0,
-                    reset_and_halt_before_program=True,
-                )
+                for options in ({}, {"reset_and_halt_before_program": True},
+                                {"defer_reset": True}):
+                    with self.subTest(options=options):
+                        events.clear()
+                        common.flash_image_pyocd_sha256(
+                            "image", "a" * 64, image, 5.0, **options
+                        )
+                        expected = [("reset_and_halt", "software"),
+                                    ("program", None)]
+                        if not options.get("defer_reset", False):
+                            expected.append(("start", None))
+                        self.assertEqual(expected, events)
 
-        self.assertEqual(
-            [("reset_and_halt", "software"), ("program", None), ("start", None)],
-            events,
-        )
+                events.clear()
+                with mock.patch.object(
+                        Target, "get_state",
+                        return_value=type("State", (), {"name": "RUNNING"})()), \
+                        self.assertRaisesRegex(
+                            common.BlePairHilFailure, "pre-program reset-and-halt"):
+                    common.flash_image_pyocd_sha256(
+                        "image", "a" * 64, image, 5.0
+                    )
+                self.assertEqual([("reset_and_halt", "software")], events)
+
+                events.clear()
+                with mock.patch.object(
+                        Target, "reset_and_halt",
+                        side_effect=RuntimeError("synthetic reset failure")), \
+                        self.assertRaises(common.BlePairHilFailure):
+                    common.flash_image_pyocd_sha256(
+                        "image", "a" * 64, image, 5.0
+                    )
+                self.assertEqual([], events)
 
     def test_rram_erase_fills_and_verifies_the_exact_range(self):
         """! @brief nRF54L RRAM erase가 요청 범위 전체를 0xff로 채우는지 검증합니다. """

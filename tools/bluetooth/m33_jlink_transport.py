@@ -439,6 +439,9 @@ def get_backend(fixture, base_type):
                         row["status"] = "PASS"
                     except BaseException as error:
                         row["error_type"] = type(error).__name__
+                        flash_failure = diagnostics.safe_flash_failure_evidence(error)
+                        if flash_failure is not None:
+                            row["flash_failure"] = flash_failure
                         raise
                     finally:
                         final_error = None

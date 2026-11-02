@@ -1,9 +1,48 @@
 # M33 개발 인계 — W06 재설계 구현
 
 최종 갱신: **2026-11-02**. 실패별 집중 수정과 개발 검증은 #1~#49까지 완료했다.
-사용자가 연결한 nRF54L15 DK 3개로 공식 matrix #12 signed write/EATT의 최초 명령 실패를 교정 중이다.
+사용자가 연결한 nRF54L15 DK 3개로 공식 matrix #1의 flash 준비 경계 실패를 교정 중이다.
 개발 49/49를 단일 최종 source의 공식 49/49로 승격하지 않으며 W06은 미완료다.
 구체적인 설계·수락 조건은 [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)가 소유한다.
+
+### 2026-11-02 flash 진입 상태 교정
+
+S13 `27bfb72b07c8e9d46f4e2049a14f85bc97b81708`의 exact M12 CI `41372106554`/attempt 1,
+Host 64 suite·651시험·skip 0, Actions 4 shard·141개, ecosystem 2개, runtime 9개와 stage 150개는
+통과했다. 공식 cycle `D:/w06/final27bf`는 #1 `m28_link`의 mixed sector program에서 START 전에
+FAIL했고 완료 group은 0/49다. 이전 S12의 #1 PASS에도 program 첫 시도 실패와 허용된 재시도가
+있었다. 두 소스의 #1 HEX 3개는 byte 단위로 같으며 과거 PASS를 현재 source의 실적으로 승계하지 않는다.
+
+새 채팅에서 실패 상태의 image·UID·RAM·debug·OS·6 COM·공통 3lock 종료를 확인했다. 사용자의
+임시 순서 지시에 따라 별도 survey의 #2를 PASS와 완전 종료까지 수행했으나, 최신 지시는 오류를 먼저
+교정하고 새 #1부터 순서대로 진행하는 것이다. survey는 #2 뒤 종료했으며 원래 FAIL cycle에 이어 쓰거나
+공식 49/49로 재분류하지 않는다.
+
+동일 S13의 별도 진단 A에서 이전 앱의 `MPU_CTRL=5`, `CONTROL=2` 상태를 물려받은 RAM flash init
+(`PC=0x20000015`)이 약 30초 뒤 timeout했다. 이어 `IPSR=3`, `HFSR.FORCED=1`,
+이전 앱의 `arch_system_halt` PC와 instruction-access fault에 해당하는 `r0=20`을 관측했다.
+pyOCD의 내부 VERIFY→ERASE fallback으로 후속 init이 HardFault 문맥에서 성공할 수 있으므로 최종
+program 반환만으로 첫 init의 정상 여부를 판정하지 않는다. 진단 B에서는 기존
+`reset_and_halt_before_program=True`만 적용하여 `MPU_CTRL=0`, `CONTROL=0`, `IPSR=0`에서
+init 3회가 각각 약 0.1초에 반환값 0으로 완료했다. 직접 MPU 설정·보안 설정·firmware는 변경하지 않았다.
+A와 B의 선행 image는 다르고 계측 시간은 원래 제한 시간을 소비한다. 원래 #1의 마지막 11.5초 실패는
+당시 subtype 로그가 없어 이 진단과 동일 원인이라고 소급 확정하지 않는다.
+
+공통 HEX program의 기존 정상 reset-and-halt 옵션을 기본값으로 설정하여 이전 앱 실행 상태를
+초기화하고 HALTED를 확인한다. `defer_reset`은 계속 program 이후 실행만 지연하며 sector 범위,
+exact HEX 검사, 유한 retry, 시간 제한과 security 조건은 유지한다. J-Link 실패 기록은 기존 helper로
+허용된 flash 원인 분류와 정수만 보존하고 raw UID·임의 예외 문자열은 저장하지 않는다. 원래 예외와 FAIL,
+close 및 receipt pin 계약은 유지한다. 원본 FAIL과 진단 결과는 공식 PASS로 승격하지 않는다.
+
+진단 종료 수락은 `D:/w06/control/s13-flash-observe1-acceptance.json`
+(`f7ef3a09be56c691ebf061677b40002261dd7de0e92fe681a5a40916ce2b55d9`)과
+`D:/w06/control/s13-flash-reset-compare1-acceptance.json`
+(`7085a494ab58126ec1dc781946794e2e6e22b9145a5b136152b91fa53782e242`)에 고정한다.
+교정 전 경계 회귀의 실패를 재현했고 교정 후 관련 242시험·skip 0, M33 계약과 문서 509개 검사를
+통과했다. 공식 Host의 64 suite·651시험 계약은 유지하며, 이 중 이름을 바꾼 경계 시험의 ID hash는
+실제 verbose 로그로 갱신했다. 별도 J-Link 회귀는 36시험이다. 새 소스의 commit/push·exact CI와
+전체 공식 실행은 별도 생성한다. 선행 #29 focused20을
+재실행하지 않으며 공식 #29 안에서 20회 fresh/restored 총 40구간을 검증한다.
 
 ### 2026-11-01 UART 수신 경계 교정
 

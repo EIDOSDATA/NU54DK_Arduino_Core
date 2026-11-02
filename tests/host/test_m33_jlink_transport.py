@@ -18,6 +18,7 @@ TOOLS = ROOT / "tools/bluetooth"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 import m33_jlink_transport as adapter
+from m33_diagnostics import safe_flash_failure_evidence
 
 
 class FakeDLL:
@@ -611,8 +612,10 @@ class BackendIntegrationTests(unittest.TestCase):
         self.Probe = Probe
         self.Session = Session
         self.Base = Base
-        self.diagnostics = SimpleNamespace(SAFE_SESSION_OPTIONS={'auto_unlock': False},
-                                            validate_debug_identity=unittest.mock.Mock())
+        self.diagnostics = SimpleNamespace(
+            SAFE_SESSION_OPTIONS={'auto_unlock': False},
+            validate_debug_identity=unittest.mock.Mock(),
+            safe_flash_failure_evidence=safe_flash_failure_evidence)
         self.modules = {
             'pylink': SimpleNamespace(),
             'pyocd.flash.file_programmer': SimpleNamespace(FileProgrammer=object),
@@ -664,6 +667,7 @@ class BackendIntegrationTests(unittest.TestCase):
         self.assertEqual(pin['session_close']['status'], 'PASS')
         self.assertTrue(row['probe_closed'])
         self.assertTrue(row['probe_disconnected'])
+        self.assertNotIn('flash_failure', row)
         self.assertEqual(self.calls.count('close'), 1)
 
     def test_body_failure_still_closes_and_publishes_FAIL(self):
@@ -674,8 +678,50 @@ class BackendIntegrationTests(unittest.TestCase):
         pin, row = self.receipt()
         self.assertEqual(pin['status'], 'FAIL')
         self.assertEqual(row['error_type'], 'ValueError')
+        self.assertNotIn('flash_failure', row)
         self.assertEqual(pin['session_close']['status'], 'PASS')
         self.assertEqual(self.calls.count('close'), 1)
+
+    def test_flash_failure_preserves_safe_reason_and_original_exception(self):
+        """! @brief 원래 예외·FAIL·정리를 유지하며 허용한 flash 분류만 게시합니다. """
+
+        class FlashFailure(RuntimeError):
+            """! @brief 비공개 문자열을 가진 pyOCD flash 오류 fixture입니다. """
+
+        for route in ('direct', 'cause', 'context', 'unknown'):
+            with self.subTest(route=route):
+                self.calls.clear()
+                adapter.transport._RECEIPTS.clear()
+                failure = FlashFailure('flash init failure: PRIVATE-PROBE-UID')
+                failure.address = 0x20000015
+                failure.result_code = -1
+                error = failure
+                expected = {'reason': 'init_failure',
+                            'address': 0x20000015, 'result_code': -1}
+                if route in ('cause', 'context'):
+                    error = RuntimeError('PRIVATE-WRAPPER-TEXT')
+                    if route == 'cause':
+                        error.__cause__ = failure
+                    else:
+                        error.__context__ = failure
+                elif route == 'unknown':
+                    error = FlashFailure('PRIVATE-UNKNOWN-ERROR')
+                    error.address = 'PRIVATE-ADDRESS'
+                    error.result_code = True
+                    expected = {'reason': 'other'}
+                probe = self.Probe(self.fixture['boards'][0]['serial'])
+                with self.assertRaises(type(error)) as caught:
+                    with self.backend.session(probe):
+                        raise error
+                self.assertIs(caught.exception, error)
+                pin, row = self.receipt()
+                self.assertEqual(pin['status'], 'FAIL')
+                self.assertEqual(row['error_type'], type(error).__name__)
+                self.assertEqual(row['flash_failure'], expected)
+                self.assertNotIn('PRIVATE-', json.dumps(row))
+                self.assertNotIn('flash_failure', pin)
+                self.assertEqual(pin['session_close']['status'], 'PASS')
+                self.assertEqual(self.calls.count('close'), 1)
 
     def test_UID_mismatch_closes_without_verified_UID_pin(self):
         probe = self.Probe(self.fixture['boards'][0]['serial'])

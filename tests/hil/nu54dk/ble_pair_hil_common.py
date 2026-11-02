@@ -439,7 +439,7 @@ def flash_image_pyocd_sha256(
     *,
     defer_reset: bool = False,
     expected_sha256: str | None = None,
-    reset_and_halt_before_program: bool = False,
+    reset_and_halt_before_program: bool = True,
 ) -> tuple[str, str]:
     """! @brief raw UID argv 없이 SHA-256 live probe에 sector program을 수행합니다. """
 
@@ -464,7 +464,8 @@ def flash_image_pyocd_sha256(
             if time.monotonic() >= deadline:
                 raise BlePairHilFailure(f"{role} pyOCD sector flash timeout")
             if reset_and_halt_before_program:
-                ## @brief 부트로더 vector 소거 중 기존 앱 interrupt 진입을 차단합니다.
+                ## @brief 이전 앱의 MPU·권한·예외 상태를 초기화하고 HALTED를 확인합니다.
+                ## @details defer_reset은 program 이후 실행만 지연합니다.
                 session.target.reset_and_halt(
                     reset_type=backend.target_type.ResetType.SYSRESETREQ
                 )
