@@ -493,7 +493,7 @@ HOST_TESTS = sorted({value[1] for value in FAMILIES.values()} |
 HOST_TEST_EXPECTATIONS = {
     "test_build_matrix_runner.py": (12, "b87426eebadc8d4013bb2b6df2fa189c402d31a278160dd96f7966e4a5c612cb"),
     "test_m28_ble_2board_hil.py": (15, "200340053eefa1211b0fb971596f18f1c440cf175c1bba48127338bc932f4ed7"),
-    "test_m28_ble_3board_hil.py": (17, "9702191cccf87eaf05d98705b6b70f49e3883d4924bda6f446911f236bca3a8c"),
+    "test_m28_ble_3board_hil.py": (18, "cb050a7b2ee3ed138f9e9c18968bf6c99cea70c142a35d5cf3a4ee986cfd2dfb"),
     "test_m28_ble_extended.py": (2, "b08f318e2c842225295dcbbd253ab9e1e0dd7c43791d7b477d5387b87e1b3f68"),
     "test_m28_ble_links.py": (6, "6de3ca2ef62ba0f1068d8469692ed7726fe23b811eee4300a3711b11284eea05"),
     "test_m28_ble_pawr.py": (2, "b5bc3120e739f2e4538be03b494abd5cb195bb67f13b6a94ba0886ce57095f8e"),

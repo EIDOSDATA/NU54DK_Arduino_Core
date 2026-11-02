@@ -1,57 +1,55 @@
 # M33 개발 인계 — W06 현행 상태
 
-최종 갱신: **2026-11-02**. 개발 집중 #1~#49 누적 PASS는 완료 기록으로 보존한다.
-W06 마감은 미완료다. **전체49 연속 재시작을 필수로 전제하지 않고**, 기존 독립 증거·수정 회귀와
-실제 남은 마감 입력을 확인한다. 최신 사용자 지시에 따라 문서 정리 후 아래 1~7을 자율 진행한다.
+최종 갱신: **2026-11-03**. W06은 미완료다. 기존 개발49의 source별 PASS는 보존한다.
+최신 사용자 승인은 아래 **1~7의 온전한 독립 증거 마감**이다. 전체49 무중단 연속 합격은 요구하지 않는다.
+같은 source의 유효한 개별 PASS를 유지하고, 실패한 항목은 원인을 고친 새 attempt로 판정한다.
 
 ## 현재 기준선
 
 | 항목 | 현재 상태 |
 | --- | --- |
-| 저장소 | `D:/w06/a/user/hardware/nucode/zephyr` |
-| 브랜치·구현 source | `Dev-0.6.0-M33` · `93fc19f14ea54d8002b61fba81366d964a4071d7`(S14), push 확인 |
-| 이번 변경 | HIL pre-program reset 기본값·안전한 flash 오류 기록·회귀시험·문서; 제품 C/C++·SDK·board 변경 없음 |
-| 수정 검증 | S13의 reset 비교 진단과 S14 관련 Host242·skip0. 새 S14 실기 PASS로 합산하지 않음 |
-| S14 exact CI | [41405732886/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41405732886), 9 job success·job skip0 |
-| S14 Actions | [41405696091/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41405696091), 최신 API 관측은 진행 중; 전체141 수락 전 |
-| 개발49 | source별 누적 PASS. [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)의 당시 기록 |
-| 마지막 공식 cycle | S13 `D:/w06/final27bf`, #1 flash 단계 FAIL·완료0/49. 원본 보존·이어쓰기 금지 |
-| 앞선 유효 실적 | S13 Host651·Actions141·ecosystem2·runtime9·stage150 PASS; S13 실적으로 보존 |
-| 실제 종료 상태 | 11/02 새 OS·COM·공통3lock 확인. debug/flash/UART 실행0; 현재3보드 firmware·RAM·STOP 재검증을 뜻하지 않음 |
-| 자동점검 | w06 PAUSED 유지 지시, 재활성화하지 않음 |
-| 로컬 실행 정본 | `D:/w06/control/continuation.json`; 오래된 S8 새채팅 prompt는 역사로 보존 |
+| 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
+| 직전 검증 source | S15 `dcf7bafa446ecfc9b52bba28e85abe1f3c21551c`, push 완료 |
+| S15 CI | [41411896808/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41411896808) PASS |
+| S15 준비 완료 | Host651/64 suite·skip0, Actions141, ecosystem2, runtime9, stage/validate150 PASS |
+| S15 Actions | [41444695074/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41444695074), 4 shard·141 build 수락 |
+| 독립49 | `D:/w06/finaldcf7/attempt-001`의 #1 `gap_links` FAIL, 완료 **0/49**; 원본 봉인·이어쓰기 금지 |
+| #1 원인·수정 | 수집기는 선두 동일 READY 반복을 허용하지만 최종 파서는 한 줄만 허용했다. 파서를 같은 경계에 맞추고 판정 전 UART 원본 저장을 보장 |
+| 수정 검증 | 해당 suite18 PASS. 원본 보존 회귀 1개 추가로 공식 Host **652개/64 suite**; 새 source CI·정식 실기는 아직 별도 필요 |
+| 실제 종료 상태 | 실패 capture·debug·OS·6 COM·공통3lock 종료 확인. 현재 세 보드 reset·halt·strict isolation PASS; application STOP으로 바꾸어 기록하지 않음 |
+| 개발49 | 과거 source별 누적 PASS. [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)의 당시 실적 |
+| 로컬 실행 정본 | `D:/w06/control/continuation.json`의 `active_workflow`; 자동점검 w06 PAUSED 유지·재활성화 금지 |
 
 ## 판단 정정과 증거 경계
 
-상세 경위·J-Link 공식 자료·오류별 원인·회귀 범위는
-[307번 기록](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)에 모았다.
+[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)은 연속 검증 판단 오류와
+일반 J-Link 업로드/시험 도구 경로의 혼동을 기록한다. 이번 READY 불일치와 raw 보존 수정은
+[308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>)에 기록한다.
 
-- 정상 J-Link 업로드의 reset과 custom J-Link/pyOCD `attach`·`no_reset=True` 경로를 혼동했다.
-  관측된 결함은 시험 도구의 program 전 reset 준비 누락이며, 일반 사용자의 업로드나 장비 한계가 아니다.
-- 원형 `assemble --campaign-evidence`는 독립49 증거를 지원한다. matrix registry의 순서와
-  동일 source·완전성 조건을 무중단 연속 실행 의무로 확대하지 않는다.
-- 원래 #1 마지막 약11.5초 FlashFailure subtype과 진단 A의 MPU init 문제의 동일성은 미확인이다.
-  원본 FAIL, 부분 PASS, 진단, 실제 새 실행을 구분한다.
-- 개발 누적49와 일부 옛 raw 경로는 기록으로 남지만 모두 현재 존재하는 것은 아니다.
-  과거 source의 결과를 최신 source로 바꿔 strict closure에 넣지 않는다.
-- 별도 #1 재실기, #30~49 일괄, 전체49 재시작, 선행 #29 focused20은 기본 실행 목록에 없다.
-  필요한 시험의 고유 cycles·negative·security·STOP·retry 조건은 줄이지 않는다.
+- 원형 `assemble --campaign-evidence`로 독립49를 결합한다. 단일 writer·공통3lock 때문에 차례로
+  실행하는 것과 전체49가 한 번에 끊김 없이 성공해야 한다는 요구를 혼동하지 않는다.
+- 같은 source의 유효 PASS는 한 항목 실패 때문에 버리지 않는다. FAIL은 보존하고 새 attempt만 채택한다.
+- 구현·시험·판정 코드 변경으로 source가 바뀌면 과거 PASS를 새 source 실적으로 고쳐 쓰지 않는다.
+  이번 변경은 검증 코드 수정이며 S15와 새 source의 증거를 분리한다. 연속 실행을 위한 재시작이 아니다.
+- 선두 READY의 물리적 반복 원인은 확정하지 않았다. reset 미실행이나 일반 J-Link 업로드 결함으로 단정하지 않는다.
+- #29의 공식20회 fresh/restored 총40구간과 #30~#49는 독립49 범위에 포함한다. 별도 선행 focused20은 없다.
+  각 시험의 cycles·negative·security·STOP/cleanup·retry 합격 조건은 유지한다.
 
 ## 다음 작업 1~7
 
-1. **현재 상태 확인:** 소유권·프로세스·COM·3lock·마지막 종료 기록과 D 여유를 확인한다.
-2. **기존 CI·Actions 확인:** 실행 중인 exact run의 실제 종료·artifact를 수집한다. 중복 dispatch하지 않는다.
-3. **기존 실적 정리:** 개발49·진단B·회귀242·CI를 각 source와 범위에 결합한다.
-4. **파이프라인 잔여 처리:** Host651·Actions141·ecosystem2·runtime9·stage150의 유효 입력과 미충족을 구분한다.
-5. **남은 마감 처리:** 1800초 soak·자원/지원·risk7·qualification3의 실제 미완료 입력만 처리한다.
-6. **원형 판정·export:** 독립 actual evidence를 원형 validator·strict closure/export로 검증한다.
-   source 또는 원본 누락은 그대로 보고하고 완료를 합성하지 않는다.
-7. **마감 기록:** 문서·증거·검사 결과를 commit/push하고 해당 commit CI를 확인한다.
-   문서 마감과 W06 실제 완료 여부를 분리한다.
-
-이 목록은 모두 새로 실행하라는 뜻이 아니다. 확인된 실패·누락·변경 영향에 필요한 범위만 진행한다.
-원형이 요구하는 같은 source의 원본 증거가 없는데 재실행도 제외된 경우, 충돌하는 구체 입력과
-가능한 마감 범위를 제시한다. 조건을 임의 완화하거나 전체 재실행으로 자동 되돌리지 않는다.
+1. **수정 검증·기준 고정:** 최소 수정과 관련 회귀·문서를 마감하고 commit/push·exact CI를 확인한다.
+   소유권·프로세스·COM·3lock·SDK/도구/board·여유 공간과 clean source S를 고정한다.
+2. **Host652:** S의 원형 Host652/64 suite·skip0, 원본 로그·시험 ID/hash·실제 process 종료를 확보한다.
+3. **같은 S의 준비:** Actions 4 shard·build141 → ecosystem2 → runtime9 → stage/validate150.
+   exact run 중복 dispatch는 하지 않으며 원형이 허용한 build/campaign 재사용만 적용한다.
+4. **독립49:** 기능33+자원8+자동 peer8의 같은 S 원본 증거를 확보한다. 중간 실패는 원인부터 교정한다.
+   실패 cycle에는 이어 쓰지 않고 유효 PASS는 원래 경로에 보존한다. 전체49 무중단 합격 조건은 없다.
+5. **잔여 마감:** 별도 세 보드1800초 soak, 자원/지원 정합, risk7, qualification3을 완료한다.
+   자원8·자동 peer8의 별도 중복 시험층은 만들지 않는다. 외부 제품/OS 실기와 제품 qualification은 실제 범위를 유지한다.
+6. **원형 판정·export:** clean S에서 전체 actual evidence·원본 hash·receipt·종료 사슬을 검증하고
+   독립 경로로 assemble → strict validate → export를 수행한다. 원본 누락이나 다른 source를 합성하지 않는다.
+7. **최종 기록:** 허용된 완료 문서·readiness·증거 참조만 S의 직계 non-merge 기록 commit C 하나로 반영한다.
+   원형 S→C 계약 검증 → push → C exact CI → 최종 기록을 완료한다. 이 조건 전에는 W06 완료로 처리하지 않는다.
 
 ## 운영·보존 경계
 

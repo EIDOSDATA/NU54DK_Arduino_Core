@@ -591,11 +591,11 @@ def parse_role_transcript(
     test_name = TEST_NAMES[test_id]
     suffix = f":nonce={nonce}".encode("ascii")
     lines = protocol_lines(transcript, MILESTONE, nonce)
-    cursor = take_exact(
-        lines,
-        0,
-        f"NUCODE_M28B3_READY:role={role}:test={test_name}".encode("ascii"),
-    )
+    ready = f"NUCODE_M28B3_READY:role={role}:test={test_name}".encode("ascii")
+    cursor = take_exact(lines, 0, ready)
+    ## @brief 시작 전 수집기가 허용한 동일 READY 재전송만 선두에서 소비합니다.
+    while cursor < len(lines) and lines[cursor] == ready:
+        cursor += 1
     if role in ("peripheral", "mixed"):
         cursor = take_exact(
             lines,
@@ -921,6 +921,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
             flash_backend=args.flash_backend,
             ready_replay_settle_seconds=0.75,
         )
+        ## @brief 후처리 검사 실패도 완료된 UART 원본을 잃지 않도록 먼저 보존합니다.
+        for role in ROLES:
+            transcript_paths[role].write_bytes(getattr(execution, role).transcript)
         for role in ROLES:
             validate_image_unchanged(
                 images[role], image_sizes[role], image_hashes[role]
@@ -931,8 +934,6 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
             for role in ROLES
         }
-        for role in ROLES:
-            transcript_paths[role].write_bytes(getattr(execution, role).transcript)
         evidence = build_evidence(
             test_id=args.test_id,
             core_revision=core_revision,
