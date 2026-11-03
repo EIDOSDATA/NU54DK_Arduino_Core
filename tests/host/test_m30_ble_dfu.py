@@ -370,6 +370,98 @@ class M30SecureBleDfuTests(unittest.TestCase):
         value.send_line.assert_called_once()
         self.assertEqual(value.tx_retries, 0)
         self._check_windows_uart_error_observation()
+        self._check_bounded_uart_burst_reads()
+
+    def _check_bounded_uart_burst_reads(self) -> None:
+        """! @brief burst·분할 행을 손실 없이 받고 원형 deadline과 capture 제한을 유지합니다. """
+
+        class BurstPort:
+            """! @brief 호출 크기까지 수신 burst를 반환하는 bounded serial 대역입니다. """
+
+            def __init__(self, chunks):
+                self.chunks = list(chunks)
+                self.calls = 0
+
+            @property
+            def in_waiting(self):
+                """! @brief 첫 대기 중 도착한 burst의 남은 byte는 다음 조회에 노출합니다. """
+
+                return len(self.chunks[0]) if self.calls and self.chunks else 0
+
+            def read(self, size):
+                self.calls += 1
+                if not self.chunks:
+                    return b""
+                data = self.chunks.pop(0)
+                if len(data) > size:
+                    self.chunks.insert(0, data[size:])
+                return data[:size]
+
+        def session_for(chunks):
+            """! @brief 원형 read_line의 capture와 pending 경계를 검사할 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.pending = {"central": bytearray()}
+            value.capture = {"central": bytearray()}
+            value.ports = {"central": BurstPort(chunks)}
+            return value
+
+        first, second = b"x" * 153, b"second response"
+        wire = first + b"\r\n" + second + b"\r\n"
+        value = session_for([wire])
+        with mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0):
+            self.assertEqual(value.read_line("central", 1.0), first)
+            self.assertEqual(value.read_line("central", 1.0), second)
+        self.assertEqual(value.ports["central"].calls, 1)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(bytes(value.pending["central"]), b"")
+
+        value = session_for([wire[:132], wire[132:154], wire[154:]])
+        with mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0):
+            self.assertEqual(value.read_line("central", 1.0), first)
+            self.assertEqual(value.read_line("central", 1.0), second)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(value.ports["central"].calls, 3)
+
+        value = session_for([wire[:132]])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0)),
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.pending["central"]), wire[:132])
+        self.assertEqual(bytes(value.capture["central"]), wire[:132])
+        self.assertEqual(value.ports["central"].calls, 1)
+
+        value = session_for([wire])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0)),
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.pending["central"]), wire)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(value.ports["central"].calls, 1)
+
+        value = session_for([wire])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0),
+            mock.patch.object(HIL_RUNNER, "MAX_TRANSCRIPT_BYTES", len(wire) - 1),
+            self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "transcript"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+
+        factory = mock.MagicMock()
+        port = factory.return_value.__enter__.return_value
+        port.is_open = False
+        serial_module = SimpleNamespace(Serial=factory, EIGHTBITS=8, PARITY_NONE="N", STOPBITS_ONE=1)
+        endpoint = SimpleNamespace(port_name="test-only")
+        with HIL_RUNNER.DfuSession(serial_module, endpoint, endpoint, 460800, "a" * 32, "b" * 40):
+            for call in factory.call_args_list:
+                self.assertEqual(call.kwargs["timeout"], 0.05)
+                self.assertEqual(call.kwargs["write_timeout"], 2.0)
+                self.assertEqual(call.kwargs["inter_byte_timeout"], 0.001)
 
     def _check_windows_uart_error_observation(self) -> None:
         """! @brief 오류 관찰이 원형 호출·반환·오류 상태·scope 복원을 보존하는지 검사합니다. """
