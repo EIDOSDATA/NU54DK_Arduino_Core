@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import ctypes
 import importlib.util
 import json
 from pathlib import Path
@@ -200,6 +201,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
 
         session = object.__new__(HIL_RUNNER.DfuSession)
         session.core_revision = "a" * 40
+        session.pending = {"peripheral": bytearray(), "central": bytearray()}
         session.send_line = mock.Mock()
         session.transaction = mock.Mock(return_value=object())
         session.require_success = mock.Mock()
@@ -312,6 +314,117 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertEqual(
             session.send_line.call_args_list[0], session.send_line.call_args_list[1]
         )
+
+        def make_session():
+            """! @brief 실제 framing 경로와 재송신 횟수를 검사할 최소 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.nonce = "a" * 32
+            value.core_revision = "b" * 40
+            value.sequence = 0
+            value.tx_retries = 0
+            value.pending = {"peripheral": bytearray(), "central": bytearray()}
+            value.capture = {"peripheral": bytearray(), "central": bytearray()}
+            value.send_line = mock.Mock()
+            return value
+
+        suffix = b"|nonce=" + b"a" * 32 + b"|core=" + b"b" * 40
+        valid_rx = b"M30DFU|1|RX|role=central|data=" + response.hex().encode("ascii") + suffix
+        truncated_rx = valid_rx[:-21]
+        target_failure = b"M30DFU|1|FAIL|role=central|reason=protocol-timeout" + suffix
+        for line, message in (
+            (truncated_rx, "malformed SMP RX"),
+            (valid_rx.replace(b"|RX|", b"|RX:", 1), "malformed SMP RX"),
+            (b"M30DFU|1|TX_REJECT|role=central|reason=tx-busy", "malformed SMP TX_REJECT"),
+            (truncated_rx + target_failure, "target 실패"),
+            (valid_rx.replace(b"b" * 40, b"c" * 40), "SMP RX identity"),
+        ):
+            with self.subTest(line=line):
+                value = make_session()
+                value.read_line = mock.Mock(side_effect=(line, TimeoutError("exhausted")))
+                with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, message):
+                    value.transaction(2, 1, 1, {}, 1.0)
+                value.send_line.assert_called_once()
+                value.read_line.assert_called_once_with("central", 1.0)
+                self.assertEqual(value.tx_retries, 0)
+
+        for pending, expected, message in (
+            (truncated_rx + target_failure, HIL_RUNNER.M30DfuFailure, "target 실패"),
+            (truncated_rx, TimeoutError, "original deadline"),
+        ):
+            with self.subTest(pending=pending):
+                value = make_session()
+                value.pending["central"].extend(pending)
+                value.capture["central"].extend(pending)
+                value.read_line = mock.Mock(side_effect=TimeoutError("original deadline"))
+                with self.assertRaisesRegex(expected, message):
+                    value.transaction(2, 1, 1, {}, 1.0)
+                value.send_line.assert_called_once()
+                self.assertEqual(value.tx_retries, 0)
+                self.assertEqual(bytes(value.pending["central"]), pending)
+                self.assertEqual(bytes(value.capture["central"]), pending)
+
+        value = make_session()
+        value.read_line = mock.Mock(side_effect=(b"*** Booting MCUboot ***", valid_rx))
+        self.assertEqual(value.transaction(2, 1, 1, {}, 1.0).payload, {})
+        value.send_line.assert_called_once()
+        self.assertEqual(value.tx_retries, 0)
+        self._check_windows_uart_error_observation()
+
+    def _check_windows_uart_error_observation(self) -> None:
+        """! @brief 오류 관찰이 원형 호출·반환·오류 상태·scope 복원을 보존하는지 검사합니다. """
+
+        class CommStatus(ctypes.Structure):
+            """! @brief 실제 통신 없이 queue 값의 포인터 복사를 검증합니다. """
+
+            _fields_ = [("cbInQue", ctypes.c_uint32), ("cbOutQue", ctypes.c_uint32)]
+
+        flags = ctypes.c_uint32(2)
+        status = CommStatus(13, 7)
+        flags_pointer, status_pointer = ctypes.byref(flags), ctypes.byref(status)
+        state = {"os": 123, "private": 456}
+        original = mock.Mock(side_effect=(1, 0, RuntimeError("original API failure")))
+        win32 = SimpleNamespace(
+            ClearCommError=original, GetLastError=lambda: state["os"],
+            LPDWORD=ctypes.POINTER(ctypes.c_uint32), LPCOMSTAT=ctypes.POINTER(CommStatus),
+        )
+        value = object.__new__(HIL_RUNNER.DfuSession)
+        value.serial_module = SimpleNamespace(Serial=SimpleNamespace(__module__="serial.serialwin32"))
+        value.ports = {"central": SimpleNamespace(_port_handle=42)}
+        setter = mock.Mock(side_effect=lambda code: state.__setitem__("os", code))
+
+        def changed_clock():
+            """! @brief 관찰 중 오류 상태가 변해도 원래 값이 복원되는지 확인합니다. """
+
+            state.update(os=999, private=888)
+            return 17
+
+        with (
+            mock.patch.object(HIL_RUNNER.os, "name", "nt"),
+            mock.patch.dict(sys.modules, {"serial.serialwin32": SimpleNamespace(win32=win32)}),
+            mock.patch.object(ctypes, "WinDLL", return_value=SimpleNamespace(SetLastError=setter), create=True),
+            mock.patch.object(ctypes, "get_last_error", side_effect=lambda: state["private"], create=True),
+            mock.patch.object(ctypes, "set_last_error", side_effect=lambda code: state.__setitem__("private", code), create=True),
+            mock.patch.object(HIL_RUNNER.time, "monotonic_ns", side_effect=changed_clock),
+            mock.patch("builtins.print") as output,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "original API failure"):
+                with value.observe_uart_errors():
+                    self.assertEqual(win32.ClearCommError(42, flags_pointer, status_pointer), 1)
+                    self.assertEqual(state, {"os": 123, "private": 456})
+                    self.assertEqual(win32.ClearCommError(42, flags_pointer, status_pointer), 0)
+                    self.assertEqual(state, {"os": 123, "private": 456})
+                    win32.ClearCommError(42, flags_pointer, status_pointer)
+            self.assertIs(win32.ClearCommError, original)
+            self.assertEqual(original.call_args_list, [mock.call(42, flags_pointer, status_pointer)] * 3)
+            self.assertEqual((flags.value, status.cbInQue, status.cbOutQue), (2, 13, 7))
+            observation = json.loads(output.call_args.args[0].split("=", 1)[1])
+            self.assertEqual((observation["calls"], observation["nonzero"], observation["api_failures"]), (2, 1, 1))
+            self.assertEqual(observation["observer_errors"], 0)
+            self.assertEqual(observation["events"][0]["role"], "central")
+            self.assertEqual(observation["events"][0]["flags"], 2)
+            self.assertEqual(observation["events"][0]["input_queued"], 13)
+            self.assertIsNone(observation["events"][1]["flags"])
 
     def test_hil_runner_retries_only_transient_sector_flash_failure(self) -> None:
         """! @brief 간헐 sector session 실패만 reset-halt로 1회 재시도합니다. """

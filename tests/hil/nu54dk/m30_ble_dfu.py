@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
@@ -858,10 +858,66 @@ class DfuSession:
         self.central_started = False
         self.cleanup = {role: "NOT_RUN" for role in ("peripheral", "central")}
 
+    @contextmanager
+    def observe_uart_errors(self):
+        """! @brief 기존 Windows 통신 오류 조회의 반환값을 바꾸지 않고 진단 로그에 보존합니다. """
+
+        if os.name != "nt" or self.serial_module.Serial.__module__ != "serial.serialwin32":
+            yield
+            return
+        import ctypes
+        from ctypes.wintypes import DWORD
+
+        win32 = sys.modules["serial.serialwin32"].win32
+        kernel = ctypes.WinDLL("kernel32", use_last_error=False)
+        set_error = kernel.SetLastError
+        set_error.argtypes = [DWORD]
+        set_error.restype = None
+        original = win32.ClearCommError
+        observation = {"calls": 0, "nonzero": 0, "api_failures": 0, "observer_errors": 0, "events": []}
+
+        def observed(handle, flags_pointer, status_pointer):
+            """! @brief 원형 API를 한 번만 호출하며 실제 OS와 ctypes 오류 상태를 복원합니다. """
+
+            result = original(handle, flags_pointer, status_pointer)
+            saved_os_error = win32.GetLastError()
+            saved_private_error = ctypes.get_last_error()
+            try:
+                observation["calls"] += 1
+                flags = ctypes.cast(flags_pointer, win32.LPDWORD).contents.value if result else None
+                if not result:
+                    observation["api_failures"] += 1
+                elif flags:
+                    observation["nonzero"] += 1
+                if (not result or flags) and len(observation["events"]) < 64:
+                    status = ctypes.cast(status_pointer, win32.LPCOMSTAT).contents if result else None
+                    role = next((name for name, port in self.ports.items()
+                                 if getattr(port, "_port_handle", None) == handle), "unmapped")
+                    observation["events"].append({
+                        "role": role, "monotonic_ns": time.monotonic_ns(), "flags": flags,
+                        "api_result": int(result), "os_error": saved_os_error,
+                        "input_queued": int(status.cbInQue) if status is not None else None,
+                        "output_queued": int(status.cbOutQue) if status is not None else None,
+                    })
+            except Exception:
+                observation["observer_errors"] += 1
+            finally:
+                ctypes.set_last_error(saved_private_error)
+                set_error(saved_os_error)
+            return result
+
+        win32.ClearCommError = observed
+        try:
+            yield
+        finally:
+            win32.ClearCommError = original
+            print("M30_DFU_UART_OBSERVATION=" + json.dumps(observation, sort_keys=True), file=sys.stderr)
+
     def __enter__(self) -> DfuSession:
         """! @brief role별 exact VCOM을 열고 기존 입력을 비웁니다. """
 
         try:
+            self.stack.enter_context(self.observe_uart_errors())
             for role in ("peripheral", "central"):
                 endpoint = self.endpoints[role]
                 port = self.stack.enter_context(
@@ -933,8 +989,14 @@ class DfuSession:
     def checked_line(self, role: str, deadline: float) -> bytes:
         """! @brief target FAIL을 즉시 승격하고 protocol line을 반환합니다. """
 
-        line = self.read_line(role, deadline)
-        if line.startswith(b"M30DFU|1|FAIL|"):
+        try:
+            line = self.read_line(role, deadline)
+        except TimeoutError as error:
+            pending = bytes(self.pending[role])
+            if b"M30DFU|1|FAIL|" in pending:
+                raise M30DfuFailure(f"{role} target 실패: {pending!r}") from error
+            raise
+        if b"M30DFU|1|FAIL|" in line:
             raise M30DfuFailure(f"{role} target 실패: {line!r}")
         return line
 
@@ -1092,6 +1154,8 @@ class DfuSession:
                     return bytes.fromhex(match.group(1).decode("ascii"))
                 except ValueError as error:
                     raise M30DfuFailure("SMP RX hex가 잘못됐습니다.") from error
+            if line.startswith(b"M30DFU|1|RX"):
+                raise M30DfuFailure(f"malformed SMP RX: {line!r}")
             reject = TX_REJECT_PATTERN.fullmatch(line)
             if reject is not None:
                 if (
@@ -1100,6 +1164,8 @@ class DfuSession:
                 ):
                     raise M30DfuFailure("SMP TX_REJECT identity가 다릅니다.")
                 return None
+            if line.startswith(b"M30DFU|1|TX_REJECT"):
+                raise M30DfuFailure(f"malformed SMP TX_REJECT: {line!r}")
 
     def wait_unlink(self, deadline: float) -> None:
         """! @brief reset response 뒤 기존 Peripheral 연결 종료를 확인합니다. """
