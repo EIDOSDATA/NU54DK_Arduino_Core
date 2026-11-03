@@ -196,7 +196,55 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 HIL_RUNNER.validate_console_transport(app)
 
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
-        """! @brief reset 뒤 VCOM 보호 시간을 거쳐 새 application에 START를 보냅니다. """
+        """! @brief reset 뒤 실제 application 준비 통지 전 UART 명령을 보내지 않습니다. """
+
+        session = object.__new__(HIL_RUNNER.DfuSession)
+        session.core_revision = "a" * 40
+        session.send_line = mock.Mock()
+        session.transaction = mock.Mock(return_value=object())
+        session.require_success = mock.Mock()
+        session.wait_unlink = mock.Mock()
+        observed = []
+        ready = (
+            b"M30DFU|1|BOOT_READY|role=peripheral|core="
+            + session.core_revision.encode("ascii")
+        )
+        incoming = iter((b"*** Booting MCUboot ***", ready))
+
+        def read_boot_line(role: str, deadline: float) -> bytes:
+            """! @brief 부팅 중 송신이 없고 원래 phase deadline을 쓰는지 확인합니다. """
+
+            self.assertEqual((role, deadline), ("peripheral", 10.0))
+            session.send_line.assert_not_called()
+            session.reconnect.assert_not_called()
+            line = next(incoming)
+            observed.append(line)
+            return line
+
+        session.read_line = mock.Mock(side_effect=read_boot_line)
+        session.reconnect = mock.Mock(return_value="connected")
+        with mock.patch.object(
+            HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0, 2.0)
+        ), mock.patch.object(HIL_RUNNER.time, "sleep"):
+            self.assertEqual(session.reset_and_reconnect(10.0), "connected")
+        self.assertEqual(observed, [b"*** Booting MCUboot ***", ready])
+        session.wait_unlink.assert_called_once_with(10.0)
+        session.reconnect.assert_called_once_with(10.0)
+        session.send_line.assert_not_called()
+
+        for line, error in (
+            (ready.replace(b"peripheral", b"central"), "BOOT_READY identity"),
+            (ready.replace(b"a" * 40, b"b" * 40), "BOOT_READY identity"),
+            (b"M30DFU|1|FAIL|reason=command-state", "target 실패"),
+        ):
+            with self.subTest(line=line):
+                session.read_line = mock.Mock(return_value=line)
+                with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, error):
+                    session.wait_boot_ready(10.0)
+        session.read_line = mock.Mock(side_effect=TimeoutError("deadline"))
+        with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "BOOT_READY timeout"):
+            session.wait_boot_ready(10.0)
+        session.send_line.assert_not_called()
 
         source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
         reset_body = source.split("def reset_and_reconnect", 1)[1].split(
@@ -208,6 +256,10 @@ class M30SecureBleDfuTests(unittest.TestCase):
         )
         self.assertLess(
             reset_body.index("guard_deadline = time.monotonic()"),
+            reset_body.index("self.wait_boot_ready(deadline)"),
+        )
+        self.assertLess(
+            reset_body.index("self.wait_boot_ready(deadline)"),
             reset_body.index("self.reconnect(deadline)"),
         )
         self.assertGreaterEqual(HIL_RUNNER.POST_RESET_COMMAND_GUARD_SECONDS, 2.0)
@@ -222,6 +274,10 @@ class M30SecureBleDfuTests(unittest.TestCase):
             reconnect_body.index("self.restart_central_scan(deadline)"),
             reconnect_body.index('self.wait_link("central", deadline)'),
         )
+        target = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        setup = target.split("void setup()", 1)[1].split("void loop()", 1)[0]
+        self.assertLess(setup.index("BLEDevice.begin("), setup.index("reportBootReady();"))
+        self.assertLess(setup.index("BLESecureDfu.confirm()"), setup.index("reportBootReady();"))
 
     def test_hil_runner_cbor_round_trip_is_strict(self) -> None:
         """! @brief SMP map·array·byte·bool을 보존하고 trailing byte를 거부합니다. """

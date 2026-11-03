@@ -809,6 +809,17 @@ namespace
         }
     }
 
+    /** @brief 초기화가 끝난 새 application의 UART 명령 수신 준비를 알립니다. */
+    void reportBootReady()
+    {
+        Serial.print(protocol);
+        Serial.print("|BOOT_READY|role=");
+        Serial.print(roleName());
+        Serial.print("|core=");
+        Serial.print(M30_DFU_CORE_REVISION);
+        Serial.println();
+    }
+
     /** @brief Host UART 명령을 현재 role 상태에 적용합니다. */
     void executeCommand(char *line)
     {
@@ -998,6 +1009,7 @@ void setup()
 #if !defined(NUCODE_M30_DFU_PERIPHERAL)
     BLEScan.onResult(onScanResult);
 #endif
+    reportBootReady();
 }
 
 /** @brief UART·BLE·security·SMP relay 상태 기계를 진행합니다. */

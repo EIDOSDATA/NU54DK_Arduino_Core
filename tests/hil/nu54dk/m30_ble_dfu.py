@@ -793,6 +793,7 @@ def output_paths(argument: str | None, overwrite: bool) -> tuple[Path, Path, Pat
 
 
 READY_PATTERN = re.compile(rb"^M30DFU\|1\|READY\|role=(peripheral|central)\|core=([0-9a-f]{40})$")
+BOOT_READY_PATTERN = re.compile(rb"^M30DFU\|1\|BOOT_READY\|role=(peripheral|central)\|core=([0-9a-f]{40})$")
 BEGIN_PATTERN = re.compile(
     rb"^M30DFU\|1\|BEGIN\|role=(peripheral|central)\|nonce=([0-9a-f]{32})\|core=([0-9a-f]{40})$"
 )
@@ -937,8 +938,26 @@ class DfuSession:
             raise M30DfuFailure(f"{role} target 실패: {line!r}")
         return line
 
+    def wait_boot_ready(self, deadline: float) -> None:
+        """! @brief 재부팅한 peripheral의 초기화 완료 통지를 송신 없이 기다립니다. """
+
+        try:
+            while True:
+                line = self.checked_line("peripheral", deadline)
+                match = BOOT_READY_PATTERN.fullmatch(line)
+                if match is None:
+                    continue
+                if (
+                    match.group(1) != b"peripheral"
+                    or match.group(2).decode("ascii") != self.core_revision
+                ):
+                    raise M30DfuFailure("peripheral BOOT_READY identity가 다릅니다.")
+                return
+        except TimeoutError as error:
+            raise M30DfuFailure("peripheral BOOT_READY timeout") from error
+
     def synchronize(self, role: str, deadline: float) -> None:
-        """! @brief 재부팅 뒤 READY query를 재시도해 application 생존을 확인합니다. """
+        """! @brief 준비된 application에 READY query를 보내 생존과 identity를 확인합니다. """
 
         while time.monotonic() < deadline:
             self.send_line(role, "M30DFU|1|READY?")
@@ -1253,6 +1272,7 @@ class DfuSession:
             if remaining <= 0.0:
                 break
             time.sleep(min(0.05, remaining))
+        self.wait_boot_ready(deadline)
         return self.reconnect(deadline)
 
 
