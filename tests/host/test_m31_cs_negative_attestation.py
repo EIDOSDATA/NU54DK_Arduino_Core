@@ -212,6 +212,12 @@ class M31CsNegativeAttestationTests(unittest.TestCase):
         }
         rows = MODULE.build_missing_service_records(record, phase_cleanup)
         self.assertEqual(len(rows), 20)
+        for field in ("initiator_disconnects", "peer_disconnects"):
+            with self.subTest(incomplete_disconnect=field):
+                record[field] = 19
+                with self.assertRaises(MODULE.CsNegativeAttestationFailure):
+                    MODULE.build_missing_service_records(record, phase_cleanup)
+                record[field] = 20
         record["initiator_lines"].append("CS procedures requested")
         with self.assertRaises(MODULE.CsNegativeAttestationFailure):
             MODULE.build_missing_service_records(record, phase_cleanup)

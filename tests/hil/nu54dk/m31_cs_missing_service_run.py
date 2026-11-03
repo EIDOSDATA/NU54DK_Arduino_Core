@@ -219,14 +219,14 @@ def main() -> int:
                     spoof_uid,
                     args.missing_service_peer_image,
                     120.0,
-                    hardware_reset=True,
+                    defer_reset=True,
                 )
                 record["initiator_flash"] = flash_image_pyocd(
                     "cs_initiator",
                     init_uid,
                     args.initiator_image,
                     120.0,
-                    hardware_reset=True,
+                    defer_reset=True,
                 )
                 flash_results = {
                     "initiator": record["initiator_flash"],
@@ -236,6 +236,7 @@ def main() -> int:
                 }
                 initiator.reset_input_buffer()
                 spoof.reset_input_buffer()
+                ## @brief 두 image의 program 완료 뒤에만 실행하여 조기 연결 UART 혼입을 막습니다.
                 hardware_reset(args.missing_service_peer_probe_sha256)
                 hardware_reset(args.initiator_probe_sha256)
                 started = time.monotonic()
