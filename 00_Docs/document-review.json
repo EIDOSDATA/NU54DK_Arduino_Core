@@ -4,6 +4,84 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "review_date": "2026-11-03",
+      "baseline_commit": "398dcc1752d62094b1ed9fddab8fd40a90368c3d",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "S16 독립17개 PASS와 #18 RRAM 초기화 FAIL, 최소 교정·87.13초 진단·source별 증거 경계 및 현행1~7 정합화",
+      "scope": {
+        "updated_existing_markdown": 6,
+        "added_markdown": 1,
+        "deleted_markdown": 0,
+        "full_document_reaudit": false,
+        "historical_records_reclassified": false
+      },
+      "current_state": {
+        "w06_complete": false,
+        "s16_independent_pass": 17,
+        "s16_failed_ordinal": 18,
+        "correction_diagnostic_formal_group18_credit": 0,
+        "host_required_tests": 654,
+        "host_required_suites": 64,
+        "continuous49_required": false,
+        "separate_focused29_allowed": false
+      },
+      "checks": [
+        {
+          "name": "Related regression",
+          "result": "PASS",
+          "tests": 157
+        },
+        {
+          "name": "Markdown UTF-8/local links",
+          "result": "PASS",
+          "count": 512,
+          "command": "python -B tools/ci/run_m12_gate.py docs"
+        },
+        {
+          "name": "M33 contract",
+          "result": "PASS",
+          "command": "python -B tools/bluetooth/m33_contract.py --sdk-root D:/w06/ncs --check"
+        }
+      ],
+      "documents": [
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "078cfa6ee43b7c40fe2333f1761d3526081221d7d5a87ea7a889c8ae5fa9b69f",
+          "bytes_utf8_lf": 19155
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "956dce13d8d7ae5f3c2577d141a43a927afff64c075877ac6cfb5094b47d0b1a",
+          "bytes_utf8_lf": 5698
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "d3bdc3c7d8098294fda40e2407ff656b0ec379b77aad9c4c59d4f50791bf8ee9",
+          "bytes_utf8_lf": 9531
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "8bcf55f411b76cb0f6d829fda848022a5ea157f6c1854e718771c83cf7857cbb",
+          "bytes_utf8_lf": 34817
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "46611538d9cfdbbe3b7b18b3ed68ea36c256c7a4e1b4dcd73bae6c4367766746",
+          "bytes_utf8_lf": 9172
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "97ea098014329828cfe3fa9b566702aeaba082423679ab22aa9cea18155340b6",
+          "bytes_utf8_lf": 48443
+        },
+        {
+          "path": "00_Docs/04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md",
+          "sha256_utf8_lf": "d5e892f44d68ae07f46383866401f512855f9258f2448ee7b4280e3e406751a7",
+          "bytes_utf8_lf": 6357
+        }
+      ]
+    },
+    {
       "review_date": "2026-10-29",
       "baseline_commit": "6c57d38e87e6410b2a8f56fc50a4cf365e87aa85",
       "branch": "Dev-0.6.0-M33",
@@ -55,8 +133,19 @@
         "target_build_or_hil": "NOT_RUN"
       },
       "current_state": {
-        "first_survey": {"source": "c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a", "pass": 16, "fail": 33},
-        "d909_survey": {"group_verdicts": 40, "pass": 17, "fail": 23, "unstarted_groups": 9, "group40_child_pending": true, "group19_22_skipped_scopes": 8},
+        "first_survey": {
+          "source": "c21b2716432c5a3cc9ce98aecb4ccdeed7cf180a",
+          "pass": 16,
+          "fail": 33
+        },
+        "d909_survey": {
+          "group_verdicts": 40,
+          "pass": 17,
+          "fail": 23,
+          "unstarted_groups": 9,
+          "group40_child_pending": true,
+          "group19_22_skipped_scopes": 8
+        },
         "first_focus": "group5 privacy / PAwR received93 of100; cause unconfirmed; changed-source HIL NOT_RUN",
         "m33_completed": "5/8",
         "host_completed": "3/8",

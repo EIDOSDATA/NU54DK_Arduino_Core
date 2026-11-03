@@ -4013,6 +4013,190 @@ class RegressionTests(unittest.TestCase):
         self.assertTrue(target.halted)
         self.assertTrue(target.resumed)
 
+    def _rram_program_fixture(self, failure=None):
+        """! @brief page 경계 밖 sentinel과 호출별 실패를 가진 RRAM 준비 fixture입니다. """
+
+        from types import SimpleNamespace
+
+        start, size = 0xC2000, 0xB2000
+        memory = bytearray(b"\xa5" + b"\x00" * size + b"\x5a")
+        clock, events = [0.0], []
+        options = {"flash.timeout.init": 30.0, "flash.timeout.program": 10.0}
+        state = SimpleNamespace(name="RUNNING")
+
+        def step(phase):
+            """! @brief 단계별 첫 오류나 deadline 소진을 재현합니다. """
+
+            events.append(phase)
+            clock[0] += 0.001
+            if failure == phase:
+                raise RuntimeError(phase)
+            if failure == "late-" + phase:
+                clock[0] = 121.0
+
+        def reset(**_kwargs):
+            """! @brief 정상 reset 후 HALTED 상태를 제공합니다. """
+
+            step("reset")
+            state.name = "HALTED"
+
+        def halt():
+            """! @brief 알고리즘 오류 이후에도 CPU 정지를 기록합니다. """
+
+            events.append("halt")
+            state.name = "HALTED"
+
+        buffer = []
+
+        def load(number, address, data):
+            """! @brief 한 번 적재한 buffer0의 내용을 보존합니다. """
+
+            step("load")
+            self.assertEqual((0, start), (number, address))
+            buffer.append(bytes(data))
+
+        def program(number, address):
+            """! @brief 요청된 page만 기록하고 앞뒤 sentinel은 건드리지 않습니다. """
+
+            step("program")
+            self.assertEqual(0, number)
+            self.assertTrue(start <= address < start + size)
+            self.assertEqual(0, address % 0x1000)
+            self.assertEqual(0x1000, len(buffer[0]))
+            offset = address - start + 1
+            memory[offset:offset + 0x1000] = buffer[0]
+            state.name = "RUNNING"
+
+        def wait(*, timeout):
+            """! @brief 잔여 예산과 원형 상한 안의 대기만 허용합니다. """
+
+            self.assertGreater(timeout, 0)
+            self.assertLessEqual(timeout, min(10.0, 120.0 - clock[0]))
+            step("wait")
+            state.name = "HALTED"
+            return {"wait-timeout": -1, "wait-error": 7}.get(failure, 0)
+
+        def readback(address, length):
+            """! @brief 전체 readback의 잘린 데이터와 마지막 word 손상을 재현합니다. """
+
+            step("readback")
+            offset = address - start + 1
+            data = bytes(memory[offset:offset + length])
+            if failure == "short-readback":
+                return data[:-1]
+            if failure == "corrupt-last-word" and address + length == start + size:
+                return data[:-4] + b"\xff\xff\xff\x00"
+            return data
+
+        flash = SimpleNamespace(
+            page_buffers=[0x20001000, 0x20001004],
+            Operation=SimpleNamespace(PROGRAM=1),
+            get_page_info=lambda address: SimpleNamespace(base_addr=address, size=0x1000),
+            init=mock.Mock(side_effect=lambda *_a, **_k: step("init")),
+            load_page_buffer=mock.Mock(side_effect=load),
+            start_program_page_with_buffer=mock.Mock(side_effect=program),
+            wait_for_completion=mock.Mock(side_effect=wait),
+            cleanup=mock.Mock(side_effect=lambda: step("cleanup")),
+        )
+        region = SimpleNamespace(is_flash=True, start=0, end=0x17CFFF, flash=flash,
+                                 contains_range=lambda *, start, length: 0 <= start and start + length <= 0x17D000)
+        ram = SimpleNamespace(is_ram=True, contains_range=lambda **_kwargs: True)
+        target = SimpleNamespace(
+            memory_map=SimpleNamespace(get_region_for_address=lambda address: region if address < 0x20000000 else ram),
+            reset_and_halt=mock.Mock(side_effect=reset), get_state=lambda: state,
+            halt=mock.Mock(side_effect=halt), resume=mock.Mock(),
+            read_memory_block8=mock.Mock(side_effect=readback),
+        )
+        session = SimpleNamespace(target=target, options=SimpleNamespace(get=options.get, set=options.__setitem__))
+        backend = SimpleNamespace(target_type=SimpleNamespace(ResetType=SimpleNamespace(SYSRESETREQ=1)),
+                                  session=lambda _probe: nullcontext(session))
+        return SimpleNamespace(start=start, size=size, memory=memory, clock=clock,
+                               events=events, options=options, state=state, flash=flash,
+                               region=region, target=target, session=session, backend=backend)
+
+    def test_rram_program_preparation_reuses_one_buffer_and_verifies_all_bytes(self):
+        """! @brief 실제 secondary 크기를 buffer 한 번으로 채우고 HALTED로 다음 flash를 준비합니다. """
+
+        import ble_pair_hil_common as common
+
+        for function in (common.erase_nrf54l_rram_pyocd_sha256, common.clear_nrf54l_rram_pyocd_sha256):
+            with self.subTest(function=function.__name__):
+                f = self._rram_program_fixture()
+                with mock.patch.object(common.time, "monotonic", side_effect=lambda: f.clock[0]), \
+                        mock.patch.object(common, "_load_private_pyocd_backend",
+                                          return_value=(f.backend, None, nullcontext)):
+                    result = function("secondary", "a" * 64, f.start, f.size, 120.0,
+                                      prepare_for_program=True)
+                self.assertEqual(hashlib.sha256(b"\xff" * f.size).hexdigest(), result["observed_sha256"])
+                self.assertEqual(result["expected_sha256"], result["observed_sha256"])
+                self.assertEqual(b"\xa5" + b"\xff" * f.size + b"\x5a", bytes(f.memory))
+                self.assertEqual(1, f.flash.load_page_buffer.call_count)
+                self.assertEqual([(0, address) for address in range(f.start, f.start + f.size, 0x1000)],
+                                 [call.args for call in f.flash.start_program_page_with_buffer.call_args_list])
+                self.assertEqual(178, f.target.read_memory_block8.call_count)
+                self.assertEqual("HALTED", f.state.name)
+                f.target.resume.assert_not_called()
+                self.assertEqual({"flash.timeout.init": 30.0, "flash.timeout.program": 10.0}, f.options)
+                self.assertLessEqual(f.flash.cleanup.call_count, 1)
+
+        f = self._rram_program_fixture("init")
+        option_sets = [0]
+
+        def restore_failure(option, value):
+            """! @brief 설정 복원 실패가 최초 init 오류를 덮지 않는지 확인합니다. """
+
+            f.options[option] = value
+            option_sets[0] += 1
+            if option_sets[0] == 2:
+                raise ValueError("restore")
+
+        f.session.options.set = restore_failure
+        with mock.patch.object(common.time, "monotonic", side_effect=lambda: f.clock[0]), \
+                self.assertRaisesRegex(RuntimeError, "^init$") as raised:
+            common._fill_rram_before_program(f.backend, f.session, "secondary", f.start, f.size, 120.0)
+        self.assertTrue(any("설정 복원 실패" in note for note in raised.exception.__notes__))
+        f.target.resume.assert_not_called()
+
+        f = self._rram_program_fixture()
+        f.target.halt.side_effect = [RuntimeError("first-halt"), ValueError("second-halt")]
+        with mock.patch.object(common.time, "monotonic", side_effect=lambda: f.clock[0]), \
+                self.assertRaisesRegex(RuntimeError, "^first-halt$") as raised:
+            common._fill_rram_before_program(f.backend, f.session, "secondary", f.start, f.size, 120.0)
+        self.assertTrue(any("최종 halt 실패" in note for note in raised.exception.__notes__))
+        f.target.resume.assert_not_called()
+
+    def test_rram_program_preparation_rejects_ranges_errors_and_expired_budget(self):
+        """! @brief 범위 밖 write·부분 readback·오류·공동 deadline 소진을 PASS로 바꾸지 않습니다. """
+
+        import ble_pair_hil_common as common
+
+        for start, size in ((0xC2004, 0x1000), (0xC2000, 0x100), (0x17C000, 0x2000), (0x10000000, 0x1000)):
+            with self.subTest(start=start, size=size):
+                f = self._rram_program_fixture()
+                with self.assertRaises(common.BlePairHilFailure):
+                    common._fill_rram_before_program(f.backend, f.session, "secondary", start, size, 120.0)
+                f.target.reset_and_halt.assert_not_called()
+                f.flash.load_page_buffer.assert_not_called()
+                f.flash.start_program_page_with_buffer.assert_not_called()
+        failures = ("init", "load", "program", "wait", "wait-timeout", "wait-error",
+                    "cleanup", "readback", "short-readback", "corrupt-last-word",
+                    "late-init", "late-load", "late-program", "late-wait", "late-cleanup", "late-readback")
+        for failure in failures:
+            with self.subTest(failure=failure):
+                f = self._rram_program_fixture(failure)
+                with mock.patch.object(common.time, "monotonic", side_effect=lambda: f.clock[0]), \
+                        self.assertRaises(Exception) as raised:
+                    common._fill_rram_before_program(f.backend, f.session, "secondary", f.start, f.size, 120.0)
+                if failure in ("init", "load", "program", "wait", "cleanup", "readback"):
+                    self.assertEqual(failure, str(raised.exception))
+                if failure in ("init", "load", "late-init", "late-load"):
+                    f.flash.start_program_page_with_buffer.assert_not_called()
+                if failure in ("program", "wait", "wait-timeout", "wait-error", "late-program", "late-wait"):
+                    self.assertEqual(1, f.flash.start_program_page_with_buffer.call_count)
+                self.assertEqual("HALTED", f.state.name)
+                f.target.resume.assert_not_called()
+                self.assertEqual({"flash.timeout.init": 30.0, "flash.timeout.program": 10.0}, f.options)
+
     def test_automatic_peer_is_generated_from_same_campaign_flow(self):
         """! @brief scripted peer는 선행 파일 없이 실제 campaign PASS 뒤에만 생성합니다. """
 

@@ -12,12 +12,14 @@
 
 최신 사용자 승인은 같은 source의 완전한 독립 증거를 확보하는 1~7 마감이다.
 전체49 무중단 연속 합격과 별도 선행 #29 focused20은 요구하지 않는다. 공식 #29의40구간과 #30~#49는 포함한다.
-S15 `dcf7bafa…`의 CI·Host651·Actions141·ecosystem2·runtime9·stage150은 PASS로 보존한다.
-독립 #1은 선두 READY 수집기/파서 불일치로 FAIL·완료0/49이며 세 보드 안전종료를 확인했다.
-최소 수정 suite18 PASS, 새 원본 보존 시험 1개를 포함한 공식 Host는652/64 suite다.
+S16 `398dcc17…`의 CI·Host652·Actions141·ecosystem2·runtime9·stage150과 독립 #1~#17은 PASS로 보존한다.
+#18은 DFU 본시험 전 secondary RRAM 초기화 timeout으로 FAIL 봉인했다.
+교정 관련157 PASS, 초기화·전체 readback의 실기87.13초와 세 보드 안전종료를 확인했다.
+신규 회귀2개를 포함한 공식 Host는654/64 suite다. 교정 진단은 정식 #18 PASS로 세지 않는다.
 과거 source 실적과 새 실행을 구분하며 W06은 미완료다. 현재 1~7은 [M33 인계](M33_HANDOFF.md),
 연속 검증 판단 정정은 [307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>),
-이번 수정은 [308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>)을 따른다.
+READY 교정은 [308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>),
+이번 DFU 초기화 교정은 [309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)을 따른다.
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
@@ -80,7 +82,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 누적49/49 PASS 보존. S15 준비150 완료 뒤 독립 #1 FAIL·안전종료; READY 최소 수정 후 같은 source의 독립49·soak/risk/qualification/closure 진행. [현재 순서](M33_HANDOFF.md) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 누적49/49와 S16 독립17개 PASS 보존. #18 초기화 교정 후 같은 source의 독립49·soak/risk/qualification/closure 진행. [현재 순서](M33_HANDOFF.md) |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 

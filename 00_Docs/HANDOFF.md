@@ -13,11 +13,11 @@
 | v0.6.0 개발 | M32 12/12, M33 W01~W05 **5/8**, W06 미완료 — [계획](TODO_v0.6.0.md) |
 | Host | **3/8**. W06 완료 전 HOST-W04 이후 착수 금지 |
 | 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33`; 다시 분기하지 않음 |
-| 현재 구현 source | 직전 S15 `dcf7bafa…`; READY 판정·원본 보존 수정 후 새 source를 고정 중. 과거 시험 identity 변경 금지 |
+| 현재 구현 source | 직전 S16 `398dcc17…`; #18 DFU RRAM 초기화 교정 후 새 source를 고정 중. 과거 시험 identity 변경 금지 |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
 | 개발 검증 방식 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 실패별 수정과 최종 동일 source gate를 분리 |
 | 현재 집중 검증 | 개발 누적 **49/49 PASS**. #49 `resources:radio`까지 완료했으나 source별 결과를 최종 49/49로 혼합하지 않음 |
-| 최신 검증 | S15 CI·Host651·Actions141·ecosystem2·runtime9·stage150 PASS. 독립 #1 FAIL·0/49 및 안전종료 보존; 수정 suite18 PASS, 새 공식 Host652. [현행 순서](M33_HANDOFF.md) · [308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>) |
+| 최신 검증 | S16 CI·Host652·Actions141·ecosystem2·runtime9·stage150 및 독립 #1~#17 PASS. #18 FAIL 봉인. 교정 관련157·실기 초기화87.13초·종료 PASS, 공식 Host654. [현행 순서](M33_HANDOFF.md) · [309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>) |
 | 실제 재개 절차·보존 자료 | [M33 인계](M33_HANDOFF.md) |
 
 ## 먼저 읽기

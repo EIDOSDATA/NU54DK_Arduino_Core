@@ -564,16 +564,156 @@ def reset_target_pyocd_sha256(
     return probe_transport().reset_mode()
 
 
+def _fill_rram_before_program(
+    backend: Any,
+    session: Any,
+    role: str,
+    start: int,
+    size: int,
+    deadline: float,
+) -> str:
+    """! @brief program 직전 RRAM 초기화에 같은 RAM page를 재사용하고 전 byte를 검증합니다.
+    @note flash 알고리즘은 앱 context를 복원하지 않으므로 성공·실패 모두 HALTED로 남깁니다.
+    """
+
+    target = session.target
+    page_size = 0x1000
+    region = target.memory_map.get_region_for_address(start)
+    if (start % page_size != 0 or size <= 0 or size % page_size != 0 or
+            region is None or not region.is_flash or region.start != 0 or
+            region.end != 0x17CFFF or
+            not region.contains_range(start=start, length=size)):
+        raise BlePairHilFailure(f"{role} RRAM program 준비 범위가 잘못됐습니다.")
+    flash = region.flash
+    if flash is None or not flash.page_buffers:
+        raise BlePairHilFailure(f"{role} RRAM program page buffer가 없습니다.")
+    buffer_region = target.memory_map.get_region_for_address(flash.page_buffers[0])
+    if (buffer_region is None or not buffer_region.is_ram or
+            not buffer_region.contains_range(start=flash.page_buffers[0], length=page_size)):
+        raise BlePairHilFailure(f"{role} RRAM program buffer 범위가 잘못됐습니다.")
+    addresses = range(start, start + size, page_size)
+    for address in addresses:
+        page = flash.get_page_info(address)
+        if page is None or page.base_addr != address or page.size != page_size:
+            raise BlePairHilFailure(f"{role} RRAM program page 경계가 다릅니다.")
+
+    def remaining(phase: str, address: int = start) -> float:
+        """! @brief 기존 공동 deadline을 유지하고 실패 단계·주소를 보존합니다. """
+
+        value = deadline - time.monotonic()
+        if value <= 0:
+            raise BlePairHilFailure(
+                f"{role} RRAM program 준비 timeout: {phase}, address=0x{address:x}"
+            )
+        return value
+
+    def bounded_call(option: str, phase: str, operation: Callable[[], Any]) -> None:
+        """! @brief 원형 timeout을 늘리지 않고 init·uninit도 잔여 예산 안에서 실행합니다. """
+
+        previous = session.options.get(option)
+        if (type(previous) not in (int, float) or
+                not math.isfinite(previous) or previous <= 0):
+            raise BlePairHilFailure(f"{role} RRAM program timeout 설정이 잘못됐습니다.")
+        operation_error: BaseException | None = None
+        try:
+            session.options.set(option, min(previous, remaining(phase)))
+            operation()
+        except BaseException as error:
+            operation_error = error
+            raise
+        finally:
+            try:
+                session.options.set(option, previous)
+            except BaseException as restore_error:
+                if operation_error is None:
+                    raise
+                operation_error.add_note(
+                    "RRAM timeout 설정 복원 실패: " + type(restore_error).__name__
+                )
+        remaining(phase)
+
+    primary_error: BaseException | None = None
+    initialized = False
+    cleanup_attempted = False
+    try:
+        remaining("reset")
+        target.reset_and_halt(reset_type=backend.target_type.ResetType.SYSRESETREQ)
+        if target.get_state().name != "HALTED":
+            raise BlePairHilFailure(f"{role} RRAM program 준비 reset-and-halt 실패")
+        initialized = True
+        bounded_call("flash.timeout.init", "init", lambda: flash.init(
+            flash.Operation.PROGRAM, address=start, reset=False
+        ))
+        flash.load_page_buffer(0, start, b"\xff" * page_size)
+        remaining("buffer-load")
+        program_timeout = session.options.get("flash.timeout.program")
+        if (type(program_timeout) not in (int, float) or
+                not math.isfinite(program_timeout) or program_timeout <= 0):
+            raise BlePairHilFailure(f"{role} RRAM page timeout 설정이 잘못됐습니다.")
+        for address in addresses:
+            remaining("program-start", address)
+            flash.start_program_page_with_buffer(0, address)
+            result = flash.wait_for_completion(
+                timeout=min(program_timeout, remaining("program-wait", address))
+            )
+            if type(result) is not int or result != 0:
+                raise BlePairHilFailure(
+                    f"{role} RRAM page program 실패: address=0x{address:x}, result={result}"
+                )
+            remaining("program-complete", address)
+        cleanup_attempted = True
+        bounded_call("flash.timeout.init", "cleanup", flash.cleanup)
+        initialized = False
+        observed_hash = hashlib.sha256()
+        for address in addresses:
+            remaining("readback", address)
+            observed = bytes(target.read_memory_block8(address, page_size))
+            remaining("readback-complete", address)
+            if observed != b"\xff" * page_size:
+                raise BlePairHilFailure(f"{role} RRAM program 준비 readback이 다릅니다.")
+            observed_hash.update(observed)
+        return observed_hash.hexdigest()
+    except BaseException as error:
+        primary_error = error
+        raise
+    finally:
+        try:
+            target.halt()
+            if target.get_state().name != "HALTED":
+                raise BlePairHilFailure(f"{role} RRAM program 준비 최종 halt 실패")
+            if initialized and not cleanup_attempted:
+                bounded_call("flash.timeout.init", "failure-cleanup", flash.cleanup)
+        except BaseException as cleanup_error:
+            if primary_error is None:
+                primary_error = cleanup_error
+                raise
+            primary_error.add_note(
+                "RRAM program 준비 cleanup 실패: " + type(cleanup_error).__name__
+            )
+        finally:
+            try:
+                target.halt()
+                if target.get_state().name != "HALTED":
+                    raise BlePairHilFailure(f"{role} RRAM program 준비 HALTED 유지 실패")
+            except BaseException as halt_error:
+                if primary_error is None:
+                    raise
+                primary_error.add_note("RRAM 최종 halt 실패: " + type(halt_error).__name__)
+
+
 def erase_nrf54l_rram_pyocd_sha256(
     role: str,
     digest: str,
     start: int,
     size: int,
     timeout_seconds: float,
+    *,
+    prepare_for_program: bool = False,
 ) -> dict[str, int | str]:
     """! @brief SHA-256 live probe로 지정 RRAM 범위만 지우고 전 byte를 검증합니다. """
 
-    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
+    if type(prepare_for_program) is not bool or \
+            not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
             start < 0 or size <= 0 or \
             start % 4 != 0 or size % 0x100 != 0:
         raise BlePairHilFailure("RRAM sector erase 범위와 timeout이 잘못됐습니다.")
@@ -584,6 +724,11 @@ def erase_nrf54l_rram_pyocd_sha256(
             """! @brief 한 session에서 RRAM 범위 초기화와 전 byte readback을 완료합니다. """
 
             nonlocal observed_digest
+            if prepare_for_program:
+                observed_digest = _fill_rram_before_program(
+                    backend, session, role, start, size, deadline
+                )
+                return
             observed_hash = hashlib.sha256()
             halted = False
             try:
@@ -644,10 +789,13 @@ def clear_nrf54l_rram_pyocd_sha256(
     start: int,
     size: int,
     timeout_seconds: float,
+    *,
+    prepare_for_program: bool = False,
 ) -> dict[str, int | str]:
     """! @brief SHA-256 live probe로 RRAM을 0xff로 채우고 전체 범위를 검증합니다. """
 
-    if not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
+    if type(prepare_for_program) is not bool or \
+            not math.isfinite(timeout_seconds) or timeout_seconds <= 0 or \
             start < 0 or size <= 0 or \
             start % 4 != 0 or size % 0x100 != 0:
         raise BlePairHilFailure("RRAM clear 범위와 timeout이 잘못됐습니다.")
@@ -656,6 +804,24 @@ def clear_nrf54l_rram_pyocd_sha256(
     try:
         with private_debug_output():
             with backend.session(probe) as session:
+                if prepare_for_program:
+                    observed_digest = _fill_rram_before_program(
+                        backend, session, role, start, size, deadline
+                    )
+                    expected_hash = hashlib.sha256(b"\xff" * size).hexdigest()
+                    if observed_digest != expected_hash:
+                        raise BlePairHilFailure(f"{role} RRAM 전체 range digest가 다릅니다.")
+                    return {
+                        "mode": "nrf54l-rram-fill-verified",
+                        "start": start,
+                        "end_exclusive": start + size,
+                        "bytes": size,
+                        "erase_value": "0xff",
+                        "verified_words": size // 4,
+                        "expected_sha256": expected_hash,
+                        "observed_sha256": observed_digest,
+                        "readback_backend": "pyocd-live-target",
+                    }
                 session.target.halt()
                 try:
                     session.target.write32(0x5004B500, 1)

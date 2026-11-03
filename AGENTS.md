@@ -26,7 +26,9 @@
 - 원형 `assemble --campaign-evidence`의 독립 증거 조립을 사용할 수 있다. 같은 source·원본 chain·
   cycles·security·STOP·cleanup·retry 조건은 유지하며, 과거 source PASS를 새 source로 고쳐 쓰지 않는다.
 - 이전 flash 교정의 비교 진단·회귀242와 S15 준비 PASS를 해당 source 실적으로 보존한다.
-  이번 READY 판정 교정은 수집기/최종 파서의 경계 일치와 실패 raw 보존이다. 일반 J-Link 업로드 문제로 확대하지 않는다.
+  READY 교정 후 S16 독립 #1~#17 PASS와 #18 FAIL을 보존한다. 현재는 DFU program 준비의
+  RRAM 초기화 전송 비용을 교정한다. [309번](<00_Docs/04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)의
+  진단 PASS는 정식 #18 PASS가 아니다. 일반 J-Link 업로드나 연속시험 잔류 설정 문제로 확대하지 않는다.
 - 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 브랜치는 `Dev-0.6.0-M33`이다.
   단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:\w06`, 최소 여유4GiB를 유지한다.
 - 병렬 검토는 읽기 전용이다. 자동점검 w06은 PAUSED 유지. DAP/J-Link firmware 작업,

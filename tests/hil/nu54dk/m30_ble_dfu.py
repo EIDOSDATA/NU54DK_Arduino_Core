@@ -1711,6 +1711,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 SLOT1_OFFSET,
                 SLOT1_SIZE,
                 args.flash_timeout,
+                prepare_for_program=True,
             )
             flash_results["peripheral_bootloader"] = flash_image_with_retry(
                 "peripheral-bootloader",
@@ -1819,6 +1820,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 SLOT1_OFFSET,
                 SLOT1_SIZE,
                 args.flash_timeout,
+                prepare_for_program=True,
             )
             cleanup_flash_results = {
                 "peripheral": flash_image_with_retry(
@@ -1849,6 +1851,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 SLOT1_OFFSET,
                 SLOT1_SIZE,
                 min(args.flash_timeout, 120.0),
+                prepare_for_program=True,
             )
             flash_image_with_retry(
                 "peripheral-failure-cleanup",
