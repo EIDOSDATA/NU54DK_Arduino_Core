@@ -83,8 +83,11 @@ POSITIVE_UPDATES = 10
 NEGATIVE_ATTEMPTS = 20
 ## @brief 정상 10회·negative 5종 20회·rollback의 full-image 응답을 bounded 보존합니다.
 MAX_TRANSCRIPT_BYTES = 32 * 1024 * 1024
-## @brief 빈 queue에서도 한 응답을 담을 수 있는 bounded read를 미리 요청합니다.
+## @brief 한 번에 읽는 UART 응답 byte 수를 제한합니다.
 UART_READ_CHUNK_BYTES = 4096
+## @brief RX 출력은 64byte 수신마다 한 credit을 주며 마지막 newline 뒤에는 보내지 않습니다.
+UART_RX_CREDIT_BYTES = 64
+UART_RX_CREDIT = b"\x06"
 MAX_TX_RETRIES = 3
 DFU_BAUD_RATE = 460800
 POST_RESET_COMMAND_GUARD_SECONDS = 2.0
@@ -929,7 +932,7 @@ class DfuSession:
                         bytesize=self.serial_module.EIGHTBITS,
                         parity=self.serial_module.PARITY_NONE,
                         stopbits=self.serial_module.STOPBITS_ONE,
-                        timeout=0.05,
+                        timeout=0.0,
                         inter_byte_timeout=0.001,
                         write_timeout=2.0,
                     )
@@ -974,19 +977,35 @@ class DfuSession:
         pending = self.pending[role]
         capture = self.capture[role]
         port = self.ports[role]
+        credited_bytes = 0
         while time.monotonic() < deadline:
             newline = pending.find(b"\n")
             if newline >= 0:
                 line = bytes(pending[:newline]).rstrip(b"\r")
                 del pending[: newline + 1]
                 return line
-            ## @brief 원형 50ms 상한을 유지하며 Windows는 byte 간격1ms에도 partial 반환합니다.
+            if (
+                role == "central"
+                and pending.startswith(b"M30DFU|1|RX|role=central|data=")
+                and len(pending) >= credited_bytes + UART_RX_CREDIT_BYTES
+            ):
+                if time.monotonic() >= deadline:
+                    break
+                if port.write(UART_RX_CREDIT) != len(UART_RX_CREDIT):
+                    raise M30DfuFailure("central UART RX credit가 일부만 기록됐습니다.")
+                port.flush()
+                credited_bytes += UART_RX_CREDIT_BYTES
+            ## @brief nonblocking queue를 읽고 빈 경우에만 원형 phase deadline 안에서 양보합니다.
             chunk = port.read(UART_READ_CHUNK_BYTES)
             if chunk:
                 pending.extend(chunk)
                 capture.extend(chunk)
                 if len(capture) > MAX_TRANSCRIPT_BYTES:
                     raise M30DfuFailure(f"{role} transcript가 허용 크기를 넘었습니다.")
+            else:
+                remaining = deadline - time.monotonic()
+                if remaining > 0.0:
+                    time.sleep(min(0.001, remaining))
         raise TimeoutError(f"{role} UART line timeout")
 
     def checked_line(self, role: str, deadline: float) -> bytes:

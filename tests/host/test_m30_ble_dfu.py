@@ -370,7 +370,112 @@ class M30SecureBleDfuTests(unittest.TestCase):
         value.send_line.assert_called_once()
         self.assertEqual(value.tx_retries, 0)
         self._check_windows_uart_error_observation()
+        self._check_uart_response_credit()
         self._check_bounded_uart_burst_reads()
+
+    def _check_uart_response_credit(self) -> None:
+        """! @brief 수신한 RX 조각만 credit하고 누락·짧은 write·deadline을 우회하지 않습니다. """
+
+        prefix = b"M30DFU|1|RX|role=central|data="
+
+        class CreditPort:
+            """! @brief credit 없이는 다음 64byte를 내보내지 않는 실제 송신 제한 대역입니다. """
+
+            def __init__(self, wire, *, fragment=7, short_credit=False, lost_byte=False):
+                self.wire = wire
+                self.offset = 0
+                self.limit = min(64, len(wire))
+                self.fragment = fragment
+                self.short_credit = short_credit
+                self.lost_byte = lost_byte
+                self.credits = []
+                self.flushes = 0
+
+            def read(self, size):
+                stop = min(self.offset + min(size, self.fragment), self.limit)
+                result = self.wire[self.offset:stop]
+                self.offset = stop
+                if self.lost_byte and self.offset == 64 and result:
+                    self.lost_byte = False
+                    return result[:-1]
+                return result
+
+            def write(self, data):
+                self.credits.append(data)
+                if self.short_credit:
+                    return 0
+                if data != b"\x06" or self.offset != self.limit:
+                    raise AssertionError("수신 경계 이전 또는 잘못된 credit")
+                self.limit = min(self.limit + 64, len(self.wire))
+                return 1
+
+            def flush(self):
+                self.flushes += 1
+
+        def session_for(port):
+            """! @brief 원형 framing과 raw capture를 사용하는 최소 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.pending = {"central": bytearray()}
+            value.capture = {"central": bytearray()}
+            value.ports = {"central": port}
+            return value
+
+        for length in (64, 65, 128, 155, 593):
+            for fragment in (7, 4096):
+                with self.subTest(length=length, fragment=fragment):
+                    wire = prefix + b"a" * (length - len(prefix) - 2) + b"\r\n"
+                    port = CreditPort(wire, fragment=fragment)
+                    value = session_for(port)
+                    ticks = iter(index / 1000 for index in range(1100))
+                    with (
+                        mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+                        mock.patch.object(HIL_RUNNER.time, "sleep"),
+                    ):
+                        self.assertEqual(value.read_line("central", 1.0), wire[:-2])
+                    self.assertEqual(port.credits, [b"\x06"] * ((length - 1) // 64))
+                    self.assertEqual(port.flushes, len(port.credits))
+                    self.assertEqual(bytes(value.capture["central"]), wire)
+                    self.assertEqual(bytes(value.pending["central"]), b"")
+
+        wire = prefix + b"a" * (155 - len(prefix) - 2) + b"\r\n"
+        port = CreditPort(wire, fragment=4096, short_credit=True)
+        value = session_for(port)
+        ticks = iter(index / 1000 for index in range(1100))
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+            mock.patch.object(HIL_RUNNER.time, "sleep"),
+            self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "credit"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(port.credits, [b"\x06"])
+        self.assertEqual(port.flushes, 0)
+        self.assertEqual(bytes(value.capture["central"]), wire[:64])
+
+        for damaged in (wire, wire.replace(b"M30DFU", b"X30DFU", 1)):
+            with self.subTest(damaged=damaged[:6]):
+                port = CreditPort(damaged, fragment=4096, lost_byte=True)
+                value = session_for(port)
+                ticks = iter(index / 1000 for index in range(1100))
+                with (
+                    mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+                    mock.patch.object(HIL_RUNNER.time, "sleep"),
+                    self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+                ):
+                    value.read_line("central", 1.0)
+                self.assertEqual(port.credits, [])
+                self.assertEqual(bytes(value.capture["central"]), damaged[:63])
+
+        port = CreditPort(b"", fragment=4096)
+        value = session_for(port)
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 0.9995, 1.0001)),
+            mock.patch.object(HIL_RUNNER.time, "sleep") as sleep,
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(sleep.call_count, 1)
+        self.assertAlmostEqual(sleep.call_args.args[0], 0.0005)
 
     def _check_bounded_uart_burst_reads(self) -> None:
         """! @brief burst·분할 행을 손실 없이 받고 원형 deadline과 capture 제한을 유지합니다. """
@@ -459,7 +564,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
         endpoint = SimpleNamespace(port_name="test-only")
         with HIL_RUNNER.DfuSession(serial_module, endpoint, endpoint, 460800, "a" * 32, "b" * 40):
             for call in factory.call_args_list:
-                self.assertEqual(call.kwargs["timeout"], 0.05)
+                self.assertEqual(call.kwargs["timeout"], 0.0)
                 self.assertEqual(call.kwargs["write_timeout"], 2.0)
                 self.assertEqual(call.kwargs["inter_byte_timeout"], 0.001)
 

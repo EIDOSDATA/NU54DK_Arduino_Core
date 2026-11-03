@@ -74,12 +74,12 @@ namespace
     }
 
     /** @brief nonce와 exact Core revision을 protocol 뒤에 붙입니다. */
-    void printSuffix()
+    void printSuffix(arduino::Print &output = Serial)
     {
-        Serial.print("|nonce=");
-        Serial.print(nonce);
-        Serial.print("|core=");
-        Serial.print(M30_DFU_CORE_REVISION);
+        output.print("|nonce=");
+        output.print(nonce);
+        output.print("|core=");
+        output.print(M30_DFU_CORE_REVISION);
     }
 
     /** @brief 첫 protocol 실패만 민감 정보 없이 보고합니다. */
@@ -586,7 +586,63 @@ namespace
         }
     }
 
-    /** @brief 완성된 SMP response를 ASCII hex로 Host에 전달합니다. */
+    /** @brief 다음 RX 조각은 Host가 앞선 64byte를 수신한 뒤에만 송신합니다. */
+    class RxSerialWriter final : public arduino::Print
+    {
+      public:
+        using arduino::Print::write;
+
+        /** @brief 원형 idle deadline 안에서 credit을 받고 byte를 한 번만 송신합니다. */
+        std::size_t write(std::uint8_t value) override
+        {
+            if (failure_reason_ != nullptr)
+            {
+                return 0U;
+            }
+            if (written_ != 0U && written_ % credit_window == 0U)
+            {
+                while (true)
+                {
+                    if (k_uptime_get() > deadline_ms)
+                    {
+                        failure_reason_ = "protocol-timeout";
+                        return 0U;
+                    }
+                    if (Serial.available() > 0)
+                    {
+                        if (Serial.read() != credit_byte)
+                        {
+                            failure_reason_ = "uart-rx-credit";
+                            return 0U;
+                        }
+                        break;
+                    }
+                    k_msleep(1);
+                }
+            }
+            if (Serial.write(value) != 1U)
+            {
+                failure_reason_ = "uart-rx-write";
+                return 0U;
+            }
+            ++written_;
+            return 1U;
+        }
+
+        /** @brief credit·송신 실패를 원형 FAIL 출력에 전달합니다. */
+        const char *failureReason() const
+        {
+            return failure_reason_;
+        }
+
+      private:
+        static constexpr std::size_t credit_window = 64U;
+        static constexpr int credit_byte = 0x06;
+        std::size_t written_ = 0U;
+        const char *failure_reason_ = nullptr;
+    };
+
+    /** @brief 원형 RX 행 전체를 수신 credit에 따라 재전송 없이 Host에 전달합니다. */
     void reportResponse()
     {
         if (atomic_get(&response_error) != 0)
@@ -594,22 +650,34 @@ namespace
             fail("rx-frame");
             return;
         }
-        if (atomic_cas(&response_ready, 1, 0) == 0)
+        if (atomic_get(&response_ready) == 0)
         {
             return;
         }
         constexpr char digits[] = "0123456789abcdef";
-        Serial.print(protocol);
-        Serial.print("|RX|role=central|data=");
+        RxSerialWriter output;
+        output.print(protocol);
+        output.print("|RX|role=central|data=");
         for (std::size_t index = 0U; index < response_length; ++index)
         {
-            Serial.print(digits[response[index] >> 4U]);
-            Serial.print(digits[response[index] & 0x0fU]);
+            output.print(digits[response[index] >> 4U]);
+            output.print(digits[response[index] & 0x0fU]);
         }
-        printSuffix();
-        Serial.println();
+        printSuffix(output);
+        output.println();
+        if (output.failureReason() != nullptr)
+        {
+            fail(output.failureReason());
+            return;
+        }
+        if (atomic_get(&response_error) != 0)
+        {
+            fail("rx-frame");
+            return;
+        }
         response_length = 0U;
         response_expected = 0U;
+        atomic_set(&response_ready, 0);
     }
 
     /** @brief security·discovery·CCC 상태 기계를 진행합니다. */
