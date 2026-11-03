@@ -1231,6 +1231,18 @@ class DfuSession:
             if retry >= MAX_TX_RETRIES:
                 raise M30DfuFailure("SMP TX_REJECT 재전송 상한을 넘었습니다.")
             self.tx_retries += 1
+        return self.decode_response(response, operation, group, command_id, sequence)
+
+    def decode_response(
+        self,
+        response: bytes | None,
+        operation: int,
+        group: int,
+        command_id: int,
+        sequence: int,
+    ) -> SmpResult:
+        """! @brief 이미 수신한 SMP 응답의 exact 요청 identity와 오류 형식을 검증합니다. """
+
         if response is None:
             raise M30DfuFailure("SMP response가 없습니다.")
         if len(response) < 8:

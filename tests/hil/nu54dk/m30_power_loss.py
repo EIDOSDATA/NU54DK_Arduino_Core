@@ -1090,8 +1090,15 @@ def arm_point(
         f"{point} test request",
     )
     if point == "mcuboot_test_swap":
+        sequence = session.sequence
         send_raw_transaction(session, 2, 0, 5, {})
-        wait_window(session, point, min(deadline, time.monotonic() + 45.0))
+        window_deadline = min(deadline, time.monotonic() + 45.0)
+        response = session.wait_rx(window_deadline)
+        session.require_success(
+            session.decode_response(response, 2, 0, 5, sequence),
+            "power swap reset",
+        )
+        wait_window(session, point, window_deadline)
         print(
             "M30_POWER_ARMED=mcuboot_test_swap;ACTION=DISCONNECT_DUT_TARGET_USB",
             flush=True,
