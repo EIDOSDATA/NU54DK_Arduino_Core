@@ -10,6 +10,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest import mock
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -18,6 +19,7 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 import m32_mesh_dfu_run as runner  # noqa: E402
+from ble_pair_hil_common import BlePairHilFailure  # noqa: E402
 
 
 class M32MeshDfuHilTests(unittest.TestCase):
@@ -617,6 +619,25 @@ class M32MeshDfuHilTests(unittest.TestCase):
         self.assertNotIn("--erase chip", source)
         self.assertNotIn('"recover"', source.casefold())
         self.assertNotIn("--recover", source.casefold())
+
+        digest = "a" * 64
+        expected = ("secondary", digest, 0xC2000, 0xB2000, 120.0)
+        with mock.patch.object(
+            runner, "erase_nrf54l_rram_pyocd_sha256"
+        ) as erase:
+            runner.erase_secondary_slot(digest, 120.0)
+        erase.assert_called_once_with(*expected, prepare_for_program=True)
+
+        timeout = BlePairHilFailure("secondary RRAM program 준비 timeout")
+        with mock.patch.object(
+            runner,
+            "erase_nrf54l_rram_pyocd_sha256",
+            side_effect=timeout,
+        ) as erase:
+            with self.assertRaises(BlePairHilFailure) as raised:
+                runner.erase_secondary_slot(digest, 120.0)
+        self.assertIs(raised.exception, timeout)
+        erase.assert_called_once_with(*expected, prepare_for_program=True)
 
     def test_native_group_builds_all_four_roles(self) -> None:
         """! @brief native 회귀가 Distributor·두 Target·candidate를 모두 빌드합니다. """

@@ -503,7 +503,9 @@ def validate_build_set(builds: dict[str, BuildInput]) -> None:
 
 
 def erase_secondary_slot(probe_sha256: str, timeout_seconds: float) -> None:
-    """! @brief secondary slot의 exact sector 범위만 지웁니다. """
+    """! @brief 후속 program 전에 secondary slot의 exact sector 범위를 초기화합니다.
+    @note 검증 후 HALTED를 유지하고 이어지는 MCUboot program이 실행 문맥을 설정합니다.
+    """
 
     erase_nrf54l_rram_pyocd_sha256(
         "secondary",
@@ -511,6 +513,7 @@ def erase_secondary_slot(probe_sha256: str, timeout_seconds: float) -> None:
         SLOT1_OFFSET,
         SLOT1_END - SLOT1_OFFSET,
         timeout_seconds,
+        prepare_for_program=True,
     )
 
 
