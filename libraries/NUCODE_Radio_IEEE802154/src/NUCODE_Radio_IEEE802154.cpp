@@ -105,7 +105,10 @@ namespace
         return true;
     }
 
-    /** @brief ACK 손실 뒤 bounded 재전송을 수행합니다. */
+    /** @brief 동기 거부와 비동기 실패를 같은 남은 재전송 한도로 처리합니다. */
+    void handleTransmitFailure(int driver_error) noexcept;
+
+    /** @brief ACK 손실 뒤 기존 한도 안에서 재전송을 수행합니다. */
     void retryWorkHandler(k_work *work) noexcept
     {
         ARG_UNUSED(work);
@@ -116,8 +119,7 @@ namespace
         }
         if (!submitTransmit())
         {
-            state.tx_busy = false;
-            ++state.statistics.tx_failed;
+            handleTransmitFailure(state.driver_error);
         }
     }
 

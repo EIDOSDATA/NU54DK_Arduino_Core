@@ -5,6 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import unittest
+import subprocess
+import tempfile
+
+from host_compiler import compiler_command, run_executable
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -48,6 +52,24 @@ class M32StandaloneRadioContractTests(unittest.TestCase):
                 self.assertIn(token, backend)
         self.assertNotIn("malloc(", backend)
         self.assertNotIn("new ", backend)
+        self._check_radio154_retry_execution()
+
+    def _check_radio154_retry_execution(self) -> None:
+        """! @brief 실제 backend와 SDK·work 경계로 재전송 네 시나리오를 실행합니다. """
+        fixture = ROOT / "tests/host/fixtures/m32_radio154_retry"
+        with tempfile.TemporaryDirectory(prefix="nu54-m32-radio154-retry-") as folder:
+            binary = Path(folder) / "radio154-retry.exe"
+            command = [*compiler_command(), "-std=c++20", "-Wall", "-Wextra", "-Werror",
+                       "-Wno-missing-field-initializers", "-I", str(fixture),
+                       "-I", str(RADIO154 / "src"),
+                       str(RADIO154 / "src/NUCODE_Radio_IEEE802154.cpp"),
+                       str(fixture / "main.cpp"), "-o", str(binary)]
+            compiled = subprocess.run(command, capture_output=True, timeout=60)
+            self.assertEqual(compiled.returncode, 0, compiled.stderr.decode(errors="replace"))
+            for scenario in ("success", "exhaustion", "cancel", "initial"):
+                with self.subTest(scenario=scenario):
+                    result = run_executable([str(binary), scenario], capture_output=True, timeout=10)
+                    self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
 
     def test_esb_backend_uses_hardware_ack_retry_and_fifo_cleanup(self) -> None:
         """! @brief PTX/PRX ACK와 bounded STOP이 실제 ESB API에 연결됩니다. """

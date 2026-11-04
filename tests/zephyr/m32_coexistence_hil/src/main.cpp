@@ -83,6 +83,9 @@ namespace
     bool double_owner_rejected = false;
     bool radio_sequence_valid = false;
     std::uint32_t last_radio_sequence = UINT32_MAX;
+    std::uint32_t first_radio_gap_expected = UINT32_MAX;
+    std::uint32_t first_radio_gap_observed = UINT32_MAX;
+    std::uint32_t radio_restart_sequence = UINT32_MAX;
 #endif
     bool ble_ready_seen = false;
     bool ble_disconnect_seen = false;
@@ -118,6 +121,12 @@ namespace
     std::uint32_t failed_packets = 0U;
     std::uint32_t observed_acknowledged = 0U;
     std::uint32_t observed_failed = 0U;
+    std::uint32_t first_failed_sequence = UINT32_MAX;
+    int first_failed_driver_error = 0;
+#if defined(NUCODE_M32_COEX_154)
+    std::uint32_t first_failed_retried = 0U;
+#endif
+    bool first_failed_after_restart = false;
     std::int64_t next_send_ms = 0;
 #else
     std::uint8_t dut_uuid[16] = {};
@@ -458,6 +467,9 @@ namespace
         double_owner_rejected = false;
         radio_sequence_valid = false;
         last_radio_sequence = UINT32_MAX;
+        first_radio_gap_expected = UINT32_MAX;
+        first_radio_gap_observed = UINT32_MAX;
+        radio_restart_sequence = UINT32_MAX;
 #endif
         ble_restarts = 0U;
         radio_restarts = 0U;
@@ -487,6 +499,12 @@ namespace
         failed_packets = 0U;
         observed_acknowledged = 0U;
         observed_failed = 0U;
+        first_failed_sequence = UINT32_MAX;
+        first_failed_driver_error = 0;
+#if defined(NUCODE_M32_COEX_154)
+        first_failed_retried = 0U;
+#endif
+        first_failed_after_restart = false;
         next_send_ms = 0;
 #else
         dut_discovered = false;
@@ -680,6 +698,12 @@ namespace
         {
             return true;
         }
+        if (radio_sequence_valid && sequence != last_radio_sequence + 1U &&
+            first_radio_gap_expected == UINT32_MAX)
+        {
+            first_radio_gap_expected = last_radio_sequence + 1U;
+            first_radio_gap_observed = sequence;
+        }
         last_radio_sequence = sequence;
         radio_sequence_valid = true;
         return false;
@@ -709,6 +733,7 @@ namespace
             }
             if (radio_received == packet_target / 2U)
             {
+                radio_restart_sequence = packet.sequence;
                 if (!stopSecondRadio() || !beginSecondRadio(false))
                 {
                     fail("radio_restart", NUCODERadio154.lastDriverError());
@@ -727,6 +752,12 @@ namespace
             (radio_sequence_valid && sequence == last_radio_sequence))
         {
             return true;
+        }
+        if (radio_sequence_valid && sequence != last_radio_sequence + 1U &&
+            first_radio_gap_expected == UINT32_MAX)
+        {
+            first_radio_gap_expected = last_radio_sequence + 1U;
+            first_radio_gap_observed = sequence;
         }
         last_radio_sequence = sequence;
         radio_sequence_valid = true;
@@ -757,6 +788,7 @@ namespace
             }
             if (radio_received == packet_target / 2U)
             {
+                radio_restart_sequence = packet.sequence;
                 if (!stopSecondRadio() || !beginSecondRadio(false))
                 {
                     fail("radio_restart", NUCODEEsb.lastDriverError());
@@ -798,6 +830,46 @@ namespace
             ble.maximum_service_gap_ms > service_gap_limit_ms ||
             radio.maximum_service_gap_ms > service_gap_limit_ms)
         {
+            /** @brief 원형 실패 조건을 유지하고 종료 경계의 실제 계수만 기록합니다. */
+            Serial.print(protocol);
+            Serial.print("|DIAG|role=dut|stage=result_boundary|ble_received=");
+            Serial.print(ble_received);
+            Serial.print("|radio_received=");
+            Serial.print(radio_received);
+            Serial.print("|ble_corrupt=");
+            Serial.print(ble_corrupt);
+            Serial.print("|radio_corrupt=");
+            Serial.print(radio_corrupt);
+            Serial.print("|ble_dropped=");
+            Serial.print(BLESerial.droppedRxBytes());
+            Serial.print("|ble_restarts=");
+            Serial.print(ble_restarts);
+            Serial.print("|radio_restarts=");
+            Serial.print(radio_restarts);
+            Serial.print("|ownership_ok=");
+            Serial.print(ownership_ok ? 1 : 0);
+            Serial.print("|ble_hash_errors=");
+            Serial.print(ble.hash_errors);
+            Serial.print("|radio_hash_errors=");
+            Serial.print(radio.hash_errors);
+            Serial.print("|ble_sequence_errors=");
+            Serial.print(ble.sequence_errors);
+            Serial.print("|radio_sequence_errors=");
+            Serial.print(radio.sequence_errors);
+            Serial.print("|ble_gap_ms=");
+            Serial.print(ble.maximum_service_gap_ms);
+            Serial.print("|radio_gap_ms=");
+            Serial.print(radio.maximum_service_gap_ms);
+#if defined(NUCODE_M32_COEX_154) || defined(NUCODE_M32_COEX_ESB)
+            Serial.print("|first_radio_gap_expected=");
+            Serial.print(first_radio_gap_expected);
+            Serial.print("|first_radio_gap_observed=");
+            Serial.print(first_radio_gap_observed);
+            Serial.print("|radio_restart_sequence=");
+            Serial.print(radio_restart_sequence);
+#endif
+            printSuffix();
+            Serial.println();
             fail("result_boundary");
             return;
         }
@@ -940,6 +1012,17 @@ namespace
             }
             else if (transmission_failed > observed_failed)
             {
+                if (failed_packets == 0U)
+                {
+                    first_failed_sequence = submitted_packets - 1U;
+                    first_failed_after_restart = radio_restarted;
+#if defined(NUCODE_M32_COEX_154)
+                    first_failed_driver_error = NUCODERadio154.lastDriverError();
+                    first_failed_retried = NUCODERadio154.statistics().tx_retried;
+#else
+                    first_failed_driver_error = NUCODEEsb.lastDriverError();
+#endif
+                }
                 ++failed_packets;
             }
             else
@@ -966,6 +1049,23 @@ namespace
         }
         if (completed_packets >= packet_target)
         {
+            if (failed_packets != 0U)
+            {
+                /** @brief 다음 송신이 덮기 전에 보존한 최초 실패를 종료 시 출력합니다. */
+                Serial.print(protocol);
+                Serial.print("|DIAG|role=radio_peer|stage=transmission_failure|sequence=");
+                Serial.print(first_failed_sequence);
+                Serial.print("|driver_error=");
+                Serial.print(first_failed_driver_error);
+#if defined(NUCODE_M32_COEX_154)
+                Serial.print("|phase_retried_at_failure=");
+                Serial.print(first_failed_retried);
+#endif
+                Serial.print("|after_restart=");
+                Serial.print(first_failed_after_restart ? 1 : 0);
+                printSuffix();
+                Serial.println();
+            }
             if (acknowledged_packets + allowed_loss < packet_target ||
                 failed_packets > allowed_loss)
             {
