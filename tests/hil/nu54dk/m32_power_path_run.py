@@ -59,12 +59,32 @@ def build_dispatch_cycle_records(power_counts: dict[str, int], path_count: int,
     ]
 
 
-def _line(port: object, deadline: float) -> str:
+def _available_line(port: object, pending: bytearray) -> bytes:
+    """! @brief 수신된 byte만 읽어 상대 역할을 막지 않고 완전한 한 줄을 보존합니다. """
+    end = pending.find(b"\n")
+    if end < 0:
+        available = port.in_waiting
+        if available:
+            pending.extend(port.read(min(available, 4096)))
+        end = pending.find(b"\n")
+    if end < 0:
+        if len(pending) > 512:
+            raise PowerPathExecutionFailure("serial line overlong")
+        return b""
+    if end + 1 > 512:
+        raise PowerPathExecutionFailure("serial line overlong")
+    payload = bytes(pending[:end + 1])
+    del pending[:end + 1]
+    return payload
+
+
+def _line(port: object, deadline: float, pending: bytearray) -> str:
     """! @brief DAPLink 잡음에서 M32 Power protocol 줄만 반환합니다. """
     while time.monotonic() < deadline:
-        payload = port.readline()
-        if len(payload) > 512:
-            raise PowerPathExecutionFailure("serial line overlong")
+        payload = _available_line(port, pending)
+        if not payload:
+            time.sleep(0.001)
+            continue
         line = payload.decode("ascii", errors="replace").strip()
         if line.startswith(PROTOCOL + "|"):
             return line
@@ -188,6 +208,7 @@ def execute(args: argparse.Namespace) -> dict:
             )
         time.sleep(2.0)
         ports: dict[str, object] = {}
+        pending = {role: bytearray() for role in ROLES}
         stopped_roles: set[str] = set()
         try:
             for role, board in boards.items():
@@ -199,7 +220,7 @@ def execute(args: argparse.Namespace) -> dict:
                 port.write((PROTOCOL + "|PROBE\n").encode("ascii"))
                 port.flush()
             for role in ROLES:
-                line = _line(ports[role], time.monotonic() + 30.0)
+                line = _line(ports[role], time.monotonic() + 30.0, pending[role])
                 transcript.append(f"{role}: {line}")
                 expected = f"{PROTOCOL}|READY|role={role}|core={identity.core}"
                 if line != expected:
@@ -215,12 +236,12 @@ def execute(args: argparse.Namespace) -> dict:
             ends: set[str] = set()
             deadline = time.monotonic() + 240.0
             while time.monotonic() < deadline and ends != set(ROLES):
+                received = False
                 for role in ROLES:
-                    payload = ports[role].readline()
+                    payload = _available_line(ports[role], pending[role])
                     if not payload:
                         continue
-                    if len(payload) > 512:
-                        raise PowerPathExecutionFailure("serial line overlong")
+                    received = True
                     line = payload.decode("ascii", errors="replace").strip()
                     if not line.startswith(PROTOCOL + "|"):
                         continue
@@ -270,6 +291,8 @@ def execute(args: argparse.Namespace) -> dict:
                         if fields.get("role") != role or fields.get("status") != "pass":
                             raise PowerPathExecutionFailure("END record mismatch")
                         ends.add(role)
+                if not received:
+                    time.sleep(0.001)
             if ends != set(ROLES):
                 raise PowerPathExecutionFailure("role END timeout")
             if power_counts != {"central": POWER_TARGET, "peripheral": POWER_TARGET}:
@@ -284,7 +307,7 @@ def execute(args: argparse.Namespace) -> dict:
                 ports[role].flush()
                 stop_deadline = time.monotonic() + 30.0
                 while True:
-                    line = _line(ports[role], stop_deadline)
+                    line = _line(ports[role], stop_deadline, pending[role])
                     transcript.append(f"{role}: {line}")
                     if "|FAIL|" in line:
                         raise PowerPathExecutionFailure(f"{role} STOP FAIL")

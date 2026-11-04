@@ -7,7 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 HIL = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
@@ -210,6 +210,39 @@ class ModernDirectAttestationTest(unittest.TestCase):
     def test_power_advertising_privacy_and_ead_cycles(self) -> None:
         """! @brief W04 aggregate가 내부 20 sequence를 정확히 닫는지 확인합니다. """
 
+        idle = SimpleNamespace(in_waiting=0, read=Mock(side_effect=AssertionError("idle read")))
+        buffered = bytearray()
+        expected = [f"{power.PROTOCOL}|PATH|role=central|index={index}\n".encode("ascii")
+                    for index in range(1, 61)]
+        incoming = bytearray(b"".join(expected))
+        observed = []
+        while incoming or buffered:
+            self.assertEqual(power._available_line(idle, bytearray()), b"")
+            fragment = bytes(incoming[:37])
+            del incoming[:37]
+            port = SimpleNamespace(in_waiting=len(fragment), read=Mock(return_value=fragment))
+            line = power._available_line(port, buffered)
+            if line:
+                observed.append(line)
+            if not port.read.called:
+                incoming[:0] = fragment
+        self.assertEqual(observed, expected)
+        idle.read.assert_not_called()
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._available_line(idle, bytearray(b"x" * 513))
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._available_line(idle, bytearray(b"x" * 512 + b"\n"))
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._fields(f"{power.PROTOCOL}|PATH|role=central|role=central")
+        stop = f"{power.PROTOCOL}|STOPPED|role=central\n".encode("ascii")
+        self.assertEqual(power._line(idle, power.time.monotonic() + 1.0, bytearray(stop)),
+                         stop.decode("ascii").strip())
+        for path_count in (55, 59, 61):
+            with self.subTest(path_count=path_count), self.assertRaises(power.PowerPathExecutionFailure):
+                power.build_dispatch_cycle_records(
+                    {"central": 20, "peripheral": 20}, path_count,
+                    {"power_central": 1.0, "power_peripheral": 2.0, "path": 3.0},
+                )
         assert_cycles(
             self,
             power.build_dispatch_cycle_records(
