@@ -271,6 +271,20 @@ class ProfileRuntimeTests(unittest.TestCase):
                         self.assertEqual(result.returncode, 0,
                                          (result.stdout + result.stderr).decode(errors="replace"))
 
+            binary = temporary / "backend-security-trace.exe"
+            command = [*compiler, "-std=c++17", "-Wall", "-Wextra", "-Werror", "-pthread"]
+            for include in ("tests/host/ble_stubs", "third_party/ArduinoCore-API",
+                            "tests/zephyr/m33_profile_hil/src"):
+                command += ["-I", str(ROOT / include)]
+            command += [str(ROOT / "tests/zephyr/m33_profile_hil/src/BackendSecurityTrace.cpp"),
+                        str(ROOT / "tests/host/m33_profile_security_trace_main.cpp"),
+                        "-o", str(binary)]
+            result = subprocess.run(command, capture_output=True, timeout=60)
+            self.assertEqual(result.returncode, 0, result.stderr.decode(errors="replace"))
+            result = run_executable([str(binary)], capture_output=True, timeout=10)
+            self.assertEqual(result.returncode, 0,
+                             (result.stdout + result.stderr).decode(errors="replace"))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

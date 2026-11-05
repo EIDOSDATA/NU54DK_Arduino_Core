@@ -16,6 +16,9 @@
 #include <zephyr/bluetooth/gatt.h>
 #include "ExpectedReject.h"
 #include "ExpectedCgms.h"
+#if defined(M33_PROFILE_NATIVE)
+#include "BackendSecurityTrace.h"
+#endif
 using namespace nucode::ble;
 using namespace nucode::ble::profiles;
 namespace
@@ -2151,6 +2154,15 @@ namespace
             {
                 return;
             }
+            const BackendSecurityTrace trace = backendSecurityTraceSnapshot();
+            snprintf(detail, sizeof(detail),
+                     "|reason=backend-security|calls=%u|failures=%u|hci_reason=%u|"
+                     "security_error=%u|caller_pc=%lu",
+                     static_cast<unsigned>(trace.calls), static_cast<unsigned>(trace.failures),
+                     static_cast<unsigned>(trace.first_hci_reason),
+                     static_cast<unsigned>(trace.first_security_error),
+                     static_cast<unsigned long>(trace.first_caller));
+            record("PROGRESS", detail);
             fail("|reason=native-authentication");
             return;
         }
