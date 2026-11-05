@@ -167,11 +167,14 @@ namespace
     [[maybe_unused]] uint8_t nonce_bytes[16] = {};
 #include "stale-declarations.inc"
 #if defined(M33_PROFILE_WATCHER)
-    /** @brief 외부 queue 입력만 제공하고 판정은 추출한 실제 callback과 poll에 맡깁니다. */
-    std::vector<std::function<void()>> gap_inputs, security_inputs;
+    std::vector<std::function<void()>> security_inputs;
     std::function<void()> erase_hook;
     std::vector<unsigned> drained_events;
     void onSecurity(const SecurityEventRecord &event, void *);
+#endif
+#if defined(M33_PROFILE_WATCHER) || defined(M33_PROFILE_SERVER)
+    /** @brief 외부 queue 입력만 제공하고 판정은 추출한 실제 callback과 poll에 맡깁니다. */
+    std::vector<std::function<void()>> gap_inputs;
     void drainInputs(std::vector<std::function<void()>> &inputs)
     {
         while (!inputs.empty())
@@ -283,8 +286,48 @@ namespace
             return security_levels[handle.value];
         }
     } BLESecurity;
+#if defined(M33_PROFILE_SERVER)
+    /** @brief 실제 no-CCC helper에 송신 결과와 callback 순서만 입력합니다. */
+    BLEConnectionHandle role_handles[2] = {};
+    unsigned sensor_no_ccc[2][5] = {};
+    unsigned no_ccc_send_calls = 0U;
+    int no_ccc_driver = 0;
+    constexpr uint32_t expected_error_drain_timeout_ms = 1000U;
+    const void *watchdog = nullptr;
+    int watchdog_channel = -1;
+    std::function<bool(BLEConnectionHandle)> no_ccc_send;
+    void onLink(const BLEEventInfo &event, void *);
+    int wdt_feed(const void *, int)
+    {
+        return 0;
+    }
+    void delay(unsigned value)
+    {
+        now_ms += value;
+    }
+    struct SensorBoundary
+    {
+        bool send(BLEConnectionHandle connection)
+        {
+            ++no_ccc_send_calls;
+            if (!connected_links[connection.value])
+            {
+                return false;
+            }
+            return no_ccc_send(connection);
+        }
+    } sensor_boundary;
+    SensorBoundary *sensors[] = {&sensor_boundary, &sensor_boundary, &sensor_boundary,
+                                 &sensor_boundary, &sensor_boundary};
+#endif
     struct ConnectionBoundary
     {
+#if defined(M33_PROFILE_SERVER)
+        BLEConnectionHandle handle(BLELinkRole role) const
+        {
+            return role_handles[role == BLELinkRole::central ? 0U : 1U];
+        }
+#endif
         bool connected(BLEConnectionHandle handle) const
         {
             return handle.value < 16U && connected_links[handle.value];
@@ -350,13 +393,17 @@ namespace
     {
         void poll()
         {
-#if defined(M33_PROFILE_WATCHER)
+#if defined(M33_PROFILE_WATCHER) || defined(M33_PROFILE_SERVER)
             drainInputs(gap_inputs);
 #endif
         }
         int lastDriverError() const
         {
+#if defined(M33_PROFILE_SERVER)
+            return no_ccc_driver;
+#else
             return 0;
+#endif
         }
     } BLEDevice;
     struct ClientBoundary
@@ -382,6 +429,135 @@ namespace
         }
         return value;
     }
+#if defined(M33_PROFILE_SERVER)
+    /** @brief 실제 helper와 onLink로 연결 경계·누락·중복 callback을 판정합니다. */
+    bool runNoCcc(const std::string &test)
+    {
+        role_handles[0].value = 1U;
+        connected_links[1] = true;
+        no_ccc_driver = -ENOTCONN;
+        const auto error = []()
+        {
+            BLEEventInfo event{};
+            event.event = BLEEvent::error;
+            event.error = BLEError::not_connected;
+            event.driver_error = -ENOTCONN;
+            onLink(event, nullptr);
+        };
+        if (test == "no_ccc_unsolicited")
+        {
+            error();
+            return check(failed && no_ccc_errors == 0U && expected_error_events == 0U,
+                         "unreserved_error_keeps_original_FAIL");
+        }
+        if (test == "no_ccc_prior_pending")
+        {
+            expected_error_events = 1U;
+        }
+        if (test == "no_ccc_already_disconnected")
+        {
+            connected_links[1] = false;
+        }
+        no_ccc_send = [&](BLEConnectionHandle connection)
+        {
+            if (test == "no_ccc_send_disconnect")
+            {
+                connected_links[connection.value] = false;
+                return false;
+            }
+            if (test == "no_ccc_missing")
+            {
+                return false;
+            }
+            gap_inputs.emplace_back(
+                [&]()
+                {
+                    if (test == "no_ccc_wrong_error")
+                    {
+                        BLEEventInfo event{};
+                        event.event = BLEEvent::error;
+                        event.error = BLEError::not_connected;
+                        event.driver_error = -EIO;
+                        onLink(event, nullptr);
+                    }
+                    else
+                    {
+                        error();
+                    }
+                });
+            if (test == "no_ccc_duplicate")
+            {
+                gap_inputs.emplace_back(error);
+            }
+            if (test == "no_ccc_callback_disconnect")
+            {
+                gap_inputs.emplace_back(
+                    []()
+                    {
+                        /** @note 오류 callback 뒤의 facade 퇴거만 외부 입력으로 모사합니다. */
+                        connected_links[1] = false;
+                        role_handles[0] = {};
+                    });
+            }
+            return false;
+        };
+        const bool accepted = verifyNoCcc(0U, 0U, BLEConnectionHandle{1U});
+        if (test == "no_ccc_already_disconnected")
+        {
+            return check(!accepted && !failed && no_ccc_send_calls == 0U &&
+                             expected_error_events == 0U && no_ccc_errors == 0U,
+                         "retired_precondition_is_not_a_negative_attempt");
+        }
+        if (test == "no_ccc_prior_pending")
+        {
+            return check(!accepted && failed && no_ccc_send_calls == 0U &&
+                             expected_error_events == 1U && sensor_no_ccc[0][0] == 0U,
+                         "unresolved_prior_callback_cannot_be_reassigned");
+        }
+        if (test == "no_ccc_send_disconnect" || test == "no_ccc_missing" ||
+            test == "no_ccc_wrong_error" || test == "no_ccc_duplicate")
+        {
+            return check(!accepted && failed && cleanup_requested && sensor_no_ccc[0][0] == 0U &&
+                             no_ccc_send_calls == 1U &&
+                             (test != "no_ccc_missing" || now_ms == 1000U),
+                         "missing_duplicate_wrong_or_retired_send_never_gets_credit");
+        }
+        if (!check(accepted && !failed && no_ccc_errors == 1U && expected_error_events == 0U &&
+                       sensor_no_ccc[0][0] == 1U && no_ccc_send_calls == 1U,
+                   "only_actual_single_callback_credits_the_attempt"))
+        {
+            return false;
+        }
+        if (test == "no_ccc_callback_disconnect")
+        {
+            if (!check(!verifyNoCcc(0U, 1U, BLEConnectionHandle{1U}) && !failed &&
+                           expected_error_events == 0U && no_ccc_errors == 1U &&
+                           sensor_no_ccc[0][1] == 0U && no_ccc_send_calls == 1U,
+                       "same_poll_retirement_preserves_one_credit_without_phantom_four"))
+            {
+                return false;
+            }
+            role_handles[0].value = 2U;
+            connected_links[2] = true;
+            no_ccc_send = [&](BLEConnectionHandle)
+            {
+                gap_inputs.emplace_back(error);
+                return false;
+            };
+            for (unsigned profile = 1U; profile < 5U; ++profile)
+            {
+                if (!verifyNoCcc(0U, profile, BLEConnectionHandle{2U}))
+                {
+                    return false;
+                }
+            }
+            return check(no_ccc_errors == 5U && expected_error_events == 0U &&
+                             no_ccc_send_calls == 5U && sensor_no_ccc[0][0] == 1U,
+                         "new_live_handle_completes_only_the_four_unperformed_profiles");
+        }
+        return true;
+    }
+#endif
 #if !defined(M33_PROFILE_WATCHER)
 #if defined(M33_PROFILE_SERVER)
     constexpr unsigned requests_at_h2 = 1U;
@@ -952,6 +1128,10 @@ namespace
     bool run(const std::string &test)
     {
 #if defined(M33_PROFILE_SERVER)
+        if (test.rfind("no_ccc_", 0U) == 0U)
+        {
+            return runNoCcc(test);
+        }
         if (test.rfind("order_", 0U) == 0U)
         {
             return runSecurityOrder(test);

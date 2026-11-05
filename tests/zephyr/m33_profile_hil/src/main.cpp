@@ -273,6 +273,42 @@ namespace
             delay(1);
         }
     }
+    /** @brief 현재 연결의 no-CCC 시도와 실제 오류 callback 하나를 직렬로 결합합니다. */
+    bool verifyNoCcc(unsigned slot, unsigned profile, BLEConnectionHandle connection)
+    {
+        const auto role = slot == 0U ? BLELinkRole::central : BLELinkRole::peripheral;
+        if (BLEConnection.handle(role) != connection || !BLEConnection.connected(connection))
+        {
+            return false;
+        }
+        if (expected_error_events != 0U)
+        {
+            fail("|reason=no-ccc-prior-pending");
+            return false;
+        }
+        const unsigned before = no_ccc_errors;
+        ++expected_error_events;
+        const bool sent = sensors[profile]->send(connection);
+        if (sent || BLEDevice.lastDriverError() != -ENOTCONN ||
+            BLEConnection.handle(role) != connection || !BLEConnection.connected(connection))
+        {
+            fail("|reason=no-ccc-negative");
+            return false;
+        }
+        drainExpectedErrorEvents();
+        if (failed || expected_error_events != 0U || no_ccc_errors != before + 1U)
+        {
+            fail("|reason=no-ccc-callback");
+            return false;
+        }
+        ++sensor_no_ccc[slot][profile];
+        char detail[120];
+        snprintf(detail, sizeof(detail),
+                 "|reason=no-ccc-checked|slot=%u|profile=%u|callbacks=1|connected=%u", slot,
+                 profile, BLEConnection.connected(connection) ? 1U : 0U);
+        record("PROGRESS", detail);
+        return true;
+    }
 #endif
     /** @brief facade가 handle을 지운 뒤에도 native 연결·시도·해제 중 상태를 셉니다. */
     void countNativeConnections(bt_conn *connection, void *context)
@@ -3731,6 +3767,10 @@ void loop()
             }
             for (unsigned profile = 0U; profile < 5U; ++profile)
             {
+                if (!BLEConnection.connected(connection))
+                {
+                    break;
+                }
                 Packet packet;
                 if (!expectedPacket(profile, packet) || !sensors[profile]->setValue(packet))
                 {
@@ -3740,15 +3780,10 @@ void loop()
                 {
                     if (sensor_no_ccc[slot][profile] == 0U)
                     {
-                        ++expected_error_events;
-                        if (sensors[profile]->send(connection) ||
-                            BLEDevice.lastDriverError() != -ENOTCONN)
+                        if (!verifyNoCcc(slot, profile, connection))
                         {
-                            fail("|reason=no-ccc-negative");
                             return;
                         }
-                        ++sensor_no_ccc[slot][profile];
-                        BLEDevice.poll();
                     }
                     continue;
                 }
@@ -3766,6 +3801,10 @@ void loop()
                     return;
                 }
                 ++sensor_sent[slot][profile];
+            }
+            if (!BLEConnection.connected(connection))
+            {
+                continue;
             }
             alert_slot = slot;
             alert_ccc = subscribed(slot, 5U) ? 1U : 0U;

@@ -197,6 +197,9 @@ class ProfileRuntimeTests(unittest.TestCase):
             "void bindRecoveryReadySecurity(", "bool recoverySecurityAlreadyPending(",
         )
         server_order_scenarios = (
+            "no_ccc_normal", "no_ccc_callback_disconnect", "no_ccc_send_disconnect",
+            "no_ccc_already_disconnected", "no_ccc_missing", "no_ccc_duplicate",
+            "no_ccc_wrong_error", "no_ccc_unsolicited", "no_ccc_prior_pending",
             "order_h2_ready0", "order_h2_stale_ready0_l2", "order_h2_reason4",
             "order_h2_no_prune", "order_h2_wrong_peer", "order_h2_wrong_generation",
             "order_h2_budget", "order_h2_stop", "order_h2_restored", "order_h2_phase",
@@ -236,6 +239,9 @@ class ProfileRuntimeTests(unittest.TestCase):
                     selected_signatures = (
                         selected_signatures[:insertion] + added + selected_signatures[insertion:]
                     )
+                if role == "server":
+                    selected_signatures += ("void drainExpectedErrorEvents()",
+                                            "bool verifyNoCcc(")
                 (temporary / "stale-functions.inc").write_text(
                     "\n".join(function(signature) for signature in selected_signatures),
                     encoding="utf-8",
