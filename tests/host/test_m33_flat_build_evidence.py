@@ -297,7 +297,7 @@ class BuildEvidenceTests(unittest.TestCase):
     """! @brief 외부 retained artifact와 진단 exact manifest 변조를 검사합니다. """
 
     def test_template_retained_artifact_bytes_are_required(self):
-        """! @brief artifact hash 문자열만 있고 실제 byte가 없거나 변조되면 거부합니다. """
+        """! @brief 실제 artifact byte와 비밀 제거된 실패 진단의 보존 경계를 검사합니다. """
 
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary)
@@ -319,6 +319,22 @@ class BuildEvidenceTests(unittest.TestCase):
             artifact.write_bytes(b"changed")
             with self.assertRaisesRegex(TEMPLATE.TemplateBuildFailure, "byte"):
                 TEMPLATE.validate_retained_artifacts(row, output)
+            private = output / "private"
+            private.mkdir()
+            secret = "synthetic-private-credential"
+            (private / "build.log").write_bytes(b"build failed " + secret.encode())
+            result = TEMPLATE.subprocess.CompletedProcess(
+                ["prepare"], 1, b"stdout " + secret.encode(), b"stderr " + secret.encode()
+            )
+            TEMPLATE.retain_prepare_diagnostics("fast_pair_input", private, output,
+                                                result, (secret,))
+            for suffix in ("prepare.stdout.log", "prepare.stderr.log", "failed.build.log"):
+                retained = (output / ("fast_pair_input." + suffix)).read_bytes()
+                self.assertNotIn(secret.encode(), retained)
+                self.assertIn(b"<redacted>", retained)
+            with self.assertRaises(FileExistsError):
+                TEMPLATE.retain_prepare_diagnostics("fast_pair_input", private, output,
+                                                    result, (secret,))
 
     def test_template_manifest_binds_exact_source_argv_config_and_elf(self):
         """! @brief template manifest의 SDK source·argv·config·ELF byte를 재검증합니다. """

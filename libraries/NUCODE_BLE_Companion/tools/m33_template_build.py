@@ -257,6 +257,23 @@ def validate_retained_artifacts(row: dict, output: Path) -> None:
                 "retained template artifact byte mismatch")
 
 
+def retain_prepare_diagnostics(kind: str, directory: Path, output: Path,
+                               result: subprocess.CompletedProcess,
+                               secrets: tuple[str, ...]) -> None:
+    """! @brief 임시 tree 제거 전에 prepare 출력과 build 실패 로그를 비밀 제거 후 보존합니다. """
+
+    logs = {"prepare.stdout.log": result.stdout,
+            "prepare.stderr.log": result.stderr}
+    build_log = directory / "build.log"
+    if result.returncode != 0 and build_log.is_file():
+        logs["failed.build.log"] = build_log.read_bytes()
+    for suffix, raw in logs.items():
+        for secret in secrets:
+            raw = raw.replace(secret.encode("utf-8"), b"<redacted>")
+        with (output / f"{kind}.{suffix}").open("xb") as stream:
+            stream.write(raw)
+
+
 def execute(args: argparse.Namespace) -> dict:
     """! @brief 임시 private tree에서 네 build를 수행하고 공개 가능한 hash만 보존합니다. """
 
@@ -289,6 +306,9 @@ def execute(args: argparse.Namespace) -> dict:
             "template build requires clean exact NCS/Zephyr/board sources")
     negative = _run_negative_contract(repository, output)
     prepare = Path(__file__).resolve().with_name("prepare_template.py")
+    sys.path.insert(0, str(repository / "tools/nu54-builder/src"))
+    from nu54_builder_impl.environment import apply_toolchain_environment
+    prepare_environment = apply_toolchain_environment(toolchain)
     results = []
     with tempfile.TemporaryDirectory(prefix="m33-template-private-",
                                      dir=output.parent) as temporary:
@@ -321,8 +341,9 @@ def execute(args: argparse.Namespace) -> dict:
                 )
             result = subprocess.run(
                 command, cwd=repository, capture_output=True, timeout=2100,
-                shell=False, check=False
+                env=prepare_environment, shell=False, check=False
             )
+            retain_prepare_diagnostics(kind, build, output, result, secret_values)
             require(result.returncode == 0,
                     f"{kind} prepare/build subprocess failed")
             manifest_path = build / "template-manifest.json"
@@ -431,8 +452,11 @@ def main() -> int:
     args = parser.parse_args()
     try:
         result = execute(args)
-    except (OSError, ValueError, subprocess.SubprocessError,
-            TemplateBuildFailure) as error:
+    except TemplateBuildFailure as error:
+        print(f"M33_TEMPLATE_BUILD_FAIL: {type(error).__name__}: {error}",
+              file=sys.stderr)
+        return 1
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
         print(f"M33_TEMPLATE_BUILD_FAIL: {type(error).__name__}", file=sys.stderr)
         return 1
     print(f"M33_TEMPLATE_BUILD_STATUS={result['status']};KINDS={len(result['results'])}")
