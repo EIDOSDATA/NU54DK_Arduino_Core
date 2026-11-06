@@ -152,6 +152,10 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
         )
         self.assertTrue(pins["nrfutil"]["url"].startswith("https://files.nordicsemi.com/"))
+        self.assertRegex(
+            pins["nrfutil"]["url"],
+            r"/nrfutil-x86_64-pc-windows-msvc-\d+\.\d+\.\d+-[0-9a-f]{7}\.exe$",
+        )
         self.assertEqual(pins["sdk_manager"]["version"], "1.16.1")
         self.assertEqual(pins["ncs"]["revision"], MODULE.NCS_REVISION)
         self.assertEqual(pins["zephyr"]["revision"], MODULE.ZEPHYR_REVISION)

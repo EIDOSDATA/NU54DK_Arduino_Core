@@ -170,15 +170,17 @@ function Receive-File {
 }
 
 ## @brief SHA-256 값이 pin과 다르면 변경된 upstream byte를 거부합니다.
-function Assert-FileHash {
+function Assert-FileHash
+{
     param(
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$Expected
     )
 
     $actual = Get-Sha256 $Path
-    if ($actual -ne $Expected.ToLowerInvariant()) {
-        throw "SHA-256 불일치: $Path; expected=$Expected actual=$actual. 공식 URL은 unversioned이므로 upstream byte가 변경되었다면 검토 후 pins.json을 명시적으로 갱신하십시오."
+    if ($actual -ne $Expected.ToLowerInvariant())
+    {
+        throw "SHA-256 불일치: $Path; expected=$Expected actual=$actual. 고정된 공식 배포 byte와 일치하지 않습니다. 다운로드 경로와 파일 손상 여부를 확인하십시오."
     }
 }
 

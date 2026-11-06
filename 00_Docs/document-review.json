@@ -5,6 +5,89 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-06",
+      "baseline_commit": "722f732026473c84626db003249c020d2bfd19e7",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "S18 exact CI의 nRF Util 이동 URL SHA 불일치 교정: 기존 고정 byte·core·SDK·toolchain을 유지하는 버전별 URL 및 설치 안내 정합화",
+      "scope": {
+        "updated_existing_markdown": 1,
+        "added_markdown": 0,
+        "deleted_markdown": 0,
+        "full_document_reaudit": false,
+        "historical_records_reclassified": false
+      },
+      "current_state": {
+        "w06_complete": false,
+        "host_required_tests": 654,
+        "host_required_suites": 64,
+        "continuous49_required": false,
+        "separate_focused29_allowed": false,
+        "sdk_toolchain_versions_changed": false,
+        "nrfutil_pinned_bytes_changed": false
+      },
+      "checks": [
+        {
+          "name": "prerequisite-regression",
+          "result": "PASS",
+          "command": "python -B -m unittest discover -v -s tests/host -p test_m10_prerequisites.py",
+          "exit_code": 0,
+          "log_sha256": "e2f92b52f7386a040e82a32ef657eb84bc8e0354faff08fd9aeb9114c2e5a8dc",
+          "tests": 25,
+          "skips": 0
+        },
+        {
+          "name": "ci-lock",
+          "result": "PASS",
+          "command": "python -B tools/ci/verify_ci_lock.py",
+          "exit_code": 0,
+          "log_sha256": "80f885ddf734f74922172fa81ddabb2e18aedc8e56a4c1401d1e1a59fc0b5966"
+        },
+        {
+          "name": "docs",
+          "result": "PASS",
+          "command": "python -B tools/ci/run_m12_gate.py docs",
+          "exit_code": 0,
+          "log_sha256": "f7d8cabc39efd294f9d91348f7781ee1bd20f158fb0ba148590e6714f7e978cd",
+          "count": 512
+        },
+        {
+          "name": "generated",
+          "result": "PASS",
+          "command": "python -B tools/peripheral/verify_generated.py",
+          "exit_code": 0,
+          "log_sha256": "e547b7c74f679cefba135fd6e2fd6852bd29aa2ad28154d0c3d048aa160c9928"
+        },
+        {
+          "name": "coverage",
+          "result": "PASS",
+          "command": "python -B tools/coverage/m17_coverage.py render --check",
+          "exit_code": 0,
+          "log_sha256": "742e36d42b2603b9d48e14809c15a17d895e33aae666f3b6d8328c61962fa732"
+        },
+        {
+          "name": "m33-contract",
+          "result": "PASS",
+          "command": "python -B tools/bluetooth/m33_contract.py --sdk-root D:/w06/ncs --check",
+          "exit_code": 0,
+          "log_sha256": "a7ac90aadcf047579bd9385076c8656dbb9d608a7467a7197bf52b17b9432901"
+        },
+        {
+          "name": "diff-check",
+          "result": "PASS",
+          "command": "git diff --check",
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "documents": [
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "407982e857d63aa0a5886d160131fec5aba298c47ae887dd5c357b5e1fb5da11",
+          "bytes_utf8_lf": 3783
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-06",
       "baseline_commit": "1637c66a2beaeeafdd0c859bc05943d4a596f0a1",
       "branch": "Dev-0.6.0-M33",
       "purpose": "최종 S 고정 전 현행 W06 실행 순서·source별 증거 경계·native scoped cleanup 안내 정합화와 Host trace fixture 회귀 확인",

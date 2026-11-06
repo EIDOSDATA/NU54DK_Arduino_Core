@@ -24,9 +24,13 @@ NCS v3.4.1이 공개돼도 현재 설치기의 v3.4.0 pin을 자동 갱신하지
 [변경·개발 영향 검토](<../../00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)와 exact
 재검증이 필요하며, 다른 SDK의 수동 설치나 이 계획 문서만으로 지원 기준선이 변경되지는 않는다.
 
-공식 nRF Util URL은 unversioned다. 내려받은 byte가 `pins.json`의 SHA-256과 다르면
-자동으로 새 byte를 신뢰하지 않고 중단한다. upstream 변경을 검토하고 새 executable을
-별도로 검증한 뒤 pin과 package version을 함께 갱신해야 한다.
+공식 nRF Util 실행 파일은 버전과 빌드 식별자가 포함된 URL로 고정한다.
+현재 executable `1.4.1-f15ff58`의 byte와 SHA-256은 기존 pin을 유지하며,
+별도로 version을 판정하는 core `8.2.1`과 sdk-manager `1.16.1`도 유지한다.
+[Nordic의 특정 버전 설치 안내](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util)에 따라
+최신 파일을 가리키는 unversioned URL을 설치 입력으로 사용하지 않는다.
+내려받은 byte가 `pins.json`의 SHA-256과 다르면 자동으로 신뢰하지 않고 중단한다.
+실제 도구 version이나 byte를 바꾸는 경우에는 별도 검토·검증과 명시적인 pin·package version 갱신이 필요하다.
 
 ## 설치 출력과 실패 판정
 
