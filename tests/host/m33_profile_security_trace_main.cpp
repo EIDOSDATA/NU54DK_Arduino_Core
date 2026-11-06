@@ -38,15 +38,15 @@ int main()
     assert(forwarded == 1U && backendSecurityTraceSnapshot().failures == 0U);
 
     expected_hci_reason = 0x3dU;
-    expected_error = static_cast<bt_security_err>(9);
+    expected_error = BT_SECURITY_ERR_AUTH_FAIL;
     __wrap_bt_conn_security_changed(&connection, expected_hci_reason, expected_error);
     const BackendSecurityTrace first = backendSecurityTraceSnapshot();
     assert(forwarded == 2U && first.calls == 2U && first.failures == 1U);
-    assert(first.first_hci_reason == 0x3dU && first.first_security_error == 9U);
+    assert(first.first_hci_reason == 0x3dU && first.first_security_error == 1U);
     assert(first.first_caller != 0U);
 
     expected_hci_reason = 0x1fU;
-    expected_error = BT_SECURITY_ERR_AUTH_FAIL;
+    expected_error = BT_SECURITY_ERR_SUCCESS;
     __wrap_bt_conn_security_changed(&connection, expected_hci_reason, expected_error);
     const BackendSecurityTrace second = backendSecurityTraceSnapshot();
     assert(forwarded == 3U && second.calls == 3U && second.failures == 2U);
@@ -55,6 +55,7 @@ int main()
     assert(second.first_caller == first.first_caller);
 
     expected_hci_reason = 0U;
+    expected_error = BT_SECURITY_ERR_AUTH_FAIL;
     __wrap_bt_conn_security_changed(&connection, expected_hci_reason, expected_error);
     assert(forwarded == 4U && backendSecurityTraceSnapshot().failures == 3U);
     expected_error = BT_SECURITY_ERR_SUCCESS;

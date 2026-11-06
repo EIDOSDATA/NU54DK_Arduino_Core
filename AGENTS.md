@@ -16,25 +16,19 @@
 
 ## 작업 운영과 로컬 자료
 
-### 현재 우선 지시 — 2026-11-03
+### 현재 W06 우선 지시
 
-- 현행 상태·진행 순서는 [M33 인계](00_Docs/M33_HANDOFF.md)의 1~7번을 따른다.
-  문서를 정리하고 기존 실적·수정 회귀·CI를 확인한 뒤 실제 남은 마감을 기존 승인 범위에서 진행한다.
-- 개발 #1~#49 누적 PASS를 보존한다. 최신 승인은 같은 source의 완전한 독립49 증거와 1~7 마감이다.
-  전체49 무중단 연속 합격은 요구하지 않는다. 공식 #29의40구간·#30~#49를 포함하고 별도 선행 focused20은 없다.
-  같은 source의 유효 PASS는 보존하며 실패한 항목은 원인 교정 후 새 attempt로 판정한다.
-- 원형 `assemble --campaign-evidence`의 독립 증거 조립을 사용할 수 있다. 같은 source·원본 chain·
-  cycles·security·STOP·cleanup·retry 조건은 유지하며, 과거 source PASS를 새 source로 고쳐 쓰지 않는다.
-- 이전 flash 교정의 비교 진단·회귀242와 S15 준비 PASS를 해당 source 실적으로 보존한다.
-  READY 교정 후 S16 독립 #1~#17 PASS와 #18 FAIL을 보존한다. 현재는 DFU program 준비의
-  RRAM 초기화 전송 비용을 교정한다. [309번](<00_Docs/04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)의
-  진단 PASS는 정식 #18 PASS가 아니다. 일반 J-Link 업로드나 연속시험 잔류 설정 문제로 확대하지 않는다.
-- 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 브랜치는 `Dev-0.6.0-M33`이다.
-  단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:\w06`, 최소 여유4GiB를 유지한다.
+- 현행 상태·개발 수정순회·최종 마감 순서는 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용)을 따른다.
+- 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
+  실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
+  `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
+- 개발 단계의 수정별 검증과 최종 source 고정 후 전체 검증을 구분한다.
+  과거 source의 PASS/FAIL 원본은 보존하며 다른 source의 최종 실적으로 합성하지 않는다.
+- 단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:\w06`, 최소 여유4GiB를 유지한다.
 - 병렬 검토는 읽기 전용이다. 자동점검 w06은 PAUSED 유지. DAP/J-Link firmware 작업,
   Defender 보호 해제·예외·우회, mass erase·unlock·recover는 금지한다.
 - 중복·폐기 지시는 현행 문서에서 제거하되 과거 PASS/FAIL 원본·완료 TODO·공개 자산은 보존한다.
-  상세 판단 오류와 J-Link 경로 구분은 [307번](<00_Docs/04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)에 기록한다.
+  [304~309번 기록](00_Docs/M33_HANDOFF.md#판단-정정과-증거-경계)은 당시 source와 판단의 역사 기록이다.
 
 ### 이전 결정 — 현행 실행 지시 아님
 
@@ -81,7 +75,7 @@
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
   과거 94bb halt 수정·로컬 자료 삭제와 미커밋 패치 인계는
   [302번](<00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)의 역사 기록입니다.
-  해당 패치는 이미 이력에 반영됐습니다. 현재 source·결과·다음 작업은 [M33 인계](00_Docs/M33_HANDOFF.md)만 따릅니다.
+  해당 패치는 이미 이력에 반영됐습니다. 현행 계획은 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용), 실제 작업본·source·종료 상태는 `D:\w06\control\continuation.json`의 `active_workflow`를 따릅니다.
 - M33 구현 전에는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
   현행 [M33 TODO](00_Docs/TODO_M33.md)를 읽습니다. 완료된 [M31](00_Docs/TODO_M31.md)·[M32](00_Docs/TODO_M32.md)는 관련 근거만 참조합니다.
   계획 분모는 8·12·8이고 문서 개정은 구현 완료가 아닙니다. 2026-09-16 사용자 결정에 따라 보드 기반
@@ -125,9 +119,8 @@
 ## 검증·문서 원칙
 
 - Host·mock·build 통과나 범위 결정은 물리 PASS가 아닙니다. source·image·조건·결과를 결합해 기록합니다.
-- 개발용 실패별 집중 검증과 소스 고정 후 최종 전체 검증을 분리합니다. 현재는 위 2026-11-03
-  순서를 따릅니다. 중단한 조사 결과·미실행 범위는 그대로 보존하고, 개별 수정 때마다 전체를
-  재시작하지 않습니다. 최종 증거 판정은 별도 단계이며 독립 증거 조립을 허용하되 이전 source의 PASS를 새 source로 승계하지 않습니다.
+- 개발용 실패별 집중 검증과 소스 고정 후 최종 전체 검증을 분리합니다.
+  실행 순서와 증거 보존 규칙은 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용)을 따릅니다.
 - 공개 자산과 과거 PASS/FAIL/HOLD/NOT RUN 원본을 보존합니다. 생성 문서는 JSON·생성기를 고쳐 재생성합니다.
 - SDK·third-party·board submodule은 임의 수정하지 않습니다. 문서 경로 변경 시 들어오는 링크도 함께 고칩니다.
 - 2026-09-08 소유자 승인 이력 정리·v0.3.0 미만 공급 종료는 완료된 예외입니다. 반복 실행 허가가 아닙니다.

@@ -4,6 +4,115 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "review_date": "2026-11-06",
+      "baseline_commit": "1637c66a2beaeeafdd0c859bc05943d4a596f0a1",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "최종 S 고정 전 현행 W06 실행 순서·source별 증거 경계·native scoped cleanup 안내 정합화와 Host trace fixture 회귀 확인",
+      "scope": {
+        "updated_existing_markdown": 7,
+        "added_markdown": 0,
+        "deleted_markdown": 0,
+        "full_document_reaudit": false,
+        "historical_records_reclassified": false
+      },
+      "current_state": {
+        "w06_complete": false,
+        "host_required_tests": 654,
+        "host_required_suites": 64,
+        "continuous49_required": false,
+        "separate_focused29_allowed": false
+      },
+      "checks": [
+        {
+          "name": "related-regression",
+          "result": "PASS",
+          "command": "python -B -m unittest -v test_m33_profile_runtime.ProfileRuntimeTests.test_stale_recovery_callbacks",
+          "exit_code": 0,
+          "log_sha256": "3d1fdaf53392cb8b6ab55a93dbaadd8329fb92210c1850df50567984f3bfd16e",
+          "tests": 1,
+          "skips": 0
+        },
+        {
+          "name": "docs",
+          "result": "PASS",
+          "command": "python -B tools/ci/run_m12_gate.py docs",
+          "exit_code": 0,
+          "log_sha256": "f7d8cabc39efd294f9d91348f7781ee1bd20f158fb0ba148590e6714f7e978cd",
+          "count": 512
+        },
+        {
+          "name": "generated",
+          "result": "PASS",
+          "command": "python -B tools/peripheral/verify_generated.py",
+          "exit_code": 0,
+          "log_sha256": "e547b7c74f679cefba135fd6e2fd6852bd29aa2ad28154d0c3d048aa160c9928"
+        },
+        {
+          "name": "coverage",
+          "result": "PASS",
+          "command": "python -B tools/coverage/m17_coverage.py render --check",
+          "exit_code": 0,
+          "log_sha256": "742e36d42b2603b9d48e14809c15a17d895e33aae666f3b6d8328c61962fa732"
+        },
+        {
+          "name": "m33-contract",
+          "result": "PASS",
+          "command": "python -B tools/bluetooth/m33_contract.py --sdk-root D:/w06/ncs --check",
+          "exit_code": 0,
+          "log_sha256": "a7ac90aadcf047579bd9385076c8656dbb9d608a7467a7197bf52b17b9432901"
+        },
+        {
+          "name": "diff-check",
+          "result": "PASS",
+          "command": "git diff --check",
+          "exit_code": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "Changed local heading anchors",
+          "result": "PASS",
+          "count": 2
+        }
+      ],
+      "documents": [
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "f38ba99c10e6cd4363a1790273c24265fd83b30ce8581b83587f505e28beba42",
+          "bytes_utf8_lf": 18204
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "ea57728b34fb99bd47f54dcaccc5fe41d462e1b53c06dcd64b97d78a3d011102",
+          "bytes_utf8_lf": 5363
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "32aef86b4a040df1c48bd5d2a8b40840a3de3a42e881b85ffde483430a010e27",
+          "bytes_utf8_lf": 7174
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "5442287a235f8e630ab69bfbd59fba9b16ef30df5b046e99bd378bfc6db75292",
+          "bytes_utf8_lf": 36067
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "229a9fa19b3c261112b720d141e3da9c773d7bd835353b17c9233ab2981584dd",
+          "bytes_utf8_lf": 8772
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "c2754227197ee641de3f3e0f9d4d24f90015a44ec6eb3a05dccb76c255a30b8e",
+          "bytes_utf8_lf": 9914
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "da7fea70f976e8e6728cca4d0b67038f5ef870f191097e5f15bad8d6a380f55b",
+          "bytes_utf8_lf": 15675
+        }
+      ]
+    },
+    {
       "review_date": "2026-11-03",
       "baseline_commit": "398dcc1752d62094b1ed9fddab8fd40a90368c3d",
       "branch": "Dev-0.6.0-M33",

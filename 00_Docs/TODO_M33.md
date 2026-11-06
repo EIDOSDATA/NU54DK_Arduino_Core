@@ -3,23 +3,15 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **M33-W01~W05 완료, W06 개발 집중 49/49 완료·기존 증거와 남은 마감 정리 중 — 완료 5/8 작업 묶음** |
+| 현재 구현 상태 | **M33-W01~W05 완료, W06 미완료 — 완료 5/8 작업 묶음** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
 | 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
 | 최종 갱신일 | 2026-11-03 |
 
-최신 사용자 승인은 같은 source의 완전한 독립 증거를 확보하는 1~7 마감이다.
-전체49 무중단 연속 합격과 별도 선행 #29 focused20은 요구하지 않는다. 공식 #29의40구간과 #30~#49는 포함한다.
-S16 `398dcc17…`의 CI·Host652·Actions141·ecosystem2·runtime9·stage150과 독립 #1~#17은 PASS로 보존한다.
-#18은 DFU 본시험 전 secondary RRAM 초기화 timeout으로 FAIL 봉인했다.
-교정 관련157 PASS, 초기화·전체 readback의 실기87.13초와 세 보드 안전종료를 확인했다.
-신규 회귀2개를 포함한 공식 Host는654/64 suite다. 교정 진단은 정식 #18 PASS로 세지 않는다.
-과거 source 실적과 새 실행을 구분하며 W06은 미완료다. 현재 1~7은 [M33 인계](M33_HANDOFF.md),
-연속 검증 판단 정정은 [307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>),
-READY 교정은 [308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>),
-이번 DFU 초기화 교정은 [309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)을 따른다.
+W06의 현행 상태·개발 수정순회·최종 마감 순서는 [아래 W06 절](#m33-w06--자원회귀상호운용)이 소유한다.
+실제 작업본·source·진행 항목·native 종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
 
 M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지원표로 완성한다. 핵심 목표는
 고정 NCS에서 nRF54L15에 적용 가능한 Bluetooth 예제를 NU54DK Arduino 환경에서 사용할 수 있게 하는 것이다.
@@ -30,15 +22,12 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
 1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **5/8이며
 W01 전체 원장, W02 표준 GATT·Beacon, W03 외부 ecosystem companion, W04 DTM/HCI 진단,
-W05 전체 예제·설치 경로를 완료했고 W06은 실패별 개발 집중 검증 49/49를 완료한 뒤
-기존 증거와 최종 마감 입력을 정리 중**이다.
+W05 전체 예제·설치 경로를 완료했고 W06은 미완료**다.
+현행 실행 순서는 아래 W06 절을 따른다.
 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 
-개발 집중49는 source별 기록으로 보존하며 최신 source의 actual PASS로 합치지 않는다.
-원형은 독립49 증거 조립을 지원한다. 과거 개발 완료 이력은
-[306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>), 현재 실행과 원본 충족 여부는
-[M33 인계](M33_HANDOFF.md)에서 관리한다.
+과거 source별 개발 결과는 [M33 인계의 증거 경계](M33_HANDOFF.md#판단-정정과-증거-경계)에 연결된 원본으로 보존한다.
 
 M32 구현·문서를 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했다. M32 브랜치는 로컬·원격에서
 삭제했으며 원본 이력의 로컬 Git bundle과 전체 실행 순서는 [M33 인계](M33_HANDOFF.md)에 있다.
@@ -82,7 +71,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — 개발 누적49/49와 S16 독립17개 PASS 보존. #18 초기화 교정 후 같은 source의 독립49·soak/risk/qualification/closure 진행. [현재 순서](M33_HANDOFF.md) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — [현행 상태·실행 순서](#m33-w06--자원회귀상호운용) |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
@@ -226,17 +215,17 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 
 ### M33-W06 — 자원·회귀·상호운용
 
-**상태: 미완료·개발49 기록 보존 및 마감 입력 확인.** 개발 검증과 최종 gate의 기준은
-[W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)다.
-개발 탐색과 최종 완료 검증을 분리하되 아래 완료 조건과 분모는 줄이지 않는다.
+**상태: 미완료.** 개발 수정순회와 최종 source의 완료 검증을 구분하며, 실제 수락 전에는 완료로 기록하지 않는다.
+실제 작업본·source·진행 항목·종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
+개발 검증과 최종 gate의 기준은 [W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)이며 아래 완료 조건과 분모는 줄이지 않는다.
 
 | 완료용 gate | 요구 |
 | --- | --- |
 | 입력 | 같은 clean source S, 고정 board/SDK/toolchain·runner·실제 image |
-| build/runtime/stage | 141 build · 실제 runtime 9 · stage/validate 150 |
+| build/runtime/stage | 141 build · ecosystem 2 · 실제 runtime 9 · stage/validate 150 |
 | 기능·자원·자동 peer | 33 + 8 + 8 = 49개 유효 증거; 독립 실행 결과 조립 가능, 연속 실행 필수 아님 |
 | 장시간 검증 | 별도 세 보드 1,800초 soak |
-| 최종 마감 | 전체 Host·SDK risk 7개·qualification 3개·지원표·strict closure |
+| 최종 마감 | Host654/64 suite·skip0 · SDK risk 7개 · qualification 3개 · 지원표 · strict closure |
 
 과거 `f9f1cd28…`의 e11은 clean Host 63 suite/564 test/skip 0과 ecosystem 역할 build 2개를
 통과했지만 원격 전체 build는 사용자 전환 요청으로 취소했다. 이 source의 runtime/matrix/soak는 미실행이다.
@@ -265,12 +254,39 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 - [x] R1: 전체 입력·runner·oracle·소비 파일·비용 지도와 새 schema를 확정한다.
 - [x] R2: 보드 없는 계획·판정·중단/재개·손상 주입 회귀를 통과한다.
 - [x] R3: c21b2716에서 작은 전달 bundle과 한 그룹의 실제 cleanup→resume 수직 연결을 검증했다.
-- [ ] R4: 기존 개발49 기록을 보존하고, 현재 S의 독립49 원본을 확보한다. 실패한 항목은 새 attempt로 판정하며 유효 PASS는 유지한다.
+- [ ] R4: 개발 수정순회의 source별 원본을 보존하고, 최종 고정 source S의 독립49 원본을 확보한다. 실패한 항목은 새 attempt로 판정하며 같은 source의 유효 PASS는 유지한다.
 - [ ] R5: 영향 선택·안전한 cache/보존·시간 측정의 정합성을 검증한다.
 - [ ] R6: clean S에서 위 필수 전체 gate를 통과하고 완료 문서를 마감한다.
 
 R1~R6은 별도 M33 작업 분모가 아니다. 이전 source의 R3 결과를 수정본 전체 PASS로 승격하지 않는다.
-현행 1~7 순서로 증거와 미충족을 확인한다. 과거 문서 작업 한정 지시나 전체 재실행 지시를 자동 재개하지 않는다.
+#### 현행 실행 순서
+
+개발 검증은 #18에서 시작하여 #49까지 순서대로 진행한다.
+실패하면 원인을 교정하고 필요한 해당 범위를 새 attempt에서 검증한 뒤 다음 항목으로 진행한다.
+개별 수정 때마다 전체 CI·Host·Actions·독립49를 다시 시작하지 않는다.
+
+개발 수정순회와 필요한 문서 정리 후 다음 순서로 마감한다.
+
+1. **최종 source 고정:** 수정과 관련 회귀·문서를 마감하고 clean source S를 고정한다.
+   AGENTS.md와 구현 관련 문서 정리는 S 고정 전에 끝낸다. commit/push와 exact S CI를 확인한다.
+2. **Host654:** 같은 S의 원형 Host654/64 suite·skip0, 원본 로그·시험 ID/hash·실제 종료를 확보한다.
+3. **같은 S의 준비:** Actions 4 shard·build141 → ecosystem2 → runtime9 → stage/validate150.
+   같은 exact run을 중복 dispatch하지 않고 원형이 허용한 재사용만 적용한다.
+4. **최종 독립49:** 같은 S에서 #1부터 #49까지 기능33·자원8·자동 peer8을 검증한다.
+   공식 #29는 원형 두 campaign을 모두 실행하여 standard 20회 × (fresh·restored) = 40구간과 native 20회 × (fresh·restored·second-peer) = 60구간, 합계 100구간을 검증한다.
+   #30~#49를 생략하지 않으며 별도 선행 #29 focused20은 실행하지 않는다.
+5. **잔여 마감:** 별도 세 보드1800초 soak, 자원/지원 정합, risk7, qualification3을 완료한다.
+   자원8·자동 peer8의 별도 중복 시험층은 만들지 않는다.
+6. **원형 판정·export:** 같은 S의 actual evidence·원본 hash·receipt·종료 사슬을 확인하고
+   원형 독립 assemble → strict validate → export를 수행한다.
+7. **최종 기록:** 허용된 완료 문서·readiness·증거 참조만 S의 직계 non-merge 기록 commit C 하나로 반영한다.
+   원형 S→C 계약 검증 → push → exact C CI → 최종 기록을 마친 뒤 W06 완료를 판정한다.
+
+독립49는 무중단 연속49 합격 시험이 아니다. 같은 source의 유효 PASS는 보존한다.
+실패 cycle에는 이어 쓰지 않으며 FAIL을 재분류하지 않는다.
+구현·시험·판정 코드 변경으로 source가 바뀌면 원형 same-source 계약을 검토하고,
+과거 source의 PASS를 새 source 실적으로 합성하지 않는다.
+304~309번 역사 기록은 보존하며 AGENTS.md·구현 문서 정리를 최종 기록 commit C로 미루지 않는다.
 
 #### 과거 실행과 실패 기록
 

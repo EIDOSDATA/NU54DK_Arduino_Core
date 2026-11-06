@@ -4,12 +4,14 @@
 시작합니다. 현재 M33 개발은 `main`에서 분기한 `Dev-0.6.0-M33`에서 이어갑니다. M32 브랜치는
 로컬·원격 삭제 완료이며 원본 이력은 [M33 인계](00_Docs/M33_HANDOFF.md)의 로컬 Git bundle에,
 정식 릴리스 백업은 원격 `Release-0.5.0`에 보존합니다. M32는 12/12, M33은 W01~W05 5/8 완료입니다.
-W06은 미완료입니다. 2026-10-11 사용자 결정으로 현재는 문서 전수 검토·정리·검사와 commit/push를 수행합니다.
-[M33 인계](00_Docs/M33_HANDOFF.md)와 [새 설계](<00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를
-따릅니다. 이후 실패 하나에 필요한 코드만 수정하고 로컬 해당 항목의 실제 PASS를 확인한 뒤 다음 실패로 이동합니다.
-저장소는 `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`, 새 build·실행·cache·tmp는 `D:\w06`입니다.
-실기 writer와 무거운 작업은 하나이며 이번 병렬 문서/파일 검토는 같은 범위에 한정합니다.
-이번 개발 push는 `[skip ci]`로 대규모 CI를 유예합니다. 문서 정리·push는 최종 검증 완료가 아닙니다.
+W06은 미완료입니다. 현행 상태·개발 수정순회·최종 마감 순서는
+[M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용)을 따릅니다.
+[W06 파이프라인 재설계](<00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)에 따라
+source별 개발 검증과 최종 같은 source의 완료 검증을 구분합니다.
+기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 새 build·실행·cache·tmp는 `D:\w06`입니다.
+실제 작업본·source·진행 항목·종료 증거는 `D:\w06\control\continuation.json`의 `active_workflow`에서 확인합니다.
+실기 writer와 무거운 작업은 하나이며 병렬 검토는 읽기 전용입니다.
+최종 source S와 기록 commit C는 각각 해당 exact SHA의 CI를 확인합니다. 문서 정리·push는 W06 완료가 아닙니다.
 HOST는 3/8이며 M33-W06 완료 전에는 HOST-W04 이후를 시작하지 않습니다.
 stable은 `v0.5.0`이며 버전별 지원 범위는
 [릴리스 문서](<00_Docs/05_릴리스/README.md>)에 있습니다.

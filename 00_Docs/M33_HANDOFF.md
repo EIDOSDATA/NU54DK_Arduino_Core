@@ -1,59 +1,51 @@
 # M33 개발 인계 — W06 현행 상태
 
-최종 갱신: **2026-11-03**. W06은 미완료다. 기존 개발49의 source별 PASS는 보존한다.
-최신 사용자 승인은 아래 **1~7의 온전한 독립 증거 마감**이다. 전체49 무중단 연속 합격은 요구하지 않는다.
-같은 source의 유효한 개별 PASS를 유지하고, 실패한 항목은 원인을 고친 새 attempt로 판정한다.
+W06은 미완료다. 현행 상태·개발 수정순회·최종 마감 순서는
+[M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
+이 문서는 실제 재개 입력과 과거 증거의 위치를 안내한다.
 
 ## 현재 기준선
 
-| 항목 | 현재 상태 |
+| 항목 | 확인 위치 |
 | --- | --- |
-| 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
-| 직전 검증 source | S16 `398dcc1752d62094b1ed9fddab8fd40a90368c3d`, push 완료 |
-| S16 CI | [41498594841/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41498594841), 9 job PASS |
-| S16 준비 완료 | Host652/64 suite·skip0, Actions141, ecosystem2, runtime9, stage/validate150 PASS |
-| S16 Actions | [41498436685/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/41498436685), 4 shard·141 build 수락 |
-| 독립49 | `D:/w06/final398d/attempt-001`의 **#1~#17 PASS**, #18 `secure_dfu` FAIL; 원본 봉인·이어쓰기 금지, #19 이후 미실행 |
-| #1 교정 결과 | 실제 선두 동일 READY 반복을 포함한 #1 PASS. S15의 최초 FAIL·누락 raw·종료 기록은 보존 |
-| #18 오류·교정 | secondary RRAM 초기화의 120초 timeout. DFU program 준비 세 지점만 page buffer 재사용·전체 readback·HALTED 종료로 교정 |
-| 수정 검증 | 관련157 PASS. 교정 실기에서729,088byte 초기화·전체 byte/SHA 확인87.13초 PASS. 정식 #18 PASS가 아니며 새 source CI·최종 증거는 별도 필요. 공식 Host **654개/64 suite** |
-| 실제 종료 상태 | 교정 진단 native32137/0, debug4·primary 이미지 보존·세 보드 HALTED/strict isolation·OS·6 COM·공통3lock 종료 PASS. application STOP으로 바꾸어 기록하지 않음 |
-| 개발49 | 과거 source별 누적 PASS. [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)의 당시 실적 |
-| 로컬 실행 정본 | `D:/w06/control/continuation.json`의 `active_workflow`; 자동점검 w06 PAUSED 유지·재활성화 금지 |
+| 기준 저장소·개발 브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
+| 실제 작업본·source·단일 writer | `D:/w06/control/continuation.json`의 `active_workflow` |
+| 진행 항목·source별 결과·native 종료 | 같은 `active_workflow`와 연결된 원본 terminal·tool completion·receipt |
+| 현행 실행 순서·완료 분모 | [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용) |
+| 자동점검 | w06 PAUSED 유지·재활성화 금지 |
+
+현재 source와 프로세스·보드 상태를 과거 인계에서 추정하지 않는다.
+재개 시 실제 종료 증거와 공통3lock·COM·작업본 상태를 확인한다.
+
+실패 후 현재 시험 peer의 bond가 남은 상태에서 #29 native-only campaign을 새 fresh attempt로
+다시 시작할 때에는 원형 native scoped cleanup을 수행하고 실제 native·debug·OS·COM·공통3lock 종료를 확인한다.
+검증된 현재 peer의 bond만 삭제하고 다른 bond의 보존을 확인한다.
+STOP은 링크·대기 작업·스캔·광고·watchdog 종료 확인이며 bond 삭제를 대신하지 않는다.
+정상 fresh→restored→second-peer 사이에는 이 준비 cleanup을 끼워 넣지 않는다.
+
+실패 원본과 같은-source 유효 PASS는 보존한다. 이 cleanup은 campaign 실적에 더하지 않으며,
+이를 위해 완료된 standard20을 반복하지 않는다. 새 attempt는 fresh passkey를 포함한 원형 분모와 조건으로 판정한다.
+진단 trace 추가나 미재현을 인증 실패 원인 교정으로 기록하지 않는다.
 
 ## 판단 정정과 증거 경계
 
-[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)은 연속 검증 판단 오류와
-일반 J-Link 업로드/시험 도구 경로의 혼동을 기록한다. 이번 READY 불일치와 raw 보존 수정은
-[308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>)에 기록한다.
-S16의 독립17개 완료와 #18 초기화 교정·실기 근거는
-[309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)에 기록한다.
+[304번](<04_검증 기록/304_M33_W06_실행_정리와_문서_전수_검토.md>)부터
+[309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)까지는 당시 source와 실행의 역사 기록으로 보존한다.
 
-- 원형 `assemble --campaign-evidence`로 독립49를 결합한다. 단일 writer·공통3lock 때문에 차례로
-  실행하는 것과 전체49가 한 번에 끊김 없이 성공해야 한다는 요구를 혼동하지 않는다.
-- 같은 source의 유효 PASS는 한 항목 실패 때문에 버리지 않는다. FAIL은 보존하고 새 attempt만 채택한다.
-- 구현·시험·판정 코드 변경으로 source가 바뀌면 과거 PASS를 새 source 실적으로 고쳐 쓰지 않는다.
-  이번 변경은 DFU 준비 코드 수정이며 S16과 새 source의 증거를 분리한다. 새 source의 동일 소스 증거
-  요건 때문에 필요한 실행과 무중단 연속 합격 요구를 구분한다. 전체49 자동 재시작 규칙은 없다.
-- 선두 READY의 물리적 반복 원인은 확정하지 않았다. reset 미실행이나 일반 J-Link 업로드 결함으로 단정하지 않는다.
-- #29의 공식20회 fresh/restored 총40구간과 #30~#49는 독립49 범위에 포함한다. 별도 선행 focused20은 없다.
-  각 시험의 cycles·negative·security·STOP/cleanup·retry 합격 조건은 유지한다.
+과거 개발49 완료는
+[306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>),
+연속 검증 판단과 J-Link 경로 혼동의 정정은
+[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>),
+READY 판정과 raw 보존 교정은
+[308번](<04_검증 기록/308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md>)에 있다.
 
-## 다음 작업 1~7
+S16의 #1~#17 PASS와 #18 FAIL, secondary RRAM 초기화 120초 timeout 및
+87.13초 교정 진단은 [309번](<04_검증 기록/309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md>)에 보존한다.
+교정 진단을 정식 #18 PASS로 바꾸지 않는다. #18 실패를 J-Link reset 부재로 설명하지 않는다.
+선두 READY 반복의 물리적 원인도 확정된 것으로 기록하지 않는다.
 
-1. **수정 검증·기준 고정:** 최소 수정과 관련 회귀·문서를 마감하고 commit/push·exact CI를 확인한다.
-   소유권·프로세스·COM·3lock·SDK/도구/board·여유 공간과 clean source S를 고정한다.
-2. **Host654:** S의 원형 Host654/64 suite·skip0, 원본 로그·시험 ID/hash·실제 process 종료를 확보한다.
-3. **같은 S의 준비:** Actions 4 shard·build141 → ecosystem2 → runtime9 → stage/validate150.
-   exact run 중복 dispatch는 하지 않으며 원형이 허용한 build/campaign 재사용만 적용한다.
-4. **독립49:** 기능33+자원8+자동 peer8의 같은 S 원본 증거를 확보한다. 중간 실패는 원인부터 교정한다.
-   실패 cycle에는 이어 쓰지 않고 유효 PASS는 원래 경로에 보존한다. 전체49 무중단 합격 조건은 없다.
-5. **잔여 마감:** 별도 세 보드1800초 soak, 자원/지원 정합, risk7, qualification3을 완료한다.
-   자원8·자동 peer8의 별도 중복 시험층은 만들지 않는다. 외부 제품/OS 실기와 제품 qualification은 실제 범위를 유지한다.
-6. **원형 판정·export:** clean S에서 전체 actual evidence·원본 hash·receipt·종료 사슬을 검증하고
-   독립 경로로 assemble → strict validate → export를 수행한다. 원본 누락이나 다른 source를 합성하지 않는다.
-7. **최종 기록:** 허용된 완료 문서·readiness·증거 참조만 S의 직계 non-merge 기록 commit C 하나로 반영한다.
-   원형 S→C 계약 검증 → push → C exact CI → 최종 기록을 완료한다. 이 조건 전에는 W06 완료로 처리하지 않는다.
+원본 PASS/FAIL은 해당 source·attempt의 기록이다.
+현행 증거의 수락과 독립 조립은 M33 TODO의 W06 절 및 원형 계약에 따라 판정한다.
 
 ## 운영·보존 경계
 
