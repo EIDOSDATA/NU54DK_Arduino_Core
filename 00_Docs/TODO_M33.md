@@ -3,12 +3,12 @@
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
-| 현재 구현 상태 | **M33-W01~W05 완료, W06 미완료 — 완료 5/8 작업 묶음** |
+| 현재 구현 상태 | **W01~W05 기술 완료 5/8; W06 사용자 수락 마감으로 6/8** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 순차 Host 계획 | W01~W05 완료 5/8; M33-W06 완료 후 HOST-W04부터 재개, M33 기능 개발과 병렬 진행 금지 |
+| 순차 Host 계획 | W06 사용자 수락 마감; HOST 3/8, W04 이후 미착수·후속 범위에서 순차 진행 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-11-03 |
+| 최종 갱신일 | 2026-11-10 |
 
 W06의 현행 상태·개발 수정순회·최종 마감 순서는 [아래 W06 절](#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·native 종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
@@ -20,9 +20,9 @@ M33은 기능을 Arduino 사용자 예제·설치 package·검증 가능한 지�
 기능 구현은 [M31 TODO](TODO_M31.md)·[M32 TODO](TODO_M32.md), 제품선 진행은
 [제품 로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>)이 소유한다. 현재 M31은 W01~W08 8/8 완료,
 M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 12/12, signed MDFU와
-1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은 **5/8이며
-W01 전체 원장, W02 표준 GATT·Beacon, W03 외부 ecosystem companion, W04 DTM/HCI 진단,
-W05 전체 예제·설치 경로를 완료했고 W06은 미완료**다.
+1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은
+W01~W05 기술 완료 5/8에 W06 사용자 수락 마감을 더해 **수락 기준 6/8**이다.
+W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하며 원형 strict 기술 완료를 주장하지 않는다.
 현행 실행 순서는 아래 W06 절을 따른다.
 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
@@ -71,7 +71,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W03 | Fast Pair·ANCS/AMS 실제 기능·예제·자동 검사, 사용자 후속 상호운용 인계 | **완료** — exact `17182660…`, [299번](<04_검증 기록/299_M33_W03_외부_ecosystem과_companion_완료.md>) |
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
-| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **미완료** — [현행 상태·실행 순서](#m33-w06--자원회귀상호운용) |
+| M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
@@ -215,9 +215,13 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 
 ### M33-W06 — 자원·회귀·상호운용
 
-**상태: 미완료.** 개발 수정순회와 최종 source의 완료 검증을 구분하며, 실제 수락 전에는 완료로 기록하지 않는다.
+**상태: 사용자 수락 마감 완료.** [310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)와
+[공개 hash 참조](<04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json>)를 따른다.
+같은 S19의 실제 PASS 46개와 사용자 승인 #29·40·44를 합쳐 49개를 수락했다.
+원형 strict는 실제 49개 PASS를 요구하므로 기술 완료와 원형 export는 미충족으로 보존한다.
+readiness 기술 집계는 5/8·22/28, 별도 사용자 수락 집계는 6/8·25/28이다. #29 원인 분석은 사용자 지시로 유예했다.
 실제 작업본·source·진행 항목·종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
-개발 검증과 최종 gate의 기준은 [W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)이며 아래 완료 조건과 분모는 줄이지 않는다.
+아래 원형 기술 gate의 기준·분모는 [W06 파이프라인 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)대로 보존한다. 사용자 수락 예외는 원형 기술 PASS로 환산하지 않는다.
 
 | 완료용 gate | 요구 |
 | --- | --- |
@@ -235,17 +239,16 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
   profile별로 합치고 허용·거부 조합을 검증한다.
 - [ ] GAP/GATT/security/DFU와 신규 profile의 stale handle·cross-link·key/identity 오귀속·cleanup·
   bounded reconnect·cancel·peer loss를 회귀한다.
-- [ ] 전체 Host regression·관련 unit/negative·target build·JSON/schema/drift·문서 gate를 실행한다.
-- [ ] 세 보드로 가능한 기능 HIL과 대표 부하·soak를 고정한 분모·timeout으로 수행한다. 정밀 RF/audio
-  성능 수치는 완료 요구에 추가하지 않는다.
-- [ ] Android/iOS/Windows/Linux와 Nordic/타 vendor matrix를 기능별로 만들고 `PASS/FAIL/NOT RUN`,
+- [x] S19의 Host654/64 suite·skip0, build141·ecosystem2·runtime9·stage150을 확보했다. 최종 기록 커밋 CI는 실제 후속 control 기록으로 확인한다.
+- [x] 선택된 기술 PASS 46개와 원형 세 보드 1,800초 soak를 확보했다. #29·40·44는 사용자 수락이며 원형 HIL 전체 PASS로 표시하지 않는다.
+- [x] Android/iOS/Windows/Linux와 Nordic/타 vendor matrix를 기능별로 만들고 `PASS/FAIL/NOT RUN`,
   peer 자체 미지원과 Core 미지원을 구분한다. Windows 기본 GATT의 과거 PASS를 전체 OS UX에 복사하지 않는다.
-- [ ] Apple/Google·외부 제품의 실제 interop 행은 사용자 후속으로 인계한다. 구현·자동 가능한 semantic/
+- [x] Apple/Google·외부 제품의 실제 interop 행은 사용자 후속 `NOT_RUN`으로 인계했다. 구현·자동 가능한 semantic/
   scripted peer 검사와 실제 제품 interop의 분모를 나누고 후속 실기 부재로 W06/릴리스를 차단하지 않는다.
-- [ ] `M33-REG-01`, `M33-RESOURCE-01`, `M33-INTEROP-01`에 exact image·profile·peer 결과를 연결한다.
+- [x] `M33-REG-01`, `M33-RESOURCE-01`, `M33-INTEROP-01`의 별도 수락 metadata에 S19 결과를 연결했다. 원형 기술 상태는 `HOLD`이며 PASS 집계는 유지한다.
 - [x] Bluetooth qualification의 Host/controller/Mesh 적용성·component 근거·제품별 추가 절차를
   [별도 문서](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>)에 기록했다. NCS 3.4.0
-  Host·Controller는 공식 표의 `Planned`, Mesh는 DN 미기재 상태이며 제품 자격은 `NOT_ASSESSED`다.
+  2026-10-25 조사 기록의 Host·Controller·Mesh DN 선택지와 각주를 사용한다. component 기록은 3개 `EVIDENCE_RECORDED`이고 제품·design 자격은 `NOT_ASSESSED`다.
   Component 상태 기록과 제품 자격·예제 사용 가능성을 서로 승격하지 않는다.
 
 
@@ -259,11 +262,11 @@ W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경�
 - [ ] R6: clean S에서 위 필수 전체 gate를 통과하고 완료 문서를 마감한다.
 
 R1~R6은 별도 M33 작업 분모가 아니다. 이전 source의 R3 결과를 수정본 전체 PASS로 승격하지 않는다.
-#### 현행 실행 순서
+#### 적용한 절차와 원형 기술 마감 조건
 
-개발 검증은 #18에서 시작하여 #49까지 순서대로 진행한다.
-실패하면 원인을 교정하고 필요한 해당 범위를 새 attempt에서 검증한 뒤 다음 항목으로 진행한다.
-개별 수정 때마다 전체 CI·Host·Actions·독립49를 다시 시작하지 않는다.
+개발 수정순회 후 최종 S19의 #1~49를 선택했다. #29와 동일 profile 참조 #40·44는 사용자 승인으로 수락했으며 #30~49 처리를 끝냈다.
+아래는 보존하는 원형 기술 마감 절차다. 현재 #29 재실행이나 원인 분석을 시작하는 지시가 아니다.
+사용자 수락 마감과 실제 기록 커밋·CI 결과는 310번과 control의 최종 기록을 따른다.
 
 개발 수정순회와 필요한 문서 정리 후 다음 순서로 마감한다.
 

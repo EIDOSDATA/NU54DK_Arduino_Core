@@ -95,3 +95,9 @@ readiness 검증은 공통 메타데이터를 사용하며, DN 목록만 맞고 
 - Bluetooth SIG, [Bluetooth Qualification Process quick start guide](https://www.bluetooth.com/bluetooth-qualification-process-quick-start-guide/)
 - Bluetooth SIG, [QPRD v5, 2026-04-21](https://www.bluetooth.com/download/qprd-document/)
 - Nordic Semiconductor, [nRF54L15 Bluetooth DNs](https://docs.nordicsemi.com/r/bundle/comp_matrix_nrf54l15/page/comp/nrf54l15/nrf54l15_ble_qdid_qual_matrix.html)
+
+
+## W06 후속 증거 참조
+
+2026-11-10 S19의 Host·Controller·Mesh component 기록 3개를 `EVIDENCE_RECORDED`로 결합했다.
+[310번](<../04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)을 따르며, 위 2026-10-25 조사일·DN 선택지와 각주를 보존한다. 제품·design 자격은 계속 `NOT_ASSESSED`다.

@@ -733,7 +733,9 @@
       "id": "M33-W06",
       "title": "resource_regression_interoperability_qualification",
       "status": "in_progress",
-      "exact_evidence": null
+      "exact_evidence": null,
+      "user_accepted_status": "completed",
+      "user_accepted_evidence": "00_Docs/04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json"
     },
     {
       "id": "M33-W07",
@@ -19128,9 +19130,15 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "HOLD",
+          "source_revision": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+          "evidence": "00_Docs/04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json",
+          "user_accepted_status": "PASS_USER_ACCEPTED",
+          "technical_group_pass_count": 32,
+          "user_accepted_ordinals": [
+            29
+          ],
+          "technical_status_reason": "whole-group actual PASS incomplete; explicit user acceptance recorded separately"
         }
       ]
     },
@@ -19160,9 +19168,15 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "HOLD",
+          "source_revision": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+          "evidence": "00_Docs/04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json",
+          "user_accepted_status": "PASS_USER_ACCEPTED",
+          "technical_group_pass_count": 7,
+          "user_accepted_ordinals": [
+            40
+          ],
+          "technical_status_reason": "whole-group actual PASS incomplete; explicit user acceptance recorded separately"
         }
       ]
     },
@@ -19193,9 +19207,15 @@
           "verification_stage": "development",
           "development_blocker": true,
           "release_blocker": true,
-          "status": "NOT_RUN",
-          "source_revision": null,
-          "evidence": null
+          "status": "HOLD",
+          "source_revision": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+          "evidence": "00_Docs/04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json",
+          "user_accepted_status": "PASS_USER_ACCEPTED",
+          "technical_group_pass_count": 7,
+          "user_accepted_ordinals": [
+            44
+          ],
+          "technical_status_reason": "whole-group actual PASS incomplete; explicit user acceptance recorded separately"
         }
       ]
     },
@@ -19511,5 +19531,25 @@
     "test_family_total": 12,
     "test_case_total": 28,
     "test_case_passed": 22
+  },
+  "user_accepted_completion": {
+    "work_id": "M33-W06",
+    "status": "completed_by_explicit_user_acceptance",
+    "source_revision": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+    "evidence": "00_Docs/04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json",
+    "accepted_group_count": 49,
+    "technical_group_pass_count": 46,
+    "user_accepted_ordinals": [
+      29,
+      40,
+      44
+    ],
+    "original_strict_closure_status": "REJECTED_MANUAL_EXCEPTION_NOT_TECHNICAL_PASS",
+    "whole49_technical_pass_claimed": false,
+    "cause_analysis": "DEFERRED_BY_USER",
+    "accepted_work_completed": 6,
+    "work_total": 8,
+    "accepted_test_cases": 25,
+    "test_case_total": 28
   }
 }
