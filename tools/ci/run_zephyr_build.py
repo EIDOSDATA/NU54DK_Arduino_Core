@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 from typing import Any, Sequence
 
 
@@ -541,6 +542,10 @@ def run_build(
     environment = dict(os.environ)
     environment["ZEPHYR_BASE"] = str(workspace / "zephyr")
     environment["CCACHE_DISABLE"] = "1"
+    ## @note 고정 Zephyr가 제공하는 PARSETAB_DIR로 PLY 생성물을 실행별로 분리합니다.
+    ##       병렬 Twister의 생성물을 SDK의 같은 parsetab.py에 쓰지 않게 합니다.
+    parser_cache = Path(tempfile.mkdtemp(prefix=f".{outdir.name}-parsetab-", dir=outdir.parent))
+    environment["PARSETAB_DIR"] = str(parser_cache)
     ## @note sysbuild의 하위 CMake에도 basic_settings보다 먼저 같은 공식 package hook을 적용합니다.
     environment["ZephyrAppConfiguration_ROOT"] = (REPOSITORY / "tools/ci/cmake").as_posix()
     approved_patches = LOCK_MODULE.SDK_PATCH_MODULE.approved_zephyr_patches(lock)
@@ -548,6 +553,7 @@ def run_build(
         LOCK_MODULE.SDK_PATCH_MODULE.patchset_sha256(approved_patches)
     )
     print(f"[M12-ZEPHYR] exec: {subprocess.list2cmdline([str(item) for item in command])}")
+    print(f"[M12-ZEPHYR] isolated parser cache: {parser_cache}")
     if os.environ.get("NUCODE_ZEPHYR_PATCHES_APPLIED") == "1":
         actual = set(
             LOCK_MODULE.SDK_PATCH_MODULE._content_changes(workspace / "zephyr")

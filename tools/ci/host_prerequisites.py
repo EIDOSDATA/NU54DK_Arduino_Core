@@ -17,6 +17,30 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def capture_layout(toolchain: Path, source: str, reports: Path):
+    """! @brief 부가 경로 진단 오류가 원래 설치 FAIL을 덮어쓰지 않도록 보존합니다. """
+    try:
+        layout = {'source_revision': source, 'toolchain_root': str(toolchain), 'metadata': {}, 'declared_programs': []}
+        for name in ('environment.json', 'manifest.json'):
+            path = toolchain / name
+            if path.is_file():
+                layout['metadata'][name] = json.loads(path.read_text(encoding='utf-8-sig'))
+        for entry in layout['metadata'].get('environment.json', {}).get('env_vars', []):
+            if entry.get('key') != 'PATH' or entry.get('type') != 'relative_paths':
+                continue
+            for relative in entry['values']:
+                directory = toolchain / relative
+                if not directory.is_dir():
+                    continue
+                for path in directory.iterdir():
+                    if path.name.startswith(('python', 'west', 'git', 'arm-zephyr-eabi')):
+                        layout['declared_programs'].append({'path': str(path.relative_to(toolchain)),
+                            'is_file': path.is_file(), 'is_symlink': path.is_symlink()})
+        (reports / 'toolchain-layout.json').write_text(json.dumps(layout, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    except Exception as error:
+        print('HOST_LAYOUT_DIAGNOSTIC_ERROR=' + type(error).__name__, flush=True)
+
+
 def main():
     """! @brief 사용자 PC 설치와 구분된 CI 전용 실행·증거 경로를 구성합니다. """
     parser = argparse.ArgumentParser()
@@ -58,7 +82,11 @@ def main():
     print(json.dumps(context, ensure_ascii=False), flush=True)
     command = [context['operation'], '--state-root', str(state), '--install-root', str(install),
         '--cache-root', str(cache), '--evidence', str(reports / 'prerequisites.json')]
-    backend.main(command)
+    try:
+        backend.main(command)
+    finally:
+        toolchain = install / 'toolchains' / backend.BUNDLES[context['host']['os'] + '-' + context['host']['architecture']]
+        capture_layout(toolchain, head, reports)
     if not args.bootstrap_only:
         backend.main(['verify', '--state-root', str(state), '--install-root', str(install),
             '--evidence', str(reports / 'stored-verification.json')])

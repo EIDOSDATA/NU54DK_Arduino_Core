@@ -89,6 +89,23 @@ class HostPrerequisiteTests(unittest.TestCase):
         with self.assertRaisesRegex(P.AdapterError, 'E_HOST_INSTALL_ROOT'):
             P.roots(pin, self.root / 'state', self.root / 'sdk')
 
+    def test_macos_bundle_declared_bin_resolves_without_system_python(self):
+        """! @brief 공식 macOS bundle의 상대 PATH를 사용하고 전역 Python을 대신 선택하지 않습니다. """
+        toolchain = self.root / 'toolchain'
+        (toolchain / 'bin').mkdir(parents=True)
+        executable = toolchain / 'bin/python3.12'
+        executable.write_bytes(b'fixed-bundle-python-fixture')
+        executable.chmod(0o755)
+        (toolchain / 'environment.json').write_text(json.dumps({'env_vars': [
+            {'key': 'PATH', 'type': 'relative_paths', 'values': ['bin', 'usr/local/bin']}
+        ]}), encoding='utf-8')
+        self.assertEqual(P.resolve_toolchain_executable(toolchain, 'python', host_os='macos'), executable.resolve())
+        (toolchain / 'environment.json').write_text(json.dumps({'env_vars': [
+            {'key': 'PATH', 'type': 'relative_paths', 'values': ['../outside']}
+        ]}), encoding='utf-8')
+        with self.assertRaisesRegex(P.AdapterError, 'E_TOOL_ENVIRONMENT'):
+            P.resolve_toolchain_executable(toolchain, 'west', host_os='macos')
+
     def test_download_verifies_bytes_and_does_not_publish_partial_file(self):
         """! @brief 손상된 다운로드는 cache 완료 파일이 되지 않습니다. """
         data = b'official-fixed-bytes'

@@ -51,7 +51,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "FIRST_ATTEMPT_FAILED_CORRECTION_PENDING",
+    "status": "H2_FAILED_H3_CORRECTION_PENDING",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -61,7 +61,29 @@
       "bootstrap_components_verified": 3,
       "original_artifacts_preserved": true
     },
-    "fresh_correction_CI": "NOT_RUN"
+    "fresh_correction_CI": "NOT_RUN",
+    "attempts": [
+      {
+        "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
+        "run_id": 42742780994,
+        "conclusion": "failure",
+        "failed_OS_installations": 3,
+        "bootstrap_components_verified": 3,
+        "original_artifacts_preserved": true
+      },
+      {
+        "source_revision": "beb69193140eba95d2b7b2af333da7df908b751d",
+        "run_id": 42747429243,
+        "conclusion": "failure",
+        "failed_OS_installations": 3,
+        "causes": {
+          "windows-x86_64": "SDK_REGISTER_OPTION_CONFLICT",
+          "linux-x86_64": "SDK_REGISTER_OPTION_CONFLICT",
+          "macos-arm64": "BUNDLED_PYTHON_RESOLVER_PATH"
+        },
+        "original_artifacts_preserved": true
+      }
+    ]
   },
   "user_physical_OS_gate": {
     "status": "NOT_RUN",
@@ -124,5 +146,13 @@
       "log_sha256": "86bc420d011776dbba87e4696742c1d6fa8a77057b671d5ed3552f14317a2adf"
     },
     "implementation_scope": "UNCOMMITTED_HOST_CORRECTION_WORKTREE"
+  },
+  "local_followup_checks": {
+    "scope": "H3_UNCOMMITTED_CORRECTION_WORKTREE",
+    "related_tests": 36,
+    "CI_contract_tests": 46,
+    "PLY_concurrent_processes_exit0": 2,
+    "register_option_negative": "EXPECTED_MISSING_SDK_REJECTED",
+    "actual_tools_record": "D:/w06/control/host-w04-h3-local-actual-tools-20261110.json"
   }
 }

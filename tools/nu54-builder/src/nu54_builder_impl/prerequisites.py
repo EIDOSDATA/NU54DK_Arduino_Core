@@ -207,11 +207,17 @@ def verify_install(document: dict[str, Any], key: str, install: Path) -> dict[st
     git = resolve_toolchain_executable(toolchain, 'git', host_os=pin['os'])
     require(exact_git_revision(ncs / 'nrf', git_executable=git) == document['ncs']['revision'], 'E_HOST_NCS_REVISION', 'NCS revision이 다릅니다.')
     require(exact_git_revision(ncs / 'zephyr', git_executable=git) == document['zephyr']['revision'], 'E_HOST_ZEPHYR_REVISION', 'Zephyr revision이 다릅니다.')
+    from .environment import apply_toolchain_environment
+    environment = apply_toolchain_environment(toolchain)
+    resolved, versions = {}, {}
     for name in ('python', 'west', 'cxx', 'size'):
-        resolve_toolchain_executable(toolchain, name, host_os=pin['os'])
+        executable = resolve_toolchain_executable(toolchain, name, host_os=pin['os'])
+        resolved[name] = str(executable)
+        versions[name] = run([executable, '--version'], environment, 60)
     return {'ncs_root': str(install), 'toolchain_root': str(toolchain),
         'ncs_revision': document['ncs']['revision'], 'zephyr_revision': document['zephyr']['revision'],
-        'toolchain_bundle_id': pin['toolchain']['bundle_id']}
+        'toolchain_bundle_id': pin['toolchain']['bundle_id'], 'resolved_tools': resolved,
+        'tool_version_outputs': versions}
 
 
 def verify_ready(document: dict[str, Any], key: str, state: Path, install: Path, manifest_path: Path) -> dict[str, Any]:
@@ -275,7 +281,7 @@ def install_all(document: dict[str, Any], key: str, state: Path, install: Path, 
         sdk_root, extracted = extract_sdk(sdk, install, document['ncs']['version'])
         run([executable, 'sdk-manager', 'sdk', 'register', document['ncs']['version'],
              '--type', 'nrf', '--sdk-path', sdk_root,
-             '--toolchain-path', install / 'toolchains' / pin['toolchain']['bundle_id'], *directory], environment)
+             '--toolchain-path', install / 'toolchains' / pin['toolchain']['bundle_id']], environment)
     verified = verify_install(document, key, install)
     ready = dict(verified, schema_version=2, status='ready', platform_key=key,
         platform_pins_sha256=file_sha256(manifest_path), ncs_version=document['ncs']['version'],

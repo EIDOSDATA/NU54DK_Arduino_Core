@@ -12,6 +12,7 @@ launcher`1.4.1-f15ff58`, sdk-manager`1.16.1`, Arduino CLI`1.5.1`을 유지한다
 고정 core·toolchain archive를 검증한 뒤 sdk-manager에 전달하며 최신 core 자동 bootstrap을 사용하지 않는다.
 SDK archive는 검증 후 별도 staging에 안전하게 추출하고 원형 `VERSION` byte를 유지한다.
 SDK `v3.4.0`과 toolchain 절대 경로를 명시하여 `sdk-manager sdk register`로 등록한다.
+등록 단계의 `--toolchain-path`는 `--install-dir`와 함께 사용할 수 없다. 설치 root 옵션은 앞선 toolchain 설치에만 전달한다.
 sdk-manager1.16.1의 SDK `--tarball` 설치는 이 archive의 다중 행 `VERSION`을 해석하지 못하므로 사용하지 않는다.
 기존 SDK 경로는 덮어쓰지 않고 revision을 재검사한다. 추출 실패 staging은 진단용으로 보존한다.
 
@@ -81,6 +82,11 @@ Ubuntu/macOS 실제 설치·업로드·시리얼·ELF debug·갱신/재설치/�
 Windows 개발용 Host C++ 검사는 컴파일러와 동일한 배포본의 런타임 DLL을 사용해야 한다.
 다른 MinGW 배포본이 PATH 앞에 있으면 빌드 성공 후에도 표준 library의 파일 I/O가 오동작할 수 있다.
 SDK용 PATH와 Host 시험용 PATH를 실행 범위별로 구성하며, 이를 펌웨어 EEPROM 결함으로 판정하지 않는다.
+macOS bundle은 `environment.json`의 `bin`·`usr/bin`·`usr/local/bin` 등 내부 경로를 선언한다.
+고정 후보 외 도구도 이 선언 안에서 찾으며 전역 Python이나 bundle 밖 symlink를 대신 사용하지 않는다.
+설치 확인 시 Python·west·compiler·size의 실제 version 출력을 함께 저장한다.
+Twister의 PLY 생성물은 고정 SDK가 제공하는 `PARSETAB_DIR`를 사용해 실행별 경로로 분리한다.
+병렬 build가 SDK의 같은 `parsetab.py`를 생성하는 경쟁을 피하며 SDK 원본은 수정하지 않는다.
 
 공식 근거는 [고정 NCS 요구사항](https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/doc/nrf/installation/recommended_versions.rst),
 [nrfutil 특정 version 설치](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util),

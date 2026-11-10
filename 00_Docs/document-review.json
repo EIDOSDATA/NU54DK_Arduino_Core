@@ -5,6 +5,44 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-10",
+      "baseline_commit": "beb69193140eba95d2b7b2af333da7df908b751d",
+      "branch": "Dev-0.6.0-M33",
+      "purpose": "H2 세 OS 실패 보존 및 bundle resolver·register 인자·Twister parser 생성물 분리 교정 문서화",
+      "scope": {
+        "full_markdown_automated_scan": true,
+        "Markdown_files": 516,
+        "historical_FAIL_reclassified": false,
+        "new_HIL_runs": 0,
+        "W06_private_files_not_written": 11831
+      },
+      "current_state": {
+        "host_completed_work_packages": 3,
+        "host_current_work_package": "HOST-W04",
+        "native_Host_CI": "H2_FAILED_H3_CORRECTION_PENDING",
+        "user_physical_OS_gate": "NOT_RUN",
+        "group29_analysis": "DEFERRED_BY_USER"
+      },
+      "checks": {
+        "scope": "H3_UNCOMMITTED_CORRECTION_WORKTREE",
+        "related_tests": 36,
+        "CI_contract_tests": 46,
+        "PLY_concurrent_processes_exit0": 2,
+        "register_option_negative": "EXPECTED_MISSING_SDK_REJECTED",
+        "actual_tools_record": "D:/w06/control/host-w04-h3-local-actual-tools-20261110.json"
+      },
+      "documents": [
+        {
+          "path": "00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md",
+          "sha256": "e62205b871489f8db1780d4f29f47bc3787d73a8645111409182e8e83743b0a5"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256": "75ed310be18878efd1d93db1936433f818c23d1ea21a769eb3201fa0b815f92c"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-10",
       "baseline_commit": "85a87b5901ae923222a42bbe36387cbde1def4d2",
       "branch": "Dev-0.6.0-M33",
       "purpose": "HOST-W04 최초 CI 실패 보존·SDK 설치 경로와 로컬 Host 런타임 교정·장치 진단 및 현행 문서 동기화",

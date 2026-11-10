@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Mapping
 from typing import TypedDict
 import os
+import json
 import platform
 import re
 
-from .common import AdapterError, canonical_path
+from .common import AdapterError, canonical_path, strict_json_object
 
 
 class HostDescriptor(TypedDict):
@@ -203,6 +204,35 @@ def executable_candidates(tool: str, host_os: str | None = None) -> tuple[str, .
     return candidates
 
 
+def declared_toolchain_candidates(toolchain_root: Path, tool: str, selected_os: str) -> tuple[Path, ...]:
+    """! @brief 고정 bundle이 선언한 상대 PATH에서만 추가 실행 파일 후보를 만듭니다. """
+    document = toolchain_root / 'environment.json'
+    if not document.is_file():
+        return ()
+    try:
+        environment = json.loads(document.read_text(encoding='utf-8-sig'), object_pairs_hook=strict_json_object)
+        entries = environment['env_vars']
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle의 환경 선언을 읽지 못했습니다.') from error
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle env_vars는 object 목록이어야 합니다.')
+    names = {'python': ('python3', 'python3.12', 'python'), 'west': ('west',), 'git': ('git',),
+        'cxx': ('arm-zephyr-eabi-g++',), 'size': ('arm-zephyr-eabi-size',),
+        'ccache': ('ccache',), 'pyocd': ('pyocd',)}[tool]
+    suffix = '.exe' if selected_os == 'windows' else ''
+    candidates = []
+    for entry in entries:
+        if entry.get('key') != 'PATH' or entry.get('type') != 'relative_paths':
+            continue
+        if not isinstance(entry.get('values'), list):
+            raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle PATH values는 상대 경로 목록이어야 합니다.')
+        for relative in entry.get('values', []):
+            if not isinstance(relative, str) or not relative or Path(relative).is_absolute() or PureWindowsPath(relative).drive or '..' in Path(relative).parts:
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle PATH는 내부 상대 경로여야 합니다.')
+            candidates.extend(toolchain_root / relative / (name + suffix) for name in names)
+    return tuple(candidates)
+
+
 ## @brief Toolchain root 아래의 실제 실행 가능한 파일 하나를 결정합니다.
 def resolve_toolchain_executable(
     toolchain_root: Path,
@@ -212,15 +242,21 @@ def resolve_toolchain_executable(
     required: bool = True,
 ) -> Path | None:
     selected_os = canonical_host_os(host_os or platform.system())
+    root = canonical_path(toolchain_root)
     checked: list[Path] = []
-    for relative in executable_candidates(tool, selected_os):
-        candidate = canonical_path(toolchain_root / relative)
-        checked.append(candidate)
-        if not candidate.is_file():
-            continue
-        if selected_os != "windows" and not os.access(candidate, os.X_OK):
-            continue
-        return candidate
+    fixed = tuple(toolchain_root / relative for relative in executable_candidates(tool, selected_os))
+    for group in (fixed, None):
+        candidates = group if group is not None else declared_toolchain_candidates(toolchain_root, tool, selected_os)
+        for path in candidates:
+            candidate = canonical_path(path)
+            checked.append(candidate)
+            if not candidate.is_relative_to(root):
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle 외부 실행 파일을 사용할 수 없습니다.')
+            if not candidate.is_file():
+                continue
+            if selected_os != "windows" and not os.access(candidate, os.X_OK):
+                continue
+            return candidate
     if not required:
         return None
     paths = ", ".join(path.as_posix() for path in checked)

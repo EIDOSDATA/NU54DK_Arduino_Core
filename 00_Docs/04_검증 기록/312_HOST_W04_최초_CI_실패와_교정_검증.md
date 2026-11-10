@@ -32,3 +32,34 @@ logging fixture 교정 검사는 실제6 PASS와 Windows8.3 alias 미충족1 SKI
 사용자 Ubuntu/macOS 최종 실기 → HOST-W08이다. 실제 USB·serial·debug·lifecycle은 `NOT_RUN`이며 공개는 별도 승인이다.
 
 Windows 읽기 전용 실제 진단은 serial6개와 CMSIS-DAP identity hash3개를 열거하여 exit0이었다. flash·reset·halt는 0이며 Ubuntu/macOS 사용자 실기 PASS가 아니다.
+
+## H2 실제 결과와 후속 교정
+
+교정 source `beb69193140eba95d2b7b2af333da7df908b751d`(H2)의
+[native CI42747429243](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/42747429243)도 세 OS FAIL이다.
+Windows·Ubuntu는 새 `sdk register`의 `--toolchain-path`와 `--install-dir` 조합이 CLI에서 충돌했다.
+macOS는 SDK 추출·등록 후 revision 검사를 지나 Python 파일 탐색에서 실패했다.
+전체 설치 PASS로 올리지 않으며 원문3개와 artifact3개를 SHA-256 검증해 별도 보존했다.
+H2 [software CI42747433635](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/42747433635)의 Host 전체 작업은 실제 성공했다.
+최종 전체 결과는 남은 대표 build 종료 후 별도 확정한다.
+
+후속 작업본에서는 등록 명령의 충돌 인자를 제거했다. 고정 nRF Util의 실제 CLI로 잘못된 SDK 경로를
+입력하여 인자 충돌 대신 예상 경로 거부까지 진행됨을 확인했다. 이는 설치 PASS가 아닌 negative 진단이다.
+macOS 공식 고정 archive의 부분 header에서 `environment.json`의 내부 PATH 선언을 확인했다.
+resolver는 기존 고정 후보에 더해 이 선언 안의 실행 파일을 찾으며 bundle 밖의 상대 경로·symlink는 거부한다.
+Python·west·compiler·size는 실제 `--version` 실행과 출력까지 ready 검증에 기록한다.
+부분 archive 검사는 전체 archive SHA-256 검증 실적이 아니며 새 native CI가 필요하다.
+
+H1 자동 build shard3은 두 번째 Twister가 PLY의 불완전한 `parsetab`을 읽고 `_tabversion` 오류로
+build 전에 종료했다. 원본 실패 JSON의 stderr SHA-256과 실제 추출 byte가 일치했다.
+큰 ZIP의 전체 다운로드는 600초 timeout으로 부분 파일을 보존했고, 필요한 원문 entry만 HTTPS Range로
+추출했다. 전체 ZIP digest를 검증했다고 주장하지 않는다. 동시 실행과 공유 parser 파일 쓰기 경쟁을
+고정 SDK parser 복사본으로 구분했다. 고정 SDK가 제공하는 `PARSETAB_DIR`를 실행별 새 경로로 설정해
+SDK 공유 파일에 쓰지 않도록 교정했다. SDK·grammar 원본을 수정하지 않았다.
+첫 진단의 `1 == 1` 입력은 SDK 문법에 맞지 않아 실패했으며 이를 보존했다.
+올바른 `CONFIG_BT` positive·negative 입력의 fresh A002에서는 두 동시 process가 exit0으로 끝나고
+같은 table hash를 만들었으며 공유 parser 폴더에 생성물을 남기지 않았다.
+이는 parser 교정 진단이며 펌웨어 build·W06 HIL PASS가 아니다.
+
+후속 교정의 관련36개·CI 계약46개는 로컬 exit0이었다. 세 OS 실제 설치와 build는 새 source의 fresh CI로
+계속 검증한다. H1·H2 FAIL 및 기존 S19 W06 실적을 합성하지 않는다.
