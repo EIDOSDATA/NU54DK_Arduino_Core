@@ -57,7 +57,7 @@ def applied_sdk_patches(
     if environment.get("NUCODE_ZEPHYR_PATCHSET_SHA256") != expected:
         raise AdapterError("[NU54:E_SDK_PATCH] build 환경의 patch 집합이 lock과 다릅니다")
     if environment.get("NUCODE_ZEPHYR_PATCHES_APPLIED") == "1":
-        actual = set(sdk_patches._content_changes(zephyr_base.resolve()))
+        actual = set(sdk_patches._content_changes(zephyr_base.resolve(), environment=environment))
         expected_files = {
             path for record in records for path in record["files"]
         }
@@ -69,7 +69,7 @@ def applied_sdk_patches(
         return
     try:
         with sdk_patches.applied_zephyr_patches(
-            zephyr_base.resolve().parent, lock
+            zephyr_base.resolve().parent, lock, environment=environment
         ) as applied:
             yield applied
     except sdk_patches.PatchFailure as error:

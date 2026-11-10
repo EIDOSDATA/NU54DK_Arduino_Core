@@ -19,6 +19,7 @@ on:
       - 'tests/host/test_host_prerequisites.py'
       - 'tests/host/test_host_diagnostics.py'
       - 'tests/host/test_host_paths_locks.py'
+      - 'tests/host/test_host_sdk_patch_environment.py'
       - 'tests/host/test_m9_cache.py'
   workflow_dispatch:
     inputs:
@@ -56,7 +57,7 @@ jobs:
         with:
           python-version: 3.12.10
       - name: Run portable prerequisite and resolver tests
-        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_host_diagnostics tests.host.test_m30_host_portability tests.host.test_m9_cache tests.host.test_host_paths_locks
+        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_host_diagnostics tests.host.test_m30_host_portability tests.host.test_m9_cache tests.host.test_host_paths_locks tests.host.test_host_sdk_patch_environment
       - name: Prepare the required macOS SDK directory
         if: runner.os == 'macOS' && !inputs.bootstrap_only
         shell: bash

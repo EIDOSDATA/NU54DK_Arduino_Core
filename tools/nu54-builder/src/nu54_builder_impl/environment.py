@@ -356,6 +356,7 @@ def tool_environment(platform_root: Path | None = None) -> ToolEnvironment:
     assert git is not None
     assert compiler is not None
     assert size_tool is not None
+    environment['NUCODE_SDK_GIT'] = str(git)
     ccache_root = build_cache_root() / "compiler-cache"
     if ccache is not None:
         ensure_writable_cache_root(build_cache_root())

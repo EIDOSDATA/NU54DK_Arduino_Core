@@ -287,9 +287,9 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H7_PRODUCER_GUARD_FAIL_DIAGNOSTIC_PENDING",
+    "status": "H8_INSTALL_PASS_BLINK_SDK_GIT_FAIL_CORRECTION_PENDING",
     "source_revision": null,
-    "Boards_Manager_clean_install": "NOT_RUN",
+    "Boards_Manager_clean_install": "PASS_H8_THREE_OS_NOT_CURRENT_CORRECTION",
     "three_OS_all_204_examples": "NOT_RUN",
     "artifact_comparison": "NOT_RUN",
     "bootstrap_runtime": "ACTUAL_DERIVED_ARCHIVES_REPRODUCIBLE_UPSTREAM_BYTES_UNCHANGED",
@@ -328,8 +328,18 @@
         "producer_unit_passed": 30,
         "smoke": "NOT_RUN",
         "source_credits_combined": false
+      },
+      {
+        "source_revision": "80e11169b19e0d634fbec447cbd4233fbf50523e",
+        "native_package_run": 42778400841,
+        "producer": "PASS",
+        "installation_and_discovery": "PASS_3OS_955_FILES_24_LIBRARIES_204_EXAMPLES",
+        "Blink": "FAIL_3OS_SDK_PATCH_SYSTEM_GIT_DEPENDENCY",
+        "all_204_examples": "NOT_RUN",
+        "source_credits_combined": false
       }
-    ]
+    ],
+    "current_correction": "SDK_PATCH_EXPLICIT_GIT_AND_ENVIRONMENT"
   },
   "H5_additional_CI": {
     "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",

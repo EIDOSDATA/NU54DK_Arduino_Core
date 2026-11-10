@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06의 H6 설치 FAIL 교정 후 H7 producer guard 실패를 확인 중이다.
+기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H8 실제3OS 설치·발견 통과 후 SDK Git 전달을 교정 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -86,11 +86,15 @@ Boot HEX에서는 그 worker에서 생성한 public DER key가 정확히 한 번
 ## 완료 경계
 
 H6의 실제 package CI는 producer PASS·세 OS smoke FAIL로 종료했다. Ubuntu archive 호환성,
-macOS 검증 코드의 보호된 파일 조회와 Windows 검증 코드의 설치 root 누락을 각각 교정한다.
+macOS 검증 코드의 보호된 파일 조회와 Windows 검증 코드의 설치 root 누락을 교정했다.
+H8에서는 실제3OS의 package/SDK 설치·955파일 대조·24개 library와204예제 발견을 통과했다.
+Blink는 SDK patch manager가 SDK Git 환경을 전달하지 않아 실패했다. 공통 backend에서 선택한
+`NUCODE_SDK_GIT` 절대 경로와 환경을 적용·복구 전체에 명시하도록 교정한다.
 전체 예제·cross-Host artifact 비교는 `NOT_RUN`이며 fresh 교정 source의 실제 CI가 필요하다.
 로컬 통과는 이 gate의 대체 증거가 아니다. 최초 구현은
 [316번 기록](<../04_검증 기록/316_HOST_W06_native_package_구현과_검증_착수.md>), 실제 FAIL·교정은
-[317번 기록](<../04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>)을 따른다.
+[317번 기록](<../04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>)과
+[318번 기록](<../04_검증 기록/318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md>)을 따른다.
 
 CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실물 검증은 RC1 최종 사용자
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는

@@ -56,12 +56,20 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _git(repository: Path, arguments: Sequence[str], *, check: bool = True) -> str:
+def _git(repository: Path, arguments: Sequence[str], *, check: bool = True,
+         environment: dict[str, str] | None = None) -> str:
     """! @brief Git 명령을 shell 없이 실행하고 UTF-8 출력을 반환합니다. """
 
+    executable = 'git'
+    if environment is not None:
+        selected = environment.get('NUCODE_SDK_GIT')
+        if not isinstance(selected, str) or not Path(selected).is_absolute() or not Path(selected).is_file():
+            raise PatchFailure('SDK patch 명령에는 검증한 SDK Git의 절대 실행 경로가 필요합니다.')
+        executable = selected
     try:
         result = subprocess.run(
-            ("git", "-C", str(repository), *arguments),
+            (executable, "-C", str(repository), *arguments),
+            env=environment,
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -78,7 +86,7 @@ def _git(repository: Path, arguments: Sequence[str], *, check: bool = True) -> s
     return result.stdout.strip()
 
 
-def _content_changes(repository: Path) -> tuple[str, ...]:
+def _content_changes(repository: Path, *, environment: dict[str, str] | None = None) -> tuple[str, ...]:
     """! @brief 줄바꿈 stat 오판을 제외한 staged·tracked·untracked 변경을 반환합니다. """
 
     paths: set[str] = set()
@@ -88,7 +96,7 @@ def _content_changes(repository: Path) -> tuple[str, ...]:
         ("ls-files", "--others", "--exclude-standard"),
     )
     for command in commands:
-        paths.update(item for item in _git(repository, command).splitlines() if item)
+        paths.update(item for item in _git(repository, command, environment=environment).splitlines() if item)
     return tuple(sorted(paths))
 
 
@@ -188,7 +196,7 @@ def approved_zephyr_patches(lock: dict[str, Any]) -> tuple[dict[str, Any], ...]:
 
 @contextmanager
 def applied_zephyr_patches(
-    workspace: Path, lock: dict[str, Any]
+    workspace: Path, lock: dict[str, Any], *, environment: dict[str, str] | None = None
 ) -> Iterator[tuple[dict[str, Any], ...]]:
     """! @brief clean Zephyr checkout에 patch를 적용하고 종료 시 원상복구합니다. """
 
@@ -198,9 +206,13 @@ def applied_zephyr_patches(
         return
     zephyr = workspace.resolve() / "zephyr"
     expected_revision = str(lock["zephyr"]["revision"])
-    if _git(zephyr, ("rev-parse", "HEAD")) != expected_revision:
+    def run_git(arguments: Sequence[str]) -> str:
+        """! @brief 적용·복원 모두 같은 SDK Git과 환경을 사용합니다. """
+        return _git(zephyr, arguments, environment=environment)
+
+    if run_git(("rev-parse", "HEAD")) != expected_revision:
         raise PatchFailure("Zephyr patch 대상 revision이 lock과 다릅니다")
-    if _content_changes(zephyr):
+    if _content_changes(zephyr, environment=environment):
         raise PatchFailure("Zephyr patch는 clean exact checkout에만 적용할 수 있습니다")
     originals = {
         relative: (zephyr / relative).read_bytes()
@@ -213,11 +225,11 @@ def applied_zephyr_patches(
     try:
         for record in records:
             patch = (REPOSITORY / record["path"]).resolve()
-            _git(zephyr, ("apply", "--check", "--whitespace=error-all", str(patch)))
-            _git(zephyr, ("apply", "--whitespace=error-all", str(patch)))
+            run_git(("apply", "--check", "--whitespace=error-all", str(patch)))
+            run_git(("apply", "--whitespace=error-all", str(patch)))
             applied.append(record)
         changed = set(
-            _git(zephyr, ("diff", "--name-only", "--diff-filter=ACMRT")).splitlines()
+            run_git(("diff", "--name-only", "--diff-filter=ACMRT")).splitlines()
         )
         expected = {item for record in records for item in record["files"]}
         if changed != expected:
@@ -229,8 +241,8 @@ def applied_zephyr_patches(
         for record in reversed(applied):
             patch = (REPOSITORY / record["path"]).resolve()
             try:
-                _git(zephyr, ("apply", "--check", "--reverse", str(patch)))
-                _git(zephyr, ("apply", "--reverse", str(patch)))
+                run_git(("apply", "--check", "--reverse", str(patch)))
+                run_git(("apply", "--reverse", str(patch)))
             except Exception as error:
                 cleanup_error = error
                 break
@@ -245,7 +257,7 @@ def applied_zephyr_patches(
                 )
         if cleanup_error is None:
             try:
-                if _content_changes(zephyr):
+                if _content_changes(zephyr, environment=environment):
                     cleanup_error = PatchFailure(
                         "Zephyr patch 원상복구 뒤 checkout이 clean하지 않습니다"
                     )

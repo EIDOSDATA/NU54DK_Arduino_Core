@@ -76,3 +76,5 @@ Ubuntu 단위30개 모두 통과한 뒤 producer의 exact-source 진입 guard에
 Job129699560066의 원형 log SHA-256은
 `bfd159811bc0f11d2d2adf7e656c4727df2c069fd570095a502267ca3ceaa621`이다.
 이 실행에는 producer artifact가 생성되지 않았으며 이를 다운로드 성공으로 만들지 않는다.
+
+H8에서는 producer guard를 통과해3OS 실제 설치·발견까지 성공했으며 Blink의 SDK Git 환경 전달 누락을 확인했다. H7 세부 원인은 미확정으로 보존하고 최신 결과는 [318번](318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md)을 따른다.
