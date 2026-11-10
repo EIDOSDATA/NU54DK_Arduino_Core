@@ -48,3 +48,5 @@ H9 별도 prerequisite CI42781574213은 세 OS 성공, software/build-only는 �
 W06 S19 actual PASS46·명시 수락 #29·40·44, 원형 FAIL·soak·private11831개·public3개·완료 TODO6개를
 보존한다. #29 분석 유예·새 HIL0·w06 PAUSED 요청 유지·예약 생성/재활성화 없음.
 Ubuntu/macOS 물리 USB·Serial·debug·lifecycle은 RC1 최종 사용자 gate `NOT_RUN`이다.
+
+H10에서 POSIX 공백 경로 교정을 실제 Blink·artifact로 확인했으며 Windows mode 차이를 분리했다. 최신 결과와 교정은 [320번](320_HOST_W06_H10_POSIX_Blink_통과와_Windows_mode_교정.md)을 따른다.

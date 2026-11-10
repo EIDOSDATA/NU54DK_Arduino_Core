@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H9 후속 Kconfig 경로 교정과 Windows SDK clean 진단 중이다.
+기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H10 Ubuntu/macOS Blink 통과 후 Windows Git mode를 교정 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -93,13 +93,16 @@ Blink는 SDK patch manager가 SDK Git 환경을 전달하지 않아 실패했다
 `NUCODE_SDK_GIT` 절대 경로와 환경을 적용·복구 전체에 명시하도록 교정한다.
 H9에서는 Git 실행을 넘긴 뒤 POSIX Kconfig의 공백 경로 분할을 확인했다. 세 OS 모두 설치 Core의
 동일 byte를 안전한 ASCII cache에 복사해 CMake 입력으로 사용하며 원본 source metadata는 유지한다.
-Windows SDK clean 실패는 변경 목록을 확인 중이며 알려지지 않은 변경을 무시하지 않는다.
+H10의 Ubuntu/macOS는 실제 Blink·ELF/HEX 검증과 동일 ARM load를 통과했다. Windows clean 실패에서
+POSIX 실행 비트 차이를 확인했으며 SDK Git 호출에만 `core.filemode=false`를 사용한다.
+SDK 파일·repo/global config·OS 권한을 바꾸지 않고 실제 content·삭제·추가 검사는 유지한다.
 전체 예제·cross-Host artifact 비교는 `NOT_RUN`이며 fresh 교정 source의 실제 CI가 필요하다.
 로컬 통과는 이 gate의 대체 증거가 아니다. 최초 구현은
 [316번 기록](<../04_검증 기록/316_HOST_W06_native_package_구현과_검증_착수.md>), 실제 FAIL·교정은
 [317번 기록](<../04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>)과
 [318번 기록](<../04_검증 기록/318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md>)과
-[319번 기록](<../04_검증 기록/319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md>)을 따른다.
+[319번 기록](<../04_검증 기록/319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md>)과
+[320번 기록](<../04_검증 기록/320_HOST_W06_H10_POSIX_Blink_통과와_Windows_mode_교정.md>)을 따른다.
 
 CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실물 검증은 RC1 최종 사용자
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는

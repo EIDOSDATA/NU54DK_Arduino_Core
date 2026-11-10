@@ -77,6 +77,28 @@ class SdkPatchEnvironmentTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(M.PatchFailure):
                 M._git(self.zephyr,('rev-parse','HEAD'),environment=environment)
 
+    def test_native_mode_policy_still_rejects_content_deletion_and_untracked_files(self):
+        """! @brief Windows의 POSIX mode 표현 차이만 처리하며 실제 byte·누락·추가는 계속 검출합니다. """
+        script=self.zephyr/'executable.py'
+        script.write_bytes(b'print("original")\n')
+        self.invoke('add','executable.py')
+        self.invoke('update-index','--chmod=+x','executable.py')
+        self.invoke('-c','user.name=Unit Fixture','-c','user.email=unit@example.invalid',
+            '-c','commit.gpgsign=false','commit','--quiet','-m','mode fixture')
+        self.invoke('config','core.filemode','true')
+        mode_changes=M._content_changes(self.zephyr,environment=self.environment)
+        if os.name=='nt':
+            self.assertEqual(mode_changes,())
+        else:
+            self.assertIn('executable.py',mode_changes)
+        script.write_bytes(b'print("changed content")\n')
+        self.assertIn('executable.py',M._content_changes(self.zephyr,environment=self.environment))
+        (self.zephyr/'example.txt').unlink()
+        (self.zephyr/'untracked.txt').write_bytes(b'not approved')
+        self.assertEqual(set(M._content_changes(self.zephyr,environment=self.environment)),
+            {'example.txt','executable.py','untracked.txt'})
+        self.assertEqual(self.invoke('config','--get','core.filemode').strip(),'true')
+
 
 if __name__=='__main__':
     unittest.main()

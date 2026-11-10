@@ -287,7 +287,7 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H9_KCONFIG_PATH_FAIL_AND_WINDOWS_CLEAN_DIAG_CORRECTION_PENDING",
+    "status": "H10_POSIX_BLINK_PASS_WINDOWS_MODE_CORRECTION_PENDING",
     "source_revision": null,
     "Boards_Manager_clean_install": "PASS_H8_THREE_OS_NOT_CURRENT_CORRECTION",
     "three_OS_all_204_examples": "NOT_RUN",
@@ -298,10 +298,11 @@
     "local_package_actual_tool": "2001d5/exit0",
     "final_CI_credit": 0,
     "native_contracts": {
-      "reported": 35,
-      "passed": 34,
+      "reported": 36,
+      "passed": 35,
       "conditional_skipped": 1,
-      "actual_tool": "42c810/exit0"
+      "actual_tool": "c60868/exit0",
+      "scope": "H11_WINDOWS_MODE_CORRECTION_WORKTREE"
     },
     "CI_contract": {
       "tests": 46,
@@ -347,15 +348,32 @@
         "all_204_examples": "NOT_RUN",
         "producer_ZIP_sha256": "5e34dac0fb8dc0a7386c1d71c05bd621a2a34416f71f8519c57e4700b5e1ed89",
         "source_credits_combined": false
+      },
+      {
+        "source_revision": "26da68230a9b0a2ad19dc0b5697bb5d46c89e5c3",
+        "native_package_run": 42787963999,
+        "producer": "PASS",
+        "Ubuntu_Blink": "PASS",
+        "macOS_Blink": "PASS",
+        "Windows_Blink": "FAIL_POSIX_EXECUTABLE_MODE_DIFFERENCE_OBSERVED",
+        "Ubuntu_macOS_ARM_load_sha256": "6eca127e7863bfc3bd7cfa073594be970d2efb2d9fab9a745e89b25bb3a30e71",
+        "all_204_examples": "NOT_RUN",
+        "source_credits_combined": false
       }
     ],
-    "current_correction": "ALL_HOST_IDENTICAL_BYTE_ASCII_PLATFORM_COPY_AND_CLEAN_PATH_DIAGNOSTIC",
+    "current_correction": "WINDOWS_PER_COMMAND_CORE_FILEMODE_FALSE_WITH_CONTENT_AND_UNTRACKED_GUARDS",
     "platform_recipe_regression": {
       "reported": 12,
       "passed": 12,
-      "actual_tool": "271a2c/exit0"
+      "actual_tool": "271a2c/exit0",
+      "scope": "H10_BEFORE_WINDOWS_GIT_MODE_CORRECTION"
     },
-    "native_worker_compile_concurrency": 1
+    "native_worker_compile_concurrency": 1,
+    "SDK_mode_focused": {
+      "reported": 4,
+      "passed": 4,
+      "actual_tool": "dfaa92/exit0"
+    }
   },
   "H5_additional_CI": {
     "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",

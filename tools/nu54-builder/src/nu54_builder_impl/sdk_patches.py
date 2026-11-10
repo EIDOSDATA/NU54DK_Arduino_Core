@@ -6,6 +6,7 @@ from __future__ import annotations
 from contextlib import contextmanager
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -68,8 +69,10 @@ def _git(repository: Path, arguments: Sequence[str], *, check: bool = True,
             raise PatchFailure('SDK patch 명령에는 검증한 SDK Git의 절대 실행 경로가 필요합니다.')
         executable = selected
     try:
+        ## @note Windows의 POSIX 실행 비트 표현 차이만 명령 범위에서 처리하며 config·파일은 바꾸지 않습니다.
+        host_options = ('-c','core.filemode=false') if os.name == 'nt' else ()
         result = subprocess.run(
-            (executable, "-C", str(repository), *arguments),
+            (executable, *host_options, "-C", str(repository), *arguments),
             env=environment,
             capture_output=True,
             text=True,
