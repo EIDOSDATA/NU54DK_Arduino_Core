@@ -35,6 +35,7 @@
     "tools/nu54-builder/src/nu54_builder_impl/configuration.py",
     "tools/nu54-builder/src/nu54_builder_impl/environment.py",
     "tools/nu54-builder/src/nu54_builder_impl/host.py",
+    "tools/nu54-builder/src/nu54_builder_impl/host_diagnostics.py",
     "tools/nu54-builder/src/nu54_builder_impl/installed_platform.py",
     "tools/nu54-builder/src/nu54_builder_impl/locking.py",
     "tools/nu54-builder/src/nu54_builder_impl/prerequisites.py",

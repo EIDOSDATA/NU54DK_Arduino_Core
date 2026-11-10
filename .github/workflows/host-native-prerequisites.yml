@@ -10,8 +10,10 @@ on:
       - 'tools/nu54-builder/src/nu54_builder_impl/host.py'
       - 'tools/nu54-builder/src/nu54_builder_impl/environment.py'
       - 'tools/nu54-builder/src/nu54_builder_impl/prerequisites.py'
+      - 'tools/nu54-builder/src/nu54_builder_impl/host_diagnostics.py'
       - 'tools/ci/host_prerequisites.py'
       - 'tests/host/test_host_prerequisites.py'
+      - 'tests/host/test_host_diagnostics.py'
   workflow_dispatch:
     inputs:
       bootstrap_only:
@@ -48,7 +50,7 @@ jobs:
         with:
           python-version: 3.12.10
       - name: Run portable prerequisite and resolver tests
-        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_m30_host_portability
+        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_host_diagnostics tests.host.test_m30_host_portability
       - name: Prepare the required macOS SDK directory
         if: runner.os == 'macOS' && !inputs.bootstrap_only
         shell: bash

@@ -4,6 +4,9 @@
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
 [`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행과 사용자 실기 `NOT_RUN`은
 [Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.
+새 공통 설치기는 SDK archive를 안전하게 추출하고 원형 VERSION을 바꾸지 않은 채 명시 version으로 등록한다.
+읽기 전용 `host-doctor.py`는 시스템 의존 패키지와 비식별 serial·선택적 CMSIS-DAP 열거 결과를 기록한다.
+처음 실패·원인·교정 검증은 [312번](<../../00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>)을 따른다.
 
 새 Windows PC에서 Git, Python, MinGW-w64, Arduino CLI와 실물 보드까지 준비하는 전체 절차는
 [Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.

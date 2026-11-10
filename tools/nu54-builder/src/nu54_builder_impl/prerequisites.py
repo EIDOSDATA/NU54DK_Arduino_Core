@@ -11,6 +11,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 from typing import Any, Mapping, Sequence
 from urllib.parse import urlparse
@@ -236,6 +237,26 @@ def verify_ready(document: dict[str, Any], key: str, state: Path, install: Path,
     return dict(ready, stored_audit_only=True)
 
 
+def extract_sdk(archive: Path, install: Path, version: str) -> tuple[Path, bool]:
+    """! @brief 검증한 SDK byte를 변경 없이 안전하게 추출하고 기존 SDK는 덮어쓰지 않습니다. """
+    require(bool(re.fullmatch(r'v\d+\.\d+\.\d+', version)), 'E_HOST_SDK_VERSION', '정확한 SDK version이 필요합니다.')
+    destination = install / version
+    if destination.exists():
+        require(destination.is_dir(), 'E_HOST_SDK_PATH', 'SDK 설치 경로가 directory가 아닙니다.')
+        return destination, False
+    install.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix='.nu54-sdk-' + version + '-', dir=install))
+    try:
+        with tarfile.open(archive, mode='r:gz') as bundle:
+            bundle.extractall(staging, filter='data')
+        require((staging / 'nrf' / 'west.yml').is_file() and (staging / 'zephyr' / 'VERSION').is_file(),
+                'E_HOST_SDK_ARCHIVE', 'SDK archive의 등록 root 구조가 다릅니다.')
+        os.replace(staging, destination)
+    except (OSError, tarfile.TarError) as error:
+        raise AdapterError(f'[NU54:E_HOST_SDK_EXTRACT] 원본을 보존한 추출 실패: {staging}: {error}') from error
+    return destination, True
+
+
 def install_all(document: dict[str, Any], key: str, state: Path, install: Path, cache: Path, manifest_path: Path) -> dict[str, Any]:
     """! @brief 고정 archive를 설치하고 실제 검증이 끝난 경우에만 ready marker를 기록합니다. """
     incomplete = state / 'incomplete.json'
@@ -248,13 +269,20 @@ def install_all(document: dict[str, Any], key: str, state: Path, install: Path, 
     toolchain = checked_download(pin['toolchain']['archive'], cache)
     sdk = checked_download(document['ncs']['archive'], cache)
     directory = [] if pin['os'] == 'macos' else ['--install-dir', str(install)]
-    run([executable, 'sdk-manager', 'toolchain', 'install', '--toolchain-bundle', toolchain, *directory], environment)
-    run([executable, 'sdk-manager', 'sdk', 'install', '--tarball', sdk, '--type', 'nrf', *directory], environment)
+    with build_lock(install, operation='host-sdk-install', timeout_seconds=30):
+        run([executable, 'sdk-manager', 'toolchain', 'install', '--toolchain-bundle', toolchain,
+             '--for-ncs-version', document['ncs']['version'], *directory], environment)
+        sdk_root, extracted = extract_sdk(sdk, install, document['ncs']['version'])
+        run([executable, 'sdk-manager', 'sdk', 'register', document['ncs']['version'],
+             '--type', 'nrf', '--sdk-path', sdk_root,
+             '--toolchain-path', install / 'toolchains' / pin['toolchain']['bundle_id'], *directory], environment)
     verified = verify_install(document, key, install)
     ready = dict(verified, schema_version=2, status='ready', platform_key=key,
         platform_pins_sha256=file_sha256(manifest_path), ncs_version=document['ncs']['version'],
         nrfutil_path=str(executable), nrfutil_sha256=pin['nrfutil']['executable']['sha256'],
-        nrfutil_version=pin['nrfutil']['version'], sdk_manager_version=pin['sdk_manager']['version'])
+        nrfutil_version=pin['nrfutil']['version'], sdk_manager_version=pin['sdk_manager']['version'],
+        SDK_install_route='PINNED_ARCHIVE_EXTRACT_EXPLICIT_VERSION_REGISTER',
+        SDK_archive_extracted=extracted, SDK_archive_sha256=document['ncs']['archive']['sha256'])
     atomic_write_json(ready_path, ready)
     incomplete.unlink()
     return ready

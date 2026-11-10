@@ -8,28 +8,82 @@
   "completed_work_packages": 3,
   "total_work_packages": 8,
   "work_packages": [
-    {"id": "HOST-W01", "status": "completed", "title": "windows_assumption_inventory"},
-    {"id": "HOST-W02", "status": "completed", "title": "host_descriptor_executable_path_resolver"},
-    {"id": "HOST-W03", "status": "completed", "title": "thin_cmd_and_posix_launchers"},
-    {"id": "HOST-W04", "status": "in_progress", "title": "platform_prerequisites"},
-    {"id": "HOST-W05", "status": "not_started", "title": "portable_cache_lock_paths"},
-    {"id": "HOST-W06", "status": "not_started", "title": "package_and_ci_matrix"},
-    {"id": "HOST-W07", "status": "not_started", "title": "physical_upload_debug_serial"},
-    {"id": "HOST-W08", "status": "not_started", "title": "release_regression_support_matrix"}
+    {
+      "id": "HOST-W01",
+      "status": "completed",
+      "title": "windows_assumption_inventory"
+    },
+    {
+      "id": "HOST-W02",
+      "status": "completed",
+      "title": "host_descriptor_executable_path_resolver"
+    },
+    {
+      "id": "HOST-W03",
+      "status": "completed",
+      "title": "thin_cmd_and_posix_launchers"
+    },
+    {
+      "id": "HOST-W04",
+      "status": "in_progress",
+      "title": "platform_prerequisites"
+    },
+    {
+      "id": "HOST-W05",
+      "status": "not_started",
+      "title": "portable_cache_lock_paths"
+    },
+    {
+      "id": "HOST-W06",
+      "status": "not_started",
+      "title": "package_and_ci_matrix"
+    },
+    {
+      "id": "HOST-W07",
+      "status": "not_started",
+      "title": "physical_upload_debug_serial"
+    },
+    {
+      "id": "HOST-W08",
+      "status": "not_started",
+      "title": "release_regression_support_matrix"
+    }
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
-  "native_CI": {"status": "NOT_RUN", "workflow": ".github/workflows/host-native-prerequisites.yml"},
+  "native_CI": {
+    "status": "FIRST_ATTEMPT_FAILED_CORRECTION_PENDING",
+    "workflow": ".github/workflows/host-native-prerequisites.yml",
+    "first_attempt": {
+      "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
+      "run_id": 42742780994,
+      "conclusion": "failure",
+      "failed_OS_installations": 3,
+      "bootstrap_components_verified": 3,
+      "original_artifacts_preserved": true
+    },
+    "fresh_correction_CI": "NOT_RUN"
+  },
   "user_physical_OS_gate": {
     "status": "NOT_RUN",
     "owner": "user",
     "execution_stage": "M33-W07_RC1_FINAL_HOST_VALIDATION",
-    "fields": ["clean_install", "upload", "serial", "debug", "upgrade_reinstall_uninstall"]
+    "fields": [
+      "clean_install",
+      "upload",
+      "serial",
+      "debug",
+      "upgrade_reinstall_uninstall"
+    ]
   },
   "W06_preservation": {
     "status": "USER_ACCEPTED_CLOSED",
     "implementation_HIL_source": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
     "technical_group_pass_count": 46,
-    "explicitly_accepted_ordinals": [29, 40, 44],
+    "explicitly_accepted_ordinals": [
+      29,
+      40,
+      44
+    ],
     "whole49_technical_pass_claimed": false,
     "original_FAIL_reclassified": false,
     "cause_analysis": "DEFERRED_BY_USER",
@@ -38,5 +92,37 @@
     "full_CI_success_jobs": 9,
     "new_Host_source_HIL_credit": 0
   },
-  "release_publication": "SEPARATE_OWNER_APPROVAL_REQUIRED"
+  "release_publication": "SEPARATE_OWNER_APPROVAL_REQUIRED",
+  "local_correction_checks": {
+    "full_host": {
+      "tests": 2389,
+      "skipped": 3,
+      "exit_code": 0,
+      "actual_tool_chunk": "d14f6b",
+      "log": "host-w04-full-host-a002.log",
+      "log_sha256": "5c39ac85f41e09c6cfee3b1a8a75bca1313e1bfd1e1c7916fdee308f421592d2"
+    },
+    "diagnostics_portability": {
+      "tests": 10,
+      "skipped": 0,
+      "exit_code": 0,
+      "actual_tool_chunk": "74ab76",
+      "log_sha256": "cf21ab0f6f803ee5f54d66adb205b271c7da435b7ed40df30da34c55192e24a0"
+    },
+    "documents": {
+      "files": 516,
+      "exit_code": 0,
+      "actual_tool_chunk": "2f984d",
+      "log_sha256": "6d674081a4be67982f7a7f3c368feb387704b4cff0a1049dac8dcd59e0e28421"
+    },
+    "windows_device_inventory": {
+      "exit_code": 0,
+      "actual_tool_chunk": "713292",
+      "serial_ports": 6,
+      "probe_hashes": 3,
+      "flash_reset_halt_operations": 0,
+      "log_sha256": "86bc420d011776dbba87e4696742c1d6fa8a77057b671d5ed3552f14317a2adf"
+    },
+    "implementation_scope": "UNCOMMITTED_HOST_CORRECTION_WORKTREE"
+  }
 }

@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 from unittest import mock
@@ -144,6 +145,33 @@ class HostPrerequisiteTests(unittest.TestCase):
                         original.replace(target, 'aarch64-apple-darwin')):
             with self.subTest(output=changed), self.assertRaises(P.AdapterError):
                 P.verify_version_output(changed, 'nrfutil', '8.2.1', target)
+
+    def test_sdk_extract_preserves_version_bytes_and_existing_install(self):
+        """! @brief SDK의 다중 행 VERSION을 고치지 않고 추출하며 기존 SDK를 덮어쓰지 않습니다. """
+        version = b'VERSION_MAJOR = 3\nVERSION_MINOR = 4\nPATCHLEVEL = 0\n'
+        archive = self.root / 'sdk.tar.gz'
+        with tarfile.open(archive, 'w:gz') as bundle:
+            for name, data in (('nrf/west.yml', b'manifest:\n'), ('nrf/VERSION', version), ('zephyr/VERSION', b'original')):
+                entry = tarfile.TarInfo(name)
+                entry.size = len(data)
+                bundle.addfile(entry, io.BytesIO(data))
+        installed, extracted = P.extract_sdk(archive, self.root / 'sdk', 'v3.4.0')
+        self.assertTrue(extracted)
+        self.assertEqual((installed / 'nrf/VERSION').read_bytes(), version)
+        (installed / 'preserve-user-file').write_bytes(b'original')
+        self.assertFalse(P.extract_sdk(archive, self.root / 'sdk', 'v3.4.0')[1])
+        self.assertEqual((installed / 'preserve-user-file').read_bytes(), b'original')
+
+    def test_sdk_archive_cannot_write_outside_install_staging(self):
+        """! @brief archive의 상위 경로 탈출을 data filter로 거부합니다. """
+        archive = self.root / 'bad.tar.gz'
+        with tarfile.open(archive, 'w:gz') as bundle:
+            entry = tarfile.TarInfo('../../escaped')
+            entry.size = 1
+            bundle.addfile(entry, io.BytesIO(b'x'))
+        with self.assertRaisesRegex(P.AdapterError, 'E_HOST_SDK_EXTRACT'):
+            P.extract_sdk(archive, self.root / 'sdk', 'v3.4.0')
+        self.assertFalse((self.root / 'escaped').exists())
 
     def test_plan_has_no_install_or_network_side_effects(self):
         """! @brief 계획 조회는 환경 설치나 SDK 검증 실적으로 바뀌지 않습니다. """
