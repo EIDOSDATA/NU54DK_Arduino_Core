@@ -281,13 +281,13 @@ def install_all(document: dict[str, Any], key: str, state: Path, install: Path, 
         sdk_root, extracted = extract_sdk(sdk, install, document['ncs']['version'])
         run([executable, 'sdk-manager', 'sdk', 'register', document['ncs']['version'],
              '--type', 'nrf', '--sdk-path', sdk_root,
-             '--toolchain-path', install / 'toolchains' / pin['toolchain']['bundle_id']], environment)
+             '--toolchain-bundle-id', pin['toolchain']['bundle_id'], *directory], environment)
     verified = verify_install(document, key, install)
     ready = dict(verified, schema_version=2, status='ready', platform_key=key,
         platform_pins_sha256=file_sha256(manifest_path), ncs_version=document['ncs']['version'],
         nrfutil_path=str(executable), nrfutil_sha256=pin['nrfutil']['executable']['sha256'],
         nrfutil_version=pin['nrfutil']['version'], sdk_manager_version=pin['sdk_manager']['version'],
-        SDK_install_route='PINNED_ARCHIVE_EXTRACT_EXPLICIT_VERSION_REGISTER',
+        SDK_install_route='PINNED_ARCHIVE_EXTRACT_EXPLICIT_VERSION_BUNDLE_ROOT_REGISTER',
         SDK_archive_extracted=extracted, SDK_archive_sha256=document['ncs']['archive']['sha256'])
     atomic_write_json(ready_path, ready)
     incomplete.unlink()

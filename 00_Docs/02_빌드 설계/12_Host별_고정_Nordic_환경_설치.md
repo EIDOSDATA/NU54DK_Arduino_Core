@@ -11,8 +11,9 @@ NCS `v3.4.0`/`99553055…`, Zephyr `bf801e4e…`, board `fe65f2f0…`, core`8.2.
 launcher`1.4.1-f15ff58`, sdk-manager`1.16.1`, Arduino CLI`1.5.1`을 유지한다.
 고정 core·toolchain archive를 검증한 뒤 sdk-manager에 전달하며 최신 core 자동 bootstrap을 사용하지 않는다.
 SDK archive는 검증 후 별도 staging에 안전하게 추출하고 원형 `VERSION` byte를 유지한다.
-SDK `v3.4.0`과 toolchain 절대 경로를 명시하여 `sdk-manager sdk register`로 등록한다.
-등록 단계의 `--toolchain-path`는 `--install-dir`와 함께 사용할 수 없다. 설치 root 옵션은 앞선 toolchain 설치에만 전달한다.
+SDK `v3.4.0`·SDK 절대 경로·고정 toolchain bundle ID를 명시하여 `sdk-manager sdk register`로 등록한다.
+Windows·Ubuntu는 설치와 등록에 같은 `--install-dir`를 지정한다. macOS는 upstream 고정 위치를 사용한다.
+등록 단계의 `--toolchain-path`는 `--install-dir`와 충돌하고 기본 root를 조회하므로 이 조합을 사용하지 않는다.
 sdk-manager1.16.1의 SDK `--tarball` 설치는 이 archive의 다중 행 `VERSION`을 해석하지 못하므로 사용하지 않는다.
 기존 SDK 경로는 덮어쓰지 않고 revision을 재검사한다. 추출 실패 staging은 진단용으로 보존한다.
 

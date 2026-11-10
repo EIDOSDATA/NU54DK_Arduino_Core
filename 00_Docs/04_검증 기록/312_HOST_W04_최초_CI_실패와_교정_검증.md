@@ -63,3 +63,17 @@ SDK 공유 파일에 쓰지 않도록 교정했다. SDK·grammar 원본을 수�
 
 후속 교정의 관련36개·CI 계약46개는 로컬 exit0이었다. 세 OS 실제 설치와 build는 새 source의 fresh CI로
 계속 검증한다. H1·H2 FAIL 및 기존 S19 W06 실적을 합성하지 않는다.
+
+## H3 실제 native 결과와 Windows root 교정
+
+`e8cae4a517440b58fcfbc7a947743680e847efaf`(H3)의
+[native CI42749677608](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/42749677608)은
+Ubuntu·macOS 성공2와 Windows 실패1로 종료했다. 성공 두 OS는 실제 `ready`와 재검증 JSON,
+Python·west·compiler·size 실행 출력, exact revision을 보존했다. 세 OS artifact 모두 ZIP digest·크기를 검증했다.
+전체3 PASS로 합산하지 않는다.
+
+Windows는 `sdk register --toolchain-path`가 기본 `C:\ncs`를 조회하여 실제 `D:\ncs` 설치를 찾지 못했다.
+후속 교정본은 고정 bundle ID와 Windows·Ubuntu의 명시 설치 root를 함께 지정한다.
+macOS 고정 `/opt/nordic/ncs`는 유지한다. SDK·VERSION 원본 및 security 설정을 바꾸지 않는다.
+실제 CLI의 없는/빈 SDK negative는 예상 거부였으며 완전한 등록 PASS로 세지 않는다.
+새 source의 세 OS 전체 설치 CI에서 검증하며 H3의 두 성공을 새 source 실적으로 옮기지 않는다.

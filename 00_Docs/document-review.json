@@ -5,6 +5,34 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-10",
+      "baseline_commit": "e8cae4a517440b58fcfbc7a947743680e847efaf",
+      "purpose": "H3 실제 성공2·실패1 보존, H4 Windows 등록 root 교정과 현행 설치 안내 동기화",
+      "scope": {
+        "full_markdown_automated_scan": true,
+        "Markdown_files": 516,
+        "original_FAIL_reclassified": false,
+        "new_HIL_runs": 0
+      },
+      "current_state": {
+        "host_completed_work_packages": 3,
+        "host_current_work_package": "HOST-W04",
+        "native_Host_CI": "H3_TWO_SUCCESS_ONE_FAILURE_H4_ROOT_CORRECTION_PENDING",
+        "user_physical_OS_gate": "NOT_RUN",
+        "group29_analysis": "DEFERRED_BY_USER"
+      },
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256": "d0b83d89ec26dad5d59443ed0704a7426932de17575535ee447bfc35149ba470"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md",
+          "sha256": "6f193c63af040cb929061227302b930b721c704cf5fe5287263eb3479cbfef45"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-10",
       "baseline_commit": "beb69193140eba95d2b7b2af333da7df908b751d",
       "branch": "Dev-0.6.0-M33",
       "purpose": "H2 세 OS 실패 보존 및 bundle resolver·register 인자·Twister parser 생성물 분리 교정 문서화",

@@ -51,7 +51,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "H2_FAILED_H3_CORRECTION_PENDING",
+    "status": "H3_TWO_SUCCESS_ONE_FAILURE_H4_ROOT_CORRECTION_PENDING",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -82,6 +82,16 @@
           "macos-arm64": "BUNDLED_PYTHON_RESOLVER_PATH"
         },
         "original_artifacts_preserved": true
+      },
+      {
+        "source_revision": "e8cae4a517440b58fcfbc7a947743680e847efaf",
+        "run_id": 42749677608,
+        "conclusion": "failure",
+        "success_OS_installations": 2,
+        "failed_OS_installations": 1,
+        "cause": "Windows SDK register default C:/ncs differs from explicit D:/ncs install",
+        "original_artifacts_preserved": true,
+        "successes_transferred_to_H4": 0
       }
     ]
   },
@@ -154,5 +164,16 @@
     "PLY_concurrent_processes_exit0": 2,
     "register_option_negative": "EXPECTED_MISSING_SDK_REJECTED",
     "actual_tools_record": "D:/w06/control/host-w04-h3-local-actual-tools-20261110.json"
+  },
+  "registration_correction": {
+    "scope": "H4_UNCOMMITTED_WORKTREE",
+    "toolchain_selector": "PINNED_BUNDLE_ID",
+    "non_macos_install_root": "EXPLICIT_SAME_ROOT_AS_INSTALL",
+    "SDK_VERSION_modified": false,
+    "CLI_negative_actual_chunks": [
+      "312bf0",
+      "5e6f79"
+    ],
+    "full_registration_PASS_claimed": false
   }
 }
