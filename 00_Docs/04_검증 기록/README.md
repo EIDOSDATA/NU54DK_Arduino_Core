@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [321 — HOST-W06 H11 Windows·macOS 통과와 Linux source 진단](321_HOST_W06_H11_Windows_macOS_통과와_Linux_source_진단.md)
+
 - [320 — HOST-W06 H10 POSIX Blink 통과와 Windows mode 교정](320_HOST_W06_H10_POSIX_Blink_통과와_Windows_mode_교정.md)
 
 - [319 — HOST-W06 H9 Kconfig 경로 원인과 native 교정](319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md)

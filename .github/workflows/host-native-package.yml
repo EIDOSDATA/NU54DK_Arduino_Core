@@ -101,6 +101,9 @@ jobs:
         with:
           name: host-native-producer-${{ github.sha }}
           path: ${{ runner.temp }}/host-producer
+      - name: Record source state before restoring the download cache
+        shell: bash
+        run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --output "${{ runner.temp }}/host-source/pre-cache.json" --snapshot-only
       - name: Restore only checksum-verified upstream download bytes
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
@@ -113,6 +116,18 @@ jobs:
       - name: Install through Boards Manager and compile the installed Blink
         shell: bash
         run: python -B tools/ci/host_native_package_consumer.py --producer "${{ runner.temp }}/host-producer" --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --work-root "${{ matrix.root }}" --mode smoke --jobs 1
+      - name: Record source state after the native consumer
+        if: always()
+        shell: bash
+        run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --output "${{ runner.temp }}/host-source/post-consumer.json" --snapshot-only
+      - name: Preserve source admission diagnostics separately
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-source-${{ github.job }}-${{ matrix.platform }}-${{ matrix.shard || 0 }}-${{ github.sha }}
+          path: ${{ runner.temp }}/host-source/*.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Preserve native results, original targets and partial failure logs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -194,6 +209,9 @@ jobs:
         with:
           name: host-native-producer-${{ github.sha }}
           path: ${{ runner.temp }}/host-producer
+      - name: Record source state before restoring the download cache
+        shell: bash
+        run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --output "${{ runner.temp }}/host-source/pre-cache.json" --snapshot-only
       - name: Restore only checksum-verified upstream download bytes
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
@@ -206,6 +224,18 @@ jobs:
       - name: Install, discover all 204 examples and compile the exact assigned shard
         shell: bash
         run: python -B tools/ci/host_native_package_consumer.py --producer "${{ runner.temp }}/host-producer" --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --work-root "${{ matrix.root }}" --mode examples --shard-index ${{ matrix.shard }} --jobs ${{ matrix.jobs }}
+      - name: Record source state after the native consumer
+        if: always()
+        shell: bash
+        run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --output "${{ runner.temp }}/host-source/post-consumer.json" --snapshot-only
+      - name: Preserve source admission diagnostics separately
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-source-${{ github.job }}-${{ matrix.platform }}-${{ matrix.shard || 0 }}-${{ github.sha }}
+          path: ${{ runner.temp }}/host-source/*.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Preserve native results, original targets and partial failure logs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

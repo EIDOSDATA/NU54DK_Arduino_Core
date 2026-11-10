@@ -187,9 +187,11 @@ def setup(args, base: Path) -> tuple:
     """! @brief 고정 CLI로 package를 실제 설치하고 initial Python·ready marker를 대조합니다. """
     if os.environ.get('GITHUB_ACTIONS') != 'true':
         raise ValueError('이 consumer는 GitHub native runner 전용입니다.')
-    source = P.git(ROOT, 'rev-parse', 'HEAD')
-    if source != args.source or source != os.environ['GITHUB_SHA'] or P.git(ROOT, 'status', '--porcelain=v1'):
-        raise ValueError('native consumer는 exact clean CI source를 요구합니다.')
+    preflight=P.source_snapshot(ROOT,args.source)
+    source=preflight['actual_HEAD']
+    if source != args.source or source != preflight['GitHub_source'] or preflight['worktree_status']:
+        write_json(base/'reports/source-preflight.json',preflight)
+        raise ValueError('native consumer exact source 진입 거부: '+json.dumps(preflight,ensure_ascii=False))
     package = P.load_package()
     package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (args.version,))
     producer = json.loads((args.producer / 'producer.json').read_text(encoding='utf-8'))
@@ -214,6 +216,7 @@ def setup(args, base: Path) -> tuple:
         raise ValueError('download cache 외에 이전 설치 상태가 있습니다.')
     (base / 'reports').mkdir()
     (base / 'logs').mkdir()
+    write_json(base/'reports/source-preflight.json',preflight)
     install = Path('/opt/nordic/ncs') if key == 'macos-arm64' else base / 'ncs'
     environment = consumer_environment(base, descriptor['os'], install)
     environment['SOURCE_DATE_EPOCH'] = str(producer['source_date_epoch'])

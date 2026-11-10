@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -34,6 +35,23 @@ def sha(path: Path) -> str:
 def git(root: Path, *arguments: str) -> str:
     """! @brief shell 재해석 없이 exact Git identity와 clean 상태만 확인합니다. """
     return subprocess.check_output(['git', *arguments], cwd=root, text=True, encoding='utf-8').strip()
+
+
+def source_snapshot(root: Path, requested_source: str) -> dict:
+    """! @brief guard를 완화하지 않고 실제 HEAD·작업본·Git 경로 환경을 증거로 남깁니다. """
+    result={'schema_version':1,'kind':'EXACT_SOURCE_PREFLIGHT_DIAGNOSTIC',
+        'requested_source':requested_source,'actual_HEAD':git(root,'rev-parse','HEAD'),
+        'GitHub_source':os.environ.get('GITHUB_SHA'),'root':str(root.resolve()),
+        'git_top_level':git(root,'rev-parse','--show-toplevel'),
+        'worktree_status':git(root,'status','--porcelain=v1','--untracked-files=all').splitlines(),
+        'git_environment_paths':{key:os.environ.get(key) for key in
+            ('GIT_DIR','GIT_WORK_TREE','GIT_INDEX_FILE','GIT_CONFIG_GLOBAL','GIT_CONFIG_SYSTEM')},
+        'observed_utc':datetime.now(timezone.utc).isoformat()}
+    board=root/'board_package/NU54DK_Zephyr_DTS'
+    if board.is_dir() and (board/'.git').exists():
+        result['board']={'HEAD':git(board,'rev-parse','HEAD'),
+            'worktree_status':git(board,'status','--porcelain=v1','--untracked-files=all').splitlines()}
+    return result
 
 
 def build_bootstrap_tools(package, root: Path, output: Path) -> dict:
@@ -114,7 +132,18 @@ def main(arguments: Sequence[str] | None = None) -> int:
     parser.add_argument('--source', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--version', choices=PRIVATE_VERSIONS, default=PRIVATE_VERSIONS[0])
+    parser.add_argument('--snapshot-only', action='store_true')
     args = parser.parse_args(arguments)
+    if args.snapshot_only:
+        if args.output.exists() or args.output.resolve().is_relative_to(args.repository.resolve()):
+            raise ValueError('source 진단은 source 밖의 새 파일에만 기록합니다.')
+        result=source_snapshot(args.repository,args.source)
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        with args.output.open('x',encoding='utf-8') as stream:
+            json.dump(result,stream,ensure_ascii=False,indent=2)
+        print(json.dumps({'status':'SOURCE_DIAGNOSTIC_RECORDED','source_revision':args.source,
+            'dirty_paths':len(result['worktree_status'])},ensure_ascii=False))
+        return 0
     result = build(args.repository, args.source, args.output, args.version)
     print(json.dumps({'status': 'HOST_NATIVE_PACKAGE_PRODUCER_PASS', 'source_revision': result['source_revision'],
         'archive_sha256': result['archive']['sha256'], 'reproducible_bytes': True}, ensure_ascii=False))

@@ -287,9 +287,9 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H10_POSIX_BLINK_PASS_WINDOWS_MODE_CORRECTION_PENDING",
+    "status": "H11_WINDOWS_MACOS_BLINK_PASS_LINUX_SOURCE_DIAGNOSTICS_PENDING",
     "source_revision": null,
-    "Boards_Manager_clean_install": "PASS_H8_THREE_OS_NOT_CURRENT_CORRECTION",
+    "Boards_Manager_clean_install": "PASS_H11_WINDOWS_MACOS_LINUX_NOT_RUN",
     "three_OS_all_204_examples": "NOT_RUN",
     "artifact_comparison": "NOT_RUN",
     "bootstrap_runtime": "ACTUAL_DERIVED_ARCHIVES_REPRODUCIBLE_UPSTREAM_BYTES_UNCHANGED",
@@ -298,15 +298,16 @@
     "local_package_actual_tool": "2001d5/exit0",
     "final_CI_credit": 0,
     "native_contracts": {
-      "reported": 36,
-      "passed": 35,
+      "reported": 37,
+      "passed": 36,
       "conditional_skipped": 1,
-      "actual_tool": "c60868/exit0",
-      "scope": "H11_WINDOWS_MODE_CORRECTION_WORKTREE"
+      "actual_tool": "ef8fe3/exit0",
+      "scope": "H12_UNCOMMITTED_SOURCE_DIAGNOSTIC_WORKTREE"
     },
     "CI_contract": {
       "tests": 46,
-      "actual_tool": "90e99a/exit0"
+      "actual_tool": "940404/exit0",
+      "scope": "H12_UNCOMMITTED_SOURCE_DIAGNOSTICS"
     },
     "attempts": [
       {
@@ -359,9 +360,25 @@
         "Ubuntu_macOS_ARM_load_sha256": "6eca127e7863bfc3bd7cfa073594be970d2efb2d9fab9a745e89b25bb3a30e71",
         "all_204_examples": "NOT_RUN",
         "source_credits_combined": false
+      },
+      {
+        "source_revision": "c413fb238b93074c3c0465f527635ab2856d3f77",
+        "native_package_run": 42792855864,
+        "producer": "PASS",
+        "Windows_Blink": "PASS",
+        "macOS_Blink": "PASS",
+        "Linux_Blink": "NOT_RUN_EXACT_SOURCE_ADMISSION_FAIL",
+        "Linux_source_guard_specific_condition": "UNCONFIRMED",
+        "native_prerequisite_run": 42792855191,
+        "native_prerequisite_OS_success": 3,
+        "Windows_macOS_ARM_load_sha256": "6eca127e7863bfc3bd7cfa073594be970d2efb2d9fab9a745e89b25bb3a30e71",
+        "all_204_examples": "NOT_RUN",
+        "actual_artifact_audit": "666ff6/exit0",
+        "producer_ZIP_sha256": "8220d6492edea5226885d362e57a4fb573877ec1114768a75b5667b07ed7a4e5",
+        "source_credits_combined": false
       }
     ],
-    "current_correction": "WINDOWS_PER_COMMAND_CORE_FILEMODE_FALSE_WITH_CONTENT_AND_UNTRACKED_GUARDS",
+    "current_correction": "EXACT_SOURCE_ADMISSION_FACTS_WITHOUT_GUARD_RELAXATION",
     "platform_recipe_regression": {
       "reported": 12,
       "passed": 12,

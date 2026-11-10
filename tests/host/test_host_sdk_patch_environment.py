@@ -99,6 +99,25 @@ class SdkPatchEnvironmentTests(unittest.TestCase):
             {'example.txt','executable.py','untracked.txt'})
         self.assertEqual(self.invoke('config','--get','core.filemode').strip(),'true')
 
+    def test_source_preflight_distinguishes_commit_and_actual_dirty_worktree(self):
+        """! @brief HEAD가 같아도 tracked·untracked 변경이 있으면 진단에서 빠뜨리지 않습니다. """
+        spec=importlib.util.spec_from_file_location('actual_source_preflight_unit',ROOT/'tools/ci/host_native_package.py')
+        producer=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(producer)
+        source=self.lock['zephyr']['revision']
+        with mock.patch.dict(os.environ,{'GITHUB_SHA':source}):
+            clean=producer.source_snapshot(self.zephyr,source)
+            self.assertEqual(clean['actual_HEAD'],source)
+            self.assertEqual(clean['GitHub_source'],source)
+            self.assertEqual(clean['worktree_status'],[])
+            (self.zephyr/'example.txt').write_bytes(b'changed working bytes\n')
+            (self.zephyr/'untracked.txt').write_bytes(b'untracked bytes\n')
+            dirty=producer.source_snapshot(self.zephyr,'0'*40)
+        self.assertEqual(dirty['actual_HEAD'],source)
+        self.assertNotEqual(dirty['requested_source'],dirty['actual_HEAD'])
+        self.assertTrue(any('example.txt' in name for name in dirty['worktree_status']))
+        self.assertTrue(any('untracked.txt' in name for name in dirty['worktree_status']))
+
 
 if __name__=='__main__':
     unittest.main()
