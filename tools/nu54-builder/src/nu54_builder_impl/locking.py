@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 import socket
+import stat
 import tempfile
 import time
 import uuid
@@ -21,6 +22,8 @@ from .common import (
     canonical_path,
     path_key,
 )
+
+POSIX_LOCK_ROOT = Path('/tmp')
 
 
 ## @brief process가 현재 host에서 생존 중인지 보수적으로 판정합니다.
@@ -63,9 +66,33 @@ def read_lock_document(lock_path: Path) -> dict[str, Any]:
 def operating_system_lock_identity(
     lock_root: Path, logical_identity: str | None = None
 ) -> str:
-    seed = logical_identity if logical_identity is not None else path_key(lock_root)
+    if logical_identity is not None:
+        seed = logical_identity
+    else:
+        seed = canonical_path(lock_root).as_posix()
+        ## @note 기존 Windows worker와 같은 kernel mutex를 사용해 업그레이드 중 배타성을 유지합니다.
+        if os.name == 'nt':
+            seed = seed.casefold()
     digest = hashlib.sha256(seed.encode("utf-8")).hexdigest()
     return f"NUCODE_NU54_{digest}"
+
+
+def posix_lock_directory(logical_identity: str | None = None) -> Path:
+    """! @brief 사용자별 cache lock과 공통 probe lock을 TMP 환경과 무관한 위치에 둡니다. """
+    legacy_probe = bool(logical_identity and logical_identity.startswith('probe:'))
+    base = POSIX_LOCK_ROOT / ('n54' if legacy_probe else f'n54-{os.geteuid()}')
+    directory = base / 'adapter-locks'
+    try:
+        for path in (base, directory):
+            if path.is_symlink():
+                raise AdapterError('[NU54:E_LOCK_PERMISSION] lock directory의 symlink는 허용하지 않습니다.')
+            path.mkdir(exist_ok=True, mode=0o700)
+            info = path.lstat()
+            if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o022:
+                raise AdapterError('[NU54:E_LOCK_PERMISSION] lock directory의 소유권·쓰기 권한을 확인하십시오.')
+    except OSError as error:
+        raise AdapterError('[NU54:E_LOCK_PERMISSION] native lock directory에 접근하지 못했습니다.') from error
+    return directory
 
 
 ## @brief 운영체제가 crash 시 자동 회수하는 process 간 lock을 획득합니다.
@@ -126,11 +153,17 @@ def operating_system_lock(
 
     import fcntl
 
-    lock_directory = canonical_path(Path(tempfile.gettempdir()) / "n54" / "adapter-locks")
-    lock_directory.mkdir(parents=True, exist_ok=True)
-    descriptor = os.open(lock_directory / f"{identity}.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    lock_directory = posix_lock_directory(logical_identity)
+    flags = os.O_CREAT | os.O_RDWR | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_CLOEXEC', 0)
+    try:
+        descriptor = os.open(lock_directory / f"{identity}.lock", flags, 0o600)
+    except OSError as error:
+        raise AdapterError('[NU54:E_LOCK_PERMISSION] native lock 파일을 열지 못했습니다.') from error
     acquired = False
     try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o077 or info.st_nlink != 1:
+            raise AdapterError('[NU54:E_LOCK_PERMISSION] native lock 파일의 종류·소유권·권한이 다릅니다.')
         while not acquired:
             try:
                 fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)

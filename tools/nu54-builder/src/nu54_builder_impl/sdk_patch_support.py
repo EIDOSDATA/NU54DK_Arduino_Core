@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
-from .common import AdapterError
+from .common import AdapterError, canonical_path
 from . import sdk_patches
 
 
@@ -19,9 +19,9 @@ def _lock() -> dict[str, Any]:
 def _validate_platform_root(platform_root: Path) -> None:
     """! @brief 실행 중인 manager와 요청한 설치 Core가 같은 root인지 검증합니다. """
 
-    actual = platform_root.resolve()
-    expected = sdk_patches.REPOSITORY.resolve()
-    if actual != expected:
+    actual = canonical_path(platform_root)
+    expected = canonical_path(sdk_patches.REPOSITORY)
+    if actual.as_posix() != expected.as_posix():
         raise AdapterError(
             "[NU54:E_SDK_PATCH] SDK patch manager가 다른 설치 Core에서 로드됐습니다: "
             f"{expected} != {actual}"

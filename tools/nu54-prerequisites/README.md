@@ -1,6 +1,7 @@
 # Nordic prerequisite 설치 계약
 
-후속 v0.6.0 HOST-W04의 OS별 고정 자산과 공통 Python backend는
+v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
+현재 HOST-W05를 진행하며 OS별 고정 자산과 공통 Python backend는
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
 [`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행과 사용자 실기 `NOT_RUN`은
 [Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.

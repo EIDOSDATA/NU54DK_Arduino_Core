@@ -13,8 +13,8 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **3/8**, **HOST-W04 진행 중**. 이후 W05→W06→W07 준비→RC1→실제 OS→W08 마감 순서 |
-| Host 현재 검증 | [312번](<04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>) — 첫 native 설치 CI 실패 보존, SDK 설치기·로컬 시험 환경 교정 후 fresh 검증 |
+| Host | **4/8**, **HOST-W04 설치 범위 완료·HOST-W05 진행 중**. 이후 W06→W07 준비→RC1→실제 OS→W08 마감 순서 |
+| Host 현재 검증 | [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>) — H4 native SDK3/3·software9/9·build-only6/6 성공. W05는 별도 fresh 검증 중 |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
@@ -63,3 +63,5 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 공개 tag·Release·asset, 최초 FAIL/HOLD/NOT_RUN 원본은 보존한다. 2026-10-11 문서 정리·push와
 이후 사용자가 승인한 실패별 수정·로컬 실기는 구분한다. main 통합·추가 squash·공개 게시 권한은
 추정하지 않으며 현행 실행 순서는 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)을 따른다.
+
+HOST-W04 완료 source·설치3OS 원문과 HOST-W05 착수 범위는 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>)을 따른다.

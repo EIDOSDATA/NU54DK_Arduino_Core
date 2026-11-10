@@ -77,3 +77,7 @@ Windows는 `sdk register --toolchain-path`가 기본 `C:\ncs`를 조회하여 �
 macOS 고정 `/opt/nordic/ncs`는 유지한다. SDK·VERSION 원본 및 security 설정을 바꾸지 않는다.
 실제 CLI의 없는/빈 SDK negative는 예상 거부였으며 완전한 등록 PASS로 세지 않는다.
 새 source의 세 OS 전체 설치 CI에서 검증하며 H3의 두 성공을 새 source 실적으로 옮기지 않는다.
+
+H4 `4988d8723b76171b7caacbe67afb17e48d925ea0`의 fresh native 설치·재검증은 실제3/3·SKIP0으로
+종료했다. W04 설치 범위 마감과 W05 착수의 최신 상태는 [313번](313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md)을 따른다.
+이 기록 앞부분의 3/8·진행 중은 각 당시의 상태이며 최초 FAIL을 변경하지 않는다.

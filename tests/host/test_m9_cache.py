@@ -114,13 +114,16 @@ class M9CacheContractTests(unittest.TestCase):
             else:
                 os.environ["NUCODE_BUILD_CACHE_ROOT"] = previous
 
-    def test_default_cache_root_keeps_windows_object_path_short(self) -> None:
-        """! @brief 기본 cache root가 긴 nRF Security object 경로를 위한 짧은 suffix를 씁니다. """
+    def test_default_cache_root_keeps_native_object_path_short(self) -> None:
+        """! @brief 각 native Host의 기본 cache root가 짧은 suffix를 씁니다. """
 
         local_data = self.root / "local-data"
-        expected = local_data / "NU54" / "c"
+        host_os = MODULE.describe_host()['os']
+        base = self.root / 'Library/Caches' if host_os == 'macos' else local_data
+        expected = base / "NU54" / "c"
         expected.mkdir(parents=True)
-        with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data)}):
+        with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data), 'XDG_CACHE_HOME': str(local_data)}), \
+             mock.patch.object(Path, 'home', return_value=self.root):
             os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
             self.assert_same_path(MODULE.build_cache_root(), expected)
 
@@ -238,6 +241,13 @@ class M9CacheContractTests(unittest.TestCase):
 
         baseline = collect()
         baseline_key = MODULE.cache_key_for_manifest(baseline)
+        for host in (
+            {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu', 'version': '24.04', 'native': True},
+            {'os': 'macos', 'architecture': 'arm64', 'distribution': 'macos', 'version': '26', 'native': True},
+        ):
+            if host != baseline['host']:
+                with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=host):
+                    self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
         self.assertEqual(
             baseline["adapter"]["embedded_core_revision"], "f" * 40
         )

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pathlib import Path, PureWindowsPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Mapping
 from typing import TypedDict
 import os
@@ -10,7 +10,7 @@ import json
 import platform
 import re
 
-from .common import AdapterError, canonical_path, strict_json_object
+from .common import AdapterError, canonical_path, is_within, strict_json_object
 
 
 class HostDescriptor(TypedDict):
@@ -250,7 +250,7 @@ def resolve_toolchain_executable(
         for path in candidates:
             candidate = canonical_path(path)
             checked.append(candidate)
-            if not candidate.is_relative_to(root):
+            if not is_within(candidate, root):
                 raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle 외부 실행 파일을 사용할 수 없습니다.')
             if not candidate.is_file():
                 continue
@@ -265,6 +265,16 @@ def resolve_toolchain_executable(
     )
 
 
+def absolute_host_path(value: str | Path, host_os: str | None = None) -> Path:
+    """! @brief 명시 경로를 절대화하기 전에 해당 OS의 절대 경로인지 확인합니다. """
+    selected_os = canonical_host_os(host_os or platform.system())
+    text = value.as_posix() if isinstance(value, Path) else str(value)
+    lexical = PureWindowsPath(text) if selected_os == 'windows' else PurePosixPath(text)
+    if not text.strip() or not lexical.is_absolute() or (selected_os != 'windows' and PureWindowsPath(text).drive):
+        raise AdapterError('[NU54:E_HOST_PATH] 현재 Host의 명시적 절대 경로가 필요합니다.')
+    return canonical_path(value)
+
+
 ## @brief Host별 사용자 application data root를 계산합니다.
 def application_data_root(
     descriptor: HostDescriptor | None = None,
@@ -273,15 +283,15 @@ def application_data_root(
 ) -> Path:
     current = descriptor or describe_host()
     variables = environment if environment is not None else os.environ
-    user_home = canonical_path(home or Path.home())
     if current["os"] == "windows":
         value = variables.get("LOCALAPPDATA")
         if not value:
             raise AdapterError("[NU54:E_HOST_DATA_ROOT] LOCALAPPDATA 환경 변수가 없습니다.")
-        return canonical_path(value)
+        return absolute_host_path(value, 'windows')
+    user_home = absolute_host_path(home or Path.home(), current['os'])
     if current["os"] == "linux":
         value = variables.get("XDG_DATA_HOME")
-        return canonical_path(value) if value else user_home / ".local" / "share"
+        return absolute_host_path(value, 'linux') if value else user_home / ".local" / "share"
     return user_home / "Library" / "Application Support"
 
 
@@ -293,13 +303,13 @@ def user_cache_root(
 ) -> Path:
     current = descriptor or describe_host()
     variables = environment if environment is not None else os.environ
-    user_home = canonical_path(home or Path.home())
     if current["os"] == "windows":
         value = variables.get("LOCALAPPDATA")
         if not value:
             raise AdapterError("[NU54:E_HOST_CACHE_ROOT] LOCALAPPDATA 환경 변수가 없습니다.")
-        return canonical_path(value)
+        return absolute_host_path(value, 'windows')
+    user_home = absolute_host_path(home or Path.home(), current['os'])
     if current["os"] == "linux":
         value = variables.get("XDG_CACHE_HOME")
-        return canonical_path(value) if value else user_home / ".cache"
+        return absolute_host_path(value, 'linux') if value else user_home / ".cache"
     return user_home / "Library" / "Caches"

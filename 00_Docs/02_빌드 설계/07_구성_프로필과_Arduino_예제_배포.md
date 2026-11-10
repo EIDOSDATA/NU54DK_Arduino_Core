@@ -346,7 +346,7 @@ W10 공존, W11 exact 회귀·soak와 W12 정합성 감사·인계를 완료했�
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 M31-W08까지의 예제 정합화와 Windows package·설치·RC 공개 gate는 마감했다.
 M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배정했다. Ubuntu/macOS의
-기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, HOST-W04~W08 재개 승인과 실물 검증 전에는
+기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, Host 순차 구현과 최종 실물 검증을 마치기 전에는
 새 OS 지원을 확정하지 않는다. 이 배정은 기능 구현·검증 완료를 뜻하지 않는다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
@@ -383,7 +383,7 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 - DF는 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX의 `UNSUPPORTED`·P2 범위 제외와
   송신 예제의 controller 경계를 명시한다. 과거 LL 내부 수신을 제품 지원이나 각도 검증으로 쓰지 않는다.
 - Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
-  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W04~W08은 보류다.
+  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W04 설치 범위는 완료했고 HOST-W05부터 순차 진행한다.
 
 M31-W01에서 구현한 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를

@@ -103,7 +103,7 @@ def roots(pin: dict[str, Any], state_root: Path | None = None, install_root: Pat
     default = Path('/opt/nordic/ncs') if pin['os'] == 'macos' else Path.home() / 'ncs'
     install = absolute_root(install_root or default)
     if pin['os'] == 'macos':
-        require(install == Path(pin['required_install_root']), 'E_HOST_INSTALL_ROOT', 'macOS sdk-manager는 /opt/nordic/ncs를 요구합니다.')
+        require(install == canonical_path(pin['required_install_root']), 'E_HOST_INSTALL_ROOT', 'macOS sdk-manager는 /opt/nordic/ncs를 요구합니다.')
     return state, install
 
 

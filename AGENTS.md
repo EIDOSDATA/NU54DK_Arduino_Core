@@ -19,7 +19,7 @@
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- 현재 작업은 HOST-W04부터의 순차 구현과 문서 정합화다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
+- 현재 작업은 HOST-W04 설치 범위 완료 후 HOST-W05의 경로·cache·lock 이식과 문서 정합화다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
 - 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
   실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
   `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
@@ -65,11 +65,11 @@
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   현재 source/설치 제품 버전은 **0.5.0**이고 M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W04 진행 중**입니다. W05 exact `5f9b2257…`에서
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W04 설치 범위 완료·HOST-W05 진행 중**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W03은 완료했고
-  **HOST-W04부터 순차 진행**합니다. 2026-11-10 사용자가 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
+  **HOST-W04 설치 범위 완료 후 HOST-W05부터 순차 진행**합니다. 2026-11-10 사용자가 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
   M33 기능 개발과 Host를 병렬 진행하지 않습니다. W06 완료 후 HOST-W04~W06과 W07 도구를
   준비하고, M33-W07 RC1으로 Host 실기·HOST-W08을 마감한 뒤 M33-W08로 진행합니다.
   Host 구현은 이번 사용자 지시로 착수했으며 v0.6.0 공개는 별도 승인 단계입니다.

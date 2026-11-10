@@ -3,9 +3,9 @@
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-10",
   "status": "in_progress",
-  "current_work_package": "HOST-W04",
-  "implementation_revision": "DEVELOPMENT_WORKTREE",
-  "completed_work_packages": 3,
+  "current_work_package": "HOST-W05",
+  "implementation_revision": "HOST_W05_DEVELOPMENT_WORKTREE",
+  "completed_work_packages": 4,
   "total_work_packages": 8,
   "work_packages": [
     {
@@ -25,12 +25,15 @@
     },
     {
       "id": "HOST-W04",
-      "status": "in_progress",
-      "title": "platform_prerequisites"
+      "status": "completed",
+      "title": "platform_prerequisites",
+      "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
+      "native_CI_run_id": 42751311805,
+      "completion_scope": "PINNED_ASSETS_COMMON_INSTALL_VERIFY_AND_HOST_DIAGNOSTIC_PREPARATION"
     },
     {
       "id": "HOST-W05",
-      "status": "not_started",
+      "status": "in_progress",
       "title": "portable_cache_lock_paths"
     },
     {
@@ -51,7 +54,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "H3_TWO_SUCCESS_ONE_FAILURE_H4_ROOT_CORRECTION_PENDING",
+    "status": "PASS_H4_PLATFORM_PREREQUISITES_CURRENT_W05_PENDING",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -61,7 +64,7 @@
       "bootstrap_components_verified": 3,
       "original_artifacts_preserved": true
     },
-    "fresh_correction_CI": "NOT_RUN",
+    "fresh_correction_CI": "H4_NATIVE_THREE_OS_SUCCESS",
     "attempts": [
       {
         "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -92,8 +95,22 @@
         "cause": "Windows SDK register default C:/ncs differs from explicit D:/ncs install",
         "original_artifacts_preserved": true,
         "successes_transferred_to_H4": 0
+      },
+      {
+        "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
+        "run_id": 42751311805,
+        "conclusion": "success",
+        "success_OS_installations": 3,
+        "skipped_OS": 0,
+        "artifacts_digest_verified": true,
+        "completion_scope": "PLATFORM_PREREQUISITES_NOT_USER_PHYSICAL_USB"
       }
-    ]
+    ],
+    "validated_source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
+    "run_id": 42751311805,
+    "success_OS": 3,
+    "skipped_OS": 0,
+    "current_W05_worktree_validation": "NOT_RUN"
   },
   "user_physical_OS_gate": {
     "status": "NOT_RUN",
@@ -166,7 +183,7 @@
     "actual_tools_record": "D:/w06/control/host-w04-h3-local-actual-tools-20261110.json"
   },
   "registration_correction": {
-    "scope": "H4_UNCOMMITTED_WORKTREE",
+    "scope": "H4_VERIFIED_NATIVE_THREE_OS",
     "toolchain_selector": "PINNED_BUNDLE_ID",
     "non_macos_install_root": "EXPLICIT_SAME_ROOT_AS_INSTALL",
     "SDK_VERSION_modified": false,
@@ -174,6 +191,53 @@
       "312bf0",
       "5e6f79"
     ],
-    "full_registration_PASS_claimed": false
+    "full_registration_PASS_claimed": true,
+    "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0"
+  },
+  "W05_validation": {
+    "status": "LOCAL_PASS_NATIVE_THREE_OS_PENDING",
+    "source_revision": null,
+    "source_scope": "W05_DEVELOPMENT_WORKTREE_COMMIT_PENDING",
+    "local_focused": {
+      "reported_tests": 66,
+      "passed": 61,
+      "conditional_skipped": 5,
+      "exit_code": 0,
+      "actual_tool_chunk": "d1c73a",
+      "log_sha256": "b6564afcaed55d085347a54aed810748306fcd823d24d0607f33f821a26cba84"
+    },
+    "local_full_host": {
+      "reported_unittest_total": 2410,
+      "reported_unittest_suites": 268,
+      "reported_conditional_skips": 8,
+      "exit_code": 0,
+      "actual_completion_chunk": "a044ab",
+      "log_sha256": "e05bac6dc1aca552fd803ac4797188d90ac89718c463dff0fff54734326e9de7",
+      "frozen_files_unchanged": 2439
+    },
+    "local_full_host_scope": "W05_BACKEND_FROZEN_BEFORE_EXTRA_LONG_PATH_TEST_AND_DOCUMENT_TIDY",
+    "pending": [
+      "fresh_native_3OS_paths_permissions_lock_tests",
+      "fresh_native_3OS_pinned_SDK_reverify",
+      "exact_source_software_CI"
+    ],
+    "new_HIL_runs": 0
+  },
+  "H4_additional_CI": {
+    "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
+    "software": {
+      "run_id": 42752228422,
+      "conclusion": "success",
+      "success_jobs": 9,
+      "skipped_jobs": 0
+    },
+    "build_only": {
+      "run_id": 42751312030,
+      "conclusion": "success",
+      "success_jobs": 6,
+      "skipped_jobs": 0
+    },
+    "HIL_credit": 0,
+    "transferred_to_W05": false
   }
 }

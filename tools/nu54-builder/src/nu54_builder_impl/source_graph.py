@@ -20,6 +20,7 @@ from .common import (
     is_within,
     load_json_object,
     path_key,
+    relative_path_within,
     tree_content_sha256,
 )
 from .paths import record_path
@@ -104,7 +105,7 @@ def selected_bundled_libraries(
             if not is_within(candidate, libraries_root):
                 continue
             try:
-                relative = candidate.relative_to(libraries_root)
+                relative = relative_path_within(candidate, libraries_root)
             except ValueError:
                 continue
             if relative.parts and relative.parts[0] in FEATURE_ALLOWLIST:
@@ -121,15 +122,15 @@ def cmake_quote(path: Path) -> str:
 def source_logical_identity(source: Path, paths: dict[str, Path]) -> str:
     if is_within(source, paths["build_path"]):
         try:
-            relative = source.resolve().relative_to(paths["build_path"].resolve()).as_posix()
+            relative = relative_path_within(source, paths["build_path"]).as_posix()
         except ValueError:
             relative = source.name
         return f"arduino-generated:{relative}"
     if is_within(source, paths["sketch_root"]):
-        relative = source.resolve().relative_to(paths["sketch_root"].resolve()).as_posix()
+        relative = relative_path_within(source, paths["sketch_root"]).as_posix()
         return f"sketch:{relative}"
     if is_within(source, paths["platform_root"]):
-        relative = source.resolve().relative_to(paths["platform_root"].resolve()).as_posix()
+        relative = relative_path_within(source, paths["platform_root"]).as_posix()
         return f"platform:{relative}"
     return f"external:{path_key(source)}"
 
@@ -252,7 +253,7 @@ def write_source_manifest(
         if compiled_source != source and file_sha256(compiled_source) != file_sha256(source):
             raise AdapterError('[NU54:E_PLATFORM_COPY_STALE] 설치 source와 build 복사본 bytes가 다릅니다.')
         if is_within(source, paths["build_path"]):
-            relative = source.resolve().relative_to(paths["build_path"].resolve())
+            relative = relative_path_within(source, paths["build_path"])
             mirror = canonical_path(mirror_root / relative)
             if not is_within(mirror, mirror_root):
                 raise AdapterError(f"[NU54:E_SOURCE_MIRROR_PATH] mirror 경로가 잘못되었습니다: {mirror}")

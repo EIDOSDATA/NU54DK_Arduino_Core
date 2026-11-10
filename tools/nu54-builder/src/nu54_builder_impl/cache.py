@@ -30,6 +30,7 @@ from .common import (
     load_json_object,
     optional_file_sha256,
     run_checked,
+    relative_path_within,
     tree_content_sha256,
 )
 from .configuration import (
@@ -41,7 +42,8 @@ from .configuration import (
 from .environment import compiler_version, tool_environment
 from .locking import build_lock, operating_system_lock
 from .installed_platform import requires_platform_copy
-from .paths import build_cache_root, cache_workspace, local_cache_root, positive_environment_integer
+from .paths import build_cache_root, cache_workspace, ensure_writable_cache_root, local_cache_root, positive_environment_integer
+from .host import describe_host
 from .sdk_patch_support import patchset_sha256
 
 
@@ -100,8 +102,10 @@ def cache_input_manifest(
         if profile is not None
         else None
     )
+    host_descriptor = describe_host()
     manifest = {
         "schema_version": CACHE_SCHEMA_VERSION,
+        "host": {key: host_descriptor[key] for key in ('os', 'architecture', 'distribution', 'version', 'native')},
         "adapter": {
             "version": ADAPTER_VERSION,
             "platform_root": platform_root.as_posix(),
@@ -393,7 +397,7 @@ def remove_cache_entry_path(
     namespace = canonical_path(namespace)
     resolved_entry = canonical_path(entry)
     try:
-        relative = resolved_entry.relative_to(namespace)
+        relative = relative_path_within(resolved_entry, namespace)
     except ValueError as error:
         raise AdapterError(f"cache root 밖의 경로는 삭제할 수 없습니다: {resolved_entry}") from error
     if (
@@ -442,7 +446,7 @@ def remove_cache_entry(
 ) -> int:
     if not re.fullmatch(r"[0-9a-f]{64}", cache_key):
         raise AdapterError(f"cache key 형식이 잘못되었습니다: {cache_key}")
-    cache_root = local_cache_root(root or build_cache_root())
+    cache_root = ensure_writable_cache_root(root or build_cache_root())
     namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
     entry = cache_workspace(cache_key, root=cache_root)
     with build_lock(cache_root / ".maintenance", operation="cache-remove"):
@@ -469,7 +473,7 @@ def prune_build_cache(
     configured_max_entries = max_entries or positive_environment_integer(
         "NUCODE_BUILD_CACHE_MAX_ENTRIES", DEFAULT_BUILD_CACHE_MAX_ENTRIES
     )
-    cache_root = local_cache_root(root or build_cache_root())
+    cache_root = ensure_writable_cache_root(root or build_cache_root())
     namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
     removed: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
@@ -537,7 +541,7 @@ def clear_compiler_cache(cache_root: Path) -> int:
 
 ## @brief 비활성 build cache 전체와 선택한 compiler cache를 안전하게 비웁니다.
 def clear_build_cache(cache_root: Path, *, include_compiler: bool) -> dict[str, Any]:
-    cache_root = local_cache_root(cache_root)
+    cache_root = ensure_writable_cache_root(cache_root)
     namespace = cache_root / f"v{CACHE_SCHEMA_VERSION}"
     removed: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []

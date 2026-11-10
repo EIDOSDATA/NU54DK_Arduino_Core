@@ -149,13 +149,13 @@ class M30HostPortabilityTests(unittest.TestCase):
         macos = BUILDER.describe_host(system_name="Darwin", machine="arm64", version="26")
         self.assertEqual(
             BUILDER.user_cache_root(windows, {"LOCALAPPDATA": "C:/Users/n/AppData/Local"}, home),
-            Path("C:/Users/n/AppData/Local").resolve(),
+            BUILDER.canonical_path("C:/Users/n/AppData/Local"),
         )
         self.assertEqual(
             BUILDER.user_cache_root(linux, {"XDG_CACHE_HOME": "/cache/n"}, home),
-            Path("/cache/n").resolve(),
+            BUILDER.canonical_path("/cache/n"),
         )
-        resolved_home = home.resolve()
+        resolved_home = BUILDER.canonical_path(home)
         self.assertEqual(
             BUILDER.user_cache_root(macos, {}, home), resolved_home / "Library" / "Caches"
         )

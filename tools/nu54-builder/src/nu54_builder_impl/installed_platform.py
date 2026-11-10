@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 from typing import Any
 
-from .common import AdapterError, atomic_write_bytes_if_changed, is_within, tree_content_sha256
+from .common import AdapterError, atomic_write_bytes_if_changed, is_within, relative_path_within, tree_content_sha256
 
 
 ## @brief 고정 SDK가 직접 처리하지 못하는 설치 root만 build 복사 대상으로 선택합니다.
@@ -29,7 +29,7 @@ def platform_compiled_path(path: Path, paths: dict[str, Path]) -> Path:
     original = paths['platform_root']
     target = platform_build_root(paths)
     if target != original and is_within(path, original):
-        return target / path.resolve().relative_to(original.resolve())
+        return target / relative_path_within(path, original)
     return path
 
 

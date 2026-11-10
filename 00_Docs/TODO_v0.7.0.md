@@ -10,8 +10,8 @@
 | 실제 개발 환경 | NCS **3.4.0 유지**. 설치·checkout·lock·toolchain·board·firmware 미전환 |
 | 목표 환경 | NCS **3.4.1 전체 manifest**와 검증된 대응 toolchain·board 조합 |
 | 현재 설치·지원 배포 | **v0.5.0 stable**. 이 계획은 공개·지원 버전 변경이 아님 |
-| 현재 v0.6.0 작업 | M32 **12/12 완료**, M33 **5/8** |
-| Host | HOST-W01~W03 완료, **HOST-W04~W08 보류 유지** |
+| 현재 v0.6.0 작업 | [v0.6.0 TODO](TODO_v0.6.0.md)가 현재 진행·완료 근거를 관리 |
+| Host | [현행 인계](HANDOFF.md)의 승인된 순차 작업. SDK 전환과 실적 분리 |
 
 계획 작성은 SDK 전환·실기 재개·새 Host 지원이나 공개 실행 승인이 아니다. M32 BLOB은 고정
 NCS 3.4.0에서 후속 exact 시험을 통과했고 과거 FAIL은 보존한다. 다음 작업은 [HANDOFF](HANDOFF.md),
@@ -107,7 +107,7 @@ Matter, 새 보드·Host 지원은 **v0.7.0 범위 밖**이다. SDK가 새로 �
 - [ ] 현재 승인된 Host 범위에서 CI·재현 build·package allowlist·manifest/hash·license를 검증한다.
   설치본에서 기존 전체 예제를 발견·compile하고 대표 upload/runtime·serial/debug를 확인한다.
 - [ ] 이전 공개 tag/Release/asset·역사 lock/evidence는 덮어쓰지 않는다. 새 패키지의 SDK 요구사항과
-  migration 안내를 분리한다. HOST-W04~W08 보류를 해제하거나 새 OS 지원을 합치지 않는다.
+  migration 안내를 분리한다. 별도 승인된 HOST-W05 이후 작업의 실적을 SDK 전환 실적으로 합치거나 새 OS 지원을 자동 선언하지 않는다.
 
 ### SDK-W06 — 문서·원장·마감과 별도 공개 승인
 

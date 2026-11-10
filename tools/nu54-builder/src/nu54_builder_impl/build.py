@@ -67,6 +67,7 @@ from .paths import (
     add_workspace_paths,
     build_cache_root,
     cache_workspace,
+    ensure_writable_cache_root,
     local_cache_root,
     paths_from_context,
     record_path,
@@ -356,12 +357,13 @@ def prepare(args: argparse.Namespace) -> BuildContext:
     if not (board_root / "boards" / "nucode" / "nu54dk" / "board.yml").is_file():
         raise AdapterError(f"NU54DK board package를 찾을 수 없습니다: {board_root}")
     cache_root = build_cache_root()
-    if cache_root == platform_root or is_within(cache_root, platform_root):
+    if is_within(cache_root, platform_root):
         raise AdapterError(
             "M9 build cache를 platform/board fingerprint 내부에 둘 수 없습니다: "
             f"{cache_root}"
         )
     product_identity = load_product_identity(platform_root)
+    ensure_writable_cache_root(cache_root)
     tools = tool_environment(platform_root)
     input_manifest = cache_input_manifest(session_paths, args, tools)
     target_manifest = input_manifest.get("target")

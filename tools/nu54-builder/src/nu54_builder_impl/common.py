@@ -172,13 +172,43 @@ WINDOWS_FILE_RETRY_INITIAL_SECONDS = 0.025
 
 ## @brief 경로를 존재 여부와 무관하게 절대 경로로 정규화합니다.
 def canonical_path(value: str | Path) -> Path:
-    return Path(value).expanduser().resolve(strict=False)
+    resolved = Path(value).expanduser().resolve(strict=False)
+    if sys.platform != 'darwin':
+        return resolved
+    ## @note APFS의 case/Unicode alias를 실제 파일 이름으로 정규화합니다.
+    ##       존재하지 않는 끝부분은 보존하고 device·FIFO는 열지 않습니다.
+    import fcntl
+    ancestor = resolved
+    missing = []
+    while True:
+        while not ancestor.exists() and ancestor.parent != ancestor:
+            missing.append(ancestor.name)
+            ancestor = ancestor.parent
+        if not (ancestor.is_file() or ancestor.is_dir()):
+            return resolved
+        try:
+            descriptor = os.open(ancestor, getattr(os, 'O_EVTONLY', os.O_RDONLY))
+            try:
+                actual = fcntl.fcntl(descriptor, fcntl.F_GETPATH, b'\0' * 1024).split(b'\0', 1)[0]
+            finally:
+                os.close(descriptor)
+            break
+        except FileNotFoundError:
+            if ancestor.parent == ancestor:
+                return resolved
+            missing.append(ancestor.name)
+            ancestor = ancestor.parent
+        except OSError as error:
+            raise AdapterError('[NU54:E_HOST_PATH] macOS 실제 파일 경로를 확인하지 못했습니다.') from error
+    if not actual or not Path(os.fsdecode(actual)).is_absolute():
+        raise AdapterError('[NU54:E_HOST_PATH] macOS가 반환한 파일 경로가 잘못되었습니다.')
+    return Path(os.fsdecode(actual)).joinpath(*reversed(missing))
 
 
 ## @brief Windows에서도 결정적인 비교가 가능한 경로 key를 반환합니다.
 def path_key(value: str | Path) -> str:
     normalized = canonical_path(value).as_posix()
-    return normalized.casefold() if os.name == "nt" else normalized
+    return normalized
 
 
 ## @brief Windows scanner·indexer의 짧은 공유 위반만 재시도 대상으로 판정합니다.
@@ -355,7 +385,7 @@ def tree_content_sha256(root: Path, relative_inputs: Sequence[str | Path]) -> st
                     and ".git" not in path.relative_to(root).parts
                     and "__pycache__" not in path.relative_to(root).parts
                 ),
-                key=lambda path: path.relative_to(root).as_posix().casefold(),
+                key=lambda path: path.relative_to(root).as_posix(),
             )
         else:
             digest.update(f"missing:{Path(relative_input).as_posix()}\0".encode("utf-8"))
@@ -437,8 +467,15 @@ def load_json_object(path: Path, error_code: str) -> dict[str, Any]:
 
 ## @brief path가 지정 directory 내부인지 판정합니다.
 def is_within(path: Path, directory: Path) -> bool:
-    try:
-        path.resolve().relative_to(directory.resolve())
-        return True
-    except ValueError:
-        return False
+    actual = canonical_path(path).parts
+    base = canonical_path(directory).parts
+    return actual[:len(base)] == base
+
+
+def relative_path_within(path: Path, directory: Path) -> Path:
+    """! @brief 실제 경로 경계를 확인한 뒤 root 내부의 상대 경로를 반환합니다. """
+    actual = canonical_path(path).parts
+    base = canonical_path(directory).parts
+    if actual[:len(base)] != base:
+        raise ValueError('실제 경로가 지정 root 밖에 있습니다.')
+    return Path(*actual[len(base):])
