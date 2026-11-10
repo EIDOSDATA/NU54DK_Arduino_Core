@@ -34,8 +34,8 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 | 제품선·트랙 | 현재 상태 | 다음 작업 |
 | --- | --- | --- |
 | v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
-| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8**, 미공개 | W06 수락 마감·HOST-W05 완료·HOST-W06 진행; 현재 범위는 [M33 인계](../M33_HANDOFF.md) |
-| Host | HOST-W01~W05 완료 5/8, HOST-W06 package·CI 진행 중 | W04부터 순차 이식, RC 단계에서 OS별 실물 지원 gate 수행 |
+| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8**, 미공개 | W06 수락 마감·HOST-W06 완료·HOST-W07 준비; 현재 범위는 [M33 인계](../M33_HANDOFF.md) |
+| Host | HOST-W01~W06 완료 6/8, HOST-W06 package·CI 완료·HOST-W07 준비 | W04부터 순차 이식, RC 단계에서 OS별 실물 지원 gate 수행 |
 | [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
 
 M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가

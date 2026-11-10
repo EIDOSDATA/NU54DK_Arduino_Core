@@ -383,7 +383,7 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 - DF는 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX의 `UNSUPPORTED`·P2 범위 제외와
   송신 예제의 controller 경계를 명시한다. 과거 LL 내부 수신을 제품 지원이나 각도 검증으로 쓰지 않는다.
 - Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
-  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W05는 완료했고 HOST-W06부터 순차 진행한다.
+  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W06은 완료했고 HOST-W07 준비부터 순차 진행한다.
 
 M31-W01에서 구현한 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를

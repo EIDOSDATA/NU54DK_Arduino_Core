@@ -16,7 +16,7 @@ source 발견, NU54DK build, Arduino build, HCI query, 실제 기능 HIL, 외부
 
 현재 완료 근거는 [W02 최종 기록](<../04_검증 기록/199_M31_W02_격리_설치본_ISO_11예제와_완료.md>),
 [W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>), [W04](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>)와 [W05](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>)다. W06~W08·공개 RC 완료와 후속 범위는
-[M31 TODO](../TODO_M31.md)와 [HANDOFF](../HANDOFF.md)를 따른다. Host는 이후 사용자 지시로 재개해 W05까지 5/8 완료했고 W06을 진행 중이다.
+[M31 TODO](../TODO_M31.md)와 [HANDOFF](../HANDOFF.md)를 따른다. Host는 이후 사용자 지시로 재개해 W06까지 6/8 완료했고 W07을 준비 중이다.
 
 2026-09-21 릴리스 범위 개정으로 M31-W08이 v0.5.0의 Windows 재현 package·설치 수명주기·
 RC·지원표·공개 승인/게시·공개 설치 검증을 소유한다. M31 기능 8/8과 릴리스 gate는 별도 상태로

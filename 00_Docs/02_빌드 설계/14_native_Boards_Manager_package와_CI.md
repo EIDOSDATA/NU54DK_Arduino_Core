@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H11 Windows/macOS Blink 통과 후 Linux source guard의 상세 원인을 진단 중이다.
+기준일: 2026-11-10. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했고 HOST-W07을 준비한다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -99,7 +99,7 @@ SDK 파일·repo/global config·OS 권한을 바꾸지 않고 실제 content·�
 H11에서는 Windows/macOS 실제 설치·Blink와 동일 ARM load가 통과했으나 Linux가 설치 전 source guard에서 거부됐다.
 구체 조건은 원형에 없어 미확정이다. H12는 cache 전·consumer 진입·종료 뒤 실제 HEAD/SHA/변경 경로를
 별도 `host-source-*` artifact로 보존한다. guard·집계 분모·기존 artifact 경로를 유지하고 임의 경로 무시·reset/clean은 하지 않는다.
-전체 예제·cross-Host artifact 비교는 `NOT_RUN`이며 fresh 교정 source의 실제 CI가 필요하다.
+H11 당시 전체 예제·cross-Host artifact 비교는 `NOT_RUN`이었다. H12에서 같은 source의 전체 gate를 통과했다.
 로컬 통과는 이 gate의 대체 증거가 아니다. 최초 구현은
 [316번 기록](<../04_검증 기록/316_HOST_W06_native_package_구현과_검증_착수.md>), 실제 FAIL·교정은
 [317번 기록](<../04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>)과
@@ -111,3 +111,5 @@ H11에서는 Windows/macOS 실제 설치·Blink와 동일 ARM load가 통과했�
 CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실물 검증은 RC1 최종 사용자
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는
 보존하며 Host 실적과 합산하지 않는다. #29 원인 분석은 사용자 지시로 유예한다.
+
+H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. 사용자 실물 gate는 별도 `NOT_RUN`이다.

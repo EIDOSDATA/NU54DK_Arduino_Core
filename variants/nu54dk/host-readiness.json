@@ -3,9 +3,9 @@
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-10",
   "status": "in_progress",
-  "current_work_package": "HOST-W06",
-  "implementation_revision": "HOST_W06_PACKAGE_DEVELOPMENT_WORKTREE",
-  "completed_work_packages": 5,
+  "current_work_package": "HOST-W07",
+  "implementation_revision": "HOST_W06_H12_CLOSED_W07_PREPARATION",
+  "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
     {
@@ -42,13 +42,17 @@
     },
     {
       "id": "HOST-W06",
-      "status": "in_progress",
-      "title": "package_and_ci_matrix"
+      "status": "completed",
+      "title": "package_and_ci_matrix",
+      "source_revision": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+      "native_CI_run_id": 42797342852,
+      "completion_scope": "SAME_SOURCE_THREE_OS_INSTALLED_PACKAGE_204_EXAMPLES_AND_ACTUAL_IMAGE_COMPARISON"
     },
     {
       "id": "HOST-W07",
-      "status": "not_started",
-      "title": "physical_upload_debug_serial"
+      "status": "preparation_in_progress",
+      "title": "physical_upload_debug_serial",
+      "physical_OS_gate": "NOT_RUN"
     },
     {
       "id": "HOST-W08",
@@ -58,7 +62,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "PASS_H6_PREREQUISITES_CURRENT_W06_PACKAGE_CORRECTION_PENDING",
+    "status": "PASS_H12_PREREQUISITES",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -68,7 +72,7 @@
       "bootstrap_components_verified": 3,
       "original_artifacts_preserved": true
     },
-    "fresh_correction_CI": "H4_NATIVE_THREE_OS_SUCCESS",
+    "fresh_correction_CI": "H12_NATIVE_THREE_OS_SUCCESS",
     "attempts": [
       {
         "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -131,13 +135,24 @@
         "conditional_skipped_unit_tests": 6,
         "artifacts_digest_verified": true,
         "native_package_smoke": "FAIL_SEPARATE_GATE"
+      },
+      {
+        "source_revision": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+        "run_id": 42797342944,
+        "conclusion": "success",
+        "success_OS_installations": 3,
+        "skipped_OS": 0,
+        "reported_unit_tests": 222,
+        "passed_unit_tests": 216,
+        "conditional_skipped_unit_tests": 6,
+        "artifacts_digest_verified": true
       }
     ],
-    "validated_source_revision": "2f656943318f66a33627cd1905d4488d2d78bc0b",
-    "run_id": 42774982248,
+    "validated_source_revision": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+    "run_id": 42797342944,
     "success_OS": 3,
     "skipped_OS": 0,
-    "current_W06_worktree_validation": "NOT_RUN"
+    "current_W06_worktree_validation": "EXACT_H12_COMMIT_PASS"
   },
   "user_physical_OS_gate": {
     "status": "NOT_RUN",
@@ -287,16 +302,16 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H11_WINDOWS_MACOS_BLINK_PASS_LINUX_SOURCE_DIAGNOSTICS_PENDING",
-    "source_revision": null,
-    "Boards_Manager_clean_install": "PASS_H11_WINDOWS_MACOS_LINUX_NOT_RUN",
-    "three_OS_all_204_examples": "NOT_RUN",
-    "artifact_comparison": "NOT_RUN",
+    "status": "PASS_EXACT_H12_SOURCE",
+    "source_revision": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+    "Boards_Manager_clean_install": "PASS_THREE_OS",
+    "three_OS_all_204_examples": "PASS_612_POSITIVE_27_NEGATIVE",
+    "artifact_comparison": "PASS_204_ACTUAL_IMAGES_LOCAL_AND_REMOTE_AGREE",
     "bootstrap_runtime": "ACTUAL_DERIVED_ARCHIVES_REPRODUCIBLE_UPSTREAM_BYTES_UNCHANGED",
     "user_physical_OS_gate": "NOT_RUN",
     "local_package_snapshot": "d9fb4e79bc51a9e35cead734d9c71bdb4876e14b",
     "local_package_actual_tool": "2001d5/exit0",
-    "final_CI_credit": 0,
+    "final_CI_credit": 1,
     "native_contracts": {
       "reported": 37,
       "passed": 36,
@@ -376,9 +391,27 @@
         "actual_artifact_audit": "666ff6/exit0",
         "producer_ZIP_sha256": "8220d6492edea5226885d362e57a4fb573877ec1114768a75b5667b07ed7a4e5",
         "source_credits_combined": false
+      },
+      {
+        "source_revision": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+        "native_package_run": 42797342852,
+        "producer": "PASS",
+        "installation_and_discovery": "PASS_3_OS",
+        "positive_compiles": 612,
+        "negative_profile_rejections": 27,
+        "compared_examples": 204,
+        "original_ZIPs_verified": 57,
+        "source_checkpoints_clean": 81,
+        "actual_local_aggregate": "37b006/exit0",
+        "technical_closure": "4480d7/exit0",
+        "software_run": 42797950721,
+        "software_success_jobs": 9,
+        "build_only_run": 42797342920,
+        "build_only_success_jobs": 6,
+        "source_credits_combined": false
       }
     ],
-    "current_correction": "EXACT_SOURCE_ADMISSION_FACTS_WITHOUT_GUARD_RELAXATION",
+    "current_correction": "STRICT_SOURCE_GUARD_PRESERVED_H7_H11_CAUSE_UNCONFIRMED",
     "platform_recipe_regression": {
       "reported": 12,
       "passed": 12,
@@ -390,7 +423,8 @@
       "reported": 4,
       "passed": 4,
       "actual_tool": "dfaa92/exit0"
-    }
+    },
+    "closure_record": "00_Docs/04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md"
   },
   "H5_additional_CI": {
     "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
@@ -405,5 +439,14 @@
       "conclusion": "success"
     },
     "HIL_credit": 0
+  },
+  "W07_preparation": {
+    "status": "IN_PROGRESS",
+    "product_integration": "NOT_RUN",
+    "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
+    "draft_not_final_source_credit": true,
+    "windows_physical_regression": "NOT_RUN",
+    "private_RC1": "NOT_BUILT",
+    "user_physical_OS_gate": "NOT_RUN"
   }
 }

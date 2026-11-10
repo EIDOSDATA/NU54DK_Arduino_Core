@@ -5,7 +5,7 @@
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [현행 상태·실행 순서](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W05 완료 **5/8**; HOST-W05 완료·HOST-W06 진행 중, 이후 순차 진행 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**; HOST-W06 완료·HOST-W07 준비 중, 이후 순차 진행 |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
 | SDK | NCS v3.4.0 pin 유지; v3.4.1 전체 전환은 SDK 전용 제품 v0.7.0 |
@@ -111,5 +111,7 @@ v0.6.0의 package·제품 식별자·RC 전환은 실제 개발 및 배포 준�
 
 HOST-W04 설치 범위는 H4의 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>),
 HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>)에서
-각 source의 native 세 OS·공통 CI 성공으로 완료했다. 현재 HOST-W06 package·전체 예제를 진행한다.
+각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제 검증을 마감하고 HOST-W07을 준비한다.
 실제 USB 최종 gate와 추가 OS 정식 지원은 후속 범위로 유지한다.
+
+HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 W07 실행기·Windows 회귀·RC1을 준비한다. 사용자 Ubuntu/macOS 실물 gate는 NOT_RUN이다.
