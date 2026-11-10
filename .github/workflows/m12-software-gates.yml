@@ -226,6 +226,20 @@ jobs:
           key: ${{ steps.lock.outputs.windows_cache_key }}-fast-${{ hashFiles('tools/nu54-builder/**', 'cores/**', 'variants/**', 'libraries/**', 'platform.txt', 'boards.txt') }}
           restore-keys: |
             ${{ steps.lock.outputs.windows_cache_key }}-fast-
+      - name: Pin nRF Util core 8.2.1 before prerequisite bootstrap
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PinnedCoreDirectory = 'D:\nu54-ci-bootstrap'
+          New-Item -ItemType Directory -Path $PinnedCoreDirectory -Force | Out-Null
+          $PinnedCoreArchive = Join-Path $PinnedCoreDirectory 'nrfutil-core-8.2.1.tar.gz'
+          Invoke-WebRequest -UseBasicParsing -Uri 'https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil/nrfutil-x86_64-pc-windows-msvc-8.2.1.tar.gz' -OutFile $PinnedCoreArchive -TimeoutSec 60
+          $PinnedCoreHash = (Get-FileHash -LiteralPath $PinnedCoreArchive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($PinnedCoreHash -cne '701f1b0b7c3131c9f4df1e4de3aba6a311ece67656438a3c8a4a37cb7a2df147')
+          {
+              throw 'Pinned nRF Util core 8.2.1 archive hash mismatch'
+          }
+          "NRFUTIL_BOOTSTRAP_TARBALL_PATH=$PinnedCoreArchive" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Install or verify exact Nordic prerequisites
         shell: powershell
         run: >-
