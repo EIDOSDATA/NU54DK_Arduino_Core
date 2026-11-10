@@ -1,5 +1,6 @@
 """! @brief 패키저의 license 수집·판정과 외부 prerequisite 책임입니다. """
 from __future__ import annotations
+from . import native
 from typing import Any, Iterable
 import re
 from .channels import (
@@ -50,6 +51,8 @@ def declared_spdx_identifiers(files: Iterable[SourceFile]) -> dict[str, list[str
 def build_external_prerequisites(
     files: list[SourceFile], version: str
 ) -> list[dict[str, Any]]:
+    if native.is_native_version(version):
+        return build_native_external_prerequisites(list(files), version)
     pins_file = next(
         (item for item in files if item.path == "tools/nu54-prerequisites/pins.json"), None
     )
@@ -161,6 +164,40 @@ def build_external_prerequisites(
             "installer": "optional-user-installation",
         },
     ]
+
+
+def build_native_external_prerequisites(files: list[SourceFile], version: str) -> list[dict[str, Any]]:
+    """! @brief native 세 OS별 외부 archive와 bootstrap의 provenance를 서로 구분합니다. """
+    payload = {item.path: item.data for item in files}
+    bootstrap = native.bootstrap_from_files(files)
+    pins = native.load_platform_pins(payload.get(native.PLATFORM_PINS_PATH, b''))
+    common = {'distribution': 'external-not-redistributed', 'license_expression': 'NOASSERTION',
+        'legal_review_status': legal_review_status(version), 'required': True,
+        'installer': 'post_install.bat/post_install.sh -> tools/nu54-prerequisites/nordic.py'}
+    result = []
+    for key, platform in sorted(pins['platforms'].items()):
+        declarations = (
+            ('nRF Util launcher', platform['nrfutil']['launcher_version'], platform['nrfutil']['executable']),
+            ('nRF Util core', platform['nrfutil']['version'], platform['nrfutil']['core']),
+            ('nRF Util sdk-manager', platform['sdk_manager']['version'], platform['sdk_manager']['archive']),
+            ('NCS toolchain bundle', platform['toolchain']['bundle_id'], platform['toolchain']['archive']),
+            ('Bootstrap Python', bootstrap['runtime']['python_version'], bootstrap['platforms'][key]['archive']),
+        )
+        for name, item_version, asset in declarations:
+            result.append({**common, 'name': name + ' (' + key + ')', 'version': item_version,
+                'platform': key, 'source': asset['url'], 'sha256': asset['sha256'],
+                'installer': 'Arduino Boards Manager toolsDependencies' if name == 'Bootstrap Python' else common['installer']})
+    result.extend([
+        {**common, 'name': 'nRF Connect SDK', 'version': pins['ncs']['version'],
+            'revision': pins['ncs']['revision'], 'source': pins['ncs']['archive']['url'], 'sha256': pins['ncs']['archive']['sha256']},
+        {**common, 'name': 'Zephyr', 'version': ZEPHYR_VERSION, 'revision': pins['zephyr']['revision'],
+            'source': 'https://github.com/nrfconnect/sdk-zephyr', 'installer': 'pinned nRF Connect SDK manifest'},
+        {**common, 'name': 'pyOCD', 'version': '0.45.1', 'source': 'https://github.com/pyocd/pyOCD',
+            'installer': 'selected native NCS toolchain bundle'},
+        {**common, 'name': 'SEGGER J-Link Software', 'version': 'user-supplied', 'required': False,
+            'source': 'https://www.segger.com/downloads/jlink/', 'installer': 'optional-user-installation'},
+    ])
+    return result
 
 
 ## @brief 패키지에 포함된 라이선스 원문과 구성요소 범위를 기록합니다.

@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "scope": "EXTERNAL_BOOTSTRAP_RUNTIME_NOT_CORE_ZIP_BINARY",
+  "platforms": [
+    {
+      "platform": "windows-x86_64",
+      "runtime_archive_sha256": "1f2ab53880fc67ea323398c6388e05af28addc99a8e389209f08a51fdff4b149",
+      "metadata_source": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-pc-windows-msvc-pgo-full.tar.zst",
+        "sha256": "37b4eb2818fee605fefa75ed156c4f2e1aaeaebaf662f9b30177c842ee16c48f",
+        "PYTHON_json_sha256": "f498ce90c2d313d8a229c65bed3989f1285fac6a9eb548a0a5ce77b0ee695ff9"
+      },
+      "component_license_references": [
+        {
+          "location": "$",
+          "licenses": [
+            "Python-2.0",
+            "CNRI-Python"
+          ],
+          "license_path": "licenses/LICENSE.cpython.txt"
+        },
+        {
+          "location": "$.build_info.extensions._bz2[0]",
+          "licenses": [
+            "bzip2-1.0.6"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.bzip2.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._ctypes[0]",
+          "licenses": [
+            "MIT"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libffi.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._hashlib[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._lzma[0]",
+          "licenses": [
+            "0BSD"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.liblzma.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._sqlite3[0]",
+          "licenses": [],
+          "license_paths": [
+            "licenses/LICENSE.sqlite.txt"
+          ],
+          "license_public_domain": true
+        },
+        {
+          "location": "$.build_info.extensions._ssl[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._tkinter[0]",
+          "licenses": [
+            "TCL"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.tcl.txt",
+            "licenses/LICENSE.tix.txt"
+          ],
+          "license_public_domain": null
+        },
+        {
+          "location": "$.build_info.extensions._uuid[0]",
+          "licenses": [
+            "BSD-3-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libuuid.txt"
+          ],
+          "license_public_domain": null
+        }
+      ]
+    },
+    {
+      "platform": "linux-x86_64",
+      "runtime_archive_sha256": "ce4f6d0a6cfdb3bed6e44c2f9affd85943c76a42e25ad3a259002f31d6fb8a20",
+      "metadata_source": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-unknown-linux-gnu-pgo%2Blto-full.tar.zst",
+        "sha256": "789924432efcaaf05fec4bd3e4d8798733326c2ac0540eda33e84913c37a231e",
+        "PYTHON_json_sha256": "9cf6e4ad8ae8d2f9d9c735be636db877d2abb39c3314f6ae021bf7f124bd1596"
+      },
+      "component_license_references": [
+        {
+          "location": "$",
+          "licenses": [
+            "Python-2.0",
+            "CNRI-Python"
+          ],
+          "license_path": "licenses/LICENSE.cpython.txt"
+        },
+        {
+          "location": "$.build_info.extensions._bz2[0]",
+          "licenses": [
+            "bzip2-1.0.6"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.bzip2.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._ctypes[0]",
+          "licenses": [
+            "MIT"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libffi.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._curses[0]",
+          "licenses": [
+            "X11"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.ncurses.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._curses_panel[0]",
+          "licenses": [
+            "X11"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.ncurses.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._dbm[0]",
+          "licenses": [
+            "Sleepycat"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.bdb.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._decimal[0]",
+          "licenses": [
+            "BSD-2-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.mpdecimal.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._hashlib[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._lzma[0]",
+          "licenses": [
+            "0BSD"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.liblzma.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._sqlite3[0]",
+          "licenses": [],
+          "license_paths": [
+            "licenses/LICENSE.sqlite.txt"
+          ],
+          "license_public_domain": true
+        },
+        {
+          "location": "$.build_info.extensions._ssl[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._tkinter[0]",
+          "licenses": [
+            "MIT",
+            "TCL",
+            "X11",
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libX11.txt",
+            "licenses/LICENSE.libXau.txt",
+            "licenses/LICENSE.libxcb.txt",
+            "licenses/LICENSE.tcl.txt",
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._uuid[0]",
+          "licenses": [
+            "BSD-3-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libuuid.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.binascii[0]",
+          "licenses": [
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.pyexpat[0]",
+          "licenses": [
+            "MIT"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.expat.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.readline[0]",
+          "licenses": [
+            "BSD-3-Clause",
+            "X11"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libedit.txt",
+            "licenses/LICENSE.ncurses.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.zlib[0]",
+          "licenses": [
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        }
+      ]
+    },
+    {
+      "platform": "macos-arm64",
+      "runtime_archive_sha256": "353d5f1b4fd2715e7053f12f068435d5bbad16b91e057006b5d01e0925709a7e",
+      "metadata_source": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-aarch64-apple-darwin-pgo%2Blto-full.tar.zst",
+        "sha256": "016758f4881e5f71d63eddfbcdd53f25c5a9152435a863e4dc0770758eae32c3",
+        "PYTHON_json_sha256": "dfc38df39b46bc1337abc4b3ff160e5ef4ca16f13dedb4c412a770ecb3fb8a36"
+      },
+      "component_license_references": [
+        {
+          "location": "$",
+          "licenses": [
+            "Python-2.0",
+            "CNRI-Python"
+          ],
+          "license_path": "licenses/LICENSE.cpython.txt"
+        },
+        {
+          "location": "$.build_info.extensions._bz2[0]",
+          "licenses": [
+            "bzip2-1.0.6"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.bzip2.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._ctypes[0]",
+          "licenses": [
+            "MIT"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libffi.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._curses[0]",
+          "licenses": [
+            "X11"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.ncurses.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._curses_panel[0]",
+          "licenses": [
+            "X11"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.ncurses.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._decimal[0]",
+          "licenses": [
+            "BSD-2-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.mpdecimal.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._hashlib[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._lzma[0]",
+          "licenses": [
+            "0BSD"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.liblzma.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._sqlite3[0]",
+          "licenses": [
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.sqlite.txt",
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._ssl[0]",
+          "licenses": [
+            "Apache-2.0"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.openssl-3.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._tkinter[0]",
+          "licenses": [
+            "TCL",
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.tcl.txt",
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions._uuid[0]",
+          "licenses": [
+            "BSD-3-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libuuid.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.binascii[0]",
+          "licenses": [
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.pyexpat[0]",
+          "licenses": [
+            "MIT"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.expat.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.readline[0]",
+          "licenses": [
+            "BSD-3-Clause"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.libedit.txt"
+          ],
+          "license_public_domain": false
+        },
+        {
+          "location": "$.build_info.extensions.zlib[0]",
+          "licenses": [
+            "Zlib"
+          ],
+          "license_paths": [
+            "licenses/LICENSE.zlib-ng.txt",
+            "licenses/LICENSE.zlib.txt"
+          ],
+          "license_public_domain": false
+        }
+      ]
+    }
+  ]
+}

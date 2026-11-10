@@ -3,9 +3,9 @@
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-10",
   "status": "in_progress",
-  "current_work_package": "HOST-W05",
-  "implementation_revision": "HOST_W05_DEVELOPMENT_WORKTREE",
-  "completed_work_packages": 4,
+  "current_work_package": "HOST-W06",
+  "implementation_revision": "HOST_W06_PACKAGE_DEVELOPMENT_WORKTREE",
+  "completed_work_packages": 5,
   "total_work_packages": 8,
   "work_packages": [
     {
@@ -33,12 +33,16 @@
     },
     {
       "id": "HOST-W05",
-      "status": "in_progress",
-      "title": "portable_cache_lock_paths"
+      "status": "completed",
+      "title": "portable_cache_lock_paths",
+      "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
+      "native_CI_run_id": 42759627688,
+      "software_CI_run_id": 42759630820,
+      "completion_scope": "PATH_CACHE_PERMISSION_CASE_SYMLINK_UNICODE_LOCK_AND_COMMON_REGRESSION"
     },
     {
       "id": "HOST-W06",
-      "status": "not_started",
+      "status": "in_progress",
       "title": "package_and_ci_matrix"
     },
     {
@@ -54,7 +58,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "PASS_H4_PLATFORM_PREREQUISITES_CURRENT_W05_PENDING",
+    "status": "PASS_H5_W05_NATIVE_CURRENT_W06_PENDING",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -104,13 +108,24 @@
         "skipped_OS": 0,
         "artifacts_digest_verified": true,
         "completion_scope": "PLATFORM_PREREQUISITES_NOT_USER_PHYSICAL_USB"
+      },
+      {
+        "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
+        "run_id": 42759627688,
+        "conclusion": "success",
+        "success_OS_installations": 3,
+        "skipped_OS": 0,
+        "reported_unit_tests": 198,
+        "passed_unit_tests": 192,
+        "conditional_skipped_unit_tests": 6,
+        "artifacts_digest_verified": true
       }
     ],
-    "validated_source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
-    "run_id": 42751311805,
+    "validated_source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
+    "run_id": 42759627688,
     "success_OS": 3,
     "skipped_OS": 0,
-    "current_W05_worktree_validation": "NOT_RUN"
+    "current_W06_worktree_validation": "NOT_RUN"
   },
   "user_physical_OS_gate": {
     "status": "NOT_RUN",
@@ -195,9 +210,9 @@
     "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0"
   },
   "W05_validation": {
-    "status": "LOCAL_PASS_NATIVE_THREE_OS_PENDING",
-    "source_revision": null,
-    "source_scope": "W05_DEVELOPMENT_WORKTREE_COMMIT_PENDING",
+    "status": "PASS",
+    "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
+    "source_scope": "EXACT_H5_COMMIT",
     "local_focused": {
       "reported_tests": 66,
       "passed": 61,
@@ -216,12 +231,31 @@
       "frozen_files_unchanged": 2439
     },
     "local_full_host_scope": "W05_BACKEND_FROZEN_BEFORE_EXTRA_LONG_PATH_TEST_AND_DOCUMENT_TIDY",
-    "pending": [
-      "fresh_native_3OS_paths_permissions_lock_tests",
-      "fresh_native_3OS_pinned_SDK_reverify",
-      "exact_source_software_CI"
-    ],
-    "new_HIL_runs": 0
+    "pending": [],
+    "new_HIL_runs": 0,
+    "native_CI_run_id": 42759627688,
+    "software_CI": {
+      "run_id": 42759630820,
+      "success_jobs": 9,
+      "skipped_jobs": 0
+    },
+    "native_OS": {
+      "windows": {
+        "reported": 66,
+        "passed": 61,
+        "conditional_skipped": 5
+      },
+      "ubuntu": {
+        "reported": 66,
+        "passed": 66,
+        "conditional_skipped": 0
+      },
+      "macos_arm64": {
+        "reported": 66,
+        "passed": 65,
+        "conditional_skipped": 1
+      }
+    }
   },
   "H4_additional_CI": {
     "source_revision": "4988d8723b76171b7caacbe67afb17e48d925ea0",
@@ -239,5 +273,41 @@
     },
     "HIL_credit": 0,
     "transferred_to_W05": false
+  },
+  "W06_validation": {
+    "status": "LOCAL_PACKAGE_PASS_NATIVE_CI_PENDING",
+    "source_revision": null,
+    "Boards_Manager_clean_install": "NOT_RUN",
+    "three_OS_all_204_examples": "NOT_RUN",
+    "artifact_comparison": "NOT_RUN",
+    "bootstrap_runtime": "PINNED_UPSTREAM_ARCHIVE_BYTES_VERIFIED_ONLY",
+    "user_physical_OS_gate": "NOT_RUN",
+    "local_package_snapshot": "d9fb4e79bc51a9e35cead734d9c71bdb4876e14b",
+    "local_package_actual_tool": "2001d5/exit0",
+    "final_CI_credit": 0,
+    "native_contracts": {
+      "reported": 25,
+      "passed": 24,
+      "conditional_skipped": 1,
+      "actual_tool": "70f16d/exit0"
+    },
+    "CI_contract": {
+      "tests": 46,
+      "actual_tool": "90e99a/exit0"
+    }
+  },
+  "H5_additional_CI": {
+    "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
+    "software": {
+      "run_id": 42759630820,
+      "success_jobs": 9,
+      "conclusion": "success"
+    },
+    "build_only": {
+      "run_id": 42759627539,
+      "success_jobs": 6,
+      "conclusion": "success"
+    },
+    "HIL_credit": 0
   }
 }

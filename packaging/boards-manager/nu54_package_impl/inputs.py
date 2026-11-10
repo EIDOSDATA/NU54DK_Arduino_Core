@@ -9,6 +9,7 @@ from .model import (
     PackageError,
     SourceFile,
 )
+from . import native
 
 
 ## @brief 외부 명령을 실행하고 실패를 패키징 오류로 변환합니다.
@@ -170,7 +171,14 @@ def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[li
     board_path = "board_package/NU54DK_Zephyr_DTS"
     board_entry: tuple[str, str, str, str] | None = None
     files: list[SourceFile] = []
-    for mode, object_type, object_id, path in git_tree_entries(repo_root, commit):
+    entries = git_tree_entries(repo_root, commit)
+    bootstrap = None
+    if native.is_native_version(version):
+        pin_objects = [row[2] for row in entries if row[3] == native.BOOTSTRAP_PATH and row[1] == 'blob']
+        if len(pin_objects) != 1:
+            raise PackageError('native package source에 고정 초기 Python pin이 없습니다.')
+        bootstrap = native.load_bootstrap(git_blob(repo_root, pin_objects[0]))
+    for mode, object_type, object_id, path in entries:
         if path == board_path:
             board_entry = (mode, object_type, object_id, path)
             continue
@@ -185,6 +193,12 @@ def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[li
         if path == "platform.txt":
             data = rewrite_platform_version(data, version)
             transformation = "platform-version"
+            if bootstrap is not None:
+                data = native.rewrite_platform(data, bootstrap)
+                transformation += '+native-bootstrap-recipes'
+        elif bootstrap is not None and path in ('post_install.bat', 'post_install.sh'):
+            data = native.render_post_install(path, bootstrap)
+            transformation = 'native-bootstrap-recipes' + ('+windows-crlf' if path.endswith('.bat') else '')
         elif (
             version in model.WINDOWS_SAFE_VERSIONS
             and PurePosixPath(path).suffix.casefold() in {".bat", ".cmd"}
@@ -195,7 +209,7 @@ def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[li
             SourceFile(
                 path=path,
                 data=data,
-                mode=0o755 if mode == "100755" else 0o644,
+                mode=0o755 if mode == "100755" or bootstrap is not None and path == 'post_install.sh' else 0o644,
                 origin="core",
                 git_object=object_id,
                 transformation=transformation,
@@ -246,4 +260,8 @@ def collect_source_files(repo_root: Path, commit: str, version: str) -> tuple[li
     missing = sorted(required.difference(paths))
     if missing:
         raise PackageError(f"필수 패키지 파일이 없습니다: {', '.join(missing)}")
+    if bootstrap is not None:
+        native.bootstrap_from_files(files)
+        if not {'post_install.sh', native.PLATFORM_PINS_PATH}.issubset(paths):
+            raise PackageError('native package에 POSIX 설치 진입점 또는 Host pin이 없습니다.')
     return files, board_revision

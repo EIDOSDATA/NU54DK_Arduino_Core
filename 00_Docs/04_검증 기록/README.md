@@ -1,6 +1,9 @@
 # 검증 기록
 
-최신 개발 기록: [314번 HOST-W05 경로·cache·lock 교정과 native 검증](314_HOST_W05_경로_cache_lock_교정과_native_검증.md).
+- [316 — HOST-W06 native package 구현과 검증 착수](316_HOST_W06_native_package_구현과_검증_착수.md)
+
+최신 개발 기록: [315번 HOST-W05 native 마감과 HOST-W06 package 착수](315_HOST_W05_native_마감과_HOST_W06_package_착수.md).
+W05 초기 로컬 실패·교정·회귀는 [314번](314_HOST_W05_경로_cache_lock_교정과_native_검증.md)에 보존한다.
 W04 같은-source 설치·전체 CI 완료는 [313번](313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md)을 따른다.
 최초 Host CI 실패 원문과 교정 경과는 [312번](312_HOST_W04_최초_CI_실패와_교정_검증.md)에 보존한다.
 W06 명시 수락 시점 정정은 [311번](311_M33_W06_명시_수락_정정과_HOST_W04_착수.md)에 보존한다.

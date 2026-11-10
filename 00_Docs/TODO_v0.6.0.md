@@ -5,7 +5,7 @@
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [현행 상태·실행 순서](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W04 완료 **4/8**; HOST-W04 설치 범위 완료·HOST-W05 진행 중, 이후 순차 진행 |
+| Host 트랙 | HOST-W01~W05 완료 **5/8**; HOST-W05 완료·HOST-W06 진행 중, 이후 순차 진행 |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
 | SDK | NCS v3.4.0 pin 유지; v3.4.1 전체 전환은 SDK 전용 제품 v0.7.0 |
@@ -109,4 +109,7 @@ v0.6.0의 package·제품 식별자·RC 전환은 실제 개발 및 배포 준�
 완료 기준선은 [v0.5.0 TODO](TODO_v0.5.0.md), 전체 제품 순서는
 [로드맵](<01_아두이노 코어 설계/02_구현_로드맵.md>), 재개 절차는 [HANDOFF](HANDOFF.md)를 따른다.
 
-HOST-W04 설치 범위는 `4988d8723b76171b7caacbe67afb17e48d925ea0`의 [native CI42751311805](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/42751311805)에서 세 OS 설치·재검증3/3으로 완료했다. 전체 예제/package와 실제 USB 최종 gate는 후속 범위로 유지한다. 현재 HOST-W05를 진행하며 상세는 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>)을 따른다.
+HOST-W04 설치 범위는 H4의 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>),
+HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>)에서
+각 source의 native 세 OS·공통 CI 성공으로 완료했다. 현재 HOST-W06 package·전체 예제를 진행한다.
+실제 USB 최종 gate와 추가 OS 정식 지원은 후속 범위로 유지한다.

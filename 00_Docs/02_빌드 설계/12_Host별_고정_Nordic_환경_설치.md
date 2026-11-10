@@ -1,6 +1,6 @@
 # Host별 고정 Nordic 환경 설치
 
-상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), HOST-W05 진행 중.
+상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 진행 중.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.

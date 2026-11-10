@@ -48,7 +48,7 @@ BLE 작업은 별도 [M28 readiness](../../variants/nu54dk/m28-ble-readiness.jso
 v0.5.0은 Windows 10/11 x64 지원 릴리스다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의
 M32는 W01~W12 12/12, M33은 수락 6/8·기술 5/8이며 M32 지원 후보는 `not_published`로 유지한다.
 M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감한 상태이며 새 채팅의 재개 지점은
-[M33 인계](../../00_Docs/M33_HANDOFF.md)를 따른다. HOST는 4/8이며 W04 설치 범위 완료 후 W05를
+[M33 인계](../../00_Docs/M33_HANDOFF.md)를 따른다. HOST는 5/8이며 W05 완료 후 W06를
 순차 진행 중이다. Ubuntu/macOS의 OS별 최종 실물 gate는 별도로 유지한다.
 M27의 PASS나 생성기 성공을 후속 BLE·Host 시험의 PASS로 재사용하지 않는다.
 

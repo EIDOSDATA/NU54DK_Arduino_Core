@@ -41,6 +41,21 @@ class HostPrerequisiteTests(unittest.TestCase):
         self.assertEqual(windows['nrfutil']['executable']['sha256'], legacy['nrfutil']['sha256'])
         self.assertEqual(self.manifest['ncs']['revision'], legacy['ncs']['revision'])
 
+    def test_installer_and_builder_share_explicit_state_environment(self):
+        """! @brief post-install marker와 build 검증이 같은 사용자 지정 상태 root를 사용합니다. """
+        _, pin = P.select_platform(self.manifest)
+        target = self.root / '공백 state'
+        with mock.patch.dict(os.environ, {'NUCODE_PREREQUISITE_STATE_ROOT': str(target)}):
+            state, _ = P.roots(pin)
+            self.assertEqual(state, BUILDER.implementation.environment.prerequisite_state_root())
+            self.assertEqual(state, P.canonical_path(target))
+            explicit, _ = P.roots(pin, self.root / 'explicit-state')
+            self.assertEqual(explicit, P.canonical_path(self.root / 'explicit-state'))
+        for invalid in ('', 'relative-state'):
+            with self.subTest(value=invalid), mock.patch.dict(os.environ, {'NUCODE_PREREQUISITE_STATE_ROOT': invalid}):
+                with self.assertRaises(P.AdapterError):
+                    P.roots(pin)
+
     def test_duplicate_json_and_wrong_sdk_revision_are_rejected(self):
         """! @brief 중복 pin과 다른 SDK가 설치 전에 거부됩니다. """
         path = self.root / 'pins.json'

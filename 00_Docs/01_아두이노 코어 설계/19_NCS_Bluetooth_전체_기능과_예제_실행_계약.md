@@ -19,7 +19,7 @@
 
 완료 근거는 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와
 [W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. Host는 W01~W03 완료
-4/8이고 **HOST-W04 설치 범위 완료 후 HOST-W05 진행 중**이다. M33-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했으며
+5/8이고 **HOST-W05 완료 후 HOST-W06 진행 중**이다. M33-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했으며
 [검증 설계](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의 실패별 집중 검증과
 [최신 체크포인트](../M33_HANDOFF.md)를 따른다. 기능별 합격 조건은 유지하고 Host를 M33 기능 개발과 병행하지 않는다.
 
@@ -39,7 +39,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
 다중 Host·RC·공개를 계속 소유하며 Host 보류·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 5/8·HOST 4/8을 구분한다.
+현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 5/8·HOST 5/8을 구분한다.
 M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
 [M32 readiness](../../variants/nu54dk/m32-ble-readiness.json)가 소유한다. W08 BLOB·signed MDFU와
 W10 공존은 후속 exact HIL에서 완료했다. W11 clean `94f02544…`의 exact family 12/12·signed MDFU·
@@ -195,7 +195,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W04 설치 범위 완료 후 HOST-W05 진행 중이다. W02는 표준 GATT·Beacon 공개 예제 9/9와
+M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W05 완료 후 HOST-W06 진행 중이다. W02는 표준 GATT·Beacon 공개 예제 9/9와
 두/세 보드 exact HIL, W03은 Apple 예제 2/2·native template 4/4·scripted-peer HIL 9/9,
 W04는 DTM two-wire/H4 12/12씩, W05는 설치 예제 204/204 compile과 negative 9/9를 PASS했다.
 외부 제품 상호운용은 사용자 후속 `NOT_RUN`이다. M32의 개별 기능·통합 HIL은 M31 인계와

@@ -22,7 +22,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 Windows 10/11 x64 지원 릴리스다. 공개 RC와 stable v0.5.0 승격을 완료했다.
 Ubuntu AMD64·Apple Silicon macOS는 v0.6.0의 M32·M33 계획과 연계하며
 [다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 HOST-W04~HOST-W08 구현·
-자동 검사·사용자 절차를 순차 진행한다. **HOST-W04 설치 범위 완료·HOST-W05 진행 중(4/8)**이다.
+자동 검사·사용자 절차를 순차 진행한다. **HOST-W05 완료·HOST-W06 진행 중(5/8)**이다.
 Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는 사용자가 해당 OS를 추가할 후속
 릴리스의 최종 단계에서 검증한다. 정식 지원의 최종 실물 gate는 유지한다.
 버전 배정만으로 Host 작업을 재개하거나 추가 OS 지원을 확정하지 않는다.

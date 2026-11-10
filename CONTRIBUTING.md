@@ -12,7 +12,7 @@ source별 개발 검증과 최종 같은 source의 완료 검증을 구분합니
 실제 작업본·source·진행 항목·종료 증거는 `D:\w06\control\continuation.json`의 `active_workflow`에서 확인합니다.
 실기 writer와 무거운 작업은 하나이며 병렬 검토는 읽기 전용입니다.
 최종 source S와 기록 commit C는 각각 해당 exact SHA의 CI를 확인합니다. 문서 정리·push는 W06 완료가 아닙니다.
-HOST는 4/8이며 사용자 지시로 HOST-W04 설치 범위 완료 후 HOST-W05부터 순차 진행합니다. #29 원인 분석은 유예합니다.
+HOST는 5/8이며 사용자 지시로 HOST-W05 완료 후 HOST-W06부터 순차 진행합니다. #29 원인 분석은 유예합니다.
 stable은 `v0.5.0`이며 버전별 지원 범위는
 [릴리스 문서](<00_Docs/05_릴리스/README.md>)에 있습니다.
 

@@ -1,6 +1,7 @@
 """! @brief 패키저의 실제 archive 내용과 공개 identity 검증 책임입니다. """
 from __future__ import annotations
 from . import model
+from . import native
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 import re
@@ -156,6 +157,8 @@ def validate_archive(
                 else "exact-commit-plus-declared-platform-version-rewrite"
             ),
         }
+        if native.is_native_version(version):
+            fixed_values['source_policy'] = native.NATIVE_SOURCE_POLICY
         for field, expected in fixed_values.items():
             if manifest.get(field) != expected:
                 raise PackageError(f"release-manifest {field}가 고정값과 다릅니다.")
@@ -213,11 +216,31 @@ def validate_archive(
                 data = relative_data[path]
                 if data != rewrite_windows_command_line_endings(data, path):
                     raise PackageError(f"Windows-safe command script가 strict CRLF가 아닙니다: {path}")
-                if records_by_path[path].get("transformation") != "windows-crlf":
+                expected_transform = ('native-bootstrap-recipes+windows-crlf'
+                    if native.is_native_version(version) and path == 'post_install.bat' else 'windows-crlf')
+                if records_by_path[path].get("transformation") != expected_transform:
                     raise PackageError(f"Windows-safe command script 변환 provenance가 없습니다: {path}")
         pins_path = "tools/nu54-prerequisites/pins.json"
         if manifest["prerequisites_pins_sha256"] != sha256_bytes(relative_data[pins_path]):
             raise PackageError("release-manifest와 prerequisite pins checksum이 다릅니다.")
+
+        if native.is_native_version(version):
+            bootstrap = native.load_bootstrap(relative_data.get(native.BOOTSTRAP_PATH, b''), relative_data)
+            platform_pins = native.load_platform_pins(relative_data.get(native.PLATFORM_PINS_PATH, b''))
+            expected_native = {
+                'platform_prerequisites_sha256': sha256_bytes(relative_data[native.PLATFORM_PINS_PATH]),
+                'bootstrap_pins_sha256': sha256_bytes(relative_data[native.BOOTSTRAP_PATH]),
+                'native_host_platforms': sorted(native.PLATFORMS),
+                'toolchain_bundle_ids': {key: value['toolchain']['bundle_id'] for key, value in sorted(platform_pins['platforms'].items())},
+                'bootstrap_runtime': {key: bootstrap['runtime'][key] for key in ('name', 'tool_version', 'python_version')},
+            }
+            if set(platform_pins['platforms']) != set(native.PLATFORMS) or any(manifest.get(key) != value for key, value in expected_native.items()):
+                raise PackageError('native release manifest의 Host·bootstrap·Nordic pin 결합이 다릅니다.')
+            for path in ('post_install.bat', 'post_install.sh'):
+                if relative_data.get(path) != native.render_post_install(path, bootstrap):
+                    raise PackageError('native 설치 진입점이 고정 초기 Python 계약과 다릅니다: ' + path)
+            if records_by_path.get('post_install.sh', {}).get('mode') != '0755':
+                raise PackageError('native POSIX 설치 진입점에 실행 권한이 없습니다.')
 
         platform = relative_data.get("platform.txt", b"")
         try:
@@ -226,6 +249,8 @@ def validate_archive(
             raise PackageError("platform.txt가 UTF-8이 아닙니다.") from error
         if version_lines != [f"version={version}"]:
             raise PackageError("platform.txt version이 archive version과 다릅니다.")
+        if native.is_native_version(version) and native.rewrite_platform(platform, bootstrap) != platform:
+            raise PackageError('native recipe가 고정 초기 Python을 직접 사용하지 않습니다.')
         for path in payload_paths:
             if not include_core_path(path) and not (
                 path.startswith("board_package/NU54DK_Zephyr_DTS/")
@@ -277,15 +302,10 @@ def validate_archive(
         package_by_name = {
             item.get("name"): item for item in spdx_packages if isinstance(item, dict)
         }
-        external_names = {
-            "nRF Util",
-            "nRF Util sdk-manager",
-            "nRF Connect SDK",
-            "Zephyr",
-            "nRF Connect SDK Toolchain",
-            "pyOCD",
-            "SEGGER J-Link Software",
-        }
+        expected_external = build_external_prerequisites(
+            [SourceFile(path=path, data=relative_data[path], mode=0o644, origin='core', git_object='0' * 40)
+                for path in payload_paths], version)
+        external_names = {item['name'] for item in expected_external}
         if (
             len(spdx_packages) != 1 + len(external_names)
             or set(package_by_name) != {"NUCODE NU54DK Zephyr Boards", *external_names}
@@ -352,19 +372,6 @@ def validate_archive(
         if board_notice not in {item["path"] for item in notice_files}:
             raise PackageError("보드 Apache 범위 NOTICE 원문이 inventory에 없습니다.")
 
-        pins_path = "tools/nu54-prerequisites/pins.json"
-        expected_external = build_external_prerequisites(
-            [
-                SourceFile(
-                    path=pins_path,
-                    data=relative_data[pins_path],
-                    mode=0o644,
-                    origin="core",
-                    git_object="0" * 40,
-                )
-            ],
-            version,
-        )
         if inventory.get("external_prerequisites") != expected_external:
             raise PackageError("외부 전제조건 inventory가 pins 및 고정 계약과 다릅니다.")
         relationships = sbom.get("relationships")

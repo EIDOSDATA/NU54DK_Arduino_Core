@@ -1,6 +1,7 @@
 """! @brief 패키저의 runtime manifest 생성 책임입니다. """
 from __future__ import annotations
 from . import model
+from . import native
 from typing import Any, Iterable
 from .channels import (
     archive_filename,
@@ -88,4 +89,16 @@ def build_release_manifest(
         manifest["runtime_payload_sha256"] = runtime_payload_sha256(
             (item.path, item.data, item.mode) for item in files
         )
+    if native.is_native_version(version):
+        bootstrap = native.bootstrap_from_files(files)
+        platform = next((item for item in files if item.path == native.PLATFORM_PINS_PATH), None)
+        if platform is None:
+            raise PackageError('native package에 OS별 Nordic pin이 없습니다.')
+        platform_pins = native.load_platform_pins(platform.data)
+        manifest.update(source_policy=native.NATIVE_SOURCE_POLICY,
+            platform_prerequisites_sha256=sha256_bytes(platform.data),
+            bootstrap_pins_sha256=file_hashes[native.BOOTSTRAP_PATH],
+            native_host_platforms=sorted(native.PLATFORMS),
+            toolchain_bundle_ids={key: value['toolchain']['bundle_id'] for key, value in sorted(platform_pins['platforms'].items())},
+            bootstrap_runtime={key: bootstrap['runtime'][key] for key in ('name', 'tool_version', 'python_version')})
     return manifest

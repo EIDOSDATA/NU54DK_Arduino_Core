@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "runtime": {
+    "name": "nu54-python",
+    "tool_version": "3.12.16-20261026",
+    "python_version": "3.12.16",
+    "upstream_release": "20261026",
+    "source_repository": "https://github.com/astral-sh/python-build-standalone"
+  },
+  "platforms": {
+    "windows-x86_64": {
+      "arduino_host": "x86_64-mingw32",
+      "upstream_target": "x86_64-pc-windows-msvc",
+      "executable": "python.exe",
+      "archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-pc-windows-msvc-install_only_stripped.tar.gz",
+        "filename": "cpython-3.12.16+20261026-x86_64-pc-windows-msvc-install_only_stripped.tar.gz",
+        "size": 22014416,
+        "sha256": "1f2ab53880fc67ea323398c6388e05af28addc99a8e389209f08a51fdff4b149"
+      },
+      "upstream_full_archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-pc-windows-msvc-pgo-full.tar.zst",
+        "sha256": "37b4eb2818fee605fefa75ed156c4f2e1aaeaebaf662f9b30177c842ee16c48f",
+        "PYTHON_json_sha256": "f498ce90c2d313d8a229c65bed3989f1285fac6a9eb548a0a5ce77b0ee695ff9"
+      }
+    },
+    "linux-x86_64": {
+      "arduino_host": "x86_64-linux-gnu",
+      "upstream_target": "x86_64-unknown-linux-gnu",
+      "executable": "bin/python3.12",
+      "archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+        "filename": "cpython-3.12.16+20261026-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+        "size": 34505639,
+        "sha256": "ce4f6d0a6cfdb3bed6e44c2f9affd85943c76a42e25ad3a259002f31d6fb8a20"
+      },
+      "upstream_full_archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-unknown-linux-gnu-pgo%2Blto-full.tar.zst",
+        "sha256": "789924432efcaaf05fec4bd3e4d8798733326c2ac0540eda33e84913c37a231e",
+        "PYTHON_json_sha256": "9cf6e4ad8ae8d2f9d9c735be636db877d2abb39c3314f6ae021bf7f124bd1596"
+      }
+    },
+    "macos-arm64": {
+      "arduino_host": "arm64-apple-darwin",
+      "upstream_target": "aarch64-apple-darwin",
+      "executable": "bin/python3.12",
+      "archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-aarch64-apple-darwin-install_only_stripped.tar.gz",
+        "filename": "cpython-3.12.16+20261026-aarch64-apple-darwin-install_only_stripped.tar.gz",
+        "size": 25035343,
+        "sha256": "353d5f1b4fd2715e7053f12f068435d5bbad16b91e057006b5d01e0925709a7e"
+      },
+      "upstream_full_archive": {
+        "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-aarch64-apple-darwin-pgo%2Blto-full.tar.zst",
+        "sha256": "016758f4881e5f71d63eddfbcdd53f25c5a9152435a863e4dc0770758eae32c3",
+        "PYTHON_json_sha256": "dfc38df39b46bc1337abc4b3ff160e5ef4ca16f13dedb4c412a770ecb3fb8a36"
+      }
+    }
+  },
+  "notice_files": [
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.bdb.txt",
+      "size": 7293,
+      "sha256": "3bdff06e69991c94664f2ef5c5f8096f60b7dbec071756ea6cc26b445e06ec5b"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.bzip2.txt",
+      "size": 1743,
+      "sha256": "1f38bbc7caacafd65169276d759c0d88c991b753b643ce35d0e45ea1971dd441"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.cpython.txt",
+      "size": 36164,
+      "sha256": "86e61415828a8b5b06ec8d024e6f086ce155a8b85fd0c419c0ba4dc004e74fdd"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.expat.txt",
+      "size": 1144,
+      "sha256": "122f2c27000472a201d337b9b31f7eb2b52d091b02857061a8880371612d9534"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libX11.txt",
+      "size": 47018,
+      "sha256": "2daec087a88e7c9b8082557cdeebad5bbb8155a4137472f0b22e269cd99d0c1e"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libXau.txt",
+      "size": 1148,
+      "sha256": "56abe29bb1d9806a9e04fa9f80fed2c0f18027594df3f098148d814aef6bddfa"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libedit.txt",
+      "size": 1614,
+      "sha256": "29cea33c32bbc9785142386377915612a2fa786482c46843383384aded2e09b1"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libffi.txt",
+      "size": 1132,
+      "sha256": "deaf3a42effb551a5b140fa9afefed183a27f1341c6d1bf430d106a5e6931fc0"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.liblzma.txt",
+      "size": 660,
+      "sha256": "9a4062de0a2c388a98cf35a35d348b62fa97c838a71c3c28ee1a2d7d0a565b02"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libuuid.txt",
+      "size": 1432,
+      "sha256": "122ee1f7e258f2c3c0e538a75c037684f420454bf3850ddc74ce750bbf5fe86b"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.libxcb.txt",
+      "size": 1337,
+      "sha256": "c5ffbfeaa501071ceeb97b7de2c0d703fdaa35de01c0fb6cbac1c28453a3e9fd"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.mpdecimal.txt",
+      "size": 1284,
+      "sha256": "669512af7219f58be03a398766d7c9da11a3b3df9d3f05cb74c5ceca25c8da3b"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.ncurses.txt",
+      "size": 1447,
+      "sha256": "87a4c4442337b8968ef956031c406b74f9cb7149b7ba87311bdaba534816201c"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.openssl-3.txt",
+      "size": 10175,
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.sqlite.txt",
+      "size": 1481,
+      "sha256": "38bef3d28b24f145ea293bd3b6eb4b20396982abc8303128fb493986ea5bc719"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.tcl.txt",
+      "size": 2255,
+      "sha256": "c0a69a2bfd757361ec7e6143973b103c90409316b49e9c88db26ad6388e79f16"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.tix.txt",
+      "size": 2826,
+      "sha256": "3ac5cdd0bef6c43ce34c6a7ced452081d9e5a0bf94082b9f9147d23ec9e214f5"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.zlib-ng.txt",
+      "size": 867,
+      "sha256": "6c9f0d975b41afaa34d22f55bb8986ce69e5cb7ad327cb2b28820cd425edf5ee"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.zlib.txt",
+      "size": 995,
+      "sha256": "818922b2620f12801a12bf78e399644a30990e66824abd8ca8ec24d451d6f92c"
+    },
+    {
+      "path": "bootstrap-licenses/linux-x86_64/LICENSE.zstd.txt",
+      "size": 1549,
+      "sha256": "7055266497633c9025b777c78eb7235af13922117480ed5c674677adc381c9d8"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.bdb.txt",
+      "size": 7293,
+      "sha256": "3bdff06e69991c94664f2ef5c5f8096f60b7dbec071756ea6cc26b445e06ec5b"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.bzip2.txt",
+      "size": 1743,
+      "sha256": "1f38bbc7caacafd65169276d759c0d88c991b753b643ce35d0e45ea1971dd441"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.cpython.txt",
+      "size": 36164,
+      "sha256": "86e61415828a8b5b06ec8d024e6f086ce155a8b85fd0c419c0ba4dc004e74fdd"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.expat.txt",
+      "size": 1144,
+      "sha256": "122f2c27000472a201d337b9b31f7eb2b52d091b02857061a8880371612d9534"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libX11.txt",
+      "size": 47018,
+      "sha256": "2daec087a88e7c9b8082557cdeebad5bbb8155a4137472f0b22e269cd99d0c1e"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libXau.txt",
+      "size": 1148,
+      "sha256": "56abe29bb1d9806a9e04fa9f80fed2c0f18027594df3f098148d814aef6bddfa"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libedit.txt",
+      "size": 1614,
+      "sha256": "29cea33c32bbc9785142386377915612a2fa786482c46843383384aded2e09b1"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libffi.txt",
+      "size": 1132,
+      "sha256": "deaf3a42effb551a5b140fa9afefed183a27f1341c6d1bf430d106a5e6931fc0"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.liblzma.txt",
+      "size": 660,
+      "sha256": "9a4062de0a2c388a98cf35a35d348b62fa97c838a71c3c28ee1a2d7d0a565b02"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libuuid.txt",
+      "size": 1432,
+      "sha256": "122ee1f7e258f2c3c0e538a75c037684f420454bf3850ddc74ce750bbf5fe86b"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.libxcb.txt",
+      "size": 1337,
+      "sha256": "c5ffbfeaa501071ceeb97b7de2c0d703fdaa35de01c0fb6cbac1c28453a3e9fd"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.mpdecimal.txt",
+      "size": 1284,
+      "sha256": "669512af7219f58be03a398766d7c9da11a3b3df9d3f05cb74c5ceca25c8da3b"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.ncurses.txt",
+      "size": 1447,
+      "sha256": "87a4c4442337b8968ef956031c406b74f9cb7149b7ba87311bdaba534816201c"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.openssl-3.txt",
+      "size": 10175,
+      "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.sqlite.txt",
+      "size": 1481,
+      "sha256": "38bef3d28b24f145ea293bd3b6eb4b20396982abc8303128fb493986ea5bc719"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.tcl.txt",
+      "size": 2255,
+      "sha256": "c0a69a2bfd757361ec7e6143973b103c90409316b49e9c88db26ad6388e79f16"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.tix.txt",
+      "size": 2826,
+      "sha256": "3ac5cdd0bef6c43ce34c6a7ced452081d9e5a0bf94082b9f9147d23ec9e214f5"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.zlib-ng.txt",
+      "size": 867,
+      "sha256": "6c9f0d975b41afaa34d22f55bb8986ce69e5cb7ad327cb2b28820cd425edf5ee"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.zlib.txt",
+      "size": 995,
+      "sha256": "818922b2620f12801a12bf78e399644a30990e66824abd8ca8ec24d451d6f92c"
+    },
+    {
+      "path": "bootstrap-licenses/macos-arm64/LICENSE.zstd.txt",
+      "size": 1549,
+      "sha256": "7055266497633c9025b777c78eb7235af13922117480ed5c674677adc381c9d8"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.bdb.txt",
+      "size": 7419,
+      "sha256": "8f2d533ab34899499d5b07f209854b101b17dba2c69f3251860aecf3e4005faa"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.bzip2.txt",
+      "size": 1780,
+      "sha256": "bd5628cc76fb0ebf9c657d1dd4d1a240a1a7b216c31663e7bbf1131c0b70a910"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.cpython.txt",
+      "size": 36935,
+      "sha256": "8fe98bf9822926d854f56ffd8d97877d8b942617aa44eb7ea77fd99e22f2537e"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.expat.txt",
+      "size": 1165,
+      "sha256": "8a9cfe4b5924f4b25881aa0c9f5e4561c5f31065d0c4a13cdcdbcf917edf39aa"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libX11.txt",
+      "size": 47960,
+      "sha256": "f353accfe2976df31ea297a77d1d454bd51ef6be8c3df39bd6aca95901579357"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libXau.txt",
+      "size": 1169,
+      "sha256": "cec808cd2163fccdc8de4a91d526490777afbaeea060e1168c40a804694b7444"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libedit.txt",
+      "size": 1643,
+      "sha256": "d9932ccdd42eccf6cdded7bcb35b088e64cfc7c24d355af2cc0d02edb6b637d3"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libffi.txt",
+      "size": 1153,
+      "sha256": "9afb8970cd29fc1031fa647278e4bef613399e2e3468a1e3a397f4d158c6101c"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.liblzma.txt",
+      "size": 673,
+      "sha256": "d87d218dd908b3243ec4cbc72af400e5b7437513ea9d9229291d0812b8464fec"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libuuid.txt",
+      "size": 1459,
+      "sha256": "cbccaa3efe07a9a602751375085be572d4410a250b996716fbe8c5255c7ec6f2"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.libxcb.txt",
+      "size": 1367,
+      "sha256": "29a9539190e6de1af5fd06a9139c7103137cd1f9290b08c7b11bce89c01c14d2"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.mpdecimal.txt",
+      "size": 1308,
+      "sha256": "f094277cd46e1f6e4d87916cc4b51e22f613d45eb81f48231c3cb7caf8fc8a6a"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.ncurses.txt",
+      "size": 1476,
+      "sha256": "4f571cad3ea6c888bf0a7092e5b215dddb3142e9e3f1857fd5fac6cf13d345d7"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.openssl-3.txt",
+      "size": 10352,
+      "sha256": "ed72ce2b51ee58f117e5a021e2e04af158857f40269fbc03491f0b2a99dbcc96"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.sqlite.txt",
+      "size": 1504,
+      "sha256": "d8eb9aba7ef6b5ed06cb3ec19a7242316af2e5933c638eb67fb781c13884e01d"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.tcl.txt",
+      "size": 2295,
+      "sha256": "41613eabfc08921a7da9c4bfd7f3ce5d5406f55214b253d89f392ed86eebeb8f"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.tix.txt",
+      "size": 2880,
+      "sha256": "8cdff3addb9e9eb108c78e2cf5e05f26b216c098304945733bbec382b2eaef66"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.zlib-ng.txt",
+      "size": 886,
+      "sha256": "608fa5505ed17a5353e71ce74abec88569c3dc69515ff9a6f286f53bce4393cd"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.zlib.txt",
+      "size": 1016,
+      "sha256": "365e36720db366054863235aea5d6f440142ab968834bfaf81fa9d187c99b9b8"
+    },
+    {
+      "path": "bootstrap-licenses/windows-x86_64/LICENSE.zstd.txt",
+      "size": 1579,
+      "sha256": "d3baadc2e1dd7a7e0b483633e6b39743c16a16f28d696baff507fcd451f3d4ad"
+    }
+  ]
+}

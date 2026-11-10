@@ -1,0 +1,246 @@
+name: HOST Native Boards Manager Package
+
+on:
+  push:
+    branches: [Dev-0.6.0-M33]
+    paths:
+      - '.github/workflows/host-native-package.yml'
+      - 'packaging/boards-manager/**'
+      - 'tools/nu54-prerequisites/**'
+      - 'tools/nu54-builder/**'
+      - 'tools/ci/host_native_*.py'
+      - 'tools/ci/host_artifact_semantics.py'
+      - 'tests/host/test_host_native_*.py'
+      - 'tests/host/test_host_artifact_semantics.py'
+      - 'platform.txt'
+      - 'post_install.sh'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Private validation version; does not publish a release or index
+        type: choice
+        options: ['0.6.0-host.1', '0.6.0-rc.1']
+        default: '0.6.0-host.1'
+      full_examples:
+        description: Run all 204 installed examples per OS after the smoke comparison passes
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-native-package-${{ github.sha }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+  PYTHONDONTWRITEBYTECODE: '1'
+  HOST_PACKAGE_VERSION: ${{ inputs.version || '0.6.0-host.1' }}
+
+jobs:
+  producer:
+    name: Exact reproducible private package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Verify native package and evidence contracts
+        run: python -B -m unittest -v tests.host.test_host_native_package tests.host.test_host_native_consumer tests.host.test_host_artifact_semantics tests.host.test_host_native_aggregate
+      - name: Build the same exact source twice and validate the private index
+        run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --output "${{ runner.temp }}/host-producer"
+      - name: Preserve the producer and both original archives
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-native-producer-${{ github.sha }}
+          path: ${{ runner.temp }}/host-producer/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  smoke:
+    name: Native package smoke (${{ matrix.platform }})
+    needs: producer
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-x86_64
+            runner: windows-2025
+            root: D:/n6
+          - platform: linux-x86_64
+            runner: ubuntu-24.04
+            root: /tmp/n6
+          - platform: macos-arm64
+            runner: macos-26
+            root: /tmp/n6
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: host-native-producer-${{ github.sha }}
+          path: ${{ runner.temp }}/host-producer
+      - name: Restore only checksum-verified upstream download bytes
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ matrix.root }}/state/downloads
+          key: host-native-download-v1-${{ matrix.platform }}-${{ hashFiles('tools/nu54-prerequisites/platform-pins.json') }}
+      - name: Prepare the required macOS SDK directory
+        if: runner.os == 'macOS'
+        shell: bash
+        run: sudo install -d -o "$(id -un)" -g "$(id -gn)" /opt/nordic/ncs
+      - name: Install through Boards Manager and compile the installed Blink
+        shell: bash
+        run: python -B tools/ci/host_native_package_consumer.py --producer "${{ runner.temp }}/host-producer" --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --work-root "${{ matrix.root }}" --mode smoke --jobs 1
+      - name: Preserve native results, original targets and partial failure logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-native-smoke-${{ matrix.platform }}-${{ github.sha }}
+          path: |
+            ${{ matrix.root }}/reports/**
+            ${{ matrix.root }}/logs/**
+            ${{ matrix.root }}/targets/**
+            ${{ matrix.root }}/state/incomplete.json
+            ${{ matrix.root }}/state/bootstrap.json
+            ${{ matrix.root }}/state/ready.json
+            ${{ matrix.root }}/state/bootstrap/*/home/logs/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  smoke_compare:
+    name: Compare three native smoke images
+    needs: smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: host-native-producer-${{ github.sha }}
+          path: ${{ runner.temp }}/host-producer
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: host-native-smoke-*-${{ github.sha }}
+          path: ${{ runner.temp }}/host-workers
+      - name: Require all three exact source installations and identical ARM load images
+        run: python -B tools/ci/host_native_package_aggregate.py --producer "${{ runner.temp }}/host-producer" --results "${{ runner.temp }}/host-workers" --source "${{ github.sha }}" --mode smoke --output "${{ runner.temp }}/host-comparison/result.json"
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-native-smoke-comparison-${{ github.sha }}
+          path: ${{ runner.temp }}/host-comparison/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  examples:
+    name: Native installed examples (${{ matrix.platform }}, shard ${{ matrix.shard }})
+    needs: smoke_compare
+    if: github.event_name != 'workflow_dispatch' || inputs.full_examples
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+        include:
+          - platform: windows-x86_64
+            runner: windows-2025
+            root: D:/n6
+            jobs: 2
+          - platform: linux-x86_64
+            runner: ubuntu-24.04
+            root: /tmp/n6
+            jobs: 2
+          - platform: macos-arm64
+            runner: macos-26
+            root: /tmp/n6
+            jobs: 1
+        platform: [windows-x86_64, linux-x86_64, macos-arm64]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: host-native-producer-${{ github.sha }}
+          path: ${{ runner.temp }}/host-producer
+      - name: Restore only checksum-verified upstream download bytes
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ matrix.root }}/state/downloads
+          key: host-native-download-v1-${{ matrix.platform }}-${{ hashFiles('tools/nu54-prerequisites/platform-pins.json') }}
+      - name: Prepare the required macOS SDK directory
+        if: runner.os == 'macOS'
+        shell: bash
+        run: sudo install -d -o "$(id -un)" -g "$(id -gn)" /opt/nordic/ncs
+      - name: Install, discover all 204 examples and compile the exact assigned shard
+        shell: bash
+        run: python -B tools/ci/host_native_package_consumer.py --producer "${{ runner.temp }}/host-producer" --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --work-root "${{ matrix.root }}" --mode examples --shard-index ${{ matrix.shard }} --jobs ${{ matrix.jobs }}
+      - name: Preserve native results, original targets and partial failure logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-native-examples-${{ matrix.platform }}-${{ matrix.shard }}-${{ github.sha }}
+          path: |
+            ${{ matrix.root }}/reports/**
+            ${{ matrix.root }}/logs/**
+            ${{ matrix.root }}/targets/**
+            ${{ matrix.root }}/state/incomplete.json
+            ${{ matrix.root }}/state/bootstrap.json
+            ${{ matrix.root }}/state/ready.json
+            ${{ matrix.root }}/state/bootstrap/*/home/logs/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  aggregate:
+    name: Require 204 examples and nine profile rejections on each native OS
+    needs: examples
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: host-native-producer-${{ github.sha }}
+          path: ${{ runner.temp }}/host-producer
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: host-native-examples-*-${{ github.sha }}
+          path: ${{ runner.temp }}/host-workers
+      - name: Validate every worker and compare the original firmware artifacts
+        run: python -B tools/ci/host_native_package_aggregate.py --producer "${{ runner.temp }}/host-producer" --results "${{ runner.temp }}/host-workers" --source "${{ github.sha }}" --mode examples --output "${{ runner.temp }}/host-comparison/result.json"
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-native-examples-comparison-${{ github.sha }}
+          path: ${{ runner.temp }}/host-comparison/**
+          if-no-files-found: warn
+          retention-days: 14

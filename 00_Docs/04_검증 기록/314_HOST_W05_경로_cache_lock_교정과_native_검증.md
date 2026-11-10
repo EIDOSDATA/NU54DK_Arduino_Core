@@ -48,3 +48,7 @@ M33-W07 RC1 준비 → 사용자 Ubuntu/macOS 실제 설치·USB·serial·debug�
 W06 S19의 실제 PASS46 + 명시 수락 #29·40·44, 원형 FAIL과 source/attempt 경계는 그대로다.
 #29 원인 분석은 사용자 지시로 유예했고 새 HIL을 실행하지 않았다. w06 자동점검 PAUSED 요청을 유지하며
 예약작업 생성·재활성화는 수행하지 않았다.
+
+후속 H5 native 세 OS·공통 software CI가 실제 성공해 W05를 마감했다.
+앞의 `NOT_RUN`·4/8은 해당 시험 전의 상태로 보존하며 최신5/8·HOST-W06 착수는
+[315번](315_HOST_W05_native_마감과_HOST_W06_package_착수.md)을 따른다.

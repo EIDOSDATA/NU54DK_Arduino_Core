@@ -8,7 +8,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 4/8이며 사용자 지시로 HOST-W04 설치 범위 완료 후 HOST-W05 진행 중입니다. Ubuntu/macOS 지원에는
+HOST는 5/8이며 사용자 지시로 HOST-W05 완료 후 HOST-W06 진행 중입니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,

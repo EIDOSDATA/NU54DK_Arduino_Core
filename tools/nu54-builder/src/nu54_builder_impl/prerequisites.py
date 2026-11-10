@@ -99,7 +99,9 @@ def absolute_root(value: str | Path) -> Path:
 
 def roots(pin: dict[str, Any], state_root: Path | None = None, install_root: Path | None = None) -> tuple[Path, Path]:
     """! @brief OS별 사용자 상태와 SDK 설치 경로를 계산하고 macOS 고정 경로를 지킵니다. """
-    state = absolute_root(state_root or application_data_root() / 'NUCODE/NU54DK_Arduino_Core/prerequisites')
+    configured_state = state_root if state_root is not None else os.environ.get('NUCODE_PREREQUISITE_STATE_ROOT')
+    state = absolute_root(configured_state if configured_state is not None
+        else application_data_root() / 'NUCODE/NU54DK_Arduino_Core/prerequisites')
     default = Path('/opt/nordic/ncs') if pin['os'] == 'macos' else Path.home() / 'ncs'
     install = absolute_root(install_root or default)
     if pin['os'] == 'macos':

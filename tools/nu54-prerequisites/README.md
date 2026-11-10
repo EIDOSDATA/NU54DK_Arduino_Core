@@ -1,7 +1,7 @@
 # Nordic prerequisite 설치 계약
 
 v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
-현재 HOST-W05를 진행하며 OS별 고정 자산과 공통 Python backend는
+현재 HOST-W06을 진행하며 OS별 고정 자산과 공통 Python backend는
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
 [`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행과 사용자 실기 `NOT_RUN`은
 [Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.
@@ -42,6 +42,10 @@ bootstrap 입력으로 지정한다. launcher와 core의 별도 고정을 Window
 최신 파일을 가리키는 unversioned URL을 설치 입력으로 사용하지 않는다.
 내려받은 byte가 `pins.json`의 SHA-256과 다르면 자동으로 신뢰하지 않고 중단한다.
 실제 도구 version이나 byte를 바꾸는 경우에는 별도 검토·검증과 명시적인 pin·package version 갱신이 필요하다.
+
+Native 0.6.0 시험 package의 초기 Python·notice와 실제 Boards Manager CI는
+[native package 설계](<../../00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md>)를 따른다.
+시스템 Python/Git fallback을 허용하지 않으며 공개 allowlist는 변경하지 않는다.
 
 ## 설치 출력과 실패 판정
 

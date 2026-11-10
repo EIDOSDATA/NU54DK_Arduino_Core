@@ -41,3 +41,6 @@ tests/zephyr/m31_iso_cis_hil/src/main.cpp text eol=lf
 tests/zephyr/m31_iso_bis_hil/src/main.cpp text eol=lf
 tests/zephyr/m31_iso_combined_hil/src/main.cpp text eol=lf
 libraries/NUCODE_BLE_ISO/** text eol=lf
+
+# @brief 고정 초기 Python의 upstream license 원문 byte와 SHA-256을 OS마다 보존합니다.
+tools/nu54-prerequisites/bootstrap-licenses/** -text

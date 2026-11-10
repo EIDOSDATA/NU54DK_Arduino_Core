@@ -306,7 +306,7 @@ Adapter는 넘겨받은 source/include record를 검증하고 package allowlist 
   [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 Ubuntu AMD64·Apple Silicon
   macOS 구현·실증 중 남은 HOST-W04~HOST-W08과 OS별 최종 gate는 v0.6.0의 M32·M33 계획과 연계한다.
   버전 배정만으로 OS 지원을 확정하지 않는다. 2026-11-10 사용자 지시로 순차 재개해
-  HOST-W04 설치 범위까지 4/8을 완료했고 HOST-W05를 검증 중이다. 추가 OS 실물 gate는 유지한다.
+  HOST-W05까지 5/8을 완료했고 HOST-W06을 검증 중이다. 추가 OS 실물 gate는 유지한다.
 
 ## 9. 오류와 검증 기록
 
