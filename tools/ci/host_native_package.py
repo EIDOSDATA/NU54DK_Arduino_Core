@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import urllib.request
 from typing import Sequence
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +36,36 @@ def git(root: Path, *arguments: str) -> str:
     return subprocess.check_output(['git', *arguments], cwd=root, text=True, encoding='utf-8').strip()
 
 
+def build_bootstrap_tools(package, root: Path, output: Path) -> dict:
+    """! @brief 고정 upstream을 검증하고 실제 생성한 세 파생 archive를 두 번 대조합니다. """
+    native = package.implementation.inputs.native
+    pins = native.load_bootstrap((root / native.BOOTSTRAP_PATH).read_bytes())
+    normalization = native.bootstrap_archive
+    downloads = output / 'bootstrap-upstream'
+    downloads.mkdir()
+    records = {}
+    for key, platform in sorted(pins['platforms'].items()):
+        original = platform['archive']
+        upstream = downloads / original['filename']
+        request = urllib.request.Request(original['url'], headers={'User-Agent':'NU54-native-bootstrap-producer'})
+        with urllib.request.urlopen(request, timeout=60) as response, upstream.open('xb') as stream:
+            total = 0
+            while block := response.read(1024 * 1024):
+                total += len(block)
+                if total > original['size']:
+                    raise ValueError('초기 runtime upstream 다운로드 크기가 pin보다 큽니다.')
+                stream.write(block)
+        notices = {Path(row['path']).name:(root / 'tools/nu54-prerequisites' / row['path']).read_bytes()
+            for row in pins['notice_files'] if row['path'].split('/')[1] == key}
+        expected = platform['arduino_archive']
+        first = normalization.normalize(upstream, output / 'bootstrap-tools' / expected['filename'], notices, original)
+        second = normalization.normalize(upstream, output / 'repeated-bootstrap-tools' / expected['filename'], notices, original)
+        if first != second or any(first[field] != expected[field] for field in ('filename','size','sha256')):
+            raise ValueError('Arduino용 초기 runtime의 독립 재생성 또는 고정 pin이 다릅니다: ' + key)
+        records[key] = first
+    return records
+
+
 def build(root: Path, source: str, output: Path, version: str) -> dict:
     """! @brief 두 번 독립 생성한 모든 sidecar·archive를 대조하고 official URL index를 기록합니다. """
     root, output = root.resolve(), output.resolve()
@@ -48,6 +79,7 @@ def build(root: Path, source: str, output: Path, version: str) -> dict:
         raise ValueError('native 시험 version이 이미 공개 allowlist에 있습니다.')
     package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (version,))
     output.mkdir(parents=True)
+    bootstrap_tools = build_bootstrap_tools(package, root, output)
     first = package.build_package(root, output / 'package', version, source)
     second = package.build_package(root, output / 'repeated', version, source)
     first_files = {path.name: sha(path) for path in (output / 'package').iterdir() if path.is_file()}
@@ -65,6 +97,7 @@ def build(root: Path, source: str, output: Path, version: str) -> dict:
         'platform_prerequisites_sha256': manifest['platform_prerequisites_sha256'],
         'bootstrap_pins_sha256': manifest['bootstrap_pins_sha256'],
         'runtime_payload_sha256': manifest['runtime_payload_sha256'], 'toolchain_bundle_ids': manifest['toolchain_bundle_ids'],
+        'bootstrap_tools': bootstrap_tools, 'bootstrap_tools_publication': 'UNPUBLISHED_PRIVATE_CI_ONLY',
         'public_release_or_tag_created': False, 'user_physical_OS_gate': 'NOT_RUN',
         'observed_utc': datetime.now(timezone.utc).isoformat()}
     (output / 'producer.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

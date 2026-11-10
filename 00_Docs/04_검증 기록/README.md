@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [317 — HOST-W06 H6 설치 FAIL 원인과 교정](317_HOST_W06_H6_설치_FAIL_원인과_교정.md)
+
 - [316 — HOST-W06 native package 구현과 검증 착수](316_HOST_W06_native_package_구현과_검증_착수.md)
 
 최신 개발 기록: [315번 HOST-W05 native 마감과 HOST-W06 package 착수](315_HOST_W05_native_마감과_HOST_W06_package_착수.md).

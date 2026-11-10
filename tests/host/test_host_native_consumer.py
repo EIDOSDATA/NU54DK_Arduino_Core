@@ -95,6 +95,18 @@ class HostNativeConsumerTests(unittest.TestCase):
             'resource_audit': {'flash': {'used_bytes': 4}, 'ram': {'used_bytes': 0}}}
         return manifest, build, sketch, fqbn, context
 
+    def test_inaccessible_OS_admin_file_does_not_abort_the_consumer(self):
+        """! @brief macOS weakpass_edit 같은 보호된 관리 파일 조회 실패는 필수 도구 설치 실패가 아닙니다. """
+        protected = mock.Mock()
+        protected.name = 'weakpass_edit'
+        protected.is_file.side_effect = PermissionError('protected system administration entry')
+        with mock.patch.object(C.os, 'access', return_value=True):
+            self.assertFalse(C.eligible_os_executable(protected))
+        protected.name = 'python3'
+        protected.is_file.reset_mock()
+        self.assertFalse(C.eligible_os_executable(protected))
+        protected.is_file.assert_not_called()
+
     def test_exit_zero_manifest_cannot_hide_wrong_source_bundle_or_artifact(self):
         """! @brief 성공 exit만으로 다른 source·SDK·실제 ELF byte를 승인하지 않습니다. """
         manifest, build, sketch, fqbn, context = self.manifest_fixture()

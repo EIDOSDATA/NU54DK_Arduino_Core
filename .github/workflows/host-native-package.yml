@@ -11,6 +11,7 @@ on:
       - 'tools/ci/host_native_*.py'
       - 'tools/ci/host_artifact_semantics.py'
       - 'tests/host/test_host_native_*.py'
+      - 'tests/host/test_host_bootstrap_archive.py'
       - 'tests/host/test_host_artifact_semantics.py'
       - 'platform.txt'
       - 'post_install.sh'
@@ -53,7 +54,7 @@ jobs:
         with:
           python-version: 3.12.10
       - name: Verify native package and evidence contracts
-        run: python -B -m unittest -v tests.host.test_host_native_package tests.host.test_host_native_consumer tests.host.test_host_artifact_semantics tests.host.test_host_native_aggregate
+        run: python -B -m unittest -v tests.host.test_host_bootstrap_archive tests.host.test_host_native_package tests.host.test_host_native_consumer tests.host.test_host_artifact_semantics tests.host.test_host_native_aggregate
       - name: Build the same exact source twice and validate the private index
         run: python -B tools/ci/host_native_package.py --source "${{ github.sha }}" --version "$HOST_PACKAGE_VERSION" --output "${{ runner.temp }}/host-producer"
       - name: Preserve the producer and both original archives
@@ -61,7 +62,11 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: host-native-producer-${{ github.sha }}
-          path: ${{ runner.temp }}/host-producer/**
+          path: |
+            ${{ runner.temp }}/host-producer/producer.json
+            ${{ runner.temp }}/host-producer/package/**
+            ${{ runner.temp }}/host-producer/repeated/**
+            ${{ runner.temp }}/host-producer/bootstrap-tools/**
           if-no-files-found: warn
           retention-days: 14
 

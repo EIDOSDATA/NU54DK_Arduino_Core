@@ -58,7 +58,7 @@
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
   "native_CI": {
-    "status": "PASS_H5_W05_NATIVE_CURRENT_W06_PENDING",
+    "status": "PASS_H6_PREREQUISITES_CURRENT_W06_PACKAGE_CORRECTION_PENDING",
     "workflow": ".github/workflows/host-native-prerequisites.yml",
     "first_attempt": {
       "source_revision": "85a87b5901ae923222a42bbe36387cbde1def4d2",
@@ -119,10 +119,22 @@
         "passed_unit_tests": 192,
         "conditional_skipped_unit_tests": 6,
         "artifacts_digest_verified": true
+      },
+      {
+        "source_revision": "2f656943318f66a33627cd1905d4488d2d78bc0b",
+        "run_id": 42774982248,
+        "conclusion": "success",
+        "success_OS_installations": 3,
+        "skipped_OS": 0,
+        "reported_unit_tests": 201,
+        "passed_unit_tests": 195,
+        "conditional_skipped_unit_tests": 6,
+        "artifacts_digest_verified": true,
+        "native_package_smoke": "FAIL_SEPARATE_GATE"
       }
     ],
-    "validated_source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",
-    "run_id": 42759627688,
+    "validated_source_revision": "2f656943318f66a33627cd1905d4488d2d78bc0b",
+    "run_id": 42774982248,
     "success_OS": 3,
     "skipped_OS": 0,
     "current_W06_worktree_validation": "NOT_RUN"
@@ -275,26 +287,40 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "LOCAL_PACKAGE_PASS_NATIVE_CI_PENDING",
+    "status": "H6_SMOKE_FAIL_CORRECTION_FRESH_CI_PENDING",
     "source_revision": null,
     "Boards_Manager_clean_install": "NOT_RUN",
     "three_OS_all_204_examples": "NOT_RUN",
     "artifact_comparison": "NOT_RUN",
-    "bootstrap_runtime": "PINNED_UPSTREAM_ARCHIVE_BYTES_VERIFIED_ONLY",
+    "bootstrap_runtime": "ACTUAL_DERIVED_ARCHIVES_REPRODUCIBLE_UPSTREAM_BYTES_UNCHANGED",
     "user_physical_OS_gate": "NOT_RUN",
     "local_package_snapshot": "d9fb4e79bc51a9e35cead734d9c71bdb4876e14b",
     "local_package_actual_tool": "2001d5/exit0",
     "final_CI_credit": 0,
     "native_contracts": {
-      "reported": 25,
-      "passed": 24,
+      "reported": 30,
+      "passed": 29,
       "conditional_skipped": 1,
-      "actual_tool": "70f16d/exit0"
+      "actual_tool": "d3b81c/exit0"
     },
     "CI_contract": {
       "tests": 46,
       "actual_tool": "90e99a/exit0"
-    }
+    },
+    "attempts": [
+      {
+        "source_revision": "2f656943318f66a33627cd1905d4488d2d78bc0b",
+        "native_package_run": 42774982286,
+        "producer": "PASS",
+        "smoke": "FAIL_3_OS",
+        "all_204_examples": "NOT_RUN",
+        "artifact_comparison": "NOT_RUN",
+        "preserved_original_artifacts": true,
+        "native_prerequisite_run": 42774982248,
+        "native_prerequisite_OS_success": 3,
+        "source_credits_combined": false
+      }
+    ]
   },
   "H5_additional_CI": {
     "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",

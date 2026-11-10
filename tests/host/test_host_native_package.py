@@ -36,9 +36,10 @@ class NativePackageTests(unittest.TestCase):
         pins = N.load_bootstrap(self.pin_data, self.payload)
         tool = N.tool_definition(pins)
         self.assertEqual({row['host'] for row in tool['systems']}, {'x86_64-mingw32', 'x86_64-linux-gnu', 'arm64-apple-darwin'})
-        self.assertEqual(N.tool_dependency(pins), [{'packager': 'nucode', 'name': 'nu54-python', 'version': '3.12.16-20261026'}])
+        self.assertEqual(N.tool_dependency(pins), [{'packager': 'nucode', 'name': 'nu54-python', 'version': '3.12.16-20261026.nu54.1'}])
         self.assertEqual(len(tool['systems']), 3)
-        self.assertTrue(all(row['url'].startswith('https://github.com/astral-sh/python-build-standalone/releases/download/20261026/') for row in tool['systems']))
+        self.assertTrue(all(row['url'].startswith('https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-') for row in tool['systems']))
+        self.assertTrue(all(row['archive']['url'].startswith('https://github.com/astral-sh/python-build-standalone/releases/download/20261026/') for row in pins['platforms'].values()))
 
     def test_registered_host_candidate_sorts_before_rc_without_opening_allowlist(self):
         """! @brief native 시험 후보를 정렬하되 등록하지 않은 version을 자동 승인하지 않습니다. """

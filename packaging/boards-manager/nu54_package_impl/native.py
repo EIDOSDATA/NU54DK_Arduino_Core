@@ -7,6 +7,7 @@ import zipfile
 from typing import Any, Iterable
 
 from .model import NCS_REVISION, NCS_VERSION, PackageError, TOOLCHAIN_BUNDLE_ID, ZEPHYR_REVISION
+from . import bootstrap_archive
 
 
 BOOTSTRAP_PATH = 'tools/nu54-prerequisites/bootstrap-pins.json'
@@ -39,7 +40,9 @@ def load_bootstrap(data: bytes, payload: dict[str, bytes] | None = None) -> dict
     release = runtime.get('upstream_release', '')
     if (not isinstance(version, str) or not re.fullmatch(r'3\.12\.\d+', version)
             or not isinstance(release, str) or not re.fullmatch(r'\d{8}', release)
-            or runtime.get('name') != 'nu54-python' or runtime.get('tool_version') != version + '-' + release
+            or runtime.get('name') != 'nu54-python' or runtime.get('tool_version') != version + '-' + release + '.nu54.1'
+            or runtime.get('arduino_archive_layout') != bootstrap_archive.LAYOUT
+            or runtime.get('distribution_status') != 'UNPUBLISHED_PRIVATE_CI_ONLY'
             or runtime.get('source_repository') != 'https://github.com/astral-sh/python-build-standalone'):
         raise PackageError('초기 Python runtime identity가 고정 계약과 다릅니다.')
     for key, (host, triple, executable) in PLATFORMS.items():
@@ -53,6 +56,14 @@ def load_bootstrap(data: bytes, payload: dict[str, bytes] | None = None) -> dict
                 or not isinstance(archive.get('size'), int) or isinstance(archive['size'], bool) or archive['size'] <= 0
                 or not isinstance(archive.get('sha256'), str) or not re.fullmatch(r'[0-9a-f]{64}', archive['sha256'])):
             raise PackageError('초기 Python 공식 archive URL·size·SHA-256이 유효하지 않습니다: ' + key)
+        compatible = item.get('arduino_archive')
+        filename = f"nu54-python-{runtime['tool_version']}-{key}.tar.bz2"
+        url = ('https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-'
+            + runtime['tool_version'] + '/' + filename)
+        if (not isinstance(compatible, dict) or compatible.get('filename') != filename or compatible.get('url') != url
+                or type(compatible.get('size')) is not int or compatible['size'] <= 0
+                or not isinstance(compatible.get('sha256'), str) or not re.fullmatch(r'[0-9a-f]{64}', compatible['sha256'])):
+            raise PackageError('실제 생성한 Arduino용 runtime archive의 pin이 유효하지 않습니다: ' + key)
     notices = pins.get('notice_files')
     if not isinstance(notices, list) or not notices:
         raise PackageError('초기 Python의 원문 license 고지가 필요합니다.')
@@ -113,10 +124,10 @@ def tool_dependency(pins: dict[str, Any]) -> list[dict[str, str]]:
 
 
 def tool_definition(pins: dict[str, Any]) -> dict[str, Any]:
-    """! @brief 실제 대조한 공식 archive 세 개의 Arduino download record를 생성합니다. """
+    """! @brief upstream byte를 보존한 실제 파생 archive 세 개의 private download record를 생성합니다. """
     return {'name': pins['runtime']['name'], 'version': pins['runtime']['tool_version'], 'systems': [
-        {'host': item['arduino_host'], 'url': item['archive']['url'], 'archiveFileName': item['archive']['filename'],
-         'size': str(item['archive']['size']), 'checksum': 'SHA-256:' + item['archive']['sha256']}
+        {'host': item['arduino_host'], 'url': item['arduino_archive']['url'], 'archiveFileName': item['arduino_archive']['filename'],
+         'size': str(item['arduino_archive']['size']), 'checksum': 'SHA-256:' + item['arduino_archive']['sha256']}
         for _, item in sorted(pins['platforms'].items())]}
 
 

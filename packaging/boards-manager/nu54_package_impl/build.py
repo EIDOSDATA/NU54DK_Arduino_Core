@@ -64,7 +64,7 @@ def build_package(repo_root: Path, output_dir: Path, version: str, revision: str
         "release-manifest.json": canonical_json(release_manifest),
         "sbom.spdx.json": canonical_json(spdx),
         "license-inventory.json": canonical_json(license_inventory),
-        "THIRD_PARTY_NOTICES.md": build_third_party_notices(board_revision),
+        "THIRD_PARTY_NOTICES.md": build_third_party_notices(board_revision, version),
     }
     archive_files.update({path: (data, 0o644) for path, data in metadata_bytes.items()})
     archive_files["CHECKSUMS.sha256"] = (build_internal_checksums(archive_files), 0o644)

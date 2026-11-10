@@ -91,6 +91,14 @@ def unpack_cli(archive: Path, directory: Path, windows: bool) -> Path:
     return candidates[0].resolve()
 
 
+def eligible_os_executable(path: Path) -> bool:
+    """! @brief 접근할 수 없는 OS 관리 파일은 조회 대상에서 제외하고 금지 runtime은 허용하지 않습니다. """
+    try:
+        return not path.name.startswith(('python', 'pip', 'git')) and os.access(path, os.X_OK) and path.is_file()
+    except OSError:
+        return False
+
+
 def consumer_environment(base: Path, host_os: str, install: Path) -> dict[str, str]:
     """! @brief system Python·Git fallback을 차단한 자식 환경만 만들고 사용자 전역은 바꾸지 않습니다. """
     environment = {name: value for name, value in os.environ.items()
@@ -106,8 +114,7 @@ def consumer_environment(base: Path, host_os: str, install: Path) -> dict[str, s
         binary.mkdir()
         for root in ('/usr/bin', '/bin', '/usr/sbin', '/sbin'):
             for original in Path(root).iterdir():
-                if (not original.name.startswith(('python', 'pip', 'git')) and original.is_file()
-                        and os.access(original, os.X_OK) and not (binary / original.name).exists()):
+                if eligible_os_executable(original) and not (binary / original.name).exists():
                     (binary / original.name).symlink_to(original)
         for name in ('python', 'python3', 'python3.12', 'git', 'pip', 'pip3'):
             trap = binary / name
@@ -229,6 +236,14 @@ def setup(args, base: Path) -> tuple:
     address = 'http://127.0.0.1:' + str(server.server_address[1])
     local = json.loads(index.read_text(encoding='utf-8'))
     local['packages'][0]['platforms'][0]['url'] = address + '/' + archive.name
+    for system in local['packages'][0]['tools'][0]['systems']:
+        filename = system['archiveFileName']
+        tool_archive = args.producer / 'bootstrap-tools' / filename
+        if (tool_archive.stat().st_size != int(system['size'])
+                or 'SHA-256:' + P.sha(tool_archive) != system['checksum']):
+            raise ValueError('실제 파생 초기 runtime archive가 index pin과 다릅니다.')
+        shutil.copyfile(tool_archive, mirror / filename)
+        system['url'] = address + '/' + filename
     local_name = 'package_nucode_nu54dk_host_index.json'
     write_json(mirror / local_name, local)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -256,6 +271,7 @@ def setup(args, base: Path) -> tuple:
         raise ValueError('실제 post-install ready marker와 exact package pin이 다릅니다.')
     environment.update(NUCODE_NCS_ROOT=str(install / pins['ncs']['version']), NUCODE_TOOLCHAIN_ROOT=str(install / 'toolchains' / pins['platforms'][key]['toolchain']['bundle_id']))
     run([str(runtime), '-I', '-B', str(platform / 'tools/nu54-prerequisites/nordic.py'), 'verify',
+        '--install-root', str(install),
         '--evidence', str(base / 'reports/stored-verification.json')], environment, base / 'logs/stored-verification.log')
     private = base / 'private/CI-signing-key.pem'
     signed = run([str(runtime), '-I', '-B', str(Path(__file__).with_name('host_native_runtime.py')), '--platform', str(platform),

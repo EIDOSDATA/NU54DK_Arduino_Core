@@ -2,10 +2,12 @@
   "schema_version": 1,
   "runtime": {
     "name": "nu54-python",
-    "tool_version": "3.12.16-20261026",
+    "tool_version": "3.12.16-20261026.nu54.1",
     "python_version": "3.12.16",
     "upstream_release": "20261026",
-    "source_repository": "https://github.com/astral-sh/python-build-standalone"
+    "source_repository": "https://github.com/astral-sh/python-build-standalone",
+    "arduino_archive_layout": "USTAR_PARENTS_FIRST_BZIP2_9_V1",
+    "distribution_status": "UNPUBLISHED_PRIVATE_CI_ONLY"
   },
   "platforms": {
     "windows-x86_64": {
@@ -22,6 +24,12 @@
         "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-pc-windows-msvc-pgo-full.tar.zst",
         "sha256": "37b4eb2818fee605fefa75ed156c4f2e1aaeaebaf662f9b30177c842ee16c48f",
         "PYTHON_json_sha256": "f498ce90c2d313d8a229c65bed3989f1285fac6a9eb548a0a5ce77b0ee695ff9"
+      },
+      "arduino_archive": {
+        "filename": "nu54-python-3.12.16-20261026.nu54.1-windows-x86_64.tar.bz2",
+        "size": 18977684,
+        "sha256": "d6e1a280b2a743ca03323c603ed7ed2612941318c4b36bddb2a7f0bb913d38a4",
+        "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-windows-x86_64.tar.bz2"
       }
     },
     "linux-x86_64": {
@@ -38,6 +46,12 @@
         "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-unknown-linux-gnu-pgo%2Blto-full.tar.zst",
         "sha256": "789924432efcaaf05fec4bd3e4d8798733326c2ac0540eda33e84913c37a231e",
         "PYTHON_json_sha256": "9cf6e4ad8ae8d2f9d9c735be636db877d2abb39c3314f6ae021bf7f124bd1596"
+      },
+      "arduino_archive": {
+        "filename": "nu54-python-3.12.16-20261026.nu54.1-linux-x86_64.tar.bz2",
+        "size": 30937948,
+        "sha256": "8afcd33bc77a094b678905eae791bce1a5b7672a3ba03e40c1eb9771b6279595",
+        "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-linux-x86_64.tar.bz2"
       }
     },
     "macos-arm64": {
@@ -54,6 +68,12 @@
         "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-aarch64-apple-darwin-pgo%2Blto-full.tar.zst",
         "sha256": "016758f4881e5f71d63eddfbcdd53f25c5a9152435a863e4dc0770758eae32c3",
         "PYTHON_json_sha256": "dfc38df39b46bc1337abc4b3ff160e5ef4ca16f13dedb4c412a770ecb3fb8a36"
+      },
+      "arduino_archive": {
+        "filename": "nu54-python-3.12.16-20261026.nu54.1-macos-arm64.tar.bz2",
+        "size": 22300814,
+        "sha256": "a671849578714176940ffcac2de852474c20301f6a5cc3d53e4f12d1ff9b902e",
+        "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-macos-arm64.tar.bz2"
       }
     }
   },

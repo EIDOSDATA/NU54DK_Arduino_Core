@@ -49,3 +49,5 @@ index는 `3fb72d0db4fd29cf708ed11b81e0f5c2d7b1ae5836d5249f452ccc607af107e4`다.
 완료 TODO6개·기존 source별 PASS/FAIL·공개 자산을 보존한다. 자동점검 w06 PAUSED 요청을 유지하고
 예약작업은 생성/재활성화하지 않는다. Ubuntu/macOS 물리 USB·Serial·debug·lifecycle은 RC1 최종
 사용자 gate `NOT_RUN`이며 Host8/8·정식 다중 OS 지원·공개 완료로 표시하지 않는다.
+
+후속 H6 exact CI는 producer PASS·native package smoke3OS FAIL로 종료했다. 이 기록의 CI 미실행 문장은 착수 당시 snapshot이다. 실제 원인·교정과 원형 보존은 [317번](317_HOST_W06_H6_설치_FAIL_원인과_교정.md)을 따른다.
