@@ -49,3 +49,5 @@ stable package를 최종 exact commit에서 두 번 새로 생성했습니다. �
 v0.5.0 stable catalog는 `0.5.0` 하나만 제공합니다. v0.4.1 이하와 RC package payload,
 tag와 Release 자산은 삭제하지 않지만 모두 지원 종료 상태입니다. M18/M22/M27의 과거 index
 identity와 역사 version 생성 allowlist는 재현·감사용이며 현재 공개 공급 목록을 뜻하지 않습니다.
+
+비공개 v0.6.0 Host RC1 준비는 `host_rc_kit.py`·`host_rc_entry.py`·`host_native_lifecycle.py`와 [Host RC1 절차](<../../00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 사용합니다. 게시 명령은 제공하지 않으며 exact source의 새 실제 검증이 필요합니다.

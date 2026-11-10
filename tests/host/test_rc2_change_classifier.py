@@ -45,6 +45,15 @@ class Rc2ChangeClassifierTests(unittest.TestCase):
                 self.assertTrue(result["run_all_examples"])
                 self.assertTrue(result["release_sensitive"])
 
+    def test_host_status_and_nested_documentation_do_not_rebuild_firmware(self) -> None:
+        """! @brief 현행 문서·Host 진행 JSON은 기술 source의 전체 compile을 중복 요청하지 않습니다. """
+        result = CLASSIFIER.classify(('tools/nu54-prerequisites/README.md',
+            'tools/ci/m33_w06_artifacts.md','variants/nu54dk/host-readiness.json','CONTRIBUTING.md'))
+        self.assertTrue(result['docs_only'])
+        self.assertFalse(result['run_all_examples'])
+        self.assertFalse(result['run_six_profiles'])
+        self.assertTrue(result['run_contract'])
+
     def test_example_change_tracks_identity_and_profile(self) -> None:
         """! @brief 예제 변경은 identity와 기본 profile을 좁혀 반환합니다. """
 

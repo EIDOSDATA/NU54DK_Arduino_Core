@@ -175,3 +175,5 @@
 - 예제 변경은 `tools/ci/m31_example_audit.py`의 공개 경계 검사와 해당 예제 build를 통과해야 합니다.
 - HIL UART oracle·nonce·고정 count·마일스톤 출력은 `tests`의 전용 시험 image에만 둡니다.
   공개 library에서 시험 backend를 재사용할 때는 사용자 데이터 API와 출력 경계를 별도로 검증합니다.
+
+HOST-W07의 새 실행기는 [RC1 절차](<00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. 도구 통합·대표 회귀·전체204예제·사용자 OS7행의 물리 gate를 구분하고 private signing key를 수집·공개하지 않는다.

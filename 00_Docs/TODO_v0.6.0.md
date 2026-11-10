@@ -115,3 +115,5 @@ HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_na
 실제 USB 최종 gate와 추가 OS 정식 지원은 후속 범위로 유지한다.
 
 HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 W07 실행기·Windows 회귀·RC1을 준비한다. 사용자 Ubuntu/macOS 실물 gate는 NOT_RUN이다.
+
+HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. Host6/8과 사용자 물리 gate NOT_RUN은 유지한다.

@@ -71,3 +71,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -PlatformRoot . `
   -Json
 ```
+
+`host-check.py`는 installed build manifest와 SHA identity에 결합한 Serial·ELF debug·Blink GPIO·NUS pair 검증 진입점입니다. 장치 조작 없는 `inventory`와 실기를 구분하며 [RC1 절차](<../../00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따릅니다.

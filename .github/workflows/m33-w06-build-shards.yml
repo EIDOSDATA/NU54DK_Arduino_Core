@@ -45,6 +45,8 @@ on:
       - "dts/**"
       - "zephyr/**"
       - "third_party/**"
+      - "!**/*.md"
+      - "!variants/nu54dk/host-readiness.json"
   workflow_dispatch:
     inputs:
       target_source_sha:

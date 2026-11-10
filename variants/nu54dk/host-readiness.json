@@ -441,12 +441,178 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "IN_PROGRESS",
-    "product_integration": "NOT_RUN",
+    "status": "RC1_CANDIDATE_READY_TO_FREEZE",
+    "product_integration": "W07_C1_PRECOMMIT_FROM_b6169b9a",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "NOT_BUILT",
-    "user_physical_OS_gate": "NOT_RUN"
+    "private_RC1": "TOOLING_READY_PACKAGE_AND_END_TO_END_NOT_RUN",
+    "user_physical_OS_gate": "NOT_RUN",
+    "physical_OS_gate": "NOT_RUN",
+    "new_HIL_runs": 0,
+    "documentation": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+    "development_checks": [
+      {
+        "log": "host-w07-owned-product-a002.log",
+        "reported": 8,
+        "exit_code": 0,
+        "actual_tool_chunk": "d36f3a",
+        "sha256": "8bbf7a2a03c50fa075e3f88fdd2df029dde4dd7b7e15ed0da9bcf245b9e8b72a"
+      },
+      {
+        "log": "host-w07-upload-product-a003.log",
+        "reported": 6,
+        "exit_code": 0,
+        "actual_tool_chunk": "d422a5",
+        "sha256": "7b543ee8362051bdec6b0d5110be7018d09770b145c6fa53345f1a62d5cbdd9c"
+      },
+      {
+        "log": "host-w07-validation-contract-a003.log",
+        "reported": 6,
+        "exit_code": 0,
+        "actual_tool_chunk": "6db5d9",
+        "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
+      },
+      {
+        "log": "host-w07-classifier-a001.log",
+        "reported": 5,
+        "exit_code": 0,
+        "actual_tool_chunk": "989259",
+        "sha256": "fa89fe9a2f1f90f6ca06394faabfb3979a1720f196fc7434d5444b7124b83760"
+      }
+    ],
+    "candidate_OS_rows": [
+      {
+        "OS": "Windows10",
+        "architecture": "x64",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "Windows11",
+        "architecture": "x64",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "Ubuntu24.04 LTS",
+        "architecture": "AMD64",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "Ubuntu26.04 LTS",
+        "architecture": "AMD64",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "Ubuntu26.10",
+        "architecture": "AMD64",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "macOS26",
+        "architecture": "Apple Silicon",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      },
+      {
+        "OS": "macOS27",
+        "architecture": "Apple Silicon",
+        "physical_gate": "NOT_RUN",
+        "RC1_target_build": "NOT_RUN"
+      }
+    ],
+    "candidate_OS_sources": [
+      "https://github.com/nrfconnect/sdk-nrf/blob/v3.4.0/doc/nrf/installation/recommended_versions.rst",
+      "https://ubuntu.com/about/release-cycle",
+      "https://support.apple.com/en-us/100100"
+    ],
+    "candidate_OS_review_date": "2026-11-10",
+    "local_full_host": {
+      "kind": "HOST_W07_DEVELOPMENT_FULL_HOST_ACTUAL_COMPLETION",
+      "scope": "A001_BEFORE_POST_FULL_KIT_REVIEW",
+      "native_session": 88407,
+      "actual_start_chunk": "133586",
+      "actual_completion_chunk": "c7bb51",
+      "exit_code": 0,
+      "base_revision": "b6169b9af6d3b23d9afd530cc6d4ffc849ec86e5",
+      "freeze_sha256": "40b898a1b9f69ea996808a9fafcff0e765cfe67abf130b381605524e6ce955bc",
+      "tested_changed_files_preserved": 29,
+      "tested_changed_files_byte_mismatches": 0,
+      "inputs": "D:\\w06\\control\\host-w07-development-a001-inputs",
+      "reported_unittest_total": 2470,
+      "reported_unittest_suites": 278,
+      "reported_conditional_skips": 9,
+      "log": "D:\\w06\\control\\host-w07-full-host-a001.log",
+      "log_sha256": "260d3498fbeca8eb2794acfcf82df75bd271627985c24f8f89169bb05a921124",
+      "host_fixture_HIL_markers_not_physical_credit": true,
+      "new_HIL_runs": 0,
+      "group29_analysis": "DEFERRED_BY_USER",
+      "final_commit_CI_credit": 0,
+      "observed_utc": "2026-11-10T14:52:30.491629+00:00"
+    },
+    "post_full_review_checks": [
+      {
+        "log": "host-w07-docs-a002.log",
+        "reported": 530,
+        "actual_tool_chunk": "b09d81",
+        "exit_code": 0,
+        "sha256": "4fa5fdd42ac42824bae78b92c2d6136ef5231b1b5d19aac8aa76db0ebfaaa8a4"
+      },
+      {
+        "log": "host-w07-contract-a002.log",
+        "reported": 46,
+        "actual_tool_chunk": "9a76ac",
+        "exit_code": 0,
+        "sha256": "0ef158e708ff154290a5699e53ad2516c6be7b496dc685ad0fe67ce0eea1f942"
+      },
+      {
+        "log": "host-w07-rc-entry-a001.log",
+        "reported": 2,
+        "actual_tool_chunk": "09488a",
+        "exit_code": 0,
+        "sha256": "0c258a04df04b3bf36e505885eb6818b0a356664a423f818647eef2a1a3c29f0"
+      },
+      {
+        "log": "host-w07-validation-contract-a005.log",
+        "reported": 6,
+        "actual_tool_chunk": "19e9a9",
+        "exit_code": 0,
+        "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
+      }
+    ],
+    "final_same_source_CI": "NOT_RUN",
+    "no_system_Git_input_check": {
+      "first_actual": "b612eb/exit1",
+      "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
+      "first_FAIL_preserved": true,
+      "fresh_actual": "f75caf/exit0",
+      "input_source": "6364a1d9955f79fef0ac1f3219883a9d77e24f32",
+      "input_only_not_RC1_credit": true
+    },
+    "CLI_assets": "THREE_OS_FIXED_INPUT_BYTES_VERIFIED_2da55b",
+    "Windows_physical_regression": "NOT_RUN",
+    "original_W06_FAIL_reclassified": false
+  },
+  "W06_document_closure_CI": {
+    "source_revision": "b6169b9af6d3b23d9afd530cc6d4ffc849ec86e5",
+    "run_id": 42826873833,
+    "success_jobs": 9,
+    "skipped_jobs": 0,
+    "actual_observation": "98d825/exit0",
+    "terminal_sha256": "ad82b31339145fa1ba87017626d67a7d9abc38495aa802af2a04600ed9bec3d4",
+    "technical_source_credit_transferred": false,
+    "redundant_native_runs_intentionally_cancelled": [
+      42826869627,
+      42826868060,
+      42826867833
+    ],
+    "cancelled_upstream_aggregate_actual_failure": {
+      "job_id": 129867520315,
+      "raw_log_sha256": "acddf2a1869c320bcd97b6be80ec3f888ace37eae8b6c214ef3256575160045f"
+    }
   }
 }

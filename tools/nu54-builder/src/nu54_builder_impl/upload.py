@@ -8,6 +8,7 @@ from typing import Sequence
 import argparse
 import datetime as dt
 import hashlib
+import json
 import locale
 import os
 import re
@@ -21,6 +22,7 @@ from .environment import tool_environment
 from .host import canonical_host_os, resolve_toolchain_executable
 from .locking import build_lock, probe_lock
 from .paths import adapter_paths, paths_from_context
+from .owned_process import finite_timeout, OwnedExecutionError, OwnedInterrupted, OwnedTimeout, run_owned
 
 
 PROBE_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{3,127}$")
@@ -169,6 +171,17 @@ def discover_pyocd_probe_ids() -> list[str]:
         {str(probe.unique_id) for probe in probes if getattr(probe, "unique_id", None)},
         key=str.casefold,
     )
+
+
+## @brief exact SHA-256과 유일한 실제 CMSIS-DAP UID를 결합합니다.
+def select_pyocd_probe_digest(requested: str, discovered: Sequence[str] | None = None) -> str:
+    if not re.fullmatch(r"[0-9a-f]{64}", requested or ""):
+        raise AdapterError("[NU54:E_PROBE_SHA256] pyOCD probe의 SHA-256이 필요합니다.")
+    values = list(discovered) if discovered is not None else discover_pyocd_probe_ids()
+    matching = [value for value in values if probe_id_sha256(value) == requested]
+    if len(matching) != 1:
+        raise AdapterError("[NU54:E_PROBE_SHA256] exact probe hash의 일치 수가1이 아닙니다.")
+    return matching[0]
 
 
 ## @brief 명시값과 발견 목록에서 잘못된 자동 선택 없이 pyOCD probe 하나를 결정합니다.
@@ -366,26 +379,37 @@ def classify_flash_failure(output: str, runner: str, return_code: int) -> ChildC
 ## @brief flash child process의 출력과 결과를 console 및 build log에 기록합니다.
 def run_flash_process(
     command: Sequence[str | Path], *, cwd: Path, environment: dict[str, str], log_path: Path,
-    runner: str, probe_id: str, hex_path: Path, hex_sha256: str
+    runner: str, probe_id: str, hex_path: Path, hex_sha256: str, timeout_seconds: float = 180
 ) -> None:
     normalized = [str(value) for value in command]
+    timeout_seconds = finite_timeout(timeout_seconds)
     started = dt.datetime.now(dt.timezone.utc)
+    failure = None
+    outcome = "EXITED"
+    returncode = None
+    cleanup = {}
     try:
-        result = subprocess.run(
+        result = run_owned(
             normalized,
             cwd=cwd,
-            env=environment,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            check=False,
+            environment=environment,
+            capture_directory=log_path.parent,
+            timeout=timeout_seconds,
         )
-    except OSError as error:
-        code = "E_PYOCD_EXEC" if runner == "pyocd" else "E_JLINK_EXEC"
-        raise AdapterError(
-            f"[NU54:{code}] {runner} runner process could not start. 설치 경로와 실행 권한을 "
-            f"확인하십시오: {error}"
-        ) from error
-    output = redact_probe_identity(decode_child_output(result.stdout), probe_id)
+        raw_output = result.stdout
+        returncode = result.returncode
+        cleanup = result.cleanup
+    except (OwnedTimeout, OwnedInterrupted, OwnedExecutionError) as error:
+        failure = error
+        outcome = ("TIMEOUT" if isinstance(error, OwnedTimeout) else
+            "INTERRUPTED" if isinstance(error, OwnedInterrupted) else "START_OR_CLEANUP_FAILURE")
+        raw_output = error.output
+        cleanup = error.cleanup
+    except (OSError, ValueError, RuntimeError) as error:
+        failure = error
+        outcome = "START_OR_CLEANUP_FAILURE"
+        raw_output = redact_probe_identity(str(error), probe_id).encode("utf-8")
+    output = redact_probe_identity(decode_child_output(raw_output), probe_id)
     if output:
         print(output, end="" if output.endswith("\n") else "\n")
     finished = dt.datetime.now(dt.timezone.utc)
@@ -401,7 +425,10 @@ def run_flash_process(
         f"smart_flash={'false' if runner == 'pyocd' else 'runner-default'}",
         "mass_erase_requested=false",
         "recover_requested=false",
-        f"exit_code={result.returncode}",
+        f"process_outcome={outcome}",
+        f"timeout_seconds={timeout_seconds}",
+        "cleanup=" + json.dumps(cleanup, sort_keys=True),
+        f"exit_code={returncode}",
         "command=" + redact_probe_identity(shlex.join(normalized), probe_id),
         "--- child output ---",
         output.rstrip(),
@@ -413,8 +440,18 @@ def run_flash_process(
         stream.write("\n".join(lines))
         stream.flush()
         os.fsync(stream.fileno())
-    if result.returncode != 0:
-        raise classify_flash_failure(output, runner, result.returncode)
+    if isinstance(failure, OwnedInterrupted):
+        raise failure
+    if isinstance(failure, OwnedTimeout):
+        raise AdapterError(
+            f"[NU54:E_FLASH_TIMEOUT] {runner} upload가 {timeout_seconds}초를 초과했습니다. "
+            "소유 process 정리와 부분 출력은 flash.log를 확인하십시오. 자동 재시도하지 않습니다."
+        ) from None
+    if failure is not None:
+        code = "E_PYOCD_EXEC" if runner == "pyocd" else "E_JLINK_EXEC"
+        raise AdapterError(f"[NU54:{code}] runner 시작 또는 자식 정리 실패. flash.log를 확인하십시오.") from None
+    if returncode != 0:
+        raise classify_flash_failure(output, runner, returncode)
 
 
 ## @brief build context와 현재 NCS/toolchain identity가 같은지 확인합니다.
@@ -438,6 +475,10 @@ def validate_flash_tool_identity(context: dict[str, Any], tools: dict[str, Any])
 
 ## @brief 검증된 Full Zephyr image를 선택 runner로 일반 upload합니다.
 def flash(args: argparse.Namespace) -> None:
+    try:
+        timeout_seconds = finite_timeout(getattr(args, "timeout_seconds", 180))
+    except ValueError as error:
+        raise AdapterError(f"[NU54:E_FLASH_TIMEOUT_OPTION] {error}") from None
     if args.runner not in {"pyocd", "jlink"}:
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
     tools = tool_environment(canonical_path(args.platform_root))
@@ -455,7 +496,14 @@ def flash(args: argparse.Namespace) -> None:
                 )
             for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
                 validate_runner_configuration(runner_build, args.runner)
-            if args.runner == "pyocd":
+            digest_request = getattr(args, "probe_sha256", None)
+            if digest_request is not None:
+                if args.runner != "pyocd" or not re.fullmatch(r"[0-9a-f]{64}", digest_request):
+                    raise AdapterError("[NU54:E_PROBE_SHA256] pyOCD probe의 SHA-256이 필요합니다.")
+                probe_id = select_pyocd_probe_digest(digest_request)
+                if os.environ.get("NUCODE_PROBE_UID") not in (None, "", probe_id):
+                    raise AdapterError("[NU54:E_PROBE_SHA256] 환경 UID와 명시한 hash가 다릅니다.")
+            elif args.runner == "pyocd":
                 requested = resolve_probe_request(args.probe_id, runner=args.runner)
                 probe_id = select_pyocd_probe(requested)
             else:
@@ -491,5 +539,6 @@ def flash(args: argparse.Namespace) -> None:
                     probe_id=probe_id,
                     hex_path=inputs["hex"],
                     hex_sha256=inputs["hex_sha256"],
+                    timeout_seconds=timeout_seconds,
                 )
             print(f"NU54_UPLOAD_PASS runner={args.runner} probe={mask_probe_id(probe_id)}")

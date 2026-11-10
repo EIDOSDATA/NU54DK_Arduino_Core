@@ -12,6 +12,7 @@ from .cache import manage_cache
 from .common import AdapterError, ChildCommandError, DEFAULT_BOARD, DEFAULT_PROFILE
 from .frontend import create_archive, preprocess, record_source
 from .upload import flash
+from .owned_process import finite_timeout
 
 
 ## @brief 모든 subcommand에 Arduino recipe 공통 인자를 추가합니다.
@@ -68,12 +69,15 @@ def create_parser() -> argparse.ArgumentParser:
     add_common_arguments(flash_parser)
     flash_parser.add_argument("--manifest", required=True)
     flash_parser.add_argument("--runner", choices=("pyocd", "jlink"), required=True)
-    flash_parser.add_argument("--probe-id")
+    probe = flash_parser.add_mutually_exclusive_group()
+    probe.add_argument("--probe-id")
+    probe.add_argument("--probe-sha256")
     flash_parser.add_argument("--swd-frequency", type=int)
     flash_parser.add_argument(
         "--connect-mode", choices=("normal", "under-reset"), default="normal"
     )
     flash_parser.add_argument("--verbose", action="store_true")
+    flash_parser.add_argument("--timeout-seconds", type=finite_timeout, default=180)
 
     clean_parser = subparsers.add_parser("clean-build")
     add_common_arguments(clean_parser)

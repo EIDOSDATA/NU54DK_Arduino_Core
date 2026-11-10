@@ -17,13 +17,14 @@ on:
       - 'tests/host/test_host_artifact_semantics.py'
       - 'platform.txt'
       - 'post_install.sh'
+      - '!**/*.md'
   workflow_dispatch:
     inputs:
       version:
         description: Private validation version; does not publish a release or index
         type: choice
         options: ['0.6.0-host.1', '0.6.0-rc.1']
-        default: '0.6.0-host.1'
+        default: '0.6.0-rc.1'
       full_examples:
         description: Run all 204 installed examples per OS after the smoke comparison passes
         type: boolean
@@ -40,7 +41,7 @@ env:
   PYTHONUTF8: '1'
   PYTHONIOENCODING: utf-8
   PYTHONDONTWRITEBYTECODE: '1'
-  HOST_PACKAGE_VERSION: ${{ inputs.version || '0.6.0-host.1' }}
+  HOST_PACKAGE_VERSION: ${{ inputs.version || '0.6.0-rc.1' }}
 
 jobs:
   producer:

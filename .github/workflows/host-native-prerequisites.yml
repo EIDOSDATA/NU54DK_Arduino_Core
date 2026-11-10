@@ -21,7 +21,12 @@ on:
       - 'tests/host/test_host_paths_locks.py'
       - 'tests/host/test_host_sdk_patch_environment.py'
       - 'tests/host/test_host_installed_platform.py'
+      - 'tests/host/test_host_owned_process.py'
+      - 'tests/host/test_host_upload_process.py'
+      - 'tests/host/test_host_validation.py'
+      - 'tests/host/test_host_rc_entry.py'
       - 'tests/host/test_m9_cache.py'
+      - '!**/*.md'
   workflow_dispatch:
     inputs:
       bootstrap_only:
@@ -58,7 +63,7 @@ jobs:
         with:
           python-version: 3.12.10
       - name: Run portable prerequisite and resolver tests
-        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_host_diagnostics tests.host.test_m30_host_portability tests.host.test_m9_cache tests.host.test_host_paths_locks tests.host.test_host_sdk_patch_environment tests.host.test_host_installed_platform
+        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_host_diagnostics tests.host.test_m30_host_portability tests.host.test_m9_cache tests.host.test_host_paths_locks tests.host.test_host_sdk_patch_environment tests.host.test_host_installed_platform tests.host.test_host_owned_process tests.host.test_host_upload_process tests.host.test_host_validation tests.host.test_host_rc_entry
       - name: Prepare the required macOS SDK directory
         if: runner.os == 'macOS' && !inputs.bootstrap_only
         shell: bash

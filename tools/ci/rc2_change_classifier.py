@@ -83,7 +83,7 @@ def classify(paths: Sequence[str]) -> dict[str, object]:
     for value in normalized:
         parts = PurePosixPath(value).parts
         suffix = PurePosixPath(value).suffix.casefold()
-        if value.startswith("00_Docs/") or value in {"README.md", "AGENTS.md"}:
+        if value.startswith("00_Docs/") or suffix == ".md" or value == "variants/nu54dk/host-readiness.json":
             categories.add("documentation")
             continue
         if value.startswith(("tests/", "tools/ci/", ".github/workflows/")):
