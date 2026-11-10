@@ -287,7 +287,7 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H8_INSTALL_PASS_BLINK_SDK_GIT_FAIL_CORRECTION_PENDING",
+    "status": "H9_KCONFIG_PATH_FAIL_AND_WINDOWS_CLEAN_DIAG_CORRECTION_PENDING",
     "source_revision": null,
     "Boards_Manager_clean_install": "PASS_H8_THREE_OS_NOT_CURRENT_CORRECTION",
     "three_OS_all_204_examples": "NOT_RUN",
@@ -298,10 +298,10 @@
     "local_package_actual_tool": "2001d5/exit0",
     "final_CI_credit": 0,
     "native_contracts": {
-      "reported": 30,
-      "passed": 29,
+      "reported": 35,
+      "passed": 34,
       "conditional_skipped": 1,
-      "actual_tool": "d3b81c/exit0"
+      "actual_tool": "42c810/exit0"
     },
     "CI_contract": {
       "tests": 46,
@@ -337,9 +337,25 @@
         "Blink": "FAIL_3OS_SDK_PATCH_SYSTEM_GIT_DEPENDENCY",
         "all_204_examples": "NOT_RUN",
         "source_credits_combined": false
+      },
+      {
+        "source_revision": "e132327daebc9553cbac270b3ec0c0ffeeeb7f19",
+        "native_package_run": 42781574396,
+        "producer": "PASS",
+        "installation_and_discovery": "PASS_3_OS",
+        "Blink": "FAIL_POSIX_KCONFIG_MODULE_PATH_SPLIT_WINDOWS_SDK_CLEAN",
+        "all_204_examples": "NOT_RUN",
+        "producer_ZIP_sha256": "5e34dac0fb8dc0a7386c1d71c05bd621a2a34416f71f8519c57e4700b5e1ed89",
+        "source_credits_combined": false
       }
     ],
-    "current_correction": "SDK_PATCH_EXPLICIT_GIT_AND_ENVIRONMENT"
+    "current_correction": "ALL_HOST_IDENTICAL_BYTE_ASCII_PLATFORM_COPY_AND_CLEAN_PATH_DIAGNOSTIC",
+    "platform_recipe_regression": {
+      "reported": 12,
+      "passed": 12,
+      "actual_tool": "271a2c/exit0"
+    },
+    "native_worker_compile_concurrency": 1
   },
   "H5_additional_CI": {
     "source_revision": "2dd1455e771afdeab5a599874bf634659bf3b643",

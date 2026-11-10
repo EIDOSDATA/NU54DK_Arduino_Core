@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H8 실제3OS 설치·발견 통과 후 SDK Git 전달을 교정 중이다.
+기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06은 H9 후속 Kconfig 경로 교정과 Windows SDK clean 진단 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -64,6 +64,7 @@ symlink placeholder 생성은 부모를 생성하지 않는다. 교정은 원형
 
 Worker마다 설치 상태와 SDK를 새로 준비한다. 공유 cache는 공식 pin으로 매번 검사하는 download byte에
 한정하며 ready marker·SDK 설치 디렉터리·build 결과를 다른 worker의 설치 성공으로 재사용하지 않는다.
+각 SDK에서는 compile1개·Ninja worker2개로 임시 SDK patch 적용·복원 구간의 중첩을 피한다.
 CI signing fixture의 private key는 worker의 별도 private 경로에만 생성하며 artifact에 업로드하지 않는다.
 원형 compile/negative/설치 로그·ELF·HEX·manifest와 실패 시 부분 진단은 같은 attempt에 보존한다.
 
@@ -90,11 +91,15 @@ macOS 검증 코드의 보호된 파일 조회와 Windows 검증 코드의 설�
 H8에서는 실제3OS의 package/SDK 설치·955파일 대조·24개 library와204예제 발견을 통과했다.
 Blink는 SDK patch manager가 SDK Git 환경을 전달하지 않아 실패했다. 공통 backend에서 선택한
 `NUCODE_SDK_GIT` 절대 경로와 환경을 적용·복구 전체에 명시하도록 교정한다.
+H9에서는 Git 실행을 넘긴 뒤 POSIX Kconfig의 공백 경로 분할을 확인했다. 세 OS 모두 설치 Core의
+동일 byte를 안전한 ASCII cache에 복사해 CMake 입력으로 사용하며 원본 source metadata는 유지한다.
+Windows SDK clean 실패는 변경 목록을 확인 중이며 알려지지 않은 변경을 무시하지 않는다.
 전체 예제·cross-Host artifact 비교는 `NOT_RUN`이며 fresh 교정 source의 실제 CI가 필요하다.
 로컬 통과는 이 gate의 대체 증거가 아니다. 최초 구현은
 [316번 기록](<../04_검증 기록/316_HOST_W06_native_package_구현과_검증_착수.md>), 실제 FAIL·교정은
 [317번 기록](<../04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>)과
-[318번 기록](<../04_검증 기록/318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md>)을 따른다.
+[318번 기록](<../04_검증 기록/318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md>)과
+[319번 기록](<../04_검증 기록/319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md>)을 따른다.
 
 CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실물 검증은 RC1 최종 사용자
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는

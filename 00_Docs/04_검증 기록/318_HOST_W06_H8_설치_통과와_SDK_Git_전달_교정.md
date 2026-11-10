@@ -56,3 +56,5 @@ fresh 실행한 결과 `a7758a/exit0`이었다. 이를 전체34개 fresh PASS로
 기존 W06 S19 실제 PASS46·명시 수락 #29·40·44·원형 FAIL·soak와 완료 TODO6개를 보존한다.
 #29 원인 분석은 유예하고 새 HIL은 수행하지 않았다. 자동점검 w06 PAUSED 요청 유지·예약 생성/재활성화 없음.
 Ubuntu/macOS 실제 USB·Serial·debug·lifecycle은 RC1 최종 사용자 gate `NOT_RUN`이다.
+
+후속 H9는 SDK Git 실행을 넘긴 뒤 Windows clean 검사와 POSIX Kconfig 경로에서 실패했다. 최초 FAIL과 분리한 실제 결과·원인·교정은 [319번](319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md)을 따른다.

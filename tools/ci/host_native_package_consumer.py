@@ -453,7 +453,7 @@ def main() -> int:
     parser.add_argument('--work-root', type=Path, required=True)
     parser.add_argument('--mode', choices=('smoke', 'examples'), required=True)
     parser.add_argument('--shard-index', type=int, default=0)
-    parser.add_argument('--jobs', type=int, choices=(1, 2), default=2)
+    parser.add_argument('--jobs', type=int, choices=(1,), default=1)
     parser.add_argument('--compile-timeout', type=int, default=1200)
     args = parser.parse_args()
     base = args.work_root

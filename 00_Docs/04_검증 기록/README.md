@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [319 — HOST-W06 H9 Kconfig 경로 원인과 native 교정](319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md)
+
 - [318 — HOST-W06 H8 설치 통과와 SDK Git 전달 교정](318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md)
 
 - [317 — HOST-W06 H6 설치 FAIL 원인과 교정](317_HOST_W06_H6_설치_FAIL_원인과_교정.md)

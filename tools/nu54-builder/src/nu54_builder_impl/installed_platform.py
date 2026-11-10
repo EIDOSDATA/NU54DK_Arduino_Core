@@ -1,6 +1,5 @@
-"""! @brief 고정 Windows SDK에 전달할 설치 package의 경로와 byte 복사본을 소유합니다. """
+"""! @brief 고정 SDK에 전달할 설치 package의 경로와 byte 복사본을 소유합니다. """
 from pathlib import Path
-import os
 from typing import Any
 
 from .common import AdapterError, atomic_write_bytes_if_changed, is_within, relative_path_within, tree_content_sha256
@@ -8,7 +7,7 @@ from .common import AdapterError, atomic_write_bytes_if_changed, is_within, rela
 
 ## @brief 고정 SDK가 직접 처리하지 못하는 설치 root만 build 복사 대상으로 선택합니다.
 def requires_platform_copy(platform_root: Path) -> bool:
-    return (os.name == 'nt' and (not str(platform_root).isascii() or ' ' in str(platform_root))
+    return ((not str(platform_root).isascii() or ' ' in str(platform_root))
             and not (platform_root / '.git').exists()
             and (platform_root / 'release-manifest.json').is_file())
 
@@ -20,7 +19,7 @@ def platform_build_root(paths: dict[str, Path]) -> Path:
         return original
     workspace = paths['workspace']
     if not str(workspace).isascii() or ' ' in str(workspace):
-        raise AdapterError('[NU54:E_SDK_BUILD_PATH] 고정 Windows SDK의 build cache에는 ASCII 공백 없는 경로가 필요합니다. NUCODE_BUILD_CACHE_ROOT를 설정하십시오.')
+        raise AdapterError('[NU54:E_SDK_BUILD_PATH] 고정 SDK의 build cache에는 ASCII 공백 없는 경로가 필요합니다. NUCODE_BUILD_CACHE_ROOT를 설정하십시오.')
     return workspace / 'platform'
 
 

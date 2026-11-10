@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 import hashlib
+import json
 from pathlib import Path
 import re
 import subprocess
@@ -212,8 +213,12 @@ def applied_zephyr_patches(
 
     if run_git(("rev-parse", "HEAD")) != expected_revision:
         raise PatchFailure("Zephyr patch 대상 revision이 lock과 다릅니다")
-    if _content_changes(zephyr, environment=environment):
-        raise PatchFailure("Zephyr patch는 clean exact checkout에만 적용할 수 있습니다")
+    changes = _content_changes(zephyr, environment=environment)
+    if changes:
+        diagnostic = {'changed_count':len(changes),'first_changed_paths':changes[:30],
+            'diff_summary':run_git(('diff','--summary'))[:6000]}
+        raise PatchFailure('Zephyr patch는 clean exact checkout에만 적용할 수 있습니다: '
+            + json.dumps(diagnostic,ensure_ascii=False))
     originals = {
         relative: (zephyr / relative).read_bytes()
         for relative in sorted(
