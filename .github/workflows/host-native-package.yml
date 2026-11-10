@@ -10,6 +10,8 @@ on:
       - 'tools/nu54-builder/**'
       - 'tools/ci/host_native_*.py'
       - 'tools/ci/host_artifact_semantics.py'
+      - 'tools/release/host_*.py'
+      - 'tests/host/test_host_rc_*.py'
       - 'tests/host/test_host_native_*.py'
       - 'tests/host/test_host_bootstrap_archive.py'
       - 'tests/host/test_host_sdk_patch_environment.py'

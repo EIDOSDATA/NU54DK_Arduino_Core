@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path, PurePosixPath
+import re
 import shutil
 import subprocess
 import sys
@@ -21,6 +22,25 @@ def sha(path):
         for block in iter(lambda:stream.read(1024*1024),b''):
             digest.update(block)
     return digest.hexdigest()
+
+
+def windows_hash_check(files):
+    """! @brief PSModulePath와 무관하게 OS 기본 .NET으로 두 원형을 확인하는 batch 명령입니다. """
+    records = []
+    for relative,digest in files:
+        path = PurePosixPath(relative)
+        if (path.is_absolute() or '..' in path.parts or not re.fullmatch(r'[A-Za-z0-9_./+\-]+',relative)
+                or not re.fullmatch(r'[0-9a-f]{64}',digest)):
+            raise ValueError('고정 relative path와 SHA-256이 필요합니다.')
+        records.append("@{Path=$env:KIT+'"+relative+"';Expected='"+digest+"'}")
+    if not records:
+        raise ValueError('검사할 원형이 필요합니다.')
+    program = "$ErrorActionPreference='Stop';foreach($item in @("+','.join(records)+")){"
+    program += '$stream=[IO.File]::OpenRead($item.Path);try{$hash=[Security.Cryptography.SHA256]::Create();'
+    program += "try{$actual=[BitConverter]::ToString($hash.ComputeHash($stream)).Replace('-','').ToLowerInvariant()}finally{$hash.Dispose()}}finally{$stream.Dispose()};"
+    program += 'if($actual -ne $item.Expected){exit 2}}'
+    return ('"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoLogo -NoProfile -NonInteractive -Command "'
+        +program+'"\r\nif errorlevel 1 exit /b 2\r\n')
 
 
 def main():
@@ -88,9 +108,9 @@ def main():
     win_rel = 'payload/current/bootstrap-tools/'+win['filename']
     entry_rel = 'source/tools/release/host_rc_entry.py'
     entry_sha = sha(args.output/entry_rel)
-    starter = '@echo off\r\nsetlocal EnableExtensions\r\nset "KIT=%~dp0"\r\n'
+    starter = '@echo off\r\nsetlocal EnableExtensions DisableDelayedExpansion\r\nset "KIT=%~dp0"\r\n'
     starter += 'if /i not "%PROCESSOR_ARCHITECTURE%"=="AMD64" exit /b 2\r\n'
-    starter += 'powershell.exe -NoLogo -NoProfile -NonInteractive -Command "$ErrorActionPreference=\'Stop\'; if ((Get-FileHash -LiteralPath ($env:KIT+\''+win_rel+'\') -Algorithm SHA256).Hash.ToLower() -ne \''+win['sha256']+'\') { exit 2 }; if ((Get-FileHash -LiteralPath ($env:KIT+\''+entry_rel+'\') -Algorithm SHA256).Hash.ToLower() -ne \''+entry_sha+'\') { exit 2 }"\r\nif errorlevel 1 exit /b 2\r\n'
+    starter += windows_hash_check([(win_rel,win['sha256']),(entry_rel,entry_sha)])
     starter += 'if not exist "%KIT%runtime-windows\\python\\python.exe" (\r\n  mkdir "%KIT%runtime-windows"\r\n  "%SystemRoot%\\System32\\tar.exe" -xf "%KIT%'+win_rel.replace('/','\\')+'" -C "%KIT%runtime-windows"\r\n  if errorlevel 1 exit /b 2\r\n)\r\n'
     starter += '"%KIT%runtime-windows\\python\\python.exe" -I -X utf8 -B "%KIT%source\\tools\\release\\host_rc_entry.py" --kit "%KIT%." %*\r\nexit /b %ERRORLEVEL%\r\n'
     (args.output/'START.cmd').write_bytes(starter.encode('utf-8'))

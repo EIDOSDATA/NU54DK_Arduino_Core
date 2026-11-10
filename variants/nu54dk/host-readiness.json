@@ -441,12 +441,12 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "RC1_CANDIDATE_READY_TO_FREEZE",
-    "product_integration": "W07_C1_PRECOMMIT_FROM_b6169b9a",
+    "status": "C2_WINDOWS_STARTER_CORRECTION_READY_TO_FREEZE",
+    "product_integration": "C2_WORKTREE_FROM_addef962",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "TOOLING_READY_PACKAGE_AND_END_TO_END_NOT_RUN",
+    "private_RC1": "C1_KIT_STARTUP_FAIL_PRESERVED_C2_FINAL_PENDING",
     "user_physical_OS_gate": "NOT_RUN",
     "physical_OS_gate": "NOT_RUN",
     "new_HIL_runs": 0,
@@ -584,7 +584,7 @@
         "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
       }
     ],
-    "final_same_source_CI": "NOT_RUN",
+    "final_same_source_CI": "C2_NOT_RUN",
     "no_system_Git_input_check": {
       "first_actual": "b612eb/exit1",
       "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
@@ -595,7 +595,42 @@
     },
     "CLI_assets": "THREE_OS_FIXED_INPUT_BYTES_VERIFIED_2da55b",
     "Windows_physical_regression": "NOT_RUN",
-    "original_W06_FAIL_reclassified": false
+    "original_W06_FAIL_reclassified": false,
+    "local_SDK_input": {
+      "status": "READY",
+      "actual_tool": "bfbdfe/exit0",
+      "source_revision": null,
+      "root": "D:/w06/host-w07/sdk",
+      "NCS": "3.4.0",
+      "Python": "3.12.4",
+      "bundle": "dcbdc366a1",
+      "nrfutil": "8.2.1"
+    },
+    "C1_attempt": {
+      "source_revision": "addef962d8ce141e6c03d200b77df8dba2590402",
+      "archive_sha256": "87bbc74b71229b35ed1c1334e7cc5025324d1a0970694f5833927ec7d7d51778",
+      "actual_producer": "26ab63/exit0",
+      "actual_kit_creation": "8e23b1/exit0",
+      "actual_START_plan": "2b9bf2/exit2",
+      "original_FAIL_preserved": true,
+      "cause": "PS7_CMD_WINPS5_MODULE_PATH_GET_FILEHASH_AUTOLOAD",
+      "software_run": 42841699604,
+      "software_success_jobs": 9,
+      "native_prerequisite_run": 42841115864,
+      "native_prerequisite_success_jobs": 3,
+      "native_package_run": 42841116172,
+      "native_package_success_jobs_before_retirement": 5,
+      "native_package_final": "CANCELLED_SUPERSEDED",
+      "build_only_run": 42841116200,
+      "source_credits_transferred_to_C2": false
+    },
+    "C2_focused": {
+      "actual_tool": "679e81/exit0",
+      "reported": 2,
+      "Windows_actual_CMD_good_bytes": true,
+      "Windows_actual_CMD_changed_bytes_rejected": true,
+      "scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_SOURCE"
+    }
   },
   "W06_document_closure_CI": {
     "source_revision": "b6169b9af6d3b23d9afd530cc6d4ffc849ec86e5",
