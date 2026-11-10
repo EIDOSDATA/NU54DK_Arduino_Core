@@ -14,7 +14,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
 | Host | **5/8**, **HOST-W05 완료·HOST-W06 진행 중**. 이후 W06→W07 준비→RC1→실제 OS→W08 마감 순서 |
-| Host 현재 검증 | [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>) — H5 native SDK3/3·OS별 unit·software9/9 성공. build-only6/6도 종료. 현재 H6 package smoke3OS FAIL 교정·fresh CI 준비 — [317번](<04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>) |
+| Host 현재 검증 | [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>) — H5 native SDK3/3·OS별 unit·software9/9·build-only6/6 성공. H6 package smoke3OS FAIL 교정 후 H7 producer guard 실패를 진단 중 — [317번](<04_검증 기록/317_HOST_W06_H6_설치_FAIL_원인과_교정.md>) |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |

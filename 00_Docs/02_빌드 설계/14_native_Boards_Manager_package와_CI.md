@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06의 H6 실제 설치 FAIL을 교정 중이다.
+기준일: 2026-11-10. HOST-W05까지 완료5/8, HOST-W06의 H6 설치 FAIL 교정 후 H7 producer guard 실패를 확인 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 

@@ -64,3 +64,15 @@ provenance만 추가하는 `USTAR_PARENTS_FIRST_BZIP2_9_V1` 파생 archive를 �
 기존 W06 S19의 실제 PASS46 + 명시 수락 #29·40·44, 원형 FAIL·soak·private11831개·public3개와
 완료 TODO6개는 보존한다. 자동점검 w06 PAUSED 요청 유지·예약작업 생성/재활성화 없음.
 Ubuntu/macOS 물리 USB·Serial·debug·lifecycle은 RC1 최종 사용자 gate `NOT_RUN`이다.
+
+## H7 fresh 실행 후속
+
+교정 source H7 `64b488bfcbe979375ff2c5e2b93e251636a6cf54`의
+[native package CI42777568938](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/42777568938)는
+Ubuntu 단위30개 모두 통과한 뒤 producer의 exact-source 진입 guard에서 실패했다.
+실제 세 OS 설치·전체 예제는 아직 재실행되지 않았다. 허용 version·HEAD·작업본 상태를 묶은
+기존 메시지만으로 어느 조건이 거부됐는지는 미확정이다. Guard를 완화하지 않고 실제 version·HEAD·
+변경 파일 상태를 출력하도록 진단을 보강해 fresh source에서 확인한다.
+Job129699560066의 원형 log SHA-256은
+`bfd159811bc0f11d2d2adf7e656c4727df2c069fd570095a502267ca3ceaa621`이다.
+이 실행에는 producer artifact가 생성되지 않았으며 이를 다운로드 성공으로 만들지 않는다.

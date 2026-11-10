@@ -69,9 +69,12 @@ def build_bootstrap_tools(package, root: Path, output: Path) -> dict:
 def build(root: Path, source: str, output: Path, version: str) -> dict:
     """! @brief 두 번 독립 생성한 모든 sidecar·archive를 대조하고 official URL index를 기록합니다. """
     root, output = root.resolve(), output.resolve()
-    if (version not in PRIVATE_VERSIONS or not re.fullmatch(r'[0-9a-f]{40}', source)
-            or git(root, 'rev-parse', 'HEAD') != source or git(root, 'status', '--porcelain=v1', '--untracked-files=all')):
-        raise ValueError('native package 생성은 허용한 private version과 exact clean HEAD를 요구합니다.')
+    actual_head = git(root, 'rev-parse', 'HEAD')
+    dirty = git(root, 'status', '--porcelain=v1', '--untracked-files=all')
+    if version not in PRIVATE_VERSIONS or not re.fullmatch(r'[0-9a-f]{40}', source) or actual_head != source or dirty:
+        diagnostic = {'requested_version':version,'allowed_version':version in PRIVATE_VERSIONS,
+            'requested_source':source,'actual_HEAD':actual_head,'worktree_status':dirty.splitlines()}
+        raise ValueError('native package exact source 진입 거부: ' + json.dumps(diagnostic,ensure_ascii=False))
     if output.exists() or output.is_relative_to(root):
         raise ValueError('기존 출력이나 source 내부에는 native package를 생성하지 않습니다.')
     package = load_package(root)

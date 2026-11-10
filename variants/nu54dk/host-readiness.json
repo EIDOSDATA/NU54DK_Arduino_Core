@@ -287,7 +287,7 @@
     "transferred_to_W05": false
   },
   "W06_validation": {
-    "status": "H6_SMOKE_FAIL_CORRECTION_FRESH_CI_PENDING",
+    "status": "H7_PRODUCER_GUARD_FAIL_DIAGNOSTIC_PENDING",
     "source_revision": null,
     "Boards_Manager_clean_install": "NOT_RUN",
     "three_OS_all_204_examples": "NOT_RUN",
@@ -318,6 +318,15 @@
         "preserved_original_artifacts": true,
         "native_prerequisite_run": 42774982248,
         "native_prerequisite_OS_success": 3,
+        "source_credits_combined": false
+      },
+      {
+        "source_revision": "64b488bfcbe979375ff2c5e2b93e251636a6cf54",
+        "native_package_run": 42777568938,
+        "producer": "FAIL_EXACT_SOURCE_GUARD_DETAILS_UNCONFIRMED",
+        "producer_unit_tests": 30,
+        "producer_unit_passed": 30,
+        "smoke": "NOT_RUN",
         "source_credits_combined": false
       }
     ]
