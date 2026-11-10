@@ -32,6 +32,7 @@ from .host import (
     canonical_host_os,
     resolve_toolchain_executable,
 )
+from . import prerequisites
 
 
 ## @brief 요청 platform root가 exact Git checkout인지 확인합니다.
@@ -103,8 +104,13 @@ def configured_bundle_id(ncs_root: Path) -> str | None:
 ## @brief 개발 환경 discovery 또는 배포 package의 exact Toolchain bundle을 찾습니다.
 def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> Path:
     toolchains_root = ncs_root.parent / "toolchains"
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    bundle_id = TOOLCHAIN_BUNDLE_ID
+    if host_os != "windows":
+        _key, platform_pin = prerequisites.select_platform(prerequisites.load_manifest())
+        bundle_id = platform_pin["toolchain"]["bundle_id"]
     if exact_required:
-        pinned = toolchains_root / TOOLCHAIN_BUNDLE_ID
+        pinned = toolchains_root / bundle_id
         if (
             (pinned / "environment.json").is_file()
             and resolve_toolchain_executable(pinned, "python", required=False) is not None
@@ -122,7 +128,7 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
     bundle = configured_bundle_id(ncs_root)
     if bundle:
         candidates.append(ncs_root.parent / "toolchains" / bundle)
-    candidates.append(toolchains_root / TOOLCHAIN_BUNDLE_ID)
+    candidates.append(toolchains_root / bundle_id)
     if toolchains_root.is_dir():
         candidates.extend(sorted(path for path in toolchains_root.iterdir() if path.is_dir()))
     visited: set[str] = set()
@@ -188,6 +194,17 @@ def validate_packaged_prerequisites(
     pins = load_json_object(pins_path, "E_PREREQUISITE_PINS")
     ready_path = prerequisite_state_root() / "ready.json"
     ready = load_json_object(ready_path, "E_PREREQUISITE_READY")
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    if ready.get("schema_version") == 2 or host_os != "windows":
+        platform_pins_path = platform_root / "tools/nu54-prerequisites/platform-pins.json"
+        document = prerequisites.load_manifest(platform_pins_path)
+        key, pin = prerequisites.select_platform(document)
+        if package_manifest.get("platform_prerequisites_sha256") != file_sha256(platform_pins_path):
+            raise AdapterError("[NU54:E_PACKAGE_MANIFEST] OS별 prerequisite pin hash가 다릅니다.")
+        verified = prerequisites.verify_ready(document, key, prerequisite_state_root(), ncs_root.parent, platform_pins_path)
+        if path_key(verified["toolchain_root"]) != path_key(toolchain_root):
+            raise AdapterError("[NU54:E_PREREQUISITE_TOOLCHAIN] 발견한 OS별 toolchain 경로가 marker와 다릅니다.")
+        return
     pins_hash = file_sha256(pins_path)
 
     if pins.get("schema_version") != 1:

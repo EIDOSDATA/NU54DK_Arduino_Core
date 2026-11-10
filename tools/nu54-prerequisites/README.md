@@ -1,5 +1,10 @@
 # Nordic prerequisite 설치 계약
 
+후속 v0.6.0 HOST-W04의 OS별 고정 자산과 공통 Python backend는
+[Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
+[`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행과 사용자 실기 `NOT_RUN`은
+[Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.
+
 새 Windows PC에서 Git, Python, MinGW-w64, Arduino CLI와 실물 보드까지 준비하는 전체 절차는
 [Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.
 이 문서는 그중 Nordic prerequisite 설치기의 exact-pin 계약만 설명한다.
@@ -25,6 +30,8 @@ NCS v3.4.1이 공개돼도 현재 설치기의 v3.4.0 pin을 자동 갱신하지
 재검증이 필요하며, 다른 SDK의 수동 설치나 이 계획 문서만으로 지원 기준선이 변경되지는 않는다.
 
 공식 nRF Util 실행 파일은 버전과 빌드 식별자가 포함된 URL로 고정한다.
+후속 Host 구현에서는 `platform-pins.json`의 공식 core8.2.1 archive도 SHA-256 검증 후
+bootstrap 입력으로 지정한다. launcher와 core의 별도 고정을 Windows 설치 경로에도 적용한다.
 현재 executable `1.4.1-f15ff58`의 byte와 SHA-256은 기존 pin을 유지하며,
 별도로 version을 판정하는 core `8.2.1`과 sdk-manager `1.16.1`도 유지한다.
 [Nordic의 특정 버전 설치 안내](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util)에 따라

@@ -133,10 +133,18 @@ def describe_host(
     machine: str | None = None,
     distribution: str | None = None,
     version: str | None = None,
-    native: bool = True,
+    native: bool | None = None,
 ) -> HostDescriptor:
     host_os = canonical_host_os(system_name or platform.system())
     architecture = canonical_architecture(machine or platform.machine())
+    if native is None:
+        native = True
+        if system_name is None and machine is None:
+            if host_os == "linux":
+                native = "microsoft" not in platform.release().casefold() and not os.environ.get("WSL_DISTRO_NAME")
+            elif host_os == "windows":
+                underlying = os.environ.get("PROCESSOR_ARCHITEW6432", os.environ.get("PROCESSOR_ARCHITECTURE", ""))
+                native = not (architecture == "x86_64" and underlying.casefold() == "arm64")
 
     if host_os == "windows":
         host_distribution = (distribution or "windows").casefold()

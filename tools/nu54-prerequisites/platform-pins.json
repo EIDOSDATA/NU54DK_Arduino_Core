@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "work_package": "HOST-W04",
+  "ncs": {
+    "version": "v3.4.0",
+    "repository": "https://github.com/nrfconnect/sdk-nrf",
+    "revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "archive": {
+      "url": "https://files.nordicsemi.com/artifactory/ncs-src-mirror/external/sdk-nrf/v3.4.0/src.tar.gz",
+      "sha256": "70301f24fac7d2eb5b28c86801749d9df57f1535d47db170914915f907dffe80",
+      "sha512": "c98a688d6b1dcfdc97933a32462a93339bc0a7402a0f59a4f2340b2ac1657a986bba79031080bad42b3cf2bdc9d62aa3b286181aa0a7567b5a4265fc13fb1282",
+      "size": 3089558703
+    }
+  },
+  "zephyr": {
+    "repository": "https://github.com/nrfconnect/sdk-zephyr",
+    "revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "python_bootstrap_minimum": "3.12",
+  "provenance": {
+    "ncs_requirements": "https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/doc/nrf/installation/recommended_versions.rst",
+    "toolchain_config": "https://files.nordicsemi.com/NCS/external/bundles/config.json",
+    "sdk_config": "https://files.nordicsemi.com/artifactory/ncs-src-mirror/external/sdk-manager/config.json",
+    "nrfutil_version_install": "https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util"
+  },
+  "platforms": {
+    "windows-x86_64": {
+      "os": "windows",
+      "architecture": "x86_64",
+      "minimum_version": "10",
+      "target": "x86_64-pc-windows-msvc",
+      "nrfutil": {
+        "version": "8.2.1",
+        "launcher_version": "1.4.1-f15ff58",
+        "executable": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/executables/x86_64-pc-windows-msvc/nrfutil-x86_64-pc-windows-msvc-1.4.1-f15ff58.exe",
+          "sha256": "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
+          "size": 5939032
+        },
+        "core": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil/nrfutil-x86_64-pc-windows-msvc-8.2.1.tar.gz",
+          "sha256": "701f1b0b7c3131c9f4df1e4de3aba6a311ece67656438a3c8a4a37cb7a2df147",
+          "size": 3135274
+        }
+      },
+      "sdk_manager": {
+        "version": "1.16.1",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil-sdk-manager/nrfutil-sdk-manager-x86_64-pc-windows-msvc-1.16.1.tar.gz",
+          "sha256": "45f86409e2fd414dad5dd4843dd0dad9cee4138f2b08de1c2fd7e6272ae2aa06",
+          "size": 3524148
+        }
+      },
+      "toolchain": {
+        "bundle_id": "dcbdc366a1",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/NCS/external/bundles/v3/ncs-toolchain-x86_64-windows-dcbdc366a1.tar.gz",
+          "sha256": "a0e2311b49d8c49a95d9285852e39d62af5339aeb981e720b03757555432ec41",
+          "sha512": "4266d19541e6add4e41109677604f43e45b605bc09fcaca2d91ba35f2e7e6664b7a17475b97efed82ca2f160e1be95a6dc4455bf9396cd234444e855a9969761",
+          "size": 1013457231
+        }
+      },
+      "arduino_cli": {
+        "version": "1.5.1",
+        "archive": {
+          "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Windows_64bit.zip",
+          "sha256": "fabe42e0eb04d00e776a66178299ff95a46c623dbc260f997e58fd514853dd40",
+          "size": 17965819
+        }
+      }
+    },
+    "linux-x86_64": {
+      "os": "linux",
+      "architecture": "x86_64",
+      "minimum_version": "24.04",
+      "target": "x86_64-unknown-linux-gnu",
+      "nrfutil": {
+        "version": "8.2.1",
+        "launcher_version": "1.4.1-f15ff58",
+        "executable": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/executables/x86_64-unknown-linux-gnu/nrfutil-x86_64-unknown-linux-gnu-1.4.1-f15ff58",
+          "sha256": "1cf4bd1d3d64f43a6b9602d8d8e8d647bec0d26d517ba72fd154f95546b50260",
+          "size": 6725408
+        },
+        "core": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil/nrfutil-x86_64-unknown-linux-gnu-8.2.1.tar.gz",
+          "sha256": "903b77831aee52998fc03e271086af5a9f30558bdef3bd314eb3b601440cab0a",
+          "size": 3447680
+        }
+      },
+      "sdk_manager": {
+        "version": "1.16.1",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil-sdk-manager/nrfutil-sdk-manager-x86_64-unknown-linux-gnu-1.16.1.tar.gz",
+          "sha256": "d2fe97f143f888a679223d9c6e0b51d730eb60b4a5f4a5dafc970acd2020fe38",
+          "size": 3819157
+        }
+      },
+      "toolchain": {
+        "bundle_id": "fbf7391cab",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/NCS/external/bundles/v3/ncs-toolchain-x86_64-linux-fbf7391cab.tar.gz",
+          "sha256": "05476a662916bb5e7f932648ef9c2eafee5425ce7fbb9027ea46548fd67f15a7",
+          "sha512": "c101bc44c0524a64043193f20b8a7a740cae5c60f6a10094dccd5d88e9943ac86f4bef29de1746db88555ec103b8fd5756a02d0f3a9366d7299afe531479a7ae",
+          "size": 1263888311
+        }
+      },
+      "arduino_cli": {
+        "version": "1.5.1",
+        "archive": {
+          "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_Linux_64bit.tar.gz",
+          "sha256": "28a8e119c498a25607821c36cb2dc49e8463941b261a0d99091baa7bc692dd2b",
+          "size": 17630765
+        }
+      },
+      "distribution": "ubuntu",
+      "system_dependencies": [
+        "libc6",
+        "libstdc++6",
+        "libusb-1.0-0",
+        "libudev1",
+        "ca-certificates",
+        "xz-utils"
+      ],
+      "usb_rules": {
+        "repository": "https://github.com/NordicSemiconductor/nrf-udev",
+        "revision": "1e057483a14d91f8ea2ff598a846767b079ea47b",
+        "automatic_system_changes": false
+      }
+    },
+    "macos-arm64": {
+      "os": "macos",
+      "architecture": "arm64",
+      "minimum_version": "26",
+      "target": "aarch64-apple-darwin",
+      "nrfutil": {
+        "version": "8.2.1",
+        "launcher_version": "1.4.1-f15ff58",
+        "executable": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/executables/aarch64-apple-darwin/nrfutil-aarch64-apple-darwin-1.4.1-f15ff58",
+          "sha256": "1b993eece5a6e3e079ce25fa31a134ce4c12fb51735d10114a2ea4a1df048591",
+          "size": 5263376
+        },
+        "core": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil/nrfutil-aarch64-apple-darwin-8.2.1.tar.gz",
+          "sha256": "3162977182e1fe712dff1ab353de0471dfd63d2d9b7d4cc197d2c77987a959cc",
+          "size": 2851838
+        }
+      },
+      "sdk_manager": {
+        "version": "1.16.1",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/swtools/external/nrfutil/packages/nrfutil-sdk-manager/nrfutil-sdk-manager-aarch64-apple-darwin-1.16.1.tar.gz",
+          "sha256": "85d373cc73b623417adb71e336d568881a029dbae1d210693d4bce3597ff7c04",
+          "size": 3146977
+        }
+      },
+      "toolchain": {
+        "bundle_id": "ccc010f809",
+        "archive": {
+          "url": "https://files.nordicsemi.com/artifactory/NCS/external/bundles/v3/ncs-toolchain-aarch64-macos-ccc010f809.tar.gz",
+          "sha256": "9f222901455d4707e9e9d07226f146bfb96c355c6c489b39948268e67306c752",
+          "sha512": "dd01648f8cac8786488499b8ffa2dc62bf0ef14fe59fbf36f161993656818b49720e26c831006a179c0e4d669ca372dfe30f8865310c19e0e4ea8caf808f9f94",
+          "size": 902459854
+        }
+      },
+      "arduino_cli": {
+        "version": "1.5.1",
+        "archive": {
+          "url": "https://github.com/arduino/arduino-cli/releases/download/v1.5.1/arduino-cli_1.5.1_macOS_ARM64.tar.gz",
+          "sha256": "cb952e8c1621c95ef5f1d17831c945e3d0ec5973f89c557a7ec8feb9c4f7d4c9",
+          "size": 17370016
+        }
+      },
+      "required_install_root": "/opt/nordic/ncs",
+      "security_policy": "quarantine/Gatekeeper 유지, 필요한 설치 경로 권한은 사용자 절차로 준비"
+    }
+  }
+}

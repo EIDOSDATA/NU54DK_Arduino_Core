@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "scope": "v0.6.0_native_host_portability",
+  "updated_date": "2026-11-10",
+  "status": "in_progress",
+  "current_work_package": "HOST-W04",
+  "implementation_revision": "DEVELOPMENT_WORKTREE",
+  "completed_work_packages": 3,
+  "total_work_packages": 8,
+  "work_packages": [
+    {"id": "HOST-W01", "status": "completed", "title": "windows_assumption_inventory"},
+    {"id": "HOST-W02", "status": "completed", "title": "host_descriptor_executable_path_resolver"},
+    {"id": "HOST-W03", "status": "completed", "title": "thin_cmd_and_posix_launchers"},
+    {"id": "HOST-W04", "status": "in_progress", "title": "platform_prerequisites"},
+    {"id": "HOST-W05", "status": "not_started", "title": "portable_cache_lock_paths"},
+    {"id": "HOST-W06", "status": "not_started", "title": "package_and_ci_matrix"},
+    {"id": "HOST-W07", "status": "not_started", "title": "physical_upload_debug_serial"},
+    {"id": "HOST-W08", "status": "not_started", "title": "release_regression_support_matrix"}
+  ],
+  "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
+  "native_CI": {"status": "NOT_RUN", "workflow": ".github/workflows/host-native-prerequisites.yml"},
+  "user_physical_OS_gate": {
+    "status": "NOT_RUN",
+    "owner": "user",
+    "execution_stage": "M33-W07_RC1_FINAL_HOST_VALIDATION",
+    "fields": ["clean_install", "upload", "serial", "debug", "upgrade_reinstall_uninstall"]
+  },
+  "W06_preservation": {
+    "status": "USER_ACCEPTED_CLOSED",
+    "implementation_HIL_source": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+    "technical_group_pass_count": 46,
+    "explicitly_accepted_ordinals": [29, 40, 44],
+    "whole49_technical_pass_claimed": false,
+    "original_FAIL_reclassified": false,
+    "cause_analysis": "DEFERRED_BY_USER",
+    "full_CI_revision": "d1b320bdb0f009d7e01aaab243c5a0e42c64f3c2",
+    "full_CI_run_id": 42731935391,
+    "full_CI_success_jobs": 9,
+    "new_Host_source_HIL_credit": 0
+  },
+  "release_publication": "SEPARATE_OWNER_APPROVAL_REQUIRED"
+}

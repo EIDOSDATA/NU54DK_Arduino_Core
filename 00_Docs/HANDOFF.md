@@ -13,7 +13,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **3/8**. HOST-W04 이후 및 M33-W07/W08 미착수; 다음 범위에서 순차 진행 |
+| Host | **3/8**, **HOST-W04 진행 중**. 이후 W05→W06→W07 준비→RC1→실제 OS→W08 마감 순서 |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
@@ -44,7 +44,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 - NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
 - 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
 - 개발 smoke·Host·build와 최종 실제 보드 PASS를 분리한다. 문서 정비는 W06 완료가 아니다.
-- W06 완료 → 다음 범위 확인 → HOST → RC/실제 OS → M33-W07 → 별도 공개 승인 순서를 유지한다.
+- W06 수락 마감 후 사용자 지시로 HOST-W04를 시작했다. HOST-W04~W06 → W07 도구 → M33-W07 RC1 → 실제 OS 검증·HOST-W08 → M33-W07 마감 → M33-W08 별도 공개 승인 순서다.
 - Apple/Google·외장 장치는 사용자 후속 NOT_RUN, Ubuntu/macOS 실제 지원 검증은 RC 단계다.
 
 ## 과거 결과 찾기

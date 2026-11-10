@@ -1,0 +1,73 @@
+name: HOST Native Prerequisites
+
+on:
+  push:
+    branches:
+      - Dev-0.6.0-M33
+    paths:
+      - '.github/workflows/host-native-prerequisites.yml'
+      - 'tools/nu54-prerequisites/**'
+      - 'tools/nu54-builder/src/nu54_builder_impl/host.py'
+      - 'tools/nu54-builder/src/nu54_builder_impl/environment.py'
+      - 'tools/nu54-builder/src/nu54_builder_impl/prerequisites.py'
+      - 'tools/ci/host_prerequisites.py'
+      - 'tests/host/test_host_prerequisites.py'
+  workflow_dispatch:
+    inputs:
+      bootstrap_only:
+        description: Verify only pinned nRF Util and sdk-manager without installing the SDK
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  prerequisites:
+    name: Native prerequisites (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-x86_64
+            runner: windows-2025
+          - platform: linux-x86_64
+            runner: ubuntu-24.04
+          - platform: macos-arm64
+            runner: macos-26
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact source and board package
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - name: Set up Python 3.12.10
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Run portable prerequisite and resolver tests
+        run: python -B -m unittest -v tests.host.test_host_prerequisites tests.host.test_m30_host_portability
+      - name: Prepare the required macOS SDK directory
+        if: runner.os == 'macOS' && !inputs.bootstrap_only
+        shell: bash
+        run: sudo install -d -o "$(id -un)" -g "$(id -gn)" /opt/nordic/ncs
+      - name: Bootstrap exact Nordic commands
+        if: inputs.bootstrap_only
+        run: python -B tools/ci/host_prerequisites.py --bootstrap-only
+      - name: Install and verify exact SDK and toolchain
+        if: '!inputs.bootstrap_only'
+        run: python -B tools/ci/host_prerequisites.py
+      - name: Preserve exact source and installation evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-prerequisites-${{ matrix.platform }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/nu54-host/reports/*.json
+            ${{ runner.temp }}/nu54-host/state/bootstrap.json
+            ${{ runner.temp }}/nu54-host/state/incomplete.json
+            ${{ runner.temp }}/nu54-host/state/bootstrap/*/home/logs/**
+          if-no-files-found: warn
+          retention-days: 14
