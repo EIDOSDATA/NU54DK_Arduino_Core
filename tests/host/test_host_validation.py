@@ -158,6 +158,7 @@ class HostDebugCleanupTests(unittest.TestCase):
             class Session:
                 """! @brief close 없이 성공하면 시험을 통과할 수 없습니다. """
                 target = Target()
+                probe = SimpleNamespace()
                 def __enter__(self):
                     """! @brief 선택한 probe만 엽니다. """
                     events.append('open')

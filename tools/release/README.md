@@ -1,5 +1,7 @@
 # 릴리스 자동화 안내
 
+2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<../../00_Docs/04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
 `v050_release.py`와 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md)를 확인합니다.

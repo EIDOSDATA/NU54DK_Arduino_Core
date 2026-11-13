@@ -278,10 +278,16 @@ def build_flash_command(
         probe_id,
     ]
     if runner == "pyocd":
+        guard_script=Path(__file__).resolve().parents[1]/"nu54_pyocd_guard.py"
+        if not guard_script.is_file():
+            raise AdapterError("[NU54:E_PROBE_BACKEND] 같은 설치본의 pyOCD 보호 진입점이 없습니다.")
         command.extend((
             "--dt-flash=n",
             "--tool-opt=-Osmart_flash=false",
             "--tool-opt=-Oauto_unlock=false",
+            "--tool-opt=-Ojlink.non_interactive=false",
+            "--tool-opt=-Ojlink.power=false",
+            "--tool-opt=-Ouser_script="+str(guard_script),
         ))
         if swd_frequency is not None:
             if swd_frequency < 100_000 or swd_frequency > 4_000_000:
@@ -481,8 +487,12 @@ def flash(args: argparse.Namespace) -> None:
         raise AdapterError(f"[NU54:E_FLASH_TIMEOUT_OPTION] {error}") from None
     if args.runner not in {"pyocd", "jlink"}:
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
+    if getattr(args,"allow_jlink_backend",False) and (args.runner!="pyocd" or not (
+            getattr(args,"probe_sha256",None) or getattr(args,"probe_id",None) or os.environ.get("NUCODE_PROBE_UID"))):
+        raise AdapterError("[NU54:E_PROBE_BACKEND] J-Link backend는 pyOCD와 명시적인 probe identity가 필요합니다.")
     tools = tool_environment(canonical_path(args.platform_root))
     environment = flash_environment(tools, args.runner)
+    environment["NUCODE_ALLOW_JLINK_BACKEND"] = "1" if getattr(args,"allow_jlink_backend",False) else "0"
     session_paths = adapter_paths(args)
     with build_lock(session_paths["state_root"], operation="flash-session"):
         session_context = load_context(args, create=False)
@@ -529,6 +539,7 @@ def flash(args: argparse.Namespace) -> None:
                 f"runner={args.runner} probe={mask_probe_id(probe_id)} board={args.board} "
                 f"hex_sha256={inputs['hex_sha256']}"
             )
+            environment["NUCODE_SELECTED_PROBE_SHA256"] = probe_id_sha256(probe_id)
             with probe_lock(probe_id):
                 run_flash_process(
                     command,

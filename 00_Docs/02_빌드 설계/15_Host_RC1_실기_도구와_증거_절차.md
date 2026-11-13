@@ -1,5 +1,7 @@
 # Host RC1 실기 도구와 증거 절차
 
+2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<../04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+
 상태: HOST-W07 준비 중, Host6/8. 비공개 RC1 도구 구현과 실제 완료 판정을 구분한다.
 마지막 완료 기술 source는 [322번 H12 마감](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
@@ -93,6 +95,8 @@ START.cmd --work-root D:/w06/host-w07 upload --example nus-peripheral --probe-sh
 START.cmd --work-root D:/w06/host-w07 upload --example nus-central --probe-sha256 B
 START.cmd --work-root D:/w06/host-w07 ble-pair --probe-sha256 A --peer-probe-sha256 B --serial-sha256 SA --peer-serial-sha256 SB --path-sha256 PA --peer-path-sha256 PB
 ~~~
+
+기본 경로는 CMSIS-DAP이다. 조건부 J-Link-via-pyOCD에는 exact identity와 `--allow-jlink-backend`를 장치 명령에 함께 지정한다. 검토한 SDK의 공식 user script가 probe open 전 자동FW 갱신·GUI·전력 제어를 제한한다. 이 실적은 CMSIS-DAP 물리 PASS와 구분한다.
 
 path hash는 같은 serial에 VCOM이 둘 이상일 때 혼동을 막는다. 실제 cable 재연결로 path가 바뀌면
 inventory를 새로 수집하고 같은 serial을 대조한다. 자동 첫 port/probe 선택이나 runner fallback은 하지 않는다.

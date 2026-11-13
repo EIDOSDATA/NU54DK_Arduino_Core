@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
-  "updated_date": "2026-11-10",
+  "updated_date": "2026-11-13",
   "status": "in_progress",
   "current_work_package": "HOST-W07",
   "implementation_revision": "HOST_W06_H12_CLOSED_W07_PREPARATION",
@@ -441,12 +441,12 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C2_WINDOWS_STARTER_CORRECTION_READY_TO_FREEZE",
-    "product_integration": "C2_WORKTREE_FROM_addef962",
+    "status": "C3_PROBE_GUARD_LOCAL_TESTED_FINAL_PENDING",
+    "product_integration": "C3_WORKTREE_FROM_f18038869fa64c422b807e8fac2d821816804cd0",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "C1_KIT_STARTUP_FAIL_PRESERVED_C2_FINAL_PENDING",
+    "private_RC1": "C2_WINDOWS_PASS_C3_FINAL_PENDING",
     "user_physical_OS_gate": "NOT_RUN",
     "physical_OS_gate": "NOT_RUN",
     "new_HIL_runs": 0,
@@ -584,7 +584,7 @@
         "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
       }
     ],
-    "final_same_source_CI": "C2_NOT_RUN",
+    "final_same_source_CI": "C3_NOT_RUN",
     "no_system_Git_input_check": {
       "first_actual": "b612eb/exit1",
       "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
@@ -630,6 +630,40 @@
       "Windows_actual_CMD_good_bytes": true,
       "Windows_actual_CMD_changed_bytes_rejected": true,
       "scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_SOURCE"
+    },
+    "C2_attempt": {
+      "source_revision": "f18038869fa64c422b807e8fac2d821816804cd0",
+      "software_run": 42846429084,
+      "software_success": 9,
+      "prerequisite_run": 42846392684,
+      "prerequisite_OS_success": 3,
+      "prerequisite_reported": 294,
+      "prerequisite_PASS": 286,
+      "conditional_SKIP": 8,
+      "Windows_lifecycle_actual": "bc64ad/exit0",
+      "Windows_build_actual": "3abf30/exit0",
+      "actual_compiles": 8,
+      "original_native_run": 42846392776,
+      "original_native": "FAILURE_RUNNER_NOT_ACQUIRED",
+      "fresh_native_run": 43366923416,
+      "fresh_native": "CANCELLED_SUPERSEDED_BY_C3",
+      "physical_operations": 0,
+      "credits_transferred_to_C3": false
+    },
+    "C3_development": {
+      "base_source": "f18038869fa64c422b807e8fac2d821816804cd0",
+      "guard_tests": 21,
+      "actual_SDK_preopen": "29b2fc/exit0",
+      "native_open": 0,
+      "integrated_a001": "FAIL_INVENTORY_MISSING_2_FILES",
+      "integrated_a002": "f20514/exit0",
+      "reported": 140,
+      "PASS": 135,
+      "conditional_SKIP": 5,
+      "actual_attached_backend": "J-Link-via-pyOCD_NOT_CMSIS_DAP",
+      "CMSIS_DAP_physical": "NOT_RUN",
+      "final_CI_and_hardware": "NOT_RUN",
+      "SDK_and_probe_firmware_modified": false
     }
   },
   "W06_document_closure_CI": {

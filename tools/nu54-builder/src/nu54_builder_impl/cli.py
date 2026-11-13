@@ -78,6 +78,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
     flash_parser.add_argument("--verbose", action="store_true")
     flash_parser.add_argument("--timeout-seconds", type=finite_timeout, default=180)
+    flash_parser.add_argument("--allow-jlink-backend", action="store_true")
 
     clean_parser = subparsers.add_parser("clean-build")
     add_common_arguments(clean_parser)

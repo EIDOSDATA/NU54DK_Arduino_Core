@@ -1,5 +1,7 @@
 # Nordic prerequisite 설치 계약
 
+2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<../../00_Docs/04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+
 v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
 HOST-W06을 마감하고 HOST-W07을 준비하며 OS별 고정 자산과 공통 Python backend는
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와

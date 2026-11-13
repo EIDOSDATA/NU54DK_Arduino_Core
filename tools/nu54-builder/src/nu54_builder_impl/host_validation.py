@@ -145,9 +145,15 @@ def debug_elf(probe_sha256, elf, *, resume_only=False):
     from pyocd.core.helpers import ConnectHelper
     from pyocd.core.target import Target
     probe = select_identity(discover_pyocd_probe_ids(),probe_sha256,lambda item:item,'probe')
+    os.environ['NUCODE_SELECTED_PROBE_SHA256']=probe_sha256
+    guard_script=Path(__file__).resolve().parents[1]/'nu54_pyocd_guard.py'
+    if not guard_script.is_file():
+        raise AdapterError('[NU54:E_PROBE_BACKEND] 설치본의 probe 보호 진입점이 없습니다.')
     session = ConnectHelper.session_with_chosen_probe(unique_id=probe,blocking=False,
         return_first=False,options={'target_override':'nrf54l','connect_mode':'attach',
             'auto_unlock':False,'resume_on_disconnect':True,'frequency':1000000,
+            'no_config':True,'user_script':str(guard_script),'jlink.non_interactive':False,
+            'jlink.device':None,'jlink.power':False,
             'cache.read_code_from_elf':False,'cache.enable_memory':False,
             'cache.enable_register':False})
     if session is None:
@@ -182,7 +188,8 @@ def debug_elf(probe_sha256, elf, *, resume_only=False):
                     raise AdapterError('[NU54:E_HOST_DEBUG_RESUME] 실행 복귀를 확인하지 못했습니다.')
                 time.sleep(0.01)
             result['resumed'] = True
-    result.update(status='PASS',probe_closed=True,resume_only=resume_only)
+    result.update(status='PASS',probe_closed=True,resume_only=resume_only,
+        actual_probe_guard=getattr(session.probe,'_nu54_probe_guard',None))
     return result
 
 
@@ -197,7 +204,9 @@ def blink_gpio(probe_sha256,elf):
     probe = select_identity(discover_pyocd_probe_ids(),probe_sha256,lambda item:item,'probe')
     session = ConnectHelper.session_with_chosen_probe(unique_id=probe,blocking=False,return_first=False,
         options={'target_override':'nrf54l','connect_mode':'attach','auto_unlock':False,
-            'resume_on_disconnect':True,'frequency':1000000,'cache.enable_memory':False})
+            'resume_on_disconnect':True,'frequency':1000000,'cache.enable_memory':False,
+            'no_config':True,'user_script':str(Path(__file__).resolve().parents[1]/'nu54_pyocd_guard.py'),
+            'jlink.non_interactive':False,'jlink.device':None,'jlink.power':False})
     if session is None:
         raise AdapterError('[NU54:E_HOST_DEBUG_PROBE] exact probe session을 만들지 못했습니다.')
     samples = []
@@ -295,10 +304,12 @@ def physical_check(args):
                 receipt.update(manifest_sha256=file_sha256(inputs['manifest_path']),
                     elf_sha256=inputs['elf_sha256'],hex_sha256=inputs['hex_sha256'],
                     build_context=context,host_python=str(tools['python']))
+                child_environment=dict(tools['environment'],NUCODE_SELECTED_PROBE_SHA256=args.probe_sha256,
+                    NUCODE_ALLOW_JLINK_BACKEND='1' if args.allow_jlink_backend else '0')
                 with probe_lock(probe):
                     interrupted = None
                     try:
-                        result = run_owned(command,cwd=tools['ncs_root'],environment=tools['environment'],
+                        result = run_owned(command,cwd=tools['ncs_root'],environment=child_environment,
                             capture_directory=output,timeout=min(1800,max(60,(args.timeout_seconds+min(args.timeout_seconds,2))*6+15)))
                         raw = result.stdout
                         receipt.update(child_exit_code=result.returncode,cleanup=result.cleanup)
@@ -311,7 +322,7 @@ def physical_check(args):
                     if args.operation in ('debug','blink') and (interrupted is not None or result.returncode != 0):
                         recovery = [tools['python'],'-I','-X','utf8','-B',entry,'_resume',
                             '--result',output/'resume.json','--probe-sha256',args.probe_sha256]
-                        resumed = run_owned(recovery,cwd=tools['ncs_root'],environment=tools['environment'],
+                        resumed = run_owned(recovery,cwd=tools['ncs_root'],environment=child_environment,
                             capture_directory=output,timeout=30)
                         (output/'resume.log').write_text(resumed.stdout.decode('utf-8',errors='replace').replace(probe,'sha256:'+args.probe_sha256),encoding='utf-8')
                         receipt['recovery_resume_exit'] = resumed.returncode
@@ -433,6 +444,7 @@ def main(arguments=None):
         command.add_argument('--probe-sha256',required=True)
         command.add_argument('--output-root',required=True)
         command.add_argument('--timeout-seconds',type=finite_timeout,default=5)
+        command.add_argument('--allow-jlink-backend',action='store_true')
         if name in ('serial','ble-pair'):
             command.add_argument('--serial-sha256',required=True)
             command.add_argument('--path-sha256')

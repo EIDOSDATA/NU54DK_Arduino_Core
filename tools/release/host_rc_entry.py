@@ -85,6 +85,7 @@ def main(arguments=None):
         command = sub.add_parser(name)
         command.add_argument('--example',choices=('blink','serial','nus-peripheral','nus-central'),required=True)
         command.add_argument('--probe-sha256',required=True)
+        command.add_argument('--allow-jlink-backend',action='store_true')
         if name == 'serial':
             command.add_argument('--serial-sha256',required=True)
             command.add_argument('--path-sha256')
@@ -93,6 +94,7 @@ def main(arguments=None):
         pair.add_argument('--'+name,required=True)
     pair.add_argument('--path-sha256')
     pair.add_argument('--peer-path-sha256')
+    pair.add_argument('--allow-jlink-backend',action='store_true')
     args = parser.parse_args(arguments)
     if not args.kit.is_absolute() or not args.work_root.is_absolute() or args.work_root.resolve().is_relative_to(args.kit.resolve()):
         raise ValueError('kit 밖의 새 절대 work root가 필요합니다.')
@@ -254,11 +256,16 @@ def main(arguments=None):
                         'path_sha256','peer_path_sha256'):
                         if getattr(args,name,None):
                             command += ['--'+name.replace('_','-'),getattr(args,name)]
+                    if args.allow_jlink_backend:
+                        command += ['--allow-jlink-backend']
                     run('ble-pair',command,90)
                 elif args.operation=='upload':
-                    run('upload',[sdk_python,'-I','-X','utf8','-B',platform/'tools/nu54-builder/src/nu54_builder.py',
+                    command=[sdk_python,'-I','-X','utf8','-B',platform/'tools/nu54-builder/src/nu54_builder.py',
                         'flash',*common,'--runner','pyocd','--probe-sha256',args.probe_sha256,
-                        '--timeout-seconds','180'],200)
+                        '--timeout-seconds','180']
+                    if args.allow_jlink_backend:
+                        command += ['--allow-jlink-backend']
+                    run('upload',command,200)
                 else:
                     if args.operation=='blink' and args.example != 'blink':
                         raise ValueError('LED GPIO 관측은 Blink image에만 사용하십시오.')
@@ -270,6 +277,8 @@ def main(arguments=None):
                         command += ['--serial-sha256',args.serial_sha256]
                         if args.path_sha256:
                             command += ['--path-sha256',args.path_sha256]
+                    if args.allow_jlink_backend:
+                        command += ['--allow-jlink-backend']
                     run('physical',command,90)
             state['last_operation'] = args.operation
         receipt['status'] = 'PASS'

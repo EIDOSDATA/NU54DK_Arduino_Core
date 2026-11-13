@@ -1,5 +1,7 @@
 # 개발 인계
 
+2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
 [310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)과
@@ -15,7 +17,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
 | Host | **6/8**, **HOST-W06 완료·HOST-W07 준비 중**. 이후 W07 준비→RC1→실제 OS→W08 마감 순서 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C1 Windows START의 모듈 경로 결함·FAIL 보존 후 C2 .NET hash 교정. 고정 SDK 실제 설치 완료; fresh C2 CI·Windows 회귀는 별도 미완료 — [324번](<04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>) |
+| HOST-W07 현재 | C1 Windows START의 모듈 경로 결함·FAIL 보존 후 C2 .NET hash 교정. 고정 SDK 실제 설치 완료; C2 Windows8빌드·수명주기 PASS; C3 최종 검증은 별도 미완료 — [324번](<04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>) |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |

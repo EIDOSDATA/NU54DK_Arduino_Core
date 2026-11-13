@@ -83,6 +83,16 @@ class HostUploadProcessTests(unittest.TestCase):
             with self.subTest(requested=requested),self.assertRaisesRegex(BUILDER.AdapterError,'E_PROBE_SHA256'):
                 UPLOAD.select_pyocd_probe_digest(requested,values)
 
+    def test_jlink_backend_opt_in_requires_explicit_identity_before_environment(self):
+        """! @brief 조건부 backend는 단일 probe 자동 선택으로 승인되지 않습니다. """
+        for runner in ('pyocd','jlink'):
+            args = type('Args',(),{'timeout_seconds':30,'runner':runner,'allow_jlink_backend':True,
+                'probe_sha256':None,'probe_id':None})()
+            with self.subTest(runner=runner),mock.patch.dict(os.environ,{'NUCODE_PROBE_UID':''}),mock.patch.object(UPLOAD,'tool_environment') as environment:
+                with self.assertRaisesRegex(BUILDER.AdapterError,'E_PROBE_BACKEND'):
+                    UPLOAD.flash(args)
+                environment.assert_not_called()
+
     def test_cleanup_fault_log_keeps_partial_output_and_unconfirmed_status(self):
         """! @brief 정리 실패는 upload PASS가 되지 않고 UID를 숨긴 부분 log로 남습니다. """
         failure = UPLOAD.OwnedExecutionError(('partial '+self.uid).encode(),'RuntimeError')
