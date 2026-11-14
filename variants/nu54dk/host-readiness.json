@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
-  "updated_date": "2026-11-13",
+  "updated_date": "2026-11-14",
   "status": "in_progress",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W06_H12_CLOSED_W07_PREPARATION",
+  "implementation_revision": "HOST_W06_H12_CLOSED_W07_C4_CORRECTION",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -441,12 +441,12 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C3_PROBE_GUARD_LOCAL_TESTED_FINAL_PENDING",
-    "product_integration": "C3_WORKTREE_FROM_f18038869fa64c422b807e8fac2d821816804cd0",
+    "status": "C4_HOST_PYTHON_AND_INACTIVE_GAP_CORRECTION_FINAL_PENDING",
+    "product_integration": "C4_WORKTREE_FROM_9e48de4ced1bc223e99880bbbbc2166a36304099",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "C2_WINDOWS_PASS_C3_FINAL_PENDING",
+    "private_RC1": "C3_BUILD_CI_PASS_PHYSICAL_FAIL_C4_PENDING",
     "user_physical_OS_gate": "NOT_RUN",
     "physical_OS_gate": "NOT_RUN",
     "new_HIL_runs": 0,
@@ -584,7 +584,7 @@
         "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
       }
     ],
-    "final_same_source_CI": "C3_NOT_RUN",
+    "final_same_source_CI": "C4_NOT_RUN",
     "no_system_Git_input_check": {
       "first_actual": "b612eb/exit1",
       "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
@@ -664,6 +664,32 @@
       "CMSIS_DAP_physical": "NOT_RUN",
       "final_CI_and_hardware": "NOT_RUN",
       "SDK_and_probe_firmware_modified": false
+    },
+    "C3_attempt": {
+      "source_revision": "9e48de4ced1bc223e99880bbbbc2166a36304099",
+      "Windows_all204": "058fc3/exit0",
+      "Windows_artifacts826": "fc57f5/exit0",
+      "Windows_lifecycle": "fa9775/exit0",
+      "CI_jobs_success": 48,
+      "native_worker_local_byte_audit": "NOT_RUN",
+      "physical_a001": "1429e9/exit1",
+      "physical_a002": "adb4bc/exit1",
+      "representative_refresh": "2ea3fe/exit0",
+      "development_NUS_pair": "1b92c1/exit1",
+      "retired_as_final_candidate": true,
+      "credits_transferred_to_C4": false
+    },
+    "C4_development": {
+      "base_source": "9e48de4ced1bc223e99880bbbbc2166a36304099",
+      "SDK_python_locator_tests": "8f3bae/exit0",
+      "inactive_GAP_before": "e868a7/exit1",
+      "inactive_GAP_after": "83cb39/exit0",
+      "NUS_cause": "INACTIVE_GENERIC_GAP_GLOBAL_CALLBACK_DISCONNECTS_NUS_LINK",
+      "final_hardware": "NOT_RUN",
+      "final_CI": "NOT_RUN",
+      "final_same_source_credit": false,
+      "SDK_and_probe_firmware_modified": false,
+      "group29_cause_inferred": false
     }
   },
   "W06_document_closure_CI": {

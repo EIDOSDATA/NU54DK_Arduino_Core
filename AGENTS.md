@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<00_Docs/04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<00_Docs/04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 ## 시작 전에
 
@@ -67,11 +67,11 @@
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   현재 source/설치 제품 버전은 **0.5.0**이고 M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 준비 중**입니다. W05 exact `5f9b2257…`에서
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 C4 교정 중**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W03은 완료했고
-  **HOST-W06 완료 후 HOST-W07 준비부터 순차 진행**합니다. 2026-11-10 사용자가 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
+  **HOST-W06 완료 후 HOST-W07 실기 교정부터 순차 진행**합니다. 2026-11-10 사용자가 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
   M33 기능 개발과 Host를 병렬 진행하지 않습니다. W06 완료 후 HOST-W04~W06과 W07 도구를
   준비하고, M33-W07 RC1으로 Host 실기·HOST-W08을 마감한 뒤 M33-W08로 진행합니다.
   Host 구현은 이번 사용자 지시로 착수했으며 v0.6.0 공개는 별도 승인 단계입니다.

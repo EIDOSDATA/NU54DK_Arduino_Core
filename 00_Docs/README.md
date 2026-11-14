@@ -1,6 +1,6 @@
 # 문서 안내
 
-2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 일반 사용자는 **stable v0.5.0** 문서를 선택합니다. Windows 10/11 x64 대상이며,
 이전 stable과 RC는 지원·catalog 공급이 끝난 역사 기록으로 보존합니다.
@@ -39,7 +39,7 @@ Native package의 초기 runtime·private CI·204개 예제·artifact 비교 계
 | Bluetooth qualification 적용성 | [M33 qualification 조사](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>) — NCS 3.4.0 component 공개 상태와 별도 제품 절차 |
 
 M28~M31과 Windows v0.5.0 정식 공개, M32 12/12를 완료했습니다. M33은 W01~W05 기술 완료 5/8에 W06 사용자 수락을 더해 수락 6/8입니다.
-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했고 현재 HOST-W06 완료 후 HOST-W07 준비부터 순차 진행합니다. 현행 상태·개발 수정순회·최종 마감 순서는
+W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했고 현재 HOST-W06 완료 후 HOST-W07 실기 교정부터 순차 진행합니다. 현행 상태·개발 수정순회·최종 마감 순서는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)을 따릅니다.
 실제 작업본·source·진행 항목·종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인하며,
 재개 입력과 보존 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾습니다.

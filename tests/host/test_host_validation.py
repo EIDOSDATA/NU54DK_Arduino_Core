@@ -1,6 +1,8 @@
 """! @brief 비식별 선택·유한 Serial oracle·재열거와 실패 시 close를 검증합니다. """
 import importlib
 import importlib.util
+import contextlib
+import json
 from pathlib import Path
 from types import SimpleNamespace
 import sys
@@ -181,6 +183,139 @@ class HostDebugCleanupTests(unittest.TestCase):
                         result = M.debug_elf(M.identity_hash('fixture-probe'),path)
                         self.assertTrue(result['resumed'] and result['probe_closed'])
                 self.assertEqual(events,['open','elf','halt','resume','close'])
+
+
+class HostWorkerLaunchTests(unittest.TestCase):
+    """! @brief 실제 tool 환경 계약으로 부모 실행 경로를 검사하며 물리 PASS로 세지 않습니다. """
+    def fixture(self,root):
+        """! @brief 환경 객체에 없는 python key를 추가하지 않는 SDK 실행 fixture입니다. """
+        platform = root/'platform'
+        build = root/'build'
+        build.mkdir()
+        manifest = build/'Fixture.nu54-build.json'
+        manifest.write_text('{}',encoding='utf-8')
+        elf = build/'Fixture.elf'
+        elf.write_bytes(b'ELF-FIXTURE')
+        args = SimpleNamespace(operation='blink',output_root=root/'result',platform_root=platform,
+            build_path=build,sketch_root=platform/'libraries/NUCODE_BLE/examples/NUSPeripheral',
+            fqbn='fixture:fqbn',board='fixture-board',project_name='Fixture',manifest=manifest,
+            profile='ble',probe_sha256=M.identity_hash('fixture-probe'),serial_sha256='1'*64,
+            path_sha256=None,timeout_seconds=1,allow_jlink_backend=True)
+        tools = dict(toolchain_root=root/'fixed-sdk/toolchain',ncs_root=root/'fixed-sdk/ncs',
+            environment={'SDK_ENV':'FIXED','PATH':'fixed-sdk-bin'})
+        context = dict(fixture_name='primary')
+        inputs = dict(manifest_path=manifest,elf=elf,zephyr_build=build/'zephyr',elf_sha256='e'*64,hex_sha256='f'*64,
+            manifest=dict(context=context,sysbuild=False,cache=dict(input_manifest=dict(
+                adapter=dict(embedded_core_revision='fixture-same-source')))))
+        return args,tools,context,inputs,root/'fixed-sdk/toolchain/python.exe'
+
+    @contextlib.contextmanager
+    def parent_environment(self,args,tools,contexts,inputs,sdk_python,run):
+        """! @brief 대상·캐시 검증은 독립 fixture로 두고 SDK worker 실행 계약만 관측합니다. """
+        with contextlib.ExitStack() as stack:
+            stack.enter_context(mock.patch.object(M,'tool_environment',return_value=tools))
+            resolver = stack.enter_context(mock.patch.object(M,'resolve_toolchain_executable',return_value=sdk_python))
+            stack.enter_context(mock.patch.object(M,'load_context',side_effect=lambda item,**kwargs:contexts[id(item)]))
+            stack.enter_context(mock.patch.object(M,'paths_from_context',side_effect=lambda paths,context:
+                dict(workspace=args.output_root.parent/('cache-'+context['fixture_name']))))
+            for name in ('build_lock','probe_lock'):
+                stack.enter_context(mock.patch.object(M,name,side_effect=lambda *values,**kwargs:contextlib.nullcontext()))
+            stack.enter_context(mock.patch.object(M,'validate_flash_tool_identity'))
+            stack.enter_context(mock.patch.object(M,'validate_runner_configuration'))
+            validator = stack.enter_context(mock.patch.object(M,'validate_flash_manifest',side_effect=lambda item:inputs[id(item)]))
+            stack.enter_context(mock.patch.object(M,'discover_pyocd_probe_ids',return_value=['fixture-probe','fixture-peer']))
+            runner = stack.enter_context(mock.patch.object(M,'run_owned',side_effect=run))
+            yield resolver,validator,runner
+
+    def result_runner(self,calls,fail_operation=None):
+        """! @brief 새 worker 원형을 생성하며 실제 child나 probe는 실행하지 않습니다. """
+        def run(command,**kwargs):
+            """! @brief 성공과 실패·복귀를 구분해 부모의 실제 분기를 실행합니다. """
+            calls.append((command,kwargs))
+            operation = next(value for value in command if str(value) in ('_blink','_debug','_serial','_pair','_resume'))
+            failed = operation == fail_operation
+            path = Path(command[command.index('--result')+1])
+            path.write_text(json.dumps(dict(status='FAIL' if failed else 'PASS',fixture_only=True)),encoding='utf-8')
+            return SimpleNamespace(returncode=1 if failed else 0,stdout=b'FIXTURE_WORKER',
+                cleanup=dict(active_processes_after=0))
+        return run
+
+    def test_single_worker_uses_fixed_sdk_python_without_invented_environment_key(self):
+        """! @brief blink·debug·serial 부모 경로가 시스템 Python으로 대체되지 않습니다. """
+        for operation in ('blink','debug','serial'):
+            with self.subTest(operation=operation),tempfile.TemporaryDirectory() as temporary:
+                args,tools,context,inputs,sdk = self.fixture(Path(temporary))
+                args.operation = operation
+                calls = []
+                self.assertNotIn('python',tools)
+                with self.parent_environment(args,tools,{id(args):context},{id(args):inputs},sdk,
+                        self.result_runner(calls)) as (resolver,validator,runner):
+                    M.physical_check(args)
+                    resolver.assert_called_once_with(tools['toolchain_root'],'python')
+                self.assertEqual(len(calls),1)
+                self.assertEqual(calls[0][0][0],sdk)
+                self.assertIn('_'+operation,calls[0][0])
+                self.assertEqual(calls[0][1]['environment']['SDK_ENV'],'FIXED')
+                self.assertEqual(calls[0][1]['environment']['NUCODE_SELECTED_PROBE_SHA256'],args.probe_sha256)
+                result = json.loads((args.output_root/'result.json').read_text(encoding='utf-8'))
+                self.assertEqual(result['host_python'],str(sdk))
+                self.assertFalse(result['physical_recovery_pending'])
+
+    def test_pre_worker_failure_does_not_report_target_recovery_pending(self):
+        """! @brief 장치 worker 시작 전 manifest 오류는 보드를 halt했다고 기록하지 않습니다. """
+        with tempfile.TemporaryDirectory() as temporary:
+            args,tools,context,inputs,sdk = self.fixture(Path(temporary))
+            with self.parent_environment(args,tools,{id(args):context},{id(args):inputs},sdk,
+                    self.result_runner([])) as (resolver,validator,runner):
+                validator.side_effect = BUILDER.AdapterError('fixture invalid manifest')
+                with self.assertRaisesRegex(BUILDER.AdapterError,'invalid manifest'):
+                    M.physical_check(args)
+                runner.assert_not_called()
+            result = json.loads((args.output_root/'result.json').read_text(encoding='utf-8'))
+            self.assertEqual(result['status'],'FAIL')
+            self.assertFalse(result['physical_recovery_pending'])
+
+    def test_failed_debug_and_recovery_both_use_same_sdk_python(self):
+        """! @brief 실제 worker 실패 뒤 복귀도 고정 SDK Python으로 수행하고 FAIL은 유지합니다. """
+        with tempfile.TemporaryDirectory() as temporary:
+            args,tools,context,inputs,sdk = self.fixture(Path(temporary))
+            args.operation = 'debug'
+            calls = []
+            with self.parent_environment(args,tools,{id(args):context},{id(args):inputs},sdk,
+                    self.result_runner(calls,fail_operation='_debug')):
+                with self.assertRaisesRegex(BUILDER.AdapterError,'E_HOST_WORKER'):
+                    M.physical_check(args)
+            self.assertEqual(len(calls),2)
+            self.assertTrue(all(command[0]==sdk for command,kwargs in calls))
+            self.assertIn('_resume',calls[1][0])
+            result = json.loads((args.output_root/'result.json').read_text(encoding='utf-8'))
+            self.assertEqual(result['status'],'FAIL')
+            self.assertEqual(result['recovery_resume_exit'],0)
+            self.assertFalse(result['physical_recovery_pending'])
+
+    def test_pair_worker_uses_fixed_sdk_python_with_real_environment_shape(self):
+        """! @brief 두 NUS manifest의 부모 경로도 동일한 SDK locator를 사용합니다. """
+        with tempfile.TemporaryDirectory() as temporary:
+            args,tools,context,inputs,sdk = self.fixture(Path(temporary))
+            peer = SimpleNamespace(**vars(args))
+            peer.build_path = Path(temporary)/'peer-build'
+            peer.sketch_root = args.platform_root/'libraries/NUCODE_BLE/examples/NUSCentral'
+            peer_context = dict(fixture_name='peer')
+            peer_inputs = dict(inputs,manifest=dict(inputs['manifest'],context=peer_context))
+            args.peer_manifest = Path(temporary)/'peer.nu54-build.json'
+            args.peer_probe_sha256 = M.identity_hash('fixture-peer')
+            args.peer_serial_sha256 = '2'*64
+            args.peer_path_sha256 = None
+            calls = []
+            with mock.patch.object(M,'manifest_namespace',return_value=peer),self.parent_environment(
+                    args,tools,{id(args):context,id(peer):peer_context},
+                    {id(args):inputs,id(peer):peer_inputs},sdk,self.result_runner(calls)) as (resolver,validator,runner):
+                M.physical_pair(args)
+                resolver.assert_called_once_with(tools['toolchain_root'],'python')
+            self.assertEqual(len(calls),1)
+            self.assertEqual(calls[0][0][0],sdk)
+            self.assertIn('_pair',calls[0][0])
+            self.assertEqual(calls[0][1]['environment'],tools['environment'])
 
 
 if __name__ == '__main__':

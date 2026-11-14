@@ -16,6 +16,7 @@ from .artifacts import validate_flash_manifest
 from .build import load_context
 from .common import AdapterError, atomic_write_json, canonical_path, file_sha256
 from .environment import tool_environment
+from .host import resolve_toolchain_executable
 from .host_diagnostics import identity_hash, inspect_host
 from .locking import build_lock, probe_lock
 from .owned_process import finite_timeout, OwnedExecutionError, OwnedInterrupted, OwnedTimeout, run_owned
@@ -275,9 +276,11 @@ def physical_check(args):
     output.mkdir(parents=True)
     receipt = dict(status='FAIL',operation=args.operation,probe_sha256=args.probe_sha256,
         user_physical_OS_gate='PARTIAL_SINGLE_OPERATION',started_at_utc=time.time(),
-        firmware_source_relabelled=False,physical_recovery_pending=args.operation in ('debug','blink'))
+        firmware_source_relabelled=False,physical_recovery_pending=False)
     try:
         tools = tool_environment(canonical_path(args.platform_root))
+        sdk_python = resolve_toolchain_executable(tools['toolchain_root'],'python')
+        assert sdk_python is not None
         paths = adapter_paths(args)
         with build_lock(paths['state_root'],operation='host-check-session'):
             context = load_context(args,create=False)
@@ -292,7 +295,7 @@ def physical_check(args):
                 validate_runner_configuration(inputs['zephyr_build'],'pyocd')
                 probe = select_identity(discover_pyocd_probe_ids(),args.probe_sha256,lambda value:value,'probe')
                 entry = Path(args.platform_root)/'tools/nu54-prerequisites/host-check.py'
-                command = [tools['python'],'-I','-X','utf8','-B',entry,'_'+args.operation,
+                command = [sdk_python,'-I','-X','utf8','-B',entry,'_'+args.operation,
                     '--result',output/'worker.json','--probe-sha256',args.probe_sha256,
                     '--timeout-seconds',str(args.timeout_seconds)]
                 if args.operation == 'serial':
@@ -303,11 +306,12 @@ def physical_check(args):
                     command += ['--elf',inputs['elf']]
                 receipt.update(manifest_sha256=file_sha256(inputs['manifest_path']),
                     elf_sha256=inputs['elf_sha256'],hex_sha256=inputs['hex_sha256'],
-                    build_context=context,host_python=str(tools['python']))
+                    build_context=context,host_python=str(sdk_python))
                 child_environment=dict(tools['environment'],NUCODE_SELECTED_PROBE_SHA256=args.probe_sha256,
                     NUCODE_ALLOW_JLINK_BACKEND='1' if args.allow_jlink_backend else '0')
                 with probe_lock(probe):
                     interrupted = None
+                    receipt['physical_recovery_pending'] = args.operation in ('debug','blink')
                     try:
                         result = run_owned(command,cwd=tools['ncs_root'],environment=child_environment,
                             capture_directory=output,timeout=min(1800,max(60,(args.timeout_seconds+min(args.timeout_seconds,2))*6+15)))
@@ -320,7 +324,7 @@ def physical_check(args):
                     text = raw.decode('utf-8',errors='replace').replace(probe,'sha256:'+args.probe_sha256)
                     (output/'child.log').write_text(text,encoding='utf-8')
                     if args.operation in ('debug','blink') and (interrupted is not None or result.returncode != 0):
-                        recovery = [tools['python'],'-I','-X','utf8','-B',entry,'_resume',
+                        recovery = [sdk_python,'-I','-X','utf8','-B',entry,'_resume',
                             '--result',output/'resume.json','--probe-sha256',args.probe_sha256]
                         resumed = run_owned(recovery,cwd=tools['ncs_root'],environment=child_environment,
                             capture_directory=output,timeout=30)
@@ -364,6 +368,8 @@ def physical_pair(args):
         if canonical_path(pair[0].platform_root) != canonical_path(pair[1].platform_root):
             raise AdapterError('[NU54:E_HOST_CONTEXT] 같은 설치본의 두 NUS image가 필요합니다.')
         tools = tool_environment(canonical_path(args.platform_root))
+        sdk_python = resolve_toolchain_executable(tools['toolchain_root'],'python')
+        assert sdk_python is not None
         paths = [adapter_paths(item) for item in pair]
         with contextlib.ExitStack() as stack:
             for root in sorted({row['state_root'] for row in paths},key=str):
@@ -393,7 +399,7 @@ def physical_pair(args):
             for probe in sorted(probes,key=str.casefold):
                 stack.enter_context(probe_lock(probe))
             entry = platform/'tools/nu54-prerequisites/host-check.py'
-            command = [tools['python'],'-I','-X','utf8','-B',entry,'_pair','--result',output/'worker.json',
+            command = [sdk_python,'-I','-X','utf8','-B',entry,'_pair','--result',output/'worker.json',
                 '--probe-sha256',args.probe_sha256,'--peer-probe-sha256',args.peer_probe_sha256,
                 '--serial-sha256',args.serial_sha256,'--peer-serial-sha256',args.peer_serial_sha256,
                 '--timeout-seconds','10']
@@ -403,7 +409,7 @@ def physical_pair(args):
             try:
                 result = run_owned(command,cwd=tools['ncs_root'],environment=tools['environment'],capture_directory=output,timeout=60)
                 raw = result.stdout
-                receipt.update(child_exit_code=result.returncode,cleanup=result.cleanup)
+                receipt.update(child_exit_code=result.returncode,cleanup=result.cleanup,host_python=str(sdk_python))
             except (OwnedTimeout,OwnedInterrupted,OwnedExecutionError) as error:
                 raw = error.output
                 receipt.update(process_outcome=type(error).__name__,cleanup=error.cleanup)

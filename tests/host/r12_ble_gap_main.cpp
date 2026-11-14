@@ -570,6 +570,25 @@ int main(int argc, char **argv)
         assert(BLEConnection.count() == 0U);
     }
 #endif
+    else if (std::strcmp(scenario, "inactive_facade_callback") == 0)
+    {
+        BLEDevice.end();
+        assert(internal::claimFacade(internal::FacadeOwner::nus));
+        for (auto &connection : mock_connections)
+        {
+            mock_conn_callbacks->connected(&connection, 0);
+            mock_conn_callbacks->connected(&connection, 0x3e);
+            mock_conn_callbacks->disconnected(&connection, 0x13);
+            assert(connection.disconnects == 0 && connection.refs == 0);
+        }
+        BLEDevice.poll();
+        assert(!BLEDevice.initialized() && BLEConnection.count() == 0U);
+        assert(events[static_cast<unsigned>(BLEEvent::connected)] == 0U);
+        internal::releaseFacade(internal::FacadeOwner::nus);
+        assert(BLEDevice.begin("generic-after-nus"));
+        const BLEConnectionHandle connection = connect(0);
+        assert(BLEConnection.connected(connection));
+    }
     else if (std::strcmp(scenario, "role_callback_guard") == 0)
     {
         assert(BLEAdvertising.clear() && BLEAdvertising.start());

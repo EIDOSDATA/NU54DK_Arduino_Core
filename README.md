@@ -1,6 +1,6 @@
 # NU54DK Arduino Core
 
-2026-11-13 현행 상태: **Host6/8·HOST-W07 C3 교정 검증 중**. C2 Windows 대표4종 cold/warm8빌드와 설치 수명주기는 실제 PASS다. 연결 전 J-Link 자동FW 갱신 경로를 C3에서 차단하며, C3 최종 CI·실물과 OS별 사용자 gate는 미완료다. [source별 결과](<00_Docs/04_검증 기록/325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md>)를 따른다. W06 실제 PASS46·수락3·FAIL은 동결하고 #29 분석은 유예한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<00_Docs/04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 NU54DK의 **nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Core**입니다.
 `setup()`/`loop()`와 Arduino API로 시작하고, BLE·LE Audio·Channel Sounding과
@@ -164,7 +164,7 @@ M28~M31·P0~P2와 RC2 사용자 경험 교정, 연속 Upload runtime PM 교정�
 결정·검증·공개 근거는 [274번 기록](<00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 
 개발 소스의 **M32는 12/12, M33은 수락 6/8·기술 5/8**입니다. W06은 실제 PASS46과 명시 수락
-#29·40·44를 구분하여 마감했고 원인 분석은 유예했습니다. 현재는 HOST-W06 완료 후 HOST-W07 준비부터 순차 진행합니다. BLE 제어·Mesh·무선 공존의
+#29·40·44를 구분하여 마감했고 원인 분석은 유예했습니다. 현재는 HOST-W06 완료 후 HOST-W07 실기 교정부터 순차 진행합니다. BLE 제어·Mesh·무선 공존의
 완료 근거는 [M32 TODO](00_Docs/TODO_M32.md), 예제·배포 잔여 계획은 [M33 TODO](00_Docs/TODO_M33.md)에 있습니다.
 M32 구현과 문서를 한 커밋으로 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했습니다.
 M32 브랜치는 사용자 요청으로 로컬·원격에서 삭제했고 원본 이력은 로컬 Git bundle로 보관했습니다.
