@@ -4,7 +4,7 @@
   "updated_date": "2026-11-14",
   "status": "in_progress",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W06_H12_CLOSED_W07_C4_CORRECTION",
+  "implementation_revision": "HOST_W06_H12_CLOSED_W07_C5_VERIFIER_CORRECTION",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -441,12 +441,12 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C4_HOST_PYTHON_AND_INACTIVE_GAP_CORRECTION_FINAL_PENDING",
-    "product_integration": "C4_WORKTREE_FROM_9e48de4ced1bc223e99880bbbbc2166a36304099",
+    "status": "C5_FINITE_NEGATIVE_BUDGET_CORRECTION_FINAL_PENDING",
+    "product_integration": "C5_WORKTREE_FROM_85812309fca62b9fa418490becbe7696aa2aa148",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "C3_BUILD_CI_PASS_PHYSICAL_FAIL_C4_PENDING",
+    "private_RC1": "C4_REPRESENTATIVE_PHYSICAL_PASS_NATIVE_NEGATIVE_TIMEOUT_C5_PENDING",
     "user_physical_OS_gate": "NOT_RUN",
     "physical_OS_gate": "NOT_RUN",
     "new_HIL_runs": 0,
@@ -584,7 +584,7 @@
         "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
       }
     ],
-    "final_same_source_CI": "C4_NOT_RUN",
+    "final_same_source_CI": "C5_NOT_RUN",
     "no_system_Git_input_check": {
       "first_actual": "b612eb/exit1",
       "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
@@ -689,6 +689,61 @@
       "final_CI": "NOT_RUN",
       "final_same_source_credit": false,
       "SDK_and_probe_firmware_modified": false,
+      "group29_cause_inferred": false
+    },
+    "C4_attempt": {
+      "source_revision": "85812309fca62b9fa418490becbe7696aa2aa148",
+      "representative": "46e491/exit0",
+      "physical_a001": "6231d6/exit1",
+      "physical_a002": "b59c79/exit0",
+      "physical_audit": "a2b998/exit0",
+      "software_success": 9,
+      "prerequisite_success": 3,
+      "build_only_success": 6,
+      "native_run": 43540090624,
+      "native_attempt": 1,
+      "native_success": 28,
+      "native_fail": 1,
+      "native_skip": 1,
+      "native_failure": "WINDOWS_SHARD5_NEGATIVE_PREPARATION_120_SECOND_TIMEOUT_POSITIVE25_PASS",
+      "all204": "c96af2/exit1_CONTROLLED_RETIREMENT_37_COLD_0_WARM",
+      "retired_as_final_candidate": true,
+      "credits_transferred_to_C5": false
+    },
+    "C5_development": {
+      "base_source": "85812309fca62b9fa418490becbe7696aa2aa148",
+      "firmware_inputs_unchanged_from_C4": true,
+      "regression_before": "c972cc/exit1",
+      "related_tests": "f71eb9/exit0_17_TESTS",
+      "timeout_seconds": 300,
+      "rejection_predicate_unchanged": true,
+      "automatic_retries": 0,
+      "sdk_patch_guard_a001": "3d89b6/exit1",
+      "owned_sdk_patch_recovery": "019be3/exit0",
+      "negative_a002": {
+        "kind": "C5_DEVELOPMENT_NEGATIVE_ON_C4_INSTALLED_PAYLOAD_NOT_FINAL",
+        "status": "PASS_DEVELOPMENT_ONLY",
+        "payload_source": "85812309fca62b9fa418490becbe7696aa2aa148",
+        "checker_source": "C5_UNCOMMITTED_WORKTREE_FROM_C4",
+        "timeout_seconds": 300,
+        "marker": "[NU54:E_FEATURE_PROFILE]",
+        "case": "mesh_coexistence_under_ble",
+        "hardware_operations": 0,
+        "final_same_source_credit": false,
+        "actual_exit_code": 1,
+        "cleanup": {
+          "strategy": "ATOMIC_WINDOWS_JOB_LIST",
+          "active_processes_after": 0,
+          "kill_on_last_handle_close": true
+        },
+        "marker_present": true,
+        "log_sha256": "74fed7e8d70fc738123f41c045aa5a1c10816f25ba948526845d4ee7e652e403",
+        "elapsed_seconds": 172.718,
+        "observed_utc": "2026-11-14T05:01:20.993623+00:00"
+      },
+      "final_hardware": "NOT_RUN",
+      "final_CI": "NOT_RUN",
+      "final_same_source_credit": false,
       "group29_cause_inferred": false
     }
   },

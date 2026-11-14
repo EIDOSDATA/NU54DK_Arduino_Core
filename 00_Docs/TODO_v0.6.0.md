@@ -1,13 +1,13 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 | 항목 | 현재 상태 |
 | --- | --- |
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [현행 상태·실행 순서](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W06 완료 **6/8**; HOST-W06 완료·HOST-W07 C4 교정 중, 이후 순차 진행 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**; HOST-W06 완료·HOST-W07 C5 최종 검증 준비, 이후 순차 진행 |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
 | SDK | NCS v3.4.0 pin 유지; v3.4.1 전체 전환은 SDK 전용 제품 v0.7.0 |

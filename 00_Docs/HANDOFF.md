@@ -1,6 +1,6 @@
 # 개발 인계
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -15,9 +15,9 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, **HOST-W06 완료·HOST-W07 C4 교정 중**. 이후 W07 준비→RC1→실제 OS→W08 마감 순서 |
+| Host | **6/8**, **HOST-W06 완료·HOST-W07 C5 최종 검증 준비**. 이후 W07 준비→RC1→실제 OS→W08 마감 순서 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C3 전체204·CI48 성공, 실기 a001/a002 및 NUS FAIL 보존. C4 SDK Python·비활성 GAP 소유권 교정 후 새 source 실기·최종 검증 — [326번](<04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>) |
+| HOST-W07 현재 | C4 대표8빌드·실기11 PASS, native Windows negative120초 timeout FAIL. C5 유한300초 교정·fresh 최종 검증 — [327번](<04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>) |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |

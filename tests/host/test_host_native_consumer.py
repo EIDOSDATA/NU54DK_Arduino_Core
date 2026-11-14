@@ -149,6 +149,48 @@ class HostNativeConsumerTests(unittest.TestCase):
         self.assertEqual(row['status'], 'FAIL')
         self.assertEqual(row['error_type'], 'ValueError')
 
+    def test_negative_profile_allows_preparation_longer_than_two_minutes(self):
+        """! @brief 준비가 120초를 넘겨도 실제 비성공 exit와 profile marker로만 거부를 승인합니다. """
+        case = C.EXAMPLES.NEGATIVE_PROFILE_MATRIX[5]
+        observed = []
+        def delayed_rejection(command, **options):
+            """! @brief 대기 없이 CI의 준비 지연과 뒤따르는 실제 거부 경계를 재현합니다. """
+            timeout = options['timeout']
+            observed.append(timeout)
+            self.assertIsInstance(timeout, (int, float))
+            self.assertGreater(timeout, 0)
+            self.assertLessEqual(timeout, 600)
+            if timeout < 121:
+                raise subprocess.TimeoutExpired(command, timeout, output=b'[NU54 2/5] configuration preparation')
+            return subprocess.CompletedProcess(command, 1, case['marker'].encode())
+        with mock.patch.object(C.subprocess, 'run', side_effect=delayed_rejection):
+            row = C.compile_negative(5, case, {case['identity']: {'directory': self.root / 'sketch'}},
+                Path('unused-cli'), self.root / 'config', {}, self.root / 'delayed')
+        self.assertEqual(row['status'], 'PASS', row)
+        self.assertEqual(row['actual_exit_code'], 1)
+        self.assertTrue(row['expected_rejection'])
+        self.assertEqual(len(observed), 1)
+
+    def test_negative_budget_does_not_accept_zero_exit_wrong_marker_or_artifact(self):
+        """! @brief 시간 예산과 무관하게 성공 exit·다른 오류·성공 산출물을 거부합니다. """
+        case = C.EXAMPLES.NEGATIVE_PROFILE_MATRIX[5]
+        for name, exit_code, output, artifact in (
+                ('zero', 0, case['marker'].encode(), False),
+                ('wrong-marker', 1, b'compiler unavailable', False),
+                ('artifact', 1, case['marker'].encode(), True)):
+            with self.subTest(name=name):
+                def rejected(command, **options):
+                    """! @brief 판정 오류를 숨길 수 있는 세 가지 자식 결과를 만듭니다. """
+                    if artifact:
+                        build = Path(command[command.index('--build-path') + 1])
+                        (build / 'unexpected.elf').write_bytes(b'not an allowed rejection')
+                    return subprocess.CompletedProcess(command, exit_code, output)
+                with mock.patch.object(C.subprocess, 'run', side_effect=rejected):
+                    row = C.compile_negative(5, case, {case['identity']: {'directory': self.root / 'sketch'}},
+                        Path('unused-cli'), self.root / 'config', {}, self.root / name)
+                self.assertEqual(row['status'], 'FAIL')
+                self.assertNotIn('expected_rejection', row)
+
     def test_non_CI_consumer_cannot_begin_an_SDK_installation(self):
         """! @brief CI 전용 controller를 사용자 PC 설치 도구로 오용하지 않습니다. """
         with mock.patch.dict(os.environ, {'GITHUB_ACTIONS': 'false'}), self.assertRaises(ValueError):

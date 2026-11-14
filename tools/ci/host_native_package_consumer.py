@@ -26,6 +26,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 SHARDS = 8
+## @brief Windows의 CLI·CMake 준비를 포함하는 유한 예산이며 profile 거부 판정은 유지합니다.
+NEGATIVE_PROFILE_TIMEOUT_SECONDS = 300
 
 
 def load_module(name: str, path: Path):
@@ -437,7 +439,7 @@ def compile_negative(number: int, case: dict, catalog: dict, cli: Path, config: 
         fqbn = 'nucode:zephyr:nu54dk:feature_set=' + case['profile']
         completed = run([str(cli), 'compile', '--config-file', str(config), '--fqbn', fqbn,
             '--build-path', str(build), str(catalog[case['identity']]['directory'])], environment, log,
-            120, required_rejection=case['marker'])
+            NEGATIVE_PROFILE_TIMEOUT_SECONDS, required_rejection=case['marker'])
         if list(build.glob('*.nu54-build.json')) or list(build.glob('*.elf')):
             raise ValueError('거부한 profile에 성공 artifact가 공개됐습니다.')
         row.update(status='PASS', actual_exit_code=completed.returncode, expected_rejection=True)

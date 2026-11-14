@@ -236,7 +236,7 @@ def main(arguments=None):
                         directory.mkdir(parents=True)
                         run('negative-'+case['id'],[installed['cli'],'compile','--config-file',installed['config'],
                             '--fqbn','nucode:zephyr:nu54dk:feature_set='+case['profile'],'--build-path',directory,
-                            catalog[case['identity']]['directory']],120,expected_rejection=case['marker'])
+                            catalog[case['identity']]['directory']],L.CONSUMER.NEGATIVE_PROFILE_TIMEOUT_SECONDS,expected_rejection=case['marker'])
                         if list(directory.glob('*.elf')) or list(directory.glob('*.nu54-build.json')):
                             raise ValueError('거부한 profile이 성공 artifact를 남겼습니다.')
                         receipt['negative_profile_rejections'] += 1

@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C4 교정 중**. C3 전체204·대표4 warm·negative9 빌드와 CI48 job은 성공했다. 실기의 부모 SDK Python 조회 오류와 비활성 GAP 콜백의 NUS 연결 해제를 구분해 교정하며, 새 C4 source의 최종 검증과 OS별 실기는 미완료다. [source별 결과](<00_Docs/04_검증 기록/326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<00_Docs/04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 ## 시작 전에
 
@@ -67,7 +67,7 @@
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   현재 source/설치 제품 버전은 **0.5.0**이고 M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 C4 교정 중**입니다. W05 exact `5f9b2257…`에서
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 C5 최종 검증 준비**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W03은 완료했고

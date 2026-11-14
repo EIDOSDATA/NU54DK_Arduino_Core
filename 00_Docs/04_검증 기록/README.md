@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [327 — C4 실기 통과와 C5 거부 검증 예산 교정](327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md)
+
 - [326 — C3 전체 빌드와 C4 NUS 소유권 교정](326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md)
 
 - [325 — C2 Windows 통과와 C3 probe FW 보호](325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md)
@@ -22,7 +24,7 @@
 
 - [316 — HOST-W06 native package 구현과 검증 착수](316_HOST_W06_native_package_구현과_검증_착수.md)
 
-최신 개발 기록은 위326번 C3 전체 결과·C4 교정이며 완료 기술 증거는322번 H12다. [315번](315_HOST_W05_native_마감과_HOST_W06_package_착수.md)은 W05 마감 당시 기록이다.
+최신 개발 기록은 위327번 C4 실기 결과·C5 검증기 교정이며 완료 기술 증거는322번 H12다. [315번](315_HOST_W05_native_마감과_HOST_W06_package_착수.md)은 W05 마감 당시 기록이다.
 W05 초기 로컬 실패·교정·회귀는 [314번](314_HOST_W05_경로_cache_lock_교정과_native_검증.md)에 보존한다.
 W04 같은-source 설치·전체 CI 완료는 [313번](313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md)을 따른다.
 최초 Host CI 실패 원문과 교정 경과는 [312번](312_HOST_W04_최초_CI_실패와_교정_검증.md)에 보존한다.
