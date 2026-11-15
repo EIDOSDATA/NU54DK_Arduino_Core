@@ -12,7 +12,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
 | 문서 개정 | 5.6 |
-| 문서 상태 | 고정 source 비교, M23~M32·M33-W01~W05 완료, M33-W06 수락 마감·HOST-W07 Windows 11 완료·나머지 네 OS 대기·현재 실행 범위는 [M33 인계](../M33_HANDOFF.md) 참조 |
+| 문서 상태 | 고정 source 비교, M23~M32·M33-W01~W05 완료, M33-W06 수락 마감·HOST-W07 Windows 11 완료·추가 OS 진행은 현행 인계 참조·현재 실행 범위는 [M33 인계](../M33_HANDOFF.md) 참조 |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -471,7 +471,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 M31-W01~W08 **8/8 완료**의 작업별 판정·근거는 [M31 TODO](../TODO_M31.md)에서 관리한다.
 이 문서는 아래 기능 분담과 후속 의존성을 소유하며 완료 경과를 중복 관리하지 않는다.
-HOST는 독립 6/8 완료이며 W06 native package·CI 검증을 마감하고 W07 Windows 11 RC1 검증을 마감하고 나머지 네 OS를 준비한다. Windows v0.5.0의 package·설치·
+HOST는 독립 6/8 완료이며 W06 native package·CI 검증을 마감하고 W07 Windows 11 RC1 검증을 마감하고 추가 OS를 다중 Host 계약의 호환성 범위로 검증한다. Windows v0.5.0의 package·설치·
 RC·공개 gate는 M31-W08, 후속 다중 Host 확대의 최종 수락은 M33-W07~W08이 소유한다.
 메모리 최적화 P0·P1·P2와 W04~W08, 공개 `v0.5.0-rc.1` smoke를 완료했다. 후속
 `v0.5.0-rc.2`는 사용자 경험 교정·자동 검증을 완료하고 사용자 요청에 따라 main 통합과
@@ -534,7 +534,7 @@ Mesh DFU의 최소 layout·transfer·서명·복구는 M32 범위다. 저장소 
 ### M33 — 전체 Bluetooth 예제·상호운용·후속 릴리스
 
 M31 Windows v0.5.0은 M31-W08에서 마감했다. M33의 추가 기능·전체 catalog·Host 확대·공개는
-v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8·W07 Windows 11 완료·OS 1/5이며 기존 OS별 필수 실물 검증 조건은 유지한다.
+v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8·W07 C5 Windows 11 기준선 보존·현행 Host 원장을 따르며 기존 OS별 필수 실물 검증 조건은 유지한다.
 
 - M28~M32의 API, profile, memory·throughput·power 한계와 interop 결과를 통합한다.
 - [M33 TODO](../TODO_M33.md)의 **8개 작업**으로 전체 NCS sample/test ID를 마감한다.
@@ -554,7 +554,8 @@ v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8�
   vendor 호환성을 선언하지 않는다.
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
 - HOST-W08에서 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon의
-  전체 예제·대표 실제 upload/runtime·lifecycle을 마감한다.
+  Host 계약에 배정한 기존 전체 기준선·버전별 호환성·변경 영향 검증을 마감한다.
+  버전 차이만으로 전체204를 반복하지 않는다.
   Ubuntu/macOS 실제 검증은 해당 OS 후속 릴리스 때 사용자가 수행하며 세 Host 증거 gate는 유지한다.
 - 완료 gate: release package, 보드 기반 전체 BLE regression, 외부 장치의 구현·예제·자동 검사와
   사용자 추후 검증 상태가 명시된 mobile/desktop·cross-vendor matrix, 세 Host 지원 matrix와 공개 stable 검증.
@@ -563,7 +564,7 @@ v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8�
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 M33-W07의 HOST-W07에서 Windows 11 RC1 검증을 마감했고 나머지 네 OS는 준비 대기다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 M33-W07의 HOST-W07에서 Windows 11 RC1 검증을 마감했고 현행 Host 진행은 인계와 다중 Host 계약을 따른다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

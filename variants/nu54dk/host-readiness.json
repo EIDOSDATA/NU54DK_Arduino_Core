@@ -1152,7 +1152,7 @@
         "evidence": "D:/w06/h7c10/development",
         "evidence_read_actual": "42d015/exit0; 5c046e/exit0",
         "fresh_physical": "PASS",
-        "all204": "RUNNING_20261115T180802545594Z",
+        "all204": "STOPPED_SCOPE_CORRECTION_15_COLD_0_WARM_NOT_FULL_PASS",
         "CI": "PREREQUISITES_MACOS_UNIT_FAIL_PRESERVED_OTHER_WORKFLOWS_PENDING",
         "representative": "8_PASS",
         "USB_replug": "PASS_FIRST_UART_6_NONCES",
@@ -1162,7 +1162,10 @@
         "IDE_evidence": "D:\\w06\\h7c10\\ide-audit-a001\\closure-a001.json",
         "external_Git_helper_FAIL": "PRESERVED_PREAUTH_GUARD_CORRECTED",
         "CI_failure_record": "D:/w06/h7c10/CI/prerequisites-macos-failure-a001.json",
-        "CI_failure_cause": "UNCONFIRMED"
+        "CI_failure_cause": "UNCONFIRMED",
+        "all204_original_native": "f9b9f9/exit1",
+        "all204_cleanup_native": "c7c638/exit0",
+        "all204_scope_correction_record": "D:/w06/h7c10/all-build-a001/scope-correction-cleanup-a001.json"
       },
       "firmware_changed": false,
       "SDK_pin_changed": false,
@@ -1203,7 +1206,7 @@
     "WSL2_IDE": "PASS",
     "WSL2_BLE": "PASS",
     "WSL2_USB_replug": "PASS_FIRST_UART",
-    "WSL2_all204": "RUNNING_20261115T180802545594Z",
+    "WSL2_all204": "STOPPED_SCOPE_CORRECTION_15_COLD_0_WARM_NOT_FULL_PASS",
     "CI": "PREREQUISITES_MACOS_UNIT_FAIL_PRESERVED_OTHER_WORKFLOWS_PENDING",
     "native_Ubuntu_physical": "NOT_RUN",
     "previous_source_credit_transferred": false,
@@ -1217,21 +1220,39 @@
     "whole_suite_per_OS_version": false,
     "expand_only_on": "Observed failure or demonstrated change impact",
     "original_results_immutable": true,
-    "mixed_source_single_run_credit": false
+    "mixed_source_single_run_credit": false,
+    "whole_suite_per_source_change": false,
+    "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+    "baseline_native_run": 43561469020,
+    "Ubuntu24_WSL2_full_repetition_required": false,
+    "full_ci_default": false,
+    "decision": "보존한 전체 기준선 + 실제 변경 영향·버전별 호환성. SDK/compiler·firmware·compile 설정의 전체 영향이 확인된 경우만 전체 재시험.",
+    "evidence": "D:/w06/h7c10/document-scope-review-a001/review.json"
   },
   "release_support_rows": [
     {
       "OS": "Windows 11",
       "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
       "validation_scope": "PRESERVED_BASELINE_PLUS_LIMITED_COMMON_TOOL_REGRESSION",
-      "status": "C5_COMPLETE_C10_IMPACT_PENDING"
+      "status": "C5_WINDOWS11_COMPLETE_C10_LIMITED_IMPACT_VERIFIED",
+      "impact_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "impact_host": "Windows Server2025 native x64 CI; not Windows11 physical",
+      "impact_job": 132902468232,
+      "impact_tests": {
+        "total": 141,
+        "passed": 134,
+        "conditional_skipped": 7
+      },
+      "impact_record": "D:/w06/h7c10/windows-limited-impact-audit-a001.json",
+      "impact_record_sha256": "f90c96d5728a21c8b461cec7b4907ca04b0911ba42de8497ad452a6171a557db"
     },
     {
       "OS": "Ubuntu 24.04 LTS",
       "execution_environment": "wsl2",
-      "baseline_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
-      "validation_scope": "BASELINE_FULL",
-      "status": "PHYSICAL_REPLUG_IDE_PASS_ALL204_CI_PENDING"
+      "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "validation_scope": "PRESERVED_NATIVE_BASELINE_PLUS_WSL2_HOST_PATH_AND_CHANGE_IMPACT",
+      "status": "PHYSICAL_REPLUG_IDE_PASS_EVIDENCE_CLOSURE_PENDING",
+      "validation_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34"
     },
     {
       "OS": "Ubuntu 26.04 LTS",
@@ -1252,5 +1273,16 @@
       "validation_scope": "VERSION_COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
       "status": "NOT_RUN"
     }
-  ]
+  ],
+  "compiler_selection_review": {
+    "record": "D:/w06/h7c10/compiler-selection-review-a001.json",
+    "sha256": "f97e6bde59db91affcdfa05fa8deaad840622ee291549163bd58587d368e78a4",
+    "selector": "OS_AND_ARCHITECTURE",
+    "OS_version_selects_compiler": false,
+    "toolchain_bundles": {
+      "windows-x86_64": "dcbdc366a1",
+      "linux-x86_64": "fbf7391cab",
+      "macos-arm64": "ccc010f809"
+    }
+  }
 }

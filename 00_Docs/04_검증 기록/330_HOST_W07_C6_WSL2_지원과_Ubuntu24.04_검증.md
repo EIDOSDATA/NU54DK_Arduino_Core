@@ -3,7 +3,7 @@
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
 현재 단계는 **M33-W07 / HOST-W07**, Host 완료6/8이다. C10 새 설치·대표8·Blink·UART·
 debug·BLE·잘못된 UID 거부와 실제 USB 재연결 후 첫 UART6개·IDE Verify가 PASS다.
-Ubuntu24.04 기준 전체204와 exact CI 마감은 진행 중이다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
+C5 전체 native 기준선에 C10 변경 영향 증거를 연결해 Ubuntu24.04/WSL2를 마감한다. 중복 전체204는15cold 뒤 범위 정정으로 중단·정리했다. 전체 PASS로 세지 않는다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
 
 2026-11-16 사용자 지시에 따라 Ubuntu 24.04 LTS/WSL2의 C10 기준 검증을 우선 마감한다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.
 
@@ -185,11 +185,11 @@ C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837
 DTR 단독 진단 종료 시 두 NU54DK를 C8 SerialEcho로 복귀했다. 후속 역할 image 변경은 새 attempt에 기록한다.
 
 1. 완료한 C10 설치·대표8·실기·재연결·IDE 결과를 보존하고 같은 시험을 반복하지 않는다.
-2. Ubuntu24.04/WSL2 기준 전체204cold·대표4warm·profile 거부9개와 원본 byte 감사를 마친다.
+2. C5 native 전체 기준선과 C10 변경 영향·대표8·원본 byte 감사를 연결해 Ubuntu24.04/WSL2 증거를 마감한다. 중복 전체204 재실행은 하지 않는다.
 3. C10 exact CI·artifact 감사를 마감한다. C8/C9 완료·FAIL·중단 원본은 별도 보존한다.
 4. Ubuntu26.04 LTS의 설치·대표 build·USB/serial/debug·lifecycle 호환성을 확인한다. 전체204 중복은 하지 않는다.
 5. macOS26 → macOS27의 실제 환경 호환성을 확인한다. Mac 환경 확보가 필요하며 버전별 전체204는 반복하지 않는다.
-6. C5 Windows11 완료 기준선에 공통 도구의 제한 회귀 결과를 연결한다.
+6. 완료한 C5 Windows11 기준선+C10 제한 영향 검사 연결을 지원표에 유지한다. 새 Windows 실기는 반복하지 않는다.
 7. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
 8. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
 
@@ -220,4 +220,28 @@ C10 prerequisite run43743775292/attempt1은 Windows·Ubuntu2PASS, macOS1FAIL이�
 별도 macOS CI 진단은 exact C10 원형 test10회와 controlled zombie-only 그룹1회를 고정 관측한다.
 signal·예외·PASS 조건을 변경하지 않고 같은 소유PGID 상태와 errno를 추가 기록한다. 진단 성공은
 C10 원형 CI FAIL을 PASS로 바꾸지 않는다. SDK 설치·전체 예제·USB/HIL을 반복하지 않으며
-Ubuntu24.04의 실행 중인 전체 빌드와 실기·IDE PASS를 보존한다.
+Ubuntu24.04의 중단된 전체 빌드 원본과 별도로 완료한 실기·IDE PASS를 보존한다.
+
+## 2026-11-16 전체 문서 검토와 검증 범위 정정
+
+OS 버전별·Host 검증기 수정별 전체204 재실행 요구는 과도했다. 고정 toolchain 선택은 OS+CPU이며
+버전별 compiler 교체가 아니다. 최신 전체 기준선은 C5 `5ee7c10368b554ca23d68f8f82e39308b91df6de`,
+native run43561469020/attempt1의24worker·OS별204compile/9negative다. H12 이전 기준선도 보존한다.
+C5→C10 firmware·SDK pin·board·compile recipe는 그대로다. C10의 WSL2·child 환경·kit 경로·
+검증기 옵션은 새 설치·대표cold/warm8·실기·IDE·재연결·관련 Host unit과 CI로 영향 범위를 확인한다.
+C9→C10 대표8의 실제 BIN/HEX도 같지만 이는 byte 비교 근거이며 과거 source의 PASS 이월은 아니다.
+
+Windows11 C5 실기에 C10 Windows Server2025 job132902468232의141건(134PASS·조건부SKIP7),
+SDK 설치·재검증을 연결했다. `windows-limited-impact-audit-a001.json`과
+`compiler-selection-review-a001.json`은 `D:/w06/h7c10`에 보존한다. C10 Windows11 신규 실기나
+macOS FAIL을 포함한 전체 prerequisite workflow 성공으로 표시하지 않는다.
+
+C10 전체 빌드 attempt `build-20261115T180802545594Z`는15cold·0warm 뒤 범위 정정으로 중단했다.
+실행기 원본 결과는 FAIL/exit1(`f9b9f9`) 그대로이며 전체204 PASS가 아니다. 원인은 compiler 실패가
+아니라 중복 실행 중단이다. SIGINT 후 남은 소유 자손은 별도로 정리했고 `c7c638/exit0`에서0개를 확인했다.
+원본·중단 의도·cleanup은 `D:/w06/h7c10/all-build-a001`에 보존했다. 완료한 대표8·실기는 별도 attempt다.
+
+본체 Markdown537개와 보드 하위 저장소6개를 검토했다. 현행 계약·지원표·로드맵·TODO·설치·CI·인계의
+중복 전체 실행 요구와 오래된 진행 상태를 정리했다. 역사 기록·완료 TODO6개·기존 PASS/FAIL은 수정하지 않았다.
+`host-native-package.yml`의 push와 기본 dispatch는 설치·대표 smoke까지만 실행하고, 전체204는 실제 전체 영향 검토 뒤 명시한다.
+같은-source/run/attempt 집계 규칙은 유지한다. 미실행 호환성이나 미해결 macOS cleanup FAIL을 PASS로 바꾸지 않는다.

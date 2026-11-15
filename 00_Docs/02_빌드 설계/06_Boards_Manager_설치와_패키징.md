@@ -14,7 +14,7 @@ RC1/RC2 다운로드·설치 결과는 해당 역사 문서에 보존한다. Ubu
 사용자 지시로 HOST-W06까지 6/8과 HOST-W07 Windows 11 비공개 RC1 검증을 완료했다. 후속 OS의
 prerequisite·설치·실물 검증 gate는 유지하지만 M31 Windows 릴리스의 선행조건으로 두지 않는다.
 SDK 설치, Boards Manager 초기 Python bootstrap, 전체 예제 compile과 실물 runtime은 각각 판정한다.
-H12·C5의 bootstrap·전체 예제 build 완료와 C5 Windows 11 실기는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분하며 나머지 네 OS의 최종 실물 gate는 유지한다.
+H12·C5의 bootstrap·전체 예제 build 완료와 C5 Windows 11 실기는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분하며 추가 OS는 다중 Host 계약의 버전별 호환성·변경 영향 범위를 따른다.
 
 ## Stable index와 설치
 

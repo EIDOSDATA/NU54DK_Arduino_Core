@@ -1,6 +1,6 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 | 항목 | 내용 |
 | --- | --- |
@@ -91,7 +91,7 @@ HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 5. M33-W08에서 별도 공개 승인·게시·공개 설치 검증을 수행한다.
 
 W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경과 공통 단위 검사를 뜻한다.
-Ubuntu24.04 기준 환경 전체 검증과 나머지 OS 버전 호환성·변경 영향·실물 결과는 위 Host 단계와 W07에서 추가한다.
+보존된 C5 native 전체 기준선에 C10 Ubuntu24.04/WSL2 변경 영향과 나머지 OS 버전의 호환성·실물 결과를 연결해 위 Host 단계와 W07에서 판정한다.
 최종 세 Host 필수 검증을 생략하지 않으며, 사용자 장비의 접속·연결 상태는 실행 시 확인한다.
 
 ## 3. 구현 TODO
@@ -313,7 +313,7 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
 - [ ] [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)에 따라 공개 시점에 각 행의 실제 OS·빌드와 결과를 확정한다.
 - [ ] HOST-W04~HOST-W07의 prerequisite/path/cache/package·자동 검사 결과와 최종 사용자 USB·serial·
   debug 검증 절차를 exact 입력과 대조한다. 중간 단계에서 Ubuntu/macOS PC 연결을 요구하지 않는다.
-- [ ] HOST-W08의 기준 환경 전체 예제와 각 지원 행에 배정한 설치·대표 build·실제 upload/runtime·수명주기 호환성 검증을
+- [ ] HOST-W08의 보존된 전체 예제 기준선과 각 지원 행에 배정한 설치·대표 build·실제 upload/runtime·수명주기 호환성 검증을
   해당 실제 환경에서 마감한다. 버전 차이만으로 전체204를 중복하지 않는다. Ubuntu/macOS는 해당 OS를 포함하는 후속 릴리스 단계에서 사용자가 실행하며 설치·USB upload·
   serial·debug·수명주기 증거를 인계받는다. 그때까지 해당 행은 `NOT_RUN`이고 해당 OS 정식 지원 공개
   gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
@@ -356,7 +356,7 @@ timeout·packet/object 분모·허용 loss/latency·복구 한계·즉시 중단
 | M33-EXAMPLE-01 | 각 build Host, runtime은 해당 role 보드 | 설치 catalog/role 전수 compile·실행 절차, 누락 profile·잘못된 조합 거부 |
 | M33-REG-01 / M33-RESOURCE-01 | Host + 최대 3보드 | 이전 기능·명시 조합·자원 회수·오귀속/손상/누수·유한 부하 |
 | M33-INTEROP-01 | 자동 가능한 peer 검사 + 실제 외부 BLE 제품은 사용자 후속 | 기능·모델별 상태·peer 미지원 구분; 실제 Apple/Google·외부 제품 검증은 릴리스 비차단, 자동 결과로 대체 금지 |
-| M33-PACKAGE-01 / M33-INSTALL-01 | 세 Host와 USB 보드; Ubuntu/macOS 실물은 최종 사용자 검증 | 재현 package·전체 예제·설치/USB upload/serial/debug·수명주기, hash/arch/profile·권한 오류; 최종 OS gate 유지 |
+| M33-PACKAGE-01 / M33-INSTALL-01 | 세 Host와 USB 보드; Ubuntu/macOS 실물은 최종 사용자 검증 | Host 계약의 전체 기준선·호환성 배정에 따른 재현 package·대표 build·설치/USB upload/serial/debug·수명주기, hash/arch/profile·권한 오류; 최종 OS gate 유지 |
 | M33-RELEASE-01 | 승인된 exact plan·공개 URL | 승인·게시·다운로드 byte·공개 설치, 미완료 필수 gate 게시 차단; CI 확인은 최신 사용자 생략 지시 우선 |
 
 ## 5. 완료와 보존 계약

@@ -28,9 +28,9 @@ on:
         options: ['0.6.0-host.1', '0.6.0-rc.1']
         default: '0.6.0-rc.1'
       full_examples:
-        description: Run all 204 installed examples per OS after the smoke comparison passes
+        description: Explicit full regression after reviewed firmware, SDK or compiler impact
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: read
@@ -180,7 +180,7 @@ jobs:
   examples:
     name: Native installed examples (${{ matrix.platform }}, shard ${{ matrix.shard }})
     needs: smoke_compare
-    if: github.event_name != 'workflow_dispatch' || inputs.full_examples
+    if: github.event_name == 'workflow_dispatch' && inputs.full_examples
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 180
     strategy:

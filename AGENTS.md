@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 ## 시작 전에
 
@@ -25,7 +25,8 @@
 - 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
   실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
   `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
-- 개발 단계의 수정별 검증과 최종 source 고정 후 전체 검증을 구분한다.
+- W06의 개발 단계 수정별 검증과 최종 source 고정 후 전체 검증은 해당 W06 계약 범위다.
+  Host 후속 변경은 다중 Host 계약의 기준선·호환성·영향 검증을 따르며 매 변경마다 전체 시험을 반복하지 않는다.
   과거 source의 PASS/FAIL 원본은 보존하며 다른 source의 최종 실적으로 합성하지 않는다.
 - 단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:\w06`, 최소 여유4GiB를 유지한다.
 - 병렬 검토는 읽기 전용이다. 자동점검 w06은 PAUSED 유지. DAP/J-Link firmware 작업,
@@ -71,7 +72,7 @@
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고
-  **HOST-W07 Windows 11 완료 후 나머지 네 OS를 순차 검증**합니다. 2026-11-10 사용자가 Host 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
+  **HOST-W07 C5 Windows 기준선을 보존하며 추가 OS는 Host 계약의 호환성 범위로 검증**합니다. 2026-11-10 사용자가 Host 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
   M33 기능 개발과 Host를 병렬 진행하지 않습니다. M33-W07 RC1으로 남은 Host 실기·HOST-W08을
   마감한 뒤 M33-W08로 진행하며 v0.6.0 공개는 별도 승인 단계입니다.
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
@@ -121,7 +122,7 @@
 ## 검증·문서 원칙
 
 - Host·mock·build 통과나 범위 결정은 물리 PASS가 아닙니다. source·image·조건·결과를 결합해 기록합니다.
-- 개발용 실패별 집중 검증과 소스 고정 후 최종 전체 검증을 분리합니다.
+- W06 개발용 실패별 집중 검증과 해당 계약의 소스 고정 후 최종 전체 검증을 분리합니다.
   실행 순서와 증거 보존 규칙은 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용)을 따릅니다.
 - 공개 자산과 과거 PASS/FAIL/HOLD/NOT RUN 원본을 보존합니다. 생성 문서는 JSON·생성기를 고쳐 재생성합니다.
 - SDK·third-party·board submodule은 임의 수정하지 않습니다. 문서 경로 변경 시 들어오는 링크도 함께 고칩니다.

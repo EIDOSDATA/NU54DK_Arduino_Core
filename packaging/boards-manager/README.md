@@ -1,9 +1,6 @@
 # NU54DK Boards Manager 패키징
 
-2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 교정 실적·재연결 UART FAIL을 보존하며 C10 명시적 입력 줄 동기화의 새 실기·재연결 PASS를 기록했다.
-고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
-설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE PASS와 재연결 UART FAIL·전체204의13cold·0warm 중단을 보존한다. C10 새 실기·재연결·IDE는 PASS이고 전체204는 진행 중이다. macOS prerequisite CI unit1FAIL은 별도 원본 보존·진단 중이다. [C6~C10 진행과 설치 상태](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
 현재 stable·지원 대상은 v0.5.0 하나이며 이전 stable·RC·preview는 catalog 공급을 종료합니다.
 정식 상태는 [v0.5.0 TODO](<../../00_Docs/TODO_v0.5.0.md>)에서 관리합니다.
@@ -17,7 +14,7 @@ C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다.
 
 현재 source version은 `0.5.0`입니다. M28~M31과 RC1/RC2, runtime PM 연속 Upload 교정,
 stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST는 6/8이며
-HOST-W07의 C5 Windows 11 완료를 보존하며 C8 Ubuntu 24.04/WSL2를 검증하고 있습니다.
+HOST-W07의 C5 Windows 11 완료를 보존하며 현행 Host 검증은330번 기록과 Host 원장을 따릅니다.
 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의 M32는 12/12, M33은 수락 6/8·기술 5/8입니다.
 W06은 실제 PASS 46개와 명시 수락 #29·#40·#44를 구분해 마감했으며 원본 FAIL을 보존합니다.
 새 채팅의 재개 지점은 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.

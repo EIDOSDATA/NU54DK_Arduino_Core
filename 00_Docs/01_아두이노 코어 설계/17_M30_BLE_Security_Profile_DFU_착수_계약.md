@@ -116,7 +116,7 @@ build/upload는 후속 HOST-W04~HOST-W07의 필수 `NOT RUN` 상태를 유지한
 않으며 M30의 완료 수치·시험 정책은 변경하지 않는다.
 
 당시 사용자 지시로 Host 작업은 W01~W03 완료(3/8)에서 보류했다. 이후 재개한 Host의 현행 상태는
-6/8·W07 Windows 11 완료·나머지 네 OS 대기이며 최신 작업 범위는 [HANDOFF](../HANDOFF.md)를 따른다.
+6/8·W07 Windows 11 완료·추가 OS 진행은 현행 인계를 따르며 최신 작업 범위는 [HANDOFF](../HANDOFF.md)를 따른다.
 
 ## 7. 고정 test ID
 

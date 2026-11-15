@@ -1,9 +1,6 @@
 # Native Boards Manager package와 CI
 
-2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 교정 실적·재연결 UART FAIL을 보존하며 C10 명시적 입력 줄 동기화의 새 실기·재연결 PASS를 기록했다.
-고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
-설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE PASS와 재연결 UART FAIL·전체204의13cold·0warm 중단을 보존한다. C10 새 실기·재연결·IDE는 PASS이고 전체204는 진행 중이다. macOS prerequisite CI unit1FAIL은 별도 원본 보존·진단 중이다. [C6~C10 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
 기준일: 2026-11-16. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 C8·C9 실적과 FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감하며 나머지 세 OS는 대기 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
@@ -62,7 +59,7 @@ symlink placeholder 생성은 부모를 생성하지 않는다. 교정은 원형
    부모 Python/Git 경로를 제거한 자식 환경에서 post-install을 실행하고 저장된 SDK 상태를 재검증한다.
 3. 공백·한글 data/user 경로의 설치 파일 전체를 원본 ZIP과 대조하고 24개 library의 예제204개를 발견한다.
    각 OS에서 설치된 Blink를 compile하고 세 OS의 실제 ARM load image·HEX·메모리 값을 비교한다.
-4. Smoke 비교가 모두 성공하면 OS별8개 shard, 총24개 worker로 전체 예제204개와 잘못된 profile9개를 검사한다.
+4. 전체 실행을 명시한 `workflow_dispatch(full_examples=true)`에서만 smoke 성공 후 OS별8개 shard, 총24개 worker로 전체 예제204개와 잘못된 profile9개를 검사한다.
    Shard 배정은 정렬된 예제 identity의 index modulo8이며 권장 profile을 그대로 사용한다.
 5. 집계는 같은 source·version·workflow run·attempt의 세 OS 전체 결과와 실제 파일을 다시 검증한다.
    전체 실행을 생략한 smoke-only 결과를 HOST-W06 완료로 세지 않는다.
@@ -117,4 +114,12 @@ CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는
 보존하며 Host 실적과 합산하지 않는다. #29 원인 분석은 사용자 지시로 유예한다.
 
-H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. H12 당시 사용자 실물 gate는 `NOT_RUN`이었다. 후속 C5의 Windows 11 완료와 나머지 네 OS 대기는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분한다.
+H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. H12 당시 사용자 실물 gate는 `NOT_RUN`이었다. C5 Windows 11 완료는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다. 현행 추가 OS 진행은 [330번](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)과 Host 계약을 따른다.
+
+## 실행 범위 선택
+
+push와 기본 수동 실행은 producer·세 native smoke·image 비교의5개 job을 수행한다.
+`full_examples` 기본값은 false다. SDK/compiler·firmware·compile 설정의 실제 영향 검토에서 전체 시험이
+필요한 경우만 true로 요청한다. 전체 실행의30개 job·24shard·source/run/attempt 집계 계약은 그대로다.
+생략된 examples·aggregate를 전체204 PASS로 세지 않으며 smoke 실행에 전체 분모를 요구하지 않는다.
+OS 버전별 지원 판정은 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 호환성 범위를 따른다.

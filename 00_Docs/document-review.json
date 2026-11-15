@@ -4,6 +4,266 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "HOST_W07_FIXED_TOOLCHAIN_AND_COMPATIBILITY_SCOPE_20261116",
+      "date": "2026-11-16",
+      "product_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "reviewed_parent": "fd8b042f69d9c7487b168968cfd310fb2396aa37",
+      "user_request": "모든 관련 문서 검토·수정 및 불필요한 내용 제거",
+      "scope": {
+        "markdown_scanned": 537,
+        "board_submodule_markdown_read_only": 6,
+        "related_contexts": 58
+      },
+      "corrected_documents": [
+        "00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md",
+        "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+        "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+        "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+        "00_Docs/01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md",
+        "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+        "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
+        "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
+        "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+        "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+        "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+        "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+        "00_Docs/02_빌드 설계/05_업로드와_디버그.md",
+        "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+        "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+        "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+        "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/13_Host_경로_권한_cache_lock.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/05_릴리스/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tests/hil/nu54dk/README.md",
+        "tools/ci/m33_w06_artifacts.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "corrected_configuration": [
+        ".github/workflows/host-native-package.yml",
+        "variants/nu54dk/host-readiness.json"
+      ],
+      "preservation": "기존 source별 PASS/FAIL, 완료 TODO6개, 번호별 역사 기록과 기존 review 항목을 보존한다.",
+      "policy": "고정 도구 전체 기준선 + 변경 영향 + 버전별 호환성; 전체 시험은 실제 전체 영향 확인 시 명시 실행",
+      "checks": {
+        "status": "PASS",
+        "results": [
+          {
+            "name": "contract",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c10\\document-scope-review-a001\\contract-a001.log",
+            "sha256": "13d153b591dff680ae5558c455a1f972c724f23a57767946590598315cace79c"
+          },
+          {
+            "name": "classifier",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c10\\document-scope-review-a001\\classifier-a001.log",
+            "sha256": "7770480c1c9fd8a70b3c20a97012fd74ad1b52091d40deeb0976d15a303b8a42"
+          },
+          {
+            "name": "docs",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c10\\document-scope-review-a001\\docs-a001.log",
+            "sha256": "9f5070019b89f2a541b5347e11f81c598d243428d76474955a970adf67705254"
+          },
+          {
+            "name": "diff",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c10\\document-scope-review-a001\\diff-a001.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "independent_reviews": [
+          "wsl_docs_review",
+          "wsl_code_review"
+        ],
+        "workflow_cases": {
+          "push_full": false,
+          "default_dispatch_full": false,
+          "explicit_dispatch_full": true
+        }
+      },
+      "documents": [
+        {
+          "path": "00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md",
+          "sha256_utf8_lf": "6f0d5005ae596f7244ef25217d765864bd0809a028800cdc66e9f97834b716fc"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "2522c8407548728c77b29e8284a86aeae50daf30382e7fb39d0257ed1f085f20"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+          "sha256_utf8_lf": "25c33e9771779a0d816afe529fd6a5f9db444be5ccee3490f1274bb45a27e81c"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+          "sha256_utf8_lf": "e004521d0755a1b5aa73acd6354004bdf46cb42a164ded4e5cdd03f00fd6a90a"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md",
+          "sha256_utf8_lf": "d193708674bdae2134b1e5cadb158869df38a21a31655b58a14b41264102cbde"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md",
+          "sha256_utf8_lf": "8e473ed152ba8da6fe5dcef9583b53fcddb7133ce500c050916ef1c9e5c5b15d"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md",
+          "sha256_utf8_lf": "85d3e2a8a3ddc4cf1099afcc27a8dd9790819b128fdb59d40a5557be38e412e3"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/20_M31_Bluetooth_착수_계약.md",
+          "sha256_utf8_lf": "5da701778d6b7cf08ab30fa68f0693d36497b005299e3ef2bf78ac254a5d5e5c"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/21_M31_메모리_최적화_통합_설계.md",
+          "sha256_utf8_lf": "feb474986225e9aad144a2c75951e46f7ee5d540156b5d6f1bcef3acbefae8c7"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+          "sha256_utf8_lf": "92af041d51bfe9b3385f7fde15313acb77c57fc1e09095fbc568ee435bc0682b"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+          "sha256_utf8_lf": "efe74e1b3aec6fcbeab08c498cac586f8661d2c9d8ca02ad80256517808bdb13"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+          "sha256_utf8_lf": "cc766c7ca820bda9e6902f8ce521fee1063b04c4de93f50be7fdc1624e3148a0"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/05_업로드와_디버그.md",
+          "sha256_utf8_lf": "b48328ddcfe0e6cea2747e77d0744a58fb8604d9f0f221e54abcaf380485800d"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+          "sha256_utf8_lf": "271b88cd207bf8534a328311e08b83d1c77b3940d06e32c237da6a025039201a"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+          "sha256_utf8_lf": "035c4de155c3d7d7e9a3be79bee38c056b2b6df87540edbf0b726ce5094fc3f1"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+          "sha256_utf8_lf": "a333bdce89199110986c32ea9a5bc20c854d813b376a3703caefd6e38d7c9a88"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+          "sha256_utf8_lf": "ee2cd14b2b6517a54fc3d23ce00d8a293719e1ee199898c865ea8bac985a9d83"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "25c344fb94de00a30c6bffd3d4210b3e919fe8a4017f3e9ed267da7948936fab"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md",
+          "sha256_utf8_lf": "36a72fc3846baf4afc8b699e4aba3ceb579188468b4990e9032adb9d240f5976"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "d0b81442c4478191549af73aefd094ec5a3856fc6cb20cff5ed3efa4ed8a4129"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/13_Host_경로_권한_cache_lock.md",
+          "sha256_utf8_lf": "699aa881edb1364b298aa41bd553f77a6cf0168f09c623a377f2c61e64c7b327"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "7779c389376c3df59a2daa147aff9a05e7a89fe63667b7a3a27557da5e047e2b"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "fc3f92d6f4fbda11310b3c878f73735b7bbd658d7ab3e0883699a77dc94e1d8c"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+          "sha256_utf8_lf": "5379fd451735cabcea090ee0b89af5d63d769ffcf7ea8989cf81ab200aa881ab"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "6314b46c24685d4271a463ab986b2e0e15b356dd3f580f31d6f36557e708b597"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "bf56b2b8f50ca3ea687804a568999bd8a8dae8b30666164ed684bfd50c93c914"
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "855198804195206373f86ba15cc428eb7a7fbe23c59812b0e8c6054d1612b103"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "bd5d6072ec3781e57476bd274b83a4bb08fd9de32c90c46f63544a8cba51f722"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "8d0a8ecfe948f62523b1e85a22b9236c90ad02f616fe64dbea48305c8a11655a"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "ab38a6bca8b24e111a08ca2639d10137e9720cd493aa5714dc5e359f9510a82b"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "6ee01e188b2c4027e6fe18aea8e4d54b3572439d3fef713d141f6cbb43e7ad3c"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "faad94a8fa449dad655689ab1ece96312156e8c6386d7c60d27fb7bd6cdcb179"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "a7958b0afe912a52e85b4fca1732f6a78993d41be5b3de68b16497cfa2743a3a"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256_utf8_lf": "3301baaaf1dc8f5f013da591b7e4ec82e0625b956eb096de49f2b056f0540423"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "6f50f34c8130f3312a1c5b424728603aa9dc4851351059ba85a50c2ed05e0a2d"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "ee867cf6fff6fbe42cc187c528c75ffd461a06a849a2ccbadfb480a62d38f467"
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "0420bfdd359ea6c063052d9f359c83bdf40edbb6fd330ab4768595bd78bfadc6"
+        },
+        {
+          "path": "tools/ci/m33_w06_artifacts.md",
+          "sha256_utf8_lf": "69781dca1baa6997146d3a2270e242e238c1adda6eae22741045332b2a4120c8"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "e7ced4d2b60405765e3ee878fd7e557e0c1c2861c730576548babfccf2316845"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "01cdc5938c6bb8ded8e5b0f915d8ecea0e2ea6d26cf05ac8e50260c67d1661a3"
+        }
+      ]
+    },
+    {
       "review_date": "2026-11-16",
       "observed_utc": "2026-11-15T18:08:49.362341+00:00",
       "baseline_commit": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",

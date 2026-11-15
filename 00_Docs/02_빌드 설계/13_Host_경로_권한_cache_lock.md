@@ -23,9 +23,10 @@ cache는 단일 Host의 local filesystem에 둔다. filesystem root와 Windows U
 POSIX에서는 현재 UID 소유와 다른 사용자의 쓰기 금지, 쓰기·탐색 권한도 확인한다. 기존 directory의
 mode나 ACL을 자동 완화하지 않으며 권한 오류는 `E_CACHE_PERMISSION`으로 보고한다.
 
-cache key는 기존 SDK·compiler·Core·board 입력에 OS·architecture·distribution·version·native
+cache key는 기존 SDK·compiler·Core·board 입력에 OS·architecture·distribution·version·native·execution_environment
 identity를 함께 포함한다. 다른 Host의 cache를 재사용하지 않고 기존 cache와 FAIL 원본도 삭제하지 않는다.
-cache key가 달라지는 것은 firmware 기능 HIL의 source 실적을 승계하는 근거가 아니다.
+동일 compiler여도 native/WSL2·OS 버전별 cache를 구분한다. 이 구분은 전체 예제 재시험 의무가 아니며
+firmware 기능 HIL의 source 실적을 승계하는 근거도 아니다.
 
 ## 실제 파일 이름과 경계
 

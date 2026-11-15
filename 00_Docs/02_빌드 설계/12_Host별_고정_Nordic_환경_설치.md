@@ -1,9 +1,6 @@
 # Host별 고정 Nordic 환경 설치
 
-2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 교정 실적·재연결 UART FAIL을 보존하며 C10 명시적 입력 줄 동기화의 새 실기·재연결 PASS를 기록했다.
-고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
-설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE PASS와 재연결 UART FAIL·전체204의13cold·0warm 중단을 보존한다. C10 새 실기·재연결·IDE는 PASS이고 전체204는 진행 중이다. macOS prerequisite CI unit1FAIL은 별도 원본 보존·진단 중이다. [C6~C10 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
 상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS·기준 검증 마감 진행·나머지 세 OS 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
@@ -28,6 +25,16 @@ sdk-manager1.16.1의 SDK `--tarball` 설치는 이 archive의 다중 행 `VERSIO
 | Windows 10/11 x86-64 | `dcbdc366a1` | 사용자 `ncs`, 명시적 절대 경로 override 가능 |
 | Ubuntu 24.04+ AMD64 | `fbf7391cab` | 사용자 `~/ncs`, 명시적 절대 경로 override 가능 |
 | macOS 26+ Apple Silicon | `ccc010f809` | upstream 고정 `/opt/nordic/ncs` |
+
+선택 함수는 `prerequisites.py`의 OS+architecture 키를 사용한다. OS 버전은 허용 조건이며
+별도의 compiler를 고르는 키가 아니다. Windows10/11은 `dcbdc366a1`, Ubuntu24.04/26.04는
+`fbf7391cab`, macOS26/27은 `ccc010f809`로 같은 계열·CPU 안에서 동일 archive를 사용한다.
+세 OS 계열 사이의 archive는 각 Host에서 실행되는 별도 binary이며 서로 같은 byte라고 주장하지 않는다.
+Windows·Ubuntu 설치본에서 Zephyr SDK1.0.1/GCC14.3.0을 확인했다. NCS3.4.0의
+[공식 release notes](https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/doc/nrf/releases_and_maturity/releases/release-notes-3.4.0.rst)와 일치한다.
+선택 코드·pin·실제 version의 감사 원본은 `D:/w06/h7c10/compiler-selection-review-a001.json`이다.
+동일 compiler는 OS runtime library·설치 권한·USB·프로세스 정리까지 자동 보장하지 않으므로,
+그 차이는 대표 호환성 검사로 확인한다. OS 버전별 전체 예제 재빌드를 요구하는 근거는 아니다.
 
 위 표는 설치기의 플랫폼 인식 범위이며 공개 지원 확정표가 아니다. v0.6.0 검증 목표는 Windows 11,
 Ubuntu 24.04 LTS·26.04 LTS, macOS 26·27이며 [RC1 실기 절차](15_Host_RC1_실기_도구와_증거_절차.md)를 따른다.

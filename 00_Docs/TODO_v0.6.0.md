@@ -1,6 +1,6 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 | 항목 | 현재 상태 |
 | --- | --- |
@@ -115,7 +115,7 @@ v0.6.0의 package·제품 식별자·RC 전환은 실제 개발 및 배포 준�
 HOST-W04 설치 범위는 H4의 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>),
 HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>)에서
 각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07의 C5 RC1 준비·Windows 11 실기를 마감했다.
-나머지 네 OS의 실제 USB 최종 gate와 정식 지원 판정은 대기 중이다.
+C10 Ubuntu24.04/WSL2 실기·재연결·IDE는 PASS다. 지원 행별 남은 호환성·증거 마감은 Host 계약과330번을 따른다.
 
 HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 후속 C5의 Windows 11 검증까지 완료했다. C8 Ubuntu 24.04/WSL2의 부분 PASS와 BLE FAIL을 보존하며 C9 실적·재연결 FAIL을 보존하고 C10 실기·재연결·IDE PASS 후 기준 검증을 마감한다. 나머지 세 OS 실기는 NOT_RUN이다.
 
