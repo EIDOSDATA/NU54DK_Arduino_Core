@@ -1,5 +1,7 @@
 """! @brief 제품 SDK·USB 대신 실제 Python 자식과 손자 process로 소유권 정리를 검사합니다. """
 import importlib.util
+from contextlib import ExitStack
+import errno
 import _thread
 import json
 import os
@@ -9,6 +11,7 @@ import sys
 import tempfile
 import threading
 import time
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -170,6 +173,100 @@ class OwnedProcessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             M.run_owned(['python','-c','raise SystemExit(99)'],cwd=self.base,
                 environment=self.environment,capture_directory=self.base,timeout=1)
+
+
+class DarwinCleanupBoundaryTests(unittest.TestCase):
+    """! @brief 실제 종료 신호 없이 Darwin 오류 경계와 원형 실행 판정을 검사합니다. """
+    def observe(self, signals, *, platform='darwin', waits=None, clock=None):
+        """! @brief 고정 가상 PGID만 사용하고 실제 Popen과 killpg를 모두 차단합니다. """
+        with tempfile.TemporaryDirectory(prefix='nu54-darwin-') as directory, ExitStack() as stack:
+            base = Path(directory)
+            child = mock.Mock(pid=43210)
+            child.wait.side_effect = waits or [0, 0, 0]
+
+            def started(*arguments, **options):
+                """! @brief 정리 실패 전의 원형 부분 출력 보존도 확인합니다. """
+                options['stdout'].write(b'original partial output')
+                return child
+
+            stack.enter_context(mock.patch.object(M.subprocess, 'Popen', side_effect=started))
+            kill = stack.enter_context(mock.patch.object(M.os, 'killpg', side_effect=signals, create=True))
+            stack.enter_context(mock.patch.object(M.signal, 'SIGKILL', 9, create=True))
+            stack.enter_context(mock.patch.object(M, 'sys', SimpleNamespace(platform=platform)))
+            stack.enter_context(mock.patch.object(M, '_windows', side_effect=M._posix))
+            sleep = stack.enter_context(mock.patch.object(M.time, 'sleep'))
+            if clock is not None:
+                stack.enter_context(mock.patch.object(M.time, 'monotonic', side_effect=clock))
+            try:
+                outcome = M.run_owned([sys.executable, '-c', 'unused'], cwd=base,
+                    environment={}, capture_directory=base, timeout=1)
+            except (M.OwnedExecutionError, M.OwnedTimeout, M.OwnedInterrupted) as error:
+                outcome = error
+            return outcome, kill.call_args_list, sleep.call_args_list
+
+    def test_darwin_eperm_requires_actual_absence_and_preserves_exit_and_output(self):
+        """! @brief EPERM 뒤 실제 ESRCH일 때만 원형 exit0·exit7을 각각 반환합니다. """
+        for code in (0, 7):
+            with self.subTest(code=code):
+                result, calls, _ = self.observe([None, PermissionError(errno.EPERM, 'fixture'),
+                    PermissionError(errno.EPERM, 'fixture'), ProcessLookupError(errno.ESRCH, 'fixture')],
+                    waits=[code, code, code])
+                self.assertIsInstance(result, M.OwnedResult)
+                self.assertEqual((result.returncode, result.stdout, result.pid),
+                    (code, b'original partial output', 43210))
+                self.assertTrue(result.cleanup['darwin_sigkill_eperm_group_absent'])
+                self.assertEqual(calls, [mock.call(43210, 15), mock.call(43210, 9),
+                    mock.call(43210, 0), mock.call(43210, 0)])
+
+    def test_live_group_or_unrelated_observation_error_remains_failure(self):
+        """! @brief 살아 있는 그룹 또는 EPERM·ESRCH 외의 조회 오류는 수락하지 않습니다. """
+        for observation in (None, PermissionError(errno.EACCES, 'fixture'), OSError(errno.EIO, 'fixture')):
+            with self.subTest(observation=observation):
+                result, calls, _ = self.observe([None, PermissionError(errno.EPERM, 'fixture'), observation])
+                self.assertIsInstance(result, M.OwnedExecutionError)
+                self.assertEqual(result.error_type, 'PermissionError')
+                self.assertEqual(result.cleanup['status'], 'UNCONFIRMED')
+                self.assertEqual(result.output, b'original partial output')
+                self.assertEqual(calls[-1], mock.call(43210, 0))
+
+    def test_persistent_eperm_exhausts_the_bounded_observation(self):
+        """! @brief 0.5초 이후 추가 조회나 종료 신호 없이 원래 실패를 전달합니다. """
+        result, calls, sleeps = self.observe([None, PermissionError(errno.EPERM, 'fixture'),
+            PermissionError(errno.EPERM, 'fixture')], clock=[0, 0, 0, 0.5])
+        self.assertIsInstance(result, M.OwnedExecutionError)
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(sleeps, [mock.call(0.01)])
+
+    def test_other_platform_errno_and_term_failures_do_not_enter_observation(self):
+        """! @brief Linux·다른 errno·SIGTERM 실패는 기존 오류 경로를 유지합니다. """
+        cases = [('linux', [None, PermissionError(errno.EPERM, 'fixture')]),
+            ('darwin', [None, PermissionError(errno.EACCES, 'fixture')]),
+            ('darwin', [PermissionError(errno.EPERM, 'fixture')])]
+        for platform, signals in cases:
+            with self.subTest(platform=platform, count=len(signals)):
+                result, calls, _ = self.observe(signals, platform=platform)
+                self.assertIsInstance(result, M.OwnedExecutionError)
+                self.assertFalse(any(call.args[1] == 0 for call in calls))
+
+    def test_existing_absent_group_path_has_no_darwin_recovery_claim(self):
+        """! @brief 기존 ESRCH 정상 경로에 새 회복 증거를 붙이지 않습니다. """
+        result, calls, _ = self.observe([ProcessLookupError(errno.ESRCH, 'fixture'),
+            ProcessLookupError(errno.ESRCH, 'fixture')])
+        self.assertIsInstance(result, M.OwnedResult)
+        self.assertNotIn('darwin_sigkill_eperm_group_absent', result.cleanup)
+        self.assertEqual(len(calls), 2)
+
+    def test_group_absence_does_not_turn_timeout_or_interrupt_into_success(self):
+        """! @brief 실제 그룹 부재 확인 뒤에도 원형 timeout·중단 판정과 출력을 유지합니다. """
+        for original, expected in ((subprocess.TimeoutExpired('unused', 1), M.OwnedTimeout),
+                (KeyboardInterrupt(), M.OwnedInterrupted)):
+            with self.subTest(expected=expected):
+                result, _, _ = self.observe([None, PermissionError(errno.EPERM, 'fixture'),
+                    ProcessLookupError(errno.ESRCH, 'fixture')], waits=[original, 0, 0])
+                self.assertIsInstance(result, expected)
+                self.assertEqual(result.output, b'original partial output')
+                self.assertEqual(result.pid, 43210)
+                self.assertTrue(result.cleanup['darwin_sigkill_eperm_group_absent'])
 
 
 if __name__ == '__main__':

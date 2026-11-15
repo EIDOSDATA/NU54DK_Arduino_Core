@@ -1,10 +1,12 @@
 """! @brief 실행한 자식 묶음만 유한 시간 동안 소유하고 종료하는 공통 실행기입니다. """
 from dataclasses import dataclass
+import errno
 import math
 import os
 from pathlib import Path
 import signal
 import subprocess
+import sys
 import tempfile
 import time
 from typing import Mapping, Sequence
@@ -66,6 +68,26 @@ class OwnedExecutionError(RuntimeError):
         self.cleanup = {'status':'UNCONFIRMED','error_type':error_type}
 
 
+def _darwin_owned_group_disappeared(pgid):
+    """! @brief 추가 종료 신호 없이 같은 소유 그룹의 실제 부재를 최대 0.5초 확인합니다. """
+    deadline = time.monotonic()+0.5
+    while time.monotonic() < deadline:
+        try:
+            os.killpg(pgid, 0)
+        except OSError as error:
+            if error.errno == errno.ESRCH:
+                return True
+            if error.errno != errno.EPERM:
+                return False
+        else:
+            return False
+        remaining = deadline-time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(0.01, remaining))
+    return False
+
+
 def _posix(command, cwd, environment, capture, timeout):
     """! @brief 새 session의 process group만 정리하며 외부 process는 열거하지 않습니다. """
     process = subprocess.Popen(command, cwd=cwd, env=environment, stdin=subprocess.DEVNULL,
@@ -73,6 +95,7 @@ def _posix(command, cwd, environment, capture, timeout):
     expired = False
     interrupted = False
     returncode = None
+    darwin_group_absent_after_eperm = False
     try:
         try:
             returncode = process.wait(timeout=timeout)
@@ -93,9 +116,17 @@ def _posix(command, cwd, environment, capture, timeout):
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
+        except PermissionError as error:
+            if (sys.platform != 'darwin' or error.errno != errno.EPERM
+                    or not _darwin_owned_group_disappeared(process.pid)):
+                raise
+            darwin_group_absent_after_eperm = True
         process.wait(timeout=5)
-    return returncode, process.pid, expired, interrupted, {'strategy':'OWNED_POSIX_SESSION_GROUP',
+    cleanup = {'strategy':'OWNED_POSIX_SESSION_GROUP',
         'leader_reaped':True,'final_group_kill_sent_or_group_absent':True}
+    if darwin_group_absent_after_eperm:
+        cleanup['darwin_sigkill_eperm_group_absent'] = True
+    return returncode, process.pid, expired, interrupted, cleanup
 
 
 def _windows(command, cwd, environment, capture, timeout):
