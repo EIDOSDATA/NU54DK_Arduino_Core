@@ -43,6 +43,26 @@ def windows_hash_check(files):
         +program+'"\r\nif errorlevel 1 exit /b 2\r\n')
 
 
+def posix_starter(bootstrap, entry_sha):
+    """! @brief 원형 archive의 python 루트를 유지하고 초기 실행 환경을 검사합니다. """
+    entry_rel = 'source/tools/release/host_rc_entry.py'
+    shell = '#!/bin/sh\n# @brief OS 기본 도구로 초기 archive를 검사하고 관리 Python을 실행합니다.\nset -eu\nkit=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)\n'
+    shell += 'case "$(uname -s):$(uname -m)" in\n'
+    for key,pattern,hasher in [('linux-x86_64','Linux:x86_64','sha256sum'),('macos-arm64','Darwin:arm64','/usr/bin/shasum -a 256')]:
+        pin = bootstrap['platforms'][key]['arduino_archive']
+        executable = 'python/'+bootstrap['platforms'][key]['executable']
+        shell += f'  {pattern}) archive="{pin["filename"]}"; expected="{pin["sha256"]}"; runtime="runtime-{key}"; executable="{executable}"; hasher="{hasher}" ;;\n'
+    shell += '  *) echo "Unsupported OS/architecture" >&2; exit 2 ;;\nesac\n'
+    shell += 'actual=$($hasher "$kit/payload/current/bootstrap-tools/$archive" | cut -d " " -f 1)\n[ "$actual" = "$expected" ] || exit 2\n'
+    shell += 'entry_sha=$($hasher "$kit/'+entry_rel+'" | cut -d " " -f 1)\n[ "$entry_sha" = "'+entry_sha+'" ] || exit 2\n'
+    shell += 'if [ ! -x "$kit/$runtime/$executable" ] || [ ! -f "$kit/$runtime/.nu54-extracted" ] || [ "$(cat "$kit/$runtime/.nu54-extracted")" != "$expected" ]; then\n'
+    shell += '  if [ "$(uname -s)" = "Linux" ] && ! command -v bzip2 >/dev/null 2>&1; then\n    echo "Install the Ubuntu bzip2 package before starting this kit." >&2\n    exit 2\n  fi\n'
+    shell += '  if [ -e "$kit/$runtime" ]; then\n    echo "Incomplete runtime exists; preserve it and use a fresh kit directory." >&2\n    exit 2\n  fi\n'
+    shell += '  mkdir "$kit/$runtime"\n  /usr/bin/tar -xf "$kit/payload/current/bootstrap-tools/$archive" -C "$kit/$runtime"\n  [ -x "$kit/$runtime/$executable" ] || exit 2\n  printf "%s\\n" "$expected" > "$kit/$runtime/.nu54-extracted"\nfi\n'
+    shell += 'exec "$kit/$runtime/$executable" -I -X utf8 -B "$kit/'+entry_rel+'" --kit "$kit" "$@"\n'
+    return shell
+
+
 def main():
     """! @brief Git·source·입력 원형을 고정하고 새 kit만 생성합니다. """
     parser = argparse.ArgumentParser()
@@ -114,19 +134,8 @@ def main():
     starter += 'if not exist "%KIT%runtime-windows\\python\\python.exe" (\r\n  mkdir "%KIT%runtime-windows"\r\n  "%SystemRoot%\\System32\\tar.exe" -xf "%KIT%'+win_rel.replace('/','\\')+'" -C "%KIT%runtime-windows"\r\n  if errorlevel 1 exit /b 2\r\n)\r\n'
     starter += '"%KIT%runtime-windows\\python\\python.exe" -I -X utf8 -B "%KIT%source\\tools\\release\\host_rc_entry.py" --kit "%KIT%." %*\r\nexit /b %ERRORLEVEL%\r\n'
     (args.output/'START.cmd').write_bytes(starter.encode('utf-8'))
-    shell = '#!/bin/sh\n# @brief OS 기본 도구로 초기 archive를 검사하고 관리 Python을 실행합니다.\nset -eu\nkit=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)\n'
-    shell += 'case "$(uname -s):$(uname -m)" in\n'
-    for key,pattern,hasher in [('linux-x86_64','Linux:x86_64','sha256sum'),('macos-arm64','Darwin:arm64','/usr/bin/shasum -a 256')]:
-        pin = bootstrap['platforms'][key]['arduino_archive']
-        executable = bootstrap['platforms'][key]['executable']
-        shell += f'  {pattern}) archive="{pin["filename"]}"; expected="{pin["sha256"]}"; runtime="runtime-{key}"; executable="{executable}"; hasher="{hasher}" ;;\n'
-    shell += '  *) echo "Unsupported native OS/architecture" >&2; exit 2 ;;\nesac\n'
-    shell += 'actual=$($hasher "$kit/payload/current/bootstrap-tools/$archive" | cut -d " " -f 1)\n[ "$actual" = "$expected" ] || exit 2\n'
-    shell += 'entry_sha=$($hasher "$kit/'+entry_rel+'" | cut -d " " -f 1)\n[ "$entry_sha" = "'+entry_sha+'" ] || exit 2\n'
-    shell += 'if [ ! -x "$kit/$runtime/$executable" ]; then\n  mkdir "$kit/$runtime"\n  /usr/bin/tar -xf "$kit/payload/current/bootstrap-tools/$archive" -C "$kit/$runtime"\nfi\n'
-    shell += 'exec "$kit/$runtime/$executable" -I -X utf8 -B "$kit/source/tools/release/host_rc_entry.py" --kit "$kit" "$@"\n'
     path = args.output/'START.sh'
-    path.write_text(shell,encoding='utf-8',newline='\n')
+    path.write_text(posix_starter(bootstrap,entry_sha),encoding='utf-8',newline='\n')
     path.chmod(0o755)
     manifest = dict(schema_version=1,kind='UNPUBLISHED_PRIVATE_HOST_RC1_KIT',source_revision=args.source,
         version='0.6.0-rc.1',previous_source_revision=args.previous_source,previous_version='0.6.0-host.1',

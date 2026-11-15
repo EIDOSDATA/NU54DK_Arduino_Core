@@ -5,6 +5,111 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-15",
+      "baseline_commit": "8947588458d22c416d3907376daf3ad26345edf2",
+      "purpose": "C6 POSIX kit 두 실패 원본 보존 및 C7 실행기 교정·Ubuntu 초기화 상태 정합화",
+      "scope": "관련 현행 문서; 이전 전체 감사와 C5 결과는 불변",
+      "current_state": {
+        "stage": "M33-W07 / HOST-W07",
+        "candidate": "C7_DEVELOPMENT",
+        "Ubuntu_account": "READY",
+        "new_OS_PASS": 0,
+        "USB_identity": "PENDING_USER_CONFIRMATION",
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "29414e485ee253bab82a717e0f30f4fe73f4edac2c184c2a11f5942f4c2cf994"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "760414327f69afaf1893bbb21e1292fee6e21a21888207e21a0fabeca25ce184"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "0ee36b1591cb3cff6ce7f945bab2b768c3d70501aadf8a35d55f1bf5802415a0"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "c3b865311fbdad734b5ef54aa9eac8494ce7ba00fbd2de83cd49535db2321c73"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "9a37f644d0fcb15716d3c0103974869559a4d6d2758fad8713466d3620e011ae"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "3beb0ae613b86a74e72b05ba298f9914daa0b3483c3517e4ee86dd7cf4cb3da7"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "e464dfcf8ee4f82cd49f960db731a9a8b4ef190c79b8881918541ba0fece13be"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "cdf8496101ab2b1935d885071b1c642ae57efa0ed98961959caa5e7aab9348f4"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "8436a28ddd859d73433c54250506c240a17d7f9439928d5c0efc2b3348934742"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "e17c7e9088cf18d323242e249a5712de07b1b18957bb07a47bed710afdac8e64"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "e89e8eb0317aadc9e3442caf9dd5e45c6273da19db3232e99274cc4b5024a0d2"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "9a336e9e5d9e5151889ae1655562954a8008a61f042a273d75aff1e05add7338"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "e786ae27d6011a92464c88a05b20768a99f650ff09f87d74d0b3e7c3491b482c"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "87ab99afdc66c8aace545e38d1b8fe37b702dcd988f2c02b80f44192b7c348b3"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "272df2e4542374f9a22add89940c2743f33d1ad750387228e389b6287a297dec"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "d6112df72ab47dcb24214084390c4b6dbf5dfc102bcc61ec156d659519fae4f8"
+        }
+      ],
+      "checks": {
+        "POSIX_focused": "4f6b51/exit0; 22 PASS + 1 Windows SKIP",
+        "C5_original_results_changed": false,
+        "docs_gate": "4035d5/exit0; 537 Markdown UTF8/local-link PASS",
+        "Windows_focused": "8b1717/exit0; 4 PASS + 2 POSIX SKIP",
+        "diff_check": "9ab8a6/exit0"
+      }
+    },
+    {
+      "review_date": "2026-11-15",
       "baseline_commit": "29e2a6bcb17c64b6002d252be3d0a51fbef21cb1",
       "purpose": "사용자 승인 WSL2 지원·Ubuntu24.04 준비를 C6로 구분하고 C5/FAIL 보존",
       "method": "Host 판별·cache·설치·RC 실행 경로와 관련 현행 문서 직접 대조; 병렬 읽기 전용 코드·문서·공식 설치 절차 검토",

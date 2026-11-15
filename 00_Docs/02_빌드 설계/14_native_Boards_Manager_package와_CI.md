@@ -1,9 +1,9 @@
 # Native Boards Manager package와 CI
 
-2026-11-15 후속: 사용자 승인으로 C6에서 Ubuntu 24.04 LTS AMD64/WSL2 지원을 추가한다.
+2026-11-15 후속: C6의 WSL2 지원을 유지하고 C7에서 POSIX 검증 kit 실행기를 교정한다.
 고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
 설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-현재 Ubuntu 실기는 NOT_RUN이다. [C6 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현재 Ubuntu 실기는 NOT_RUN이다. [C6·C7 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 기준일: 2026-11-15. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 나머지 네 OS 실기는 대기 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과

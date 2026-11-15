@@ -1,12 +1,15 @@
-# HOST-W07 C6 WSL2 지원과 Ubuntu 24.04 검증
+# HOST-W07 C6·C7 WSL2 지원과 Ubuntu 24.04 검증
 
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
-현재 단계는 M33-W07 / HOST-W07이며 Host 완료는 6/8이다. **C6는 개발 검증 단계이며 Ubuntu
-설치·빌드·USB 실기는 아직 완료되지 않았다.** C5의 Windows 완료와 전체204·CI 실적은 C5 기록이다.
+현재 단계는 M33-W07 / HOST-W07이며 Host 완료는 6/8이다. **Ubuntu 등록·계정 초기화는 완료했다.
+C6 kit의 POSIX 실행 경로 오류를 교정한 C7을 준비하며 SDK·빌드·USB 실기는 아직 완료되지 않았다.**
+C5의 Windows 완료와 전체204·CI 실적은 C5 기록이다.
 
 ## 승인과 source 경계
 
 - 개발 기준 HEAD: `29e2a6bcb17c64b6002d252be3d0a51fbef21cb1`.
+- C6 exact source: `8947588458d22c416d3907376daf3ad26345edf2`. producer·kit와 실패 두 번을 원형 보존한다.
+- C7은 C6를 기준으로 POSIX kit 실행기를 교정하는 별도 source다. C6 실적을 C7 실적으로 합산하지 않는다.
 - 보존할 C5 제품 source: `5ee7c10368b554ca23d68f8f82e39308b91df6de`.
 - 새 후보는 C6로 구분한다. 개발 worktree 검사를 최종 clean source의 실제 OS PASS로 세지 않는다.
 - C5 kit·ZIP·manifest와 [328번](328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md),
@@ -33,9 +36,21 @@ USB 미발견 메시지는 usbipd와 Linux 권한 확인을 안내한다. SDK pi
 | 검사 실행 교정 | 같은 코드에서 SDK Python `-I`를 사용해 정상 의존성을 격리. 세 번째 호출에서 통과 |
 | WSL | 공식 MSI 3.0.5 설치 exit0, 실제 `wsl --version` 3.0.5.0·커널6.18.58.1-1 확인 |
 | usbipd-win | 공식 MSI 5.3.0 설치 exit0, 실제 version5.3.0 확인 |
-| Windows 기능 | VirtualMachinePlatform exit3010, 설치 성공·재부팅 필요. 자동 재부팅하지 않음 |
-| Ubuntu 24.04 | 배포판 등록·첫 부팅·계정 초기화 대기 |
-| NU54DK USB / build / IDE | NOT_RUN. 재부팅 후 새 환경에서 수행 |
+| Windows 기능 | VirtualMachinePlatform exit3010 이후 사용자 재부팅 완료. 자동 재부팅하지 않음 |
+| Ubuntu 24.04 | 등록 `4d6b76/exit0`, 계정·OS 확인 `e452ea/exit0`. Ubuntu24.04.5, 커널6.18.58.1-microsoft-standard-WSL2 |
+| Linux 의존성 | 공식 apt 기본 의존성 `305f0e/exit0`, bzip2 추가 `0c4207/exit0` |
+| C6 producer / kit | `8167a9/exit0`, `7372bd/exit0`. 재현 패키지 생성이며 실기 PASS 아님 |
+| C6 첫 Linux plan | `0b74d7/exit1`: 기본 Ubuntu에 bzip2가 없어 bootstrap archive 해제 실패. 원본 보존 |
+| C6 두 번째 Linux plan | `55d090/exit1`: 새 kit에서 압축은 풀렸지만 START.sh 실행 경로에 `python/` 누락. 원본 보존 |
+| C7 개발 검사 | `4f6b51/exit0`: 실제 Ubuntu WSL2에서 23개 중22 PASS·Windows 전용 SKIP1. 개발 worktree 검사 |
+| NU54DK USB | COM25·26 발견. 이전 COM17·18과 serial/부모 identity가 달라 동일 장치 여부 확인 중. attach·실기 NOT_RUN |
+| SDK / build / IDE | NOT_RUN. 교정한 새 kit에서 이어서 수행 |
+
+C6 kit manifest SHA-256은 `c9281b8ee65cb896bc3a4e58ccf0f370968a84dc21fdd4c136795a541554dcfe`다.
+두 실패는 firmware나 SWD 실행 이전의 kit 준비 단계다. C7은 raw archive의 `python/` 루트를 실행 경로에
+반영하고, Linux bzip2를 추출 전에 검사한다. 완전한 추출 후 archive hash marker를 기록하며 실행파일만
+남은 부분 추출은 재사용하지 않는다. Windows 실행기·Arduino 설치 후 executable pin·SDK pin은 유지한다.
+실제 sh/tar 검사에서 cold/warm 진입, archive·entry 변조 거부, bzip2 누락, 부분 추출 보존을 확인했다.
 
 최초 관리자 호출은 기본 Windows PowerShell의 Restricted 정책 때문에 설치 결과를 생성하지 않았다.
 정책 변경 없이 현재 사용 중인 PowerShell7로 호출한 뒤 실제 설치 결과를 확보했다.
@@ -46,13 +61,11 @@ USB 미발견 메시지는 usbipd와 Linux 권한 확인을 안내한다. SDK pi
 
 ## 남은 순서
 
-1. Windows 재부팅 후 WSL2 시작 가능 여부와 설치 버전을 확인한다.
-2. 새 D 드라이브 위치에 Ubuntu 24.04 LTS AMD64를 등록하고 사용자 계정을 초기화한다.
-3. Linux 파일시스템 안에 새 SDK·cache·kit·attempt를 준비한다. Windows SDK를 공유하지 않는다.
-4. 고정 kit 생성과 source/hash 확인, plan·SDK 설치/재검증·lifecycle을 수행한다.
-5. 대표 예제 build 후 COM17/18의 정확한 물리 USB 장치를 식별해 usbipd로 전달한다.
-6. Linux udev/serial 권한·probe/port identity를 확인하고 Blink·UART·debug·재연결·IDE를 검증한다.
-7. 교정이 끝난 source를 고정하고 기존 classifier가 요구하는 최종 검증을 한 번 배치한다.
+1. C7을 고정하고 새 producer·kit를 생성한다. C6 두 실패와 부분 추출 디렉터리를 보존한다.
+2. Linux 파일시스템의 새 C7 SDK·cache·kit·attempt에서 plan·SDK 설치/재검증·lifecycle을 수행한다.
+3. 대표 예제 build 후 현재 NU54DK의 정확한 물리 USB identity를 확인해 usbipd로 전달한다.
+4. Linux udev/serial 권한·probe/port identity를 확인하고 Blink·UART·debug·재연결·IDE를 검증한다.
+5. 교정이 끝난 source를 고정하고 기존 classifier가 요구하는 최종 검증을 한 번 배치한다.
    이번 builder 변경은 six-profile/all-examples 대상이다. C5 PASS를 C6 PASS로 재명명하지 않는다.
 
 WSL2 사용 승인은 Ubuntu native 검증 완료가 아니다. 지원표에는 OS와 실행 환경을 함께 표시한다.

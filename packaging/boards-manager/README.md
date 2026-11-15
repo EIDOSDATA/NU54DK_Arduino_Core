@@ -1,9 +1,9 @@
 # NU54DK Boards Manager 패키징
 
-2026-11-15 후속: 사용자 승인으로 C6에서 Ubuntu 24.04 LTS AMD64/WSL2 지원을 추가한다.
+2026-11-15 후속: C6의 WSL2 지원을 유지하고 C7에서 POSIX 검증 kit 실행기를 교정한다.
 고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
 설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-현재 Ubuntu 실기는 NOT_RUN이다. [C6 진행과 설치 상태](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현재 Ubuntu 실기는 NOT_RUN이다. [C6·C7 진행과 설치 상태](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 현재 stable·지원 대상은 v0.5.0 하나이며 이전 stable·RC·preview는 catalog 공급을 종료합니다.
 정식 상태는 [v0.5.0 TODO](<../../00_Docs/TODO_v0.5.0.md>)에서 관리합니다.

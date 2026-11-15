@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C6 WSL2 지원 개발 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C6의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C7 WSL2 검증 kit 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C7의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 ## 시작 전에
 
@@ -21,7 +21,7 @@
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- 현재 작업은 HOST-W07의 C5 Windows 11 완료 보존과 C6 Ubuntu 24.04/WSL2 지원·실기다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
+- 현재 작업은 HOST-W07의 C5 Windows 11 완료 보존과 C7 Ubuntu 24.04/WSL2 검증 kit 교정·실기다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
 - 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
   실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
   `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.

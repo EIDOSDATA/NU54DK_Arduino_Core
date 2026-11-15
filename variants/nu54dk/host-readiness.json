@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-15",
-  "status": "HOST_W07_C6_WSL2_DEVELOPMENT_WAIT_WINDOWS_REBOOT",
+  "status": "HOST_W07_C7_POSIX_KIT_CORRECTION_UBUNTU_ACCOUNT_READY",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "C6_DEVELOPMENT_BASE_29e2a6_NOT_FINAL_SOURCE",
+  "implementation_revision": "C7_DEVELOPMENT_BASE_8947588_NOT_FINAL_SOURCE",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -852,11 +852,11 @@
       "decision_record": "00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md"
     },
     "C6_development": {
-      "status": "WSL2_IMPLEMENTED_DEVELOPMENT_CHECKS_PASS_WAIT_WINDOWS_REBOOT",
+      "status": "PRESERVED_POSIX_KIT_START_FAILURES",
       "authorization_date": "2026-11-15",
       "base_commit": "29e2a6bcb17c64b6002d252be3d0a51fbef21cb1",
-      "source_revision": null,
-      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "source_revision": "8947588458d22c416d3907376daf3ad26345edf2",
+      "source_scope": "EXACT_SOURCE_PRODUCER_KIT_AND_TWO_POSIX_START_FAILURES",
       "preserved_C5_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
       "C5_credit_transferred": false,
       "host_descriptor": {
@@ -881,18 +881,64 @@
         "WSL": "3.0.5.0",
         "usbipd": "5.3.0",
         "VirtualMachinePlatform_exit": 3010,
-        "reboot_required": true,
-        "automatic_reboot": false
+        "reboot_required": false,
+        "automatic_reboot": false,
+        "reboot_confirmed": true,
+        "Ubuntu_account": "READY_eidos_Ubuntu24.04.5_WSL2"
       },
       "validation": {
-        "Ubuntu_registration": "NOT_RUN",
+        "Ubuntu_registration": "PASS_ENVIRONMENT_ONLY_e452ea_exit0",
         "SDK": "NOT_RUN",
         "lifecycle": "NOT_RUN",
         "build": "NOT_RUN",
         "USB": "NOT_RUN",
         "IDE": "NOT_RUN",
-        "native_Ubuntu_credit": false
+        "native_Ubuntu_credit": false,
+        "producer": "8167a9/exit0",
+        "kit": "7372bd/exit0",
+        "plan_failures": [
+          {
+            "actual": "0b74d7/exit1",
+            "cause": "MISSING_BZIP2",
+            "original_preserved": true
+          },
+          {
+            "actual": "55d090/exit1",
+            "cause": "POSIX_STARTER_MISSING_PYTHON_ARCHIVE_ROOT",
+            "original_preserved": true
+          }
+        ]
       },
+      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
+    },
+    "C7_development": {
+      "status": "POSIX_STARTER_CORRECTION_DEVELOPMENT_CHECKS_PASS",
+      "base_commit": "8947588458d22c416d3907376daf3ad26345edf2",
+      "source_revision": null,
+      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "changes": [
+        "POSIX raw archive python root executable",
+        "Linux bzip2 preflight",
+        "completed extraction hash marker and partial-runtime rejection"
+      ],
+      "development_checks": {
+        "actual": "4f6b51/exit0",
+        "host": "Ubuntu24.04.5_WSL2",
+        "total": 23,
+        "pass": 22,
+        "conditional_skip": 1,
+        "hardware_operations": 0
+      },
+      "validation": {
+        "producer": "NOT_RUN",
+        "kit": "NOT_RUN",
+        "SDK": "NOT_RUN",
+        "lifecycle": "NOT_RUN",
+        "build": "NOT_RUN",
+        "USB": "NOT_RUN",
+        "IDE": "NOT_RUN"
+      },
+      "C5_C6_credit_transferred": false,
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     }
   },
@@ -918,15 +964,16 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C6_DEVELOPMENT",
-  "active_candidate_record": "W07_preparation.C6_development",
+  "active_candidate": "C7_DEVELOPMENT",
+  "active_candidate_record": "W07_preparation.C7_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
-    "candidate": "C6",
+    "candidate": "C7",
     "final_source_revision": null,
     "completed_OS_rows": 0,
     "WSL2_physical": "NOT_RUN",
     "native_Ubuntu_physical": "NOT_RUN",
-    "C5_credit_transferred": false
+    "C5_credit_transferred": false,
+    "C6_credit_transferred": false
   }
 }

@@ -1,9 +1,9 @@
 # Host별 고정 Nordic 환경 설치
 
-2026-11-15 후속: 사용자 승인으로 C6에서 Ubuntu 24.04 LTS AMD64/WSL2 지원을 추가한다.
+2026-11-15 후속: C6의 WSL2 지원을 유지하고 C7에서 POSIX 검증 kit 실행기를 교정한다.
 고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
 설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-현재 Ubuntu 실기는 NOT_RUN이다. [C6 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현재 Ubuntu 실기는 NOT_RUN이다. [C6·C7 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·나머지 네 OS 실기 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
