@@ -109,6 +109,10 @@ def classify(paths: Sequence[str]) -> dict[str, object]:
             run_all_examples = True
             release_sensitive = True
             continue
+        if value == "tools/nu54-builder/src/nu54_builder_impl/owned_process.py":
+            categories.add("host")
+            release_sensitive = True
+            continue
         if value.startswith("tools/nu54-builder/") or value in {"platform.txt", "boards.txt"}:
             categories.add("builder")
             profiles.update(ALL_PROFILES)

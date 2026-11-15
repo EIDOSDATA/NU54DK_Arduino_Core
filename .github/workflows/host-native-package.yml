@@ -20,6 +20,7 @@ on:
       - 'platform.txt'
       - 'post_install.sh'
       - '!**/*.md'
+      - '!tools/nu54-builder/src/nu54_builder_impl/owned_process.py'
   workflow_dispatch:
     inputs:
       version:

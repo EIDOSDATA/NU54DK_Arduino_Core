@@ -30,6 +30,7 @@ on:
       - 'tools/release/host_*.py'
       - 'tests/host/test_m9_cache.py'
       - '!**/*.md'
+      - '!tests/host/test_host_owned_process.py'
   workflow_dispatch:
     inputs:
       bootstrap_only:

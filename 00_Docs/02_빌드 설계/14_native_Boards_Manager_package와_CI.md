@@ -72,6 +72,21 @@ CI signing fixture의 private key는 worker의 별도 private 경로에만 생�
 
 ## Artifact 비교와 실패 판정
 
+### 소유 실행기와 macOS 버전 호환성
+
+[집중 workflow](../../.github/workflows/host-macos-compatibility.yml)는 `owned_process.py`와 해당 시험의
+변경을 담당한다. 이 정확 경로만 바뀌면 W06 전체 shard와 기존 native package·prerequisite를 중복 실행하지 않는다.
+다른 build 입력이 함께 바뀌면 기존 경로 필터와 영향 분류를 유지한다. Host 변경도 제품 동작 변경이며
+문서 전용으로 분류하지 않는다. SDK·compiler·firmware 변경을 생략하는 일반 예외가 아니다.
+
+같은 exact source로 만든 두 private version fixture(`host.1`·`rc.1`)를 이용해 설치 전이를 검사한다.
+이는 과거 배포 version의 업그레이드 실적이 아니다. Windows·Linux·macOS26·27에서 실행기와 호출자 회귀를
+검사하고 macOS 두 행은 고정 SDK 새 설치, 설치·재설치·제거, 대표4개 cold/warm build를 추가한다.
+공식 [macOS27 ARM64 runner](https://github.blog/changelog/2026-10-15-xcode-27-runner-image-generally-available/)의
+label은 `xcode-27`이며 macOS26은 `macos-26`이다. 실제 major·architecture·image·source·run/attempt를 기록하고
+버전 불일치는 거부한다. 두 Mac artifact는 별도 이름을 사용하며 기존 3플랫폼 전체 집계에 섞지 않는다.
+USB·UART·debug·재연결·IDE 사용자 실기는 별도 `NOT_RUN`이며 이 CI에 장치를 연결하지 않는다.
+
 [consumer](../../tools/ci/host_native_package_consumer.py)는 실제 compile exit0뿐 아니라 manifest의
 Core·board·SDK/Zephyr·bundle·Host·FQBN·profile과 artifact hash·size·경계를 확인한다.
 [집계기](../../tools/ci/host_native_package_aggregate.py)는 전달된 실제 파일을 다시 분석한다.

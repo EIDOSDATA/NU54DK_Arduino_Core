@@ -33,6 +33,7 @@ on:
       - "tools/bluetooth/m33_diagnostics_campaign.py"
       - "tools/bluetooth/m33_ecosystem_hil.py"
       - "tools/nu54-builder/**"
+      - "!tools/nu54-builder/src/nu54_builder_impl/owned_process.py"
       - "tools/nu54-prerequisites/**"
       - "tests/hil/nu54dk/**"
       - "tests/zephyr/**"

@@ -66,6 +66,27 @@ class Rc2ChangeClassifierTests(unittest.TestCase):
         self.assertEqual(result["profiles"], ["ble"])
         self.assertFalse(result["run_all_examples"])
 
+    def test_owned_process_change_keeps_contract_without_firmware_rebuild(self) -> None:
+        """! @brief 소유 실행기 정확 경로의 Host 회귀는 전체 firmware 재빌드를 요구하지 않습니다. """
+        result = CLASSIFIER.classify(('tools/nu54-builder/src/nu54_builder_impl/owned_process.py',
+            'tests/host/test_host_owned_process.py', '.github/workflows/host-macos-compatibility.yml',
+            '00_Docs/HANDOFF.md'))
+        self.assertFalse(result['docs_only'])
+        self.assertTrue(result['run_contract'])
+        self.assertTrue(result['release_sensitive'])
+        self.assertFalse(result['run_six_profiles'])
+        self.assertFalse(result['run_all_examples'])
+
+    def test_owned_process_exception_does_not_hide_other_build_inputs(self) -> None:
+        """! @brief 유사 이름·build 입력과 혼합한 변경에는 기존 전체 영향 판정을 유지합니다. """
+        for other in ('tools/nu54-builder/src/nu54_builder_impl/build.py',
+                'tools/nu54-builder/src/nu54_builder_impl/owned_process_extra.py',
+                'cores/nRF5/main.cpp', 'new-product-input.bin'):
+            with self.subTest(other=other):
+                result = CLASSIFIER.classify(('tools/nu54-builder/src/nu54_builder_impl/owned_process.py', other))
+                self.assertTrue(result['run_six_profiles'])
+                self.assertTrue(result['run_all_examples'])
+
     def test_unknown_path_fails_closed_to_full_examples(self) -> None:
         """! @brief 새 최상위 경로는 전수 build로 보수 분류합니다. """
 
