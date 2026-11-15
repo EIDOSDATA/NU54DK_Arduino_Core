@@ -2,7 +2,7 @@
 
 현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
-기준일: 2026-11-16. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 C8·C9 실적과 FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감하며 나머지 세 OS는 대기 중이다.
+기준일: 2026-11-16. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 C8·C9 실적과 FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했고 나머지 세 OS는 대기 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 

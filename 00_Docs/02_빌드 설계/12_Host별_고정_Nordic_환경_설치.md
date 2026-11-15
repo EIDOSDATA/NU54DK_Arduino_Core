@@ -2,7 +2,7 @@
 
 현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
-상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS·기준 검증 마감 진행·나머지 세 OS 대기.
+상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu24.04/WSL2 기준선·변경 영향 검증 완료·나머지 세 OS 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.

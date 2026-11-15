@@ -4,6 +4,119 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "HOST_W07_UBUNTU24_WSL2_CLOSURE_AND_FINAL_SCOPE_DOCS_20261116",
+      "date": "2026-11-16",
+      "reviewed_parent": "441eca8fd9654c91d784c0bc0438b8cbfc98aa9f",
+      "product_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "closure_record": "D:\\w06\\h7c10\\ubuntu24-baseline-impact-closure-a001.json",
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/05_릴리스/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/peripheral/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "docs_gate": 537,
+        "exit_code": 0,
+        "log": "D:\\w06\\h7c10\\document-closure-a001\\docs-a002.log",
+        "log_sha256": "9f5070019b89f2a541b5347e11f81c598d243428d76474955a970adf67705254"
+      },
+      "preserved": "C5/C10 source별 실적, 중단 전체빌드, 원형 macOS FAIL과 기존 감사 실패를 보존한다.",
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+          "sha256_utf8_lf": "389509cc391c5c17b384cf3aa813e13b99aeab54e7f5d65a41f939cb1dbceaba"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "0dcc972b8f019c4534f41e299a08154dba9517b42642d1230687f6524193e2cd"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "810432acc1aa45f6b10df99238738c6673f2650a161321cfb3cc62c2e22ea074"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "4e08aa2d4e1350c0b49c0bbd67b4ab3425844c38d81eecfce620850856b9e5d2"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "10d1f62590bb3b87137295433831b00a166e90246ce7da6c6301945177139e24"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+          "sha256_utf8_lf": "5a09ee267a64fff2ad4ad7747de69d492ba9dec7c401032e70928114c7060068"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "ff46819ef1786b881752b0175d4e53fbdf8a437cc2d13d22027f896623bf5fb5"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "c37a011364fada43c939176e2310797409109bdf5a825e162a4a72fd0d36846e"
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "3d3bbb785bc39e2bddb4446cf64a6d1e4d2d25cd43a8ead3f54892bf2b990263"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "854d930f8de8d8ca6ba4fe06f60e9acae62aaab6d994416634703c45398c7d0d"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "caf562076dbed479b80294f50d087308567477933c685c5510e79e806eea1393"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "82a5523161e8d9f479b1a12bbf1beed63ba16e26bcb2b90fa1408f3932051c4b"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "5cffb3fd31847a73e336eb95947ce5f4f6d1cba9f7f137b954589c2accde7459"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "00c5979b2c1c9903762c65d77974c89a1df87e694c57838f896124e4a2e5cb59"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "053322b49d332fff17f22575ade5bb1a572eb25ba2a2cf098fab6252b5a0c21d"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "11a1320cb6db44756c5b1a7e2da75df0b2b4d820f20e75597956ab51fb67002f"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "32c9218a18972626d0e7dde828ab5c1283cf53556145ad78bedda39466835873"
+        },
+        {
+          "path": "tools/peripheral/README.md",
+          "sha256_utf8_lf": "78ec9da10bed641178f44a155c1ec53c4c1268f31b6f48401fde1a73eb59868f"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "d3a5d2c41177a802dfb57608bf1c70169fa469e01ad577f9d62224cf4c452017"
+        }
+      ]
+    },
+    {
       "id": "HOST_W07_FIXED_TOOLCHAIN_AND_COMPATIBILITY_SCOPE_20261116",
       "date": "2026-11-16",
       "product_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",

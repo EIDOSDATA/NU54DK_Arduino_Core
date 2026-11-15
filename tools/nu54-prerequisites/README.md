@@ -1,9 +1,9 @@
 # Nordic prerequisite 설치 계약
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
-HOST-W06과 HOST-W07의 Windows 11 검증을 완료했으며 C8 실적을 보존하고 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감하며 나머지 세 OS는 대기 중이다. OS별 고정 자산과 공통 Python backend는
+HOST-W06과 HOST-W07의 Windows 11 검증을 완료했으며 C8 실적을 보존하고 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했고 나머지 세 OS는 대기 중이다. OS별 고정 자산과 공통 Python backend는
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
 [`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행, C8 WSL2 부분 실기, 미실행 OS의 `NOT_RUN`은
 [Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.

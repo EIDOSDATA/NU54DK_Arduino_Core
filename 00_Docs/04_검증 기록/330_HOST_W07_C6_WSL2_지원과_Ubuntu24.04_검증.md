@@ -3,9 +3,9 @@
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
 현재 단계는 **M33-W07 / HOST-W07**, Host 완료6/8이다. C10 새 설치·대표8·Blink·UART·
 debug·BLE·잘못된 UID 거부와 실제 USB 재연결 후 첫 UART6개·IDE Verify가 PASS다.
-C5 전체 native 기준선에 C10 변경 영향 증거를 연결해 Ubuntu24.04/WSL2를 마감한다. 중복 전체204는15cold 뒤 범위 정정으로 중단·정리했다. 전체 PASS로 세지 않는다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
+C5 전체 native 기준선에 C10 변경 영향 증거를 연결해 Ubuntu24.04/WSL2 행을 마감했다. 중복 전체204는15cold 뒤 범위 정정으로 중단·정리했다. 전체 PASS로 세지 않는다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
 
-2026-11-16 사용자 지시에 따라 Ubuntu 24.04 LTS/WSL2의 C10 기준 검증을 우선 마감한다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.
+2026-11-16 사용자 지시에 따라 Ubuntu24.04/WSL2를 기준선·변경 영향 검증으로 마감했다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.
 
 ## 승인과 source 경계
 
@@ -184,14 +184,12 @@ C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837
 새 일반 attach와 후속 inventory·UART PASS를 연결한다. 강제 attach·mass erase·unlock·recover·FW 변경은 없다.
 DTR 단독 진단 종료 시 두 NU54DK를 C8 SerialEcho로 복귀했다. 후속 역할 image 변경은 새 attempt에 기록한다.
 
-1. 완료한 C10 설치·대표8·실기·재연결·IDE 결과를 보존하고 같은 시험을 반복하지 않는다.
-2. C5 native 전체 기준선과 C10 변경 영향·대표8·원본 byte 감사를 연결해 Ubuntu24.04/WSL2 증거를 마감한다. 중복 전체204 재실행은 하지 않는다.
-3. C10 exact CI·artifact 감사를 마감한다. C8/C9 완료·FAIL·중단 원본은 별도 보존한다.
-4. Ubuntu26.04 LTS의 설치·대표 build·USB/serial/debug·lifecycle 호환성을 확인한다. 전체204 중복은 하지 않는다.
-5. macOS26 → macOS27의 실제 환경 호환성을 확인한다. Mac 환경 확보가 필요하며 버전별 전체204는 반복하지 않는다.
-6. 완료한 C5 Windows11 기준선+C10 제한 영향 검사 연결을 지원표에 유지한다. 새 Windows 실기는 반복하지 않는다.
-7. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
-8. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
+1. 완료한 C5 기준선과 C10 설치·대표8·실기·재연결·IDE·변경 영향 증거를 보존한다. Ubuntu24.04/WSL2 행은 마감했다.
+2. 이번 문서·CI 설정 후속의 exact CI를 확인한다. C10의 불필요한 전체 native shard는 smoke 원본을 보존한 뒤 취소했다.
+3. Ubuntu26.04 LTS의 설치·대표 cold/warm build·USB/serial/debug·lifecycle 호환성을 확인한다. 전체204는 반복하지 않는다.
+4. macOS 프로세스 정리 FAIL을 교정·집중 검증하고 macOS26 →27의 설치·장치·IDE 호환성을 확인한다. 실제 Mac 환경 확보가 필요하다.
+5. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
+6. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
 
 C9 kit manifest SHA-256은 `a210e1b58ea29bd7c10bbcc023bc67219b0aa2587598241d1aadb08d4f4c3ade`다.
 새 실기 원본은 `D:/w06/h7c9/physical-sequence-a001`·`ble-pair-a001`, 감사는
@@ -215,10 +213,10 @@ C10 prerequisite run43743775292/attempt1은 Windows·Ubuntu2PASS, macOS1FAIL이�
 검사1개가 `OwnedExecutionError: PermissionError`다. SDK·USB·firmware 실행 실패가 아니다.
 해당 제품 코드와 test는 C9→C10에서 동일하다. Apple XNU의 zombie-only process group은
 [killpg1 구현](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/kern_sig.c#L1580)상 EPERM 후보가 되지만
-원형 로그에는 실패 호출·errno가 없어 이번 발생 원인은 아직 미확정이다.
+원형 로그에는 실패 호출·errno가 없어 아래 별도 진단으로 실행 경계를 확인했다.
 
-별도 macOS CI 진단은 exact C10 원형 test10회와 controlled zombie-only 그룹1회를 고정 관측한다.
-signal·예외·PASS 조건을 변경하지 않고 같은 소유PGID 상태와 errno를 추가 기록한다. 진단 성공은
+별도 macOS CI 진단에서 exact C10 원형 test10회와 controlled zombie-only 그룹1회를 고정 관측했다.
+signal·예외·PASS 조건을 변경하지 않고 같은 소유PGID 상태와 errno를 추가 기록했다. 진단 성공은
 C10 원형 CI FAIL을 PASS로 바꾸지 않는다. SDK 설치·전체 예제·USB/HIL을 반복하지 않으며
 Ubuntu24.04의 중단된 전체 빌드 원본과 별도로 완료한 실기·IDE PASS를 보존한다.
 
@@ -245,3 +243,26 @@ C10 전체 빌드 attempt `build-20261115T180802545594Z`는15cold·0warm 뒤 범
 중복 전체 실행 요구와 오래된 진행 상태를 정리했다. 역사 기록·완료 TODO6개·기존 PASS/FAIL은 수정하지 않았다.
 `host-native-package.yml`의 push와 기본 dispatch는 설치·대표 smoke까지만 실행하고, 전체204는 실제 전체 영향 검토 뒤 명시한다.
 같은-source/run/attempt 집계 규칙은 유지한다. 미실행 호환성이나 미해결 macOS cleanup FAIL을 PASS로 바꾸지 않는다.
+
+## Ubuntu24.04/WSL2 행 마감과 원본 진단 결과
+
+`673dee/exit0`에서 C5 전체 기준선과 exact C10 증거10개를 대조해 Ubuntu24.04/WSL2 행을 마감했다.
+`D:/w06/h7c10/ubuntu24-baseline-impact-closure-a001.json`이 마감 원장이다. C10은 대표4cold/4warm,
+lifecycle9단계·설치960파일·발견204·실기·물리 재연결·IDE를 통과했다. Linux prerequisite unit은
+140PASS·조건부SKIP1과 SDK 설치·재검증 PASS다. C10 M12는9/9이며 native smoke3OS 원본 byte 재집계는
+`f7ddc5/exit0`으로 통과했다. 최초 재집계는 다른 문서 HEAD에서 실행해 source 가드가 거부했다
+(`a95518/exit1`). 원본을 보존하고 actual C10 checkout에서 새 감사만 수행했으며 재빌드하지 않았다.
+지원표는 Windows11 기준선 유지와 Ubuntu24.04/WSL2 완료로2/5다. C10 직접 마감은1행이며
+native Ubuntu 사용자 실기 NOT_RUN, 나머지3행 및 HOST-W07/W08 미완료를 유지한다.
+
+C10 native run43743775319는 완료한 producer·세 smoke·비교5job과 원본 artifact8개를 보존한 뒤
+중복 전체 shard를 취소했다. 실행 전체는 CANCELLED이며 전체204 PASS가 아니다. 취소 원문과
+남은 partial artifact는 해당 run에 보존하며 새 정규 workflow는 `full_examples=false`를 기본으로 사용한다.
+
+macOS 진단 run43745916309의 원형10회 중3회(case0·4·9)에서 동일PGID의 SIGTERM 성공 뒤
+SIGKILL이 EPERM(errno1)을 반환했고 `OwnedExecutionError`로 기록됐다. 오류 직후 그룹 멤버는0이었다.
+별도 실험은 실제 zombie 상태에서 같은 EPERM을 확인했다. 원형 실패 순간 zombie-only 상태를 직접
+관측한 것은 아니므로 그 세부 원인은 실험·XNU에 부합하는 설명으로 구분한다. SDK·firmware·USB
+실행 실패가 아니며 제품 교정 전의 미해결 FAIL이다. 진단 workflow 성공은 제품 PASS로 세지 않는다.
+원본 ZIP hash는 `e01b128bde4e760b987a20742a641138f8131d2908f516429ad87525e1c8c1af`,
+보존은 `24009a/exit0`·`ee0889/exit0`이다.

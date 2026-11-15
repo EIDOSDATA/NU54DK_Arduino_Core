@@ -1,6 +1,6 @@
 # 개발 인계
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -15,9 +15,9 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, **M33-W07의 HOST-W07 C8 부분 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS·기준 검증 마감 진행**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
+| Host | **6/8**, **M33-W07의 HOST-W07 C8 부분 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu24.04/WSL2 기준선·변경 영향 검증 완료**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C5 Windows 기준선+C10 영향 검사 완료. C10 Ubuntu24.04/WSL2 실기·재연결·IDE PASS, 증거 마감 중. macOS unit FAIL 원본 보존·집중 진단. 상세 source별 결과는 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
+| HOST-W07 현재 | C5 Windows 기준선+C10 영향 검사 완료. C10 Ubuntu24.04/WSL2 기준선·변경 영향 검증 완료. macOS unit FAIL 원본 보존·집중 진단. 상세 source별 결과는 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |

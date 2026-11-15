@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
-HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감한다. Host 완료는 6/8이다.
+HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했다. Host 완료는 6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -49,7 +49,7 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
-| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS; C5 전체 빌드 기준선+변경 영향 증거 마감 중 |
+| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS; C5 전체 빌드 기준선+C10 변경 영향 검증 완료 |
 | Ubuntu 26.04 LTS | AMD64 | 호환성 검증 NOT_RUN. 24.04 마감 후 설치·대표 build·장치 경로 확인, 전체204 중복 없음 |
 | macOS 26 | Apple Silicon | C5 native 전체 빌드 PASS 보존. 설치·대표 build·USB·IDE 호환성 실기 대기, 환경 확보 필요 |
 | macOS 27 | Apple Silicon | 버전 호환성 검증 NOT_RUN, 환경 확보 필요. 버전 차이만으로 전체204 반복하지 않음 |

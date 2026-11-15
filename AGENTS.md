@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 완료를 유지하고 C10 변경 영향 검증을 연결한다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 ## 시작 전에
 
@@ -68,7 +68,7 @@
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   소스의 `coreVersion()` 식별 문자열과 공개 stable은 **0.5.0**, 비공개 C10 검증 후보 패키지는 **0.6.0-rc.1**입니다. M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS·기준 검증 마감 진행·나머지 세 OS 대기**입니다. W05 exact `5f9b2257…`에서
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu24.04/WSL2 기준선·변경 영향 검증 완료·나머지 세 OS 대기**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고

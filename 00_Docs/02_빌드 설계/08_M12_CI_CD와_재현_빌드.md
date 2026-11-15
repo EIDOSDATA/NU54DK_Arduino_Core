@@ -30,7 +30,7 @@ Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 �
 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
 릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
 Host는 사용자 지시로 재개해 W01~W06 완료(6/8)와 W07 Windows 11 비공개 RC1 검증을 마쳤다.
-나머지 Ubuntu/macOS 네 OS 실기와 HOST-W08은 대기 중이다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
+C5 Windows 기준선을 보존하며, 추가 OS의 진행과 남은 호환성·증거 마감은 현행 Host 계약과330번 기록을 따른다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
 
 ---
 
