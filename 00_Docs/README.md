@@ -1,6 +1,6 @@
 # 문서 안내
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C7 WSL2 검증 kit 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C7의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 일반 사용자는 **stable v0.5.0** 문서를 선택합니다. Windows 10/11 x64 대상이며,
 이전 stable과 RC는 지원·catalog 공급이 끝난 역사 기록으로 보존합니다.

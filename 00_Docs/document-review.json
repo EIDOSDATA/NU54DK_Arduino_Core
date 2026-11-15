@@ -5,6 +5,112 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-15",
+      "baseline_commit": "a18bf356fa5d0528e826448c9aa87bf413291485",
+      "purpose": "C7 SDK 설치·verify·lifecycle PASS와 inventory FAIL을 보존하고 C8 SDK child 환경 교정 기록",
+      "scope": "관련 현행 문서; C5/C6 원본과 완료 TODO 불변",
+      "current_state": {
+        "stage": "M33-W07 / HOST-W07",
+        "candidate": "C8_DEVELOPMENT",
+        "previous_candidate": "C7_INVENTORY_FAIL_PRESERVED",
+        "new_OS_PASS": 0,
+        "USB_transport": "ATTACHED_IDENTITY_AND_PERMISSIONS_VERIFIED",
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "0d1aea71e542d8473471a655e0e963de4820ef24ad42c78c99d777b1fa135753"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "405aa766bbadec30af26387e90135a336e7de08e285553d0b93a98bc2fcd3d25"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "5bd19f56f922e1b44d2c315af0959386fdd1c0dbde37557ba63b2e31f524f5fc"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "29ff28d8447fd0bb1a6b95b11f75cd5c42793710c0454fabaf90bf6b35bd08e7"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "552a9edf72f2efbbe697bf3e66bc3e0f5f20e53a9440f1b30c43493678b5424b"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "d333833fa996df8be21bef66d79269a5ae79855f06374c0b7c68a0a0d262a403"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "bc6054e60abbc385f15586f3c5c8adb78ed186dfc29305d90eade7f01e7d23ac"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "f18a2470543e0051ca34a79bf18958c46841b037c958b115856426e5272eddef"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "0218828d3acfe5a2a17639900b64def25ad1345cd8ba501d95188ce405e1e951"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "e990ec41a065c2bbbfc619db249f1f4412d89f190633e018f192973a4b20fa2e"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "bb562e0ee590560cbc6b182bbd94e4a32ced7cad3d020fb46dc12ed6bb566771"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "f0e3731a02d94055359c00439d59d135ce4e3094af7e3d70a430d66ce8893e60"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "6a7d682ffaa6ba0c30c1916488b3d8494b18448484c309c08c76298c2ef3963c"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "9c0c49439c85560eac39392b94973f0b008fb610f12178c0c37be89319cef9d3"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "43d523046b8799e6bdc33eb0a142bfa84bf15e78e0b8094540fd67fcd7665615"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "b57693f69da0bae5289c296c219f49cd7f6c7ed9d34c0a9947fbb60235797432"
+        }
+      ],
+      "checks": {
+        "Linux_focused": "bc94b4/exit0; 65 PASS + 1 Windows SKIP",
+        "Windows_focused": "a0b2ab/exit0; 59 PASS + 7 conditional SKIP",
+        "C5_C6_original_results_changed": false,
+        "docs_gate": "c8a401/exit0; 537 Markdown UTF8/local-link PASS",
+        "Windows_TMP_D": "17ac18/exit0; 59 PASS + 7 conditional SKIP",
+        "diff_check": "3a8a73/exit0"
+      }
+    },
+    {
+      "review_date": "2026-11-15",
       "baseline_commit": "8947588458d22c416d3907376daf3ad26345edf2",
       "purpose": "C6 POSIX kit 두 실패 원본 보존 및 C7 실행기 교정·Ubuntu 초기화 상태 정합화",
       "scope": "관련 현행 문서; 이전 전체 감사와 C5 결과는 불변",

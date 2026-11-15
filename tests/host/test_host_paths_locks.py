@@ -197,6 +197,30 @@ class HostPathLockTests(unittest.TestCase):
         self.assertEqual(environment['PATH'], str(C.canonical_path(toolchain / 'bin')) + os.pathsep + 'parent-path')
         self.assertNotIn('CFLAGS', environment)
 
+    def test_explicit_environment_preserves_session_and_does_not_reintroduce_parent(self):
+        """! @brief 실행별 환경 위에 bundle 경로만 적용하고 부모 값·compiler flag를 다시 가져오지 않습니다. """
+        toolchain = self.root/'도구 chain'
+        toolchain.mkdir()
+        (toolchain/'environment.json').write_text(json.dumps({'env_vars': [
+            {'key':'PATH','type':'relative_paths','values':['bin'],'existing_value_treatment':'prepend_to'},
+            {'key':'LD_LIBRARY_PATH','type':'relative_paths','values':['lib'],'existing_value_treatment':'prepend_to'}
+        ]}),encoding='utf-8')
+        base = {'PATH':'session-path','LD_LIBRARY_PATH':'session-library',
+            'NUCODE_PREREQUISITE_STATE_ROOT':'session-state','CFLAGS':'untracked-flag'}
+        original = dict(base)
+        with mock.patch.dict(os.environ,{'PATH':'parent-path','NUCODE_PROBE_UID':'parent-probe',
+                'NUCODE_PREREQUISITE_STATE_ROOT':'parent-state'}):
+            environment = E.apply_toolchain_environment(toolchain,base_environment=base)
+            empty = E.apply_toolchain_environment(toolchain,base_environment={})
+        self.assertEqual(environment['PATH'],str(C.canonical_path(toolchain/'bin'))+os.pathsep+'session-path')
+        self.assertEqual(environment['LD_LIBRARY_PATH'],str(C.canonical_path(toolchain/'lib'))+os.pathsep+'session-library')
+        self.assertEqual(environment['NUCODE_PREREQUISITE_STATE_ROOT'],'session-state')
+        self.assertNotIn('NUCODE_PROBE_UID',environment)
+        self.assertNotIn('CFLAGS',environment)
+        self.assertEqual(empty['PATH'],str(C.canonical_path(toolchain/'bin')))
+        self.assertNotIn('NUCODE_PREREQUISITE_STATE_ROOT',empty)
+        self.assertEqual(base,original)
+
     def test_empty_path_and_external_tools_do_not_replace_bundle_programs(self):
         """! @brief 빈 PATH에서도 고정 도구를 찾고 외부 PATH의 대체 실행 파일은 거부합니다. """
         toolchain = self.root / 'toolchain'

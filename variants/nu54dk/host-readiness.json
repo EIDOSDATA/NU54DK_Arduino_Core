@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-15",
-  "status": "HOST_W07_C7_POSIX_KIT_CORRECTION_UBUNTU_ACCOUNT_READY",
+  "status": "HOST_W07_C8_SDK_CHILD_ENVIRONMENT_CORRECTION",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "C7_DEVELOPMENT_BASE_8947588_NOT_FINAL_SOURCE",
+  "implementation_revision": "C8_DEVELOPMENT_BASE_a18bf356_NOT_FINAL_SOURCE",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -912,10 +912,10 @@
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     },
     "C7_development": {
-      "status": "POSIX_STARTER_CORRECTION_DEVELOPMENT_CHECKS_PASS",
+      "status": "PRESERVED_SDK_LIFECYCLE_PASS_INVENTORY_FAIL",
       "base_commit": "8947588458d22c416d3907376daf3ad26345edf2",
-      "source_revision": null,
-      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "source_revision": "a18bf356fa5d0528e826448c9aa87bf413291485",
+      "source_scope": "EXACT_C7_PRODUCT_WITH_SEPARATE_DOCUMENT_RECORD",
       "changes": [
         "POSIX raw archive python root executable",
         "Linux bzip2 preflight",
@@ -930,15 +930,77 @@
         "hardware_operations": 0
       },
       "validation": {
+        "producer": {
+          "child_exit_code": 0,
+          "receipt": "D:/w06/h7c7/setup/producer-a001.json"
+        },
+        "kit": {
+          "child_exit_code": 0,
+          "manifest_sha256": "4cc5b18e928ac72712c947b1db6aa50a90a6a938de905fd7d767d0646b743654",
+          "receipt": "D:/w06/h7c7/setup/kit-a001.json"
+        },
+        "SDK": "97a57d/exit0_INSTALL_PASS",
+        "lifecycle": "60ffae/exit0_WSL2_PRIVATE_LIFECYCLE",
+        "build": "NOT_RUN",
+        "USB": "NOT_RUN",
+        "IDE": "NOT_RUN",
+        "plan": {
+          "child_exit_code": 0,
+          "receipt": "D:/w06/h7c7/setup/linux-kit-plan-a001.json",
+          "native": false,
+          "execution_environment": "wsl2"
+        },
+        "USB_transport": {
+          "attach_actual": "32126b/exit0",
+          "permissions_actual": "1a9765/exit0",
+          "two_tty_ports": true,
+          "physical_runtime_PASS": false
+        },
+        "SDK_verify": "a7d93b/exit0",
+        "inventory": {
+          "actual": "e4be9c/exit1",
+          "cause": "SDK_PYTHON_BUNDLE_LOADER_ENVIRONMENT_NOT_PASSED",
+          "original_preserved": true
+        },
+        "environment_diagnostic": "38933f/exit0_IMPORTS_ONLY_NOT_C8_CREDIT"
+      },
+      "C5_C6_credit_transferred": false,
+      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
+    },
+    "C8_development": {
+      "status": "SDK_CHILD_ENVIRONMENT_CORRECTED_DEVELOPMENT_CHECKS_PASS",
+      "base_commit": "a18bf356fa5d0528e826448c9aa87bf413291485",
+      "source_revision": null,
+      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "development_checks": {
+        "Linux": {
+          "actual": "bc94b4/exit0",
+          "total": 66,
+          "pass": 65,
+          "conditional_skip": 1
+        },
+        "Windows": {
+          "actual": "17ac18/exit0",
+          "total": 66,
+          "pass": 59,
+          "conditional_skip": 7,
+          "first_actual": "a0b2ab/exit0",
+          "temporary_root": "D:/w06/tmp"
+        }
+      },
+      "validation": {
         "producer": "NOT_RUN",
         "kit": "NOT_RUN",
         "SDK": "NOT_RUN",
+        "SDK_verify": "NOT_RUN",
         "lifecycle": "NOT_RUN",
+        "inventory": "NOT_RUN",
         "build": "NOT_RUN",
         "USB": "NOT_RUN",
         "IDE": "NOT_RUN"
       },
-      "C5_C6_credit_transferred": false,
+      "previous_source_credit_transferred": false,
+      "SDK_pin_changed": false,
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     }
   },
@@ -964,16 +1026,17 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C7_DEVELOPMENT",
-  "active_candidate_record": "W07_preparation.C7_development",
+  "active_candidate": "C8_DEVELOPMENT",
+  "active_candidate_record": "W07_preparation.C8_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
-    "candidate": "C7",
+    "candidate": "C8",
     "final_source_revision": null,
     "completed_OS_rows": 0,
     "WSL2_physical": "NOT_RUN",
     "native_Ubuntu_physical": "NOT_RUN",
     "C5_credit_transferred": false,
-    "C6_credit_transferred": false
+    "C6_credit_transferred": false,
+    "C7_credit_transferred": false
   }
 }

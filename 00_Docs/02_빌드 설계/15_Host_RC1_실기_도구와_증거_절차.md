@@ -1,6 +1,6 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C7 WSL2 검증 kit 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C7의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 HOST-W07은 Windows 11 RC1 검증을 완료했으며 나머지 네 OS는 대기다. Host 완료는 6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
@@ -78,6 +78,10 @@ Host는 `native=false`, `execution_environment=wsl2`로 기록한다. WSL2 PASS�
 4. Linux kit의 첫 실행 전 `bzip2`를 설치한다. SDK runtime 의존성과 구분한다. 실패한 부분 추출은
    보존하고 새 kit 디렉터리에서 재개한다. 고정 Linux prerequisite와 공식 nrf-udev 규칙·serial 그룹을 확인한다. 사용자 비밀번호가 필요한
    sudo 입력은 사용자가 한다. 비밀번호를 로그·문서·대화에 저장하지 않는다.
+   고정 nrf-udev의 VID1915 규칙은 DAPLink `0d28:0204`에 적용되지 않는다. 이 장치는
+   [pyOCD CMSIS-DAP 규칙](https://github.com/pyocd/pyOCD/blob/main/udev/50-cmsis-dap.rules)을 참고해
+   해당 VID/PID USB device를 plugdev0660, ttyACM 자식을 dialout0660으로 제한한다.
+   사용자 그룹과 새 세션의 실제 접근 권한을 확인하고 최초 attach 전에 규칙을 reload한다.
 5. Windows의 `usbipd state`와 현재 NU54DK 두 VCOM의 공통 물리 USB 부모·serial identity를 정확히 대조한다.
    재부팅 전 COM 번호나 BUSID만으로 같은 장치라고 판단하지 않는다.
    해당 BUSID만 관리자 `usbipd bind --busid <BUSID>`로 공유한 뒤, Ubuntu를 실행한 상태에서

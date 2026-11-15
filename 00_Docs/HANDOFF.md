@@ -1,6 +1,6 @@
 # 개발 인계
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C7 WSL2 검증 kit 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C7의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -15,9 +15,9 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, **M33-W07의 HOST-W07 C7 Ubuntu 24.04/WSL2 검증 kit 교정**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
+| Host | **6/8**, **M33-W07의 HOST-W07 C8 Ubuntu 24.04/WSL2 SDK child 실행 환경 교정**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | Ubuntu 등록·계정 초기화 완료. C6 POSIX kit 경로 오류를 C7에서 교정·실제 sh 회귀 통과. SDK·실기 NOT_RUN. [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)은 C5 Windows 완료 기록이며 새 source 실적과 합산하지 않는다. 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
+| HOST-W07 현재 | C7의 kit·SDK 설치/verify·lifecycle 통과 뒤 inventory가 SDK loader 환경 누락으로 FAIL. C8 교정·Linux65PASS/Windows59PASS 개발 검사 완료. NU54DK USB 전달·권한 확인, build·upload·runtime·IDE NOT_RUN. [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)은 C5 Windows 완료 기록이며 새 source 실적과 합산하지 않는다. 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
@@ -30,7 +30,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 
 1. [AGENTS](../AGENTS.md)와 [M33 인계](M33_HANDOFF.md).
 2. [M33 TODO](TODO_M33.md)의 W07·W08, [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>).
-3. 현행 [330번 C6·C7 WSL2 진행](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json). C5 Windows 완료는 [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다.
+3. 현행 [330번 C6·C7·C8 WSL2 진행](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json). C5 Windows 완료는 [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다.
 4. 과거 실패 원인이 필요할 때 [302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)·
    [303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>)의 해당 절만 참조.
 5. 과거 개발49 완료와 판단 정정은 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)·[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)의 역사 기록이다. W06 증거 해석이 필요할 때만 [W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)과 [재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 참조하며 #29 분석은 유예한다.

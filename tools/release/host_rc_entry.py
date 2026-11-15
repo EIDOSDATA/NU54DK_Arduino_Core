@@ -132,10 +132,11 @@ def main(arguments=None):
         raise ValueError('기존 work root는 다른 RC source입니다. 새 work root를 지정하십시오.')
     receipt = dict(plan,operation=args.operation,status='FAIL',steps=[])
 
-    def run(name,command,timeout=180,expected_rejection=None):
+    def run(name,command,timeout=180,expected_rejection=None,command_environment=None):
         """! @brief 무한 대기·자동 재시도 없이 실제 출력과 cleanup을 보존합니다. """
         try:
-            result = L.OWNED.run_owned(command,cwd=args.work_root,environment=environment,
+            result = L.OWNED.run_owned(command,cwd=args.work_root,
+                environment=environment if command_environment is None else command_environment,
                 capture_directory=attempt,timeout=timeout)
             (attempt/(name+'.log')).write_bytes(result.stdout)
             expected = (result.returncode != 0 and expected_rejection.encode() in result.stdout
@@ -179,6 +180,9 @@ def main(arguments=None):
             runtime = Path(installed['config']).parent/'한글 data/packages/nucode/tools/nu54-python'/bootstrap['runtime']['tool_version']/bootstrap['platforms'][key]['executable']
             run('sdk-verify',[runtime,'-I','-X','utf8','-B',platform/'tools/nu54-prerequisites/nordic.py','verify',
                 '--install-root',sdk,'--state-root',state_root,'--evidence',attempt/'sdk.json'],180)
+            ## @brief SDK Python 자식에만 bundle의 loader 경로와 정리된 실행별 환경을 전달합니다.
+            sdk_environment = L.BUILDER.apply_toolchain_environment(
+                Path(environment['NUCODE_TOOLCHAIN_ROOT']),base_environment=environment)
             if args.operation=='build':
                 catalog = L.CONSUMER.EXAMPLES.load_catalog(platform)
                 state['builds'] = {}
@@ -243,7 +247,7 @@ def main(arguments=None):
                 receipt['all_204_examples'] = 'PASS' if args.all_examples else 'NOT_RUN_REPRESENTATIVES_ONLY'
             elif args.operation=='inventory':
                 run('inventory',[sdk_python,'-I','-X','utf8','-B',platform/'tools/nu54-prerequisites/host-check.py',
-                    'inventory','--evidence',attempt/'inventory.json'],60)
+                    'inventory','--evidence',attempt/'inventory.json'],60,command_environment=sdk_environment)
             else:
                 example = 'nus-peripheral' if args.operation=='ble-pair' else args.example
                 build_manifest = Path(state['builds'][example])
@@ -258,14 +262,14 @@ def main(arguments=None):
                             command += ['--'+name.replace('_','-'),getattr(args,name)]
                     if args.allow_jlink_backend:
                         command += ['--allow-jlink-backend']
-                    run('ble-pair',command,90)
+                    run('ble-pair',command,90,command_environment=sdk_environment)
                 elif args.operation=='upload':
                     command=[sdk_python,'-I','-X','utf8','-B',platform/'tools/nu54-builder/src/nu54_builder.py',
                         'flash',*common,'--runner','pyocd','--probe-sha256',args.probe_sha256,
                         '--timeout-seconds','180']
                     if args.allow_jlink_backend:
                         command += ['--allow-jlink-backend']
-                    run('upload',command,200)
+                    run('upload',command,200,command_environment=sdk_environment)
                 else:
                     if args.operation=='blink' and args.example != 'blink':
                         raise ValueError('LED GPIO 관측은 Blink image에만 사용하십시오.')
@@ -279,7 +283,7 @@ def main(arguments=None):
                             command += ['--path-sha256',args.path_sha256]
                     if args.allow_jlink_backend:
                         command += ['--allow-jlink-backend']
-                    run('physical',command,90)
+                    run('physical',command,90,command_environment=sdk_environment)
             state['last_operation'] = args.operation
         receipt['status'] = 'PASS'
         L.BUILDER.atomic_write_json(state_path,state)

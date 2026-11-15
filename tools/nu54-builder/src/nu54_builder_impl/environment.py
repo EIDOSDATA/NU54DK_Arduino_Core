@@ -4,7 +4,7 @@ from __future__ import annotations
 from .models import ToolEnvironment
 
 from pathlib import Path, PureWindowsPath
-from typing import Any
+from typing import Any, Mapping
 import json
 import os
 import subprocess
@@ -154,8 +154,10 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
 
 
 ## @brief Toolchain Manager environment.json을 현재 child process 환경에 적용합니다.
-def apply_toolchain_environment(toolchain_root: Path) -> dict[str, str]:
-    environment = os.environ.copy()
+def apply_toolchain_environment(
+    toolchain_root: Path, *, base_environment: Mapping[str, str] | None = None
+) -> dict[str, str]:
+    environment = dict(os.environ if base_environment is None else base_environment)
     # 사용자의 shell flag가 canonical cache key 밖에서 build를 바꾸지 못하게 합니다.
     for key in BUILD_ENVIRONMENT_OVERRIDE_KEYS:
         environment.pop(key, None)
