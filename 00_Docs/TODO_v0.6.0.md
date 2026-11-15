@@ -1,13 +1,14 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 | 항목 | 현재 상태 |
 | --- | --- |
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [현행 상태·실행 순서](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W06 완료 **6/8**; HOST-W06 완료·HOST-W07 준비 완료·사용자 OS 실기 대기, 이후 순차 진행 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 Windows 11 실기 진행 |
+| v0.6.0 지원 목표 | Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
 | SDK | NCS v3.4.0 pin 유지; v3.4.1 전체 전환은 SDK 전용 제품 v0.7.0 |
@@ -113,7 +114,7 @@ v0.6.0의 package·제품 식별자·RC 전환은 실제 개발 및 배포 준�
 
 HOST-W04 설치 범위는 H4의 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>),
 HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>)에서
-각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07 준비를 마감했으며 사용자 OS 실기를 기다린다.
+각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07 준비를 마감했다. Windows 11부터 확정한 다섯 OS의 실기를 진행한다.
 실제 USB 최종 gate와 추가 OS 정식 지원은 후속 범위로 유지한다.
 
 HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 W07 실행기·Windows 회귀·RC1을 준비한다. 사용자 Ubuntu/macOS 실물 gate는 NOT_RUN이다.

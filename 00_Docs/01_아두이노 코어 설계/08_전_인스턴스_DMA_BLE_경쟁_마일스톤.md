@@ -553,8 +553,8 @@ v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8�
   개발·공개의 차단 gate가 아니다. 기본 GATT 또는 NU54DK scripted pairing PASS로 실제 OS UX나
   vendor 호환성을 선언하지 않는다.
 - Bluetooth qualification 적용성, 필요한 QDID/DN과 미완료 인증을 분리해 공개한다.
-- HOST-W08에서 Windows 10/11 x64, Ubuntu 24.04부터 최신 지원 release까지 AMD64, macOS 26부터
-  최신 지원 major까지 Apple Silicon의 전체 예제·대표 실제 upload/runtime·lifecycle을 마감한다.
+- HOST-W08에서 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon의
+  전체 예제·대표 실제 upload/runtime·lifecycle을 마감한다.
   Ubuntu/macOS 실제 검증은 해당 OS 후속 릴리스 때 사용자가 수행하며 세 Host 증거 gate는 유지한다.
 - 완료 gate: release package, 보드 기반 전체 BLE regression, 외부 장치의 구현·예제·자동 검사와
   사용자 추후 검증 상태가 명시된 mobile/desktop·cross-vendor matrix, 세 Host 지원 matrix와 공개 stable 검증.
@@ -563,7 +563,7 @@ v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8�
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
 M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 HOST-W06 완료·HOST-W07 준비 중이다. M28 결과와
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 M33-W07의 HOST-W07에서 Windows 11 실기를 진행한다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은

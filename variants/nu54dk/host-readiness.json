@@ -4,7 +4,7 @@
   "updated_date": "2026-11-15",
   "status": "in_progress",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W07_C5_AUTOMATIC_PASS_USER_OS_GATES_PENDING",
+  "implementation_revision": "HOST_W07_C5_FIVE_OS_RELEASE_TARGET_WINDOWS11_IN_PROGRESS",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -50,9 +50,9 @@
     },
     {
       "id": "HOST-W07",
-      "status": "preparation_in_progress",
+      "status": "physical_validation_in_progress",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "NOT_RUN"
+      "physical_OS_gate": "PARTIAL_WINDOWS11_CONDITIONAL_JLINK"
     },
     {
       "id": "HOST-W08",
@@ -155,7 +155,7 @@
     "current_W06_worktree_validation": "EXACT_H12_COMMIT_PASS"
   },
   "user_physical_OS_gate": {
-    "status": "NOT_RUN",
+    "status": "IN_PROGRESS_WINDOWS11_PARTIAL",
     "owner": "user",
     "execution_stage": "M33-W07_RC1_FINAL_HOST_VALIDATION",
     "fields": [
@@ -164,7 +164,8 @@
       "serial",
       "debug",
       "upgrade_reinstall_uninstall"
-    ]
+    ],
+    "release_target_count": 5
   },
   "W06_preservation": {
     "status": "USER_ACCEPTED_CLOSED",
@@ -441,14 +442,14 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C5_PREPARATION_COMPLETE_USER_PHYSICAL_OS_GATES_PENDING",
+    "status": "C5_PREPARATION_COMPLETE_WINDOWS11_PHYSICAL_REMAINDER",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
     "private_RC1": "C5_PRIVATE_KIT_AUTOMATIC_VERIFIED_NOT_PUBLISHED",
     "user_physical_OS_gate": "NOT_RUN",
-    "physical_OS_gate": "NOT_RUN",
+    "physical_OS_gate": "PARTIAL_CONDITIONAL_JLINK_PASS",
     "new_HIL_runs": 0,
     "documentation": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
     "development_checks": [
@@ -483,46 +484,47 @@
     ],
     "candidate_OS_rows": [
       {
-        "OS": "Windows10",
-        "architecture": "x64",
-        "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
-      },
-      {
         "OS": "Windows11",
         "architecture": "x64",
-        "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
+        "physical_gate": "PARTIAL_CONDITIONAL_JLINK_PASS",
+        "RC1_target_build": "PASS_C5_WINDOWS11_GATES",
+        "support_status": "target_pending_validation",
+        "stable_to_RC1_migration": "PASS_ISOLATED_CLI",
+        "remaining": [
+          "IDE_2",
+          "physical_USB_reconnect",
+          "default_CMSIS_DAP_and_wrong_UID"
+        ]
       },
       {
         "OS": "Ubuntu24.04 LTS",
         "architecture": "AMD64",
         "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
+        "RC1_target_build": "NOT_RUN",
+        "support_status": "target_pending_validation",
+        "native_CI_build": "PASS_C5_UBUNTU24_04"
       },
       {
         "OS": "Ubuntu26.04 LTS",
         "architecture": "AMD64",
         "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
-      },
-      {
-        "OS": "Ubuntu26.10",
-        "architecture": "AMD64",
-        "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
+        "RC1_target_build": "NOT_RUN",
+        "support_status": "target_pending_validation"
       },
       {
         "OS": "macOS26",
         "architecture": "Apple Silicon",
         "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
+        "RC1_target_build": "NOT_RUN",
+        "support_status": "target_pending_validation",
+        "native_CI_build": "PASS_C5_MACOS26"
       },
       {
         "OS": "macOS27",
         "architecture": "Apple Silicon",
         "physical_gate": "NOT_RUN",
-        "RC1_target_build": "NOT_RUN"
+        "RC1_target_build": "NOT_RUN",
+        "support_status": "target_pending_validation"
       }
     ],
     "candidate_OS_sources": [
@@ -780,6 +782,59 @@
       "CMSIS_DAP_physical": "NOT_RUN",
       "source_credits_combined": false,
       "group29_analysis": "DEFERRED_BY_USER"
+    },
+    "candidate_OS_scope_change": {
+      "decision_date": "2026-11-15",
+      "release": "v0.6.0",
+      "excluded_from_this_release": [
+        "Windows10",
+        "Ubuntu26.10"
+      ],
+      "previous_candidate_rows": [
+        {
+          "OS": "Windows10",
+          "architecture": "x64",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "Windows11",
+          "architecture": "x64",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "Ubuntu24.04 LTS",
+          "architecture": "AMD64",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "Ubuntu26.04 LTS",
+          "architecture": "AMD64",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "Ubuntu26.10",
+          "architecture": "AMD64",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "macOS26",
+          "architecture": "Apple Silicon",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        },
+        {
+          "OS": "macOS27",
+          "architecture": "Apple Silicon",
+          "physical_gate": "NOT_RUN",
+          "RC1_target_build": "NOT_RUN"
+        }
+      ],
+      "decision_record": "00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md"
     }
   },
   "W06_document_closure_CI": {

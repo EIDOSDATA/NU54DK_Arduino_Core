@@ -1,6 +1,6 @@
 # NU54DK Arduino Core
 
-2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<00_Docs/04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 NU54DK의 **nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Core**입니다.
 `setup()`/`loop()`와 Arduino API로 시작하고, BLE·LE Audio·Channel Sounding과
@@ -13,7 +13,7 @@ firmware로 빌드하고 온보드 CMSIS-DAP으로 업로드합니다.
 
 [버전 선택](#버전-선택) · [빠른 시작](#빠른-시작) · [지원 기능](#지원-기능) · [예제](#예제) · [문서](#문서) · [기여](CONTRIBUTING.md)
 
-| 보드 | 사용자 환경 | 기반 SDK | 기본 업로드 |
+| 보드 | 현재 stable v0.5.0 사용자 환경 | 기반 SDK | 기본 업로드 |
 | --- | --- | --- | --- |
 | NU54DK · nRF54L15 CPUAPP | Windows 10/11 x64 · Arduino IDE 2.x / CLI | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
 

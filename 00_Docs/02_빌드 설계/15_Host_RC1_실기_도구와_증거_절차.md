@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<../04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
-상태: HOST-W07 준비 완료·사용자 OS 실기 대기, Host6/8. 비공개 RC1 도구 구현과 실제 완료 판정을 구분한다.
+HOST-W07은 Windows 11 실기 진행 중이며 Host 완료는 6/8이다.
 마지막 완료 기술 source는 [322번 H12 마감](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -35,32 +35,27 @@ kit의 `START.cmd` 또는 `START.sh`는 OS 기본 hash 도구로 초기 archive�
 
 `lifecycle`은 이전 private 후보를 전이 입력으로 사용한다. 이전 source의 build/runtime PASS를
 새 RC 실적으로 이월하지 않는다. downgrade는 kit 정책에서 CLI 실행 전에 거부하며, 이 정책 검사와
-실제 downgrade 실행을 구분한다. 기존 Windows0.5 stable migration은 별도 미실행 행이다.
+실제 downgrade 실행을 구분한다. Windows 11에서는 별도 격리 Arduino CLI 환경에서 공개 v0.5.0을 설치하고
+C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사용자 데이터와 SDK 보존을 확인했다.
+기존 사용자 IDE 프로필을 통한 갱신과 IDE 검증은 별도로 기록한다.
 전체 build의 임시 서명 key는 attempt의 `private/`에만 두며 배포·공유하지 않는다.
 
 ## 대상 OS 행
 
-2026-11-10 현재 descriptor의 최소 조건은 Windows10 x64·Ubuntu24.04 AMD64·macOS26 Apple Silicon이다.
-이는 실행 가능 후보 판별이며 정식 지원 선언이 아니다. 고정 [NCS3.4.0 요구사항](https://github.com/nrfconnect/sdk-nrf/blob/v3.4.0/doc/nrf/installation/recommended_versions.rst)의
-시험 OS는 Windows11·Ubuntu24.04·macOS26이다. Windows Server2025 CI를 Windows10/11 실기로 바꾸지 않는다.
-
-Ubuntu는 [공식 유지보수 표](https://ubuntu.com/about/release-cycle)의 현재 release 중 최소 조건 이상을,
-macOS는 [Apple 보안 release 목록](https://support.apple.com/en-us/100100)의 major 중 최소 조건 이상을
-검토했다. 아래 **모든 행**의 필수 gate를 판정하며 최소·최신 표본으로 줄이지 않는다.
+2026-11-15 확정한 v0.6.0 지원 목표와 실기 순서는 아래와 같다. 실행기의 OS 인식 조건과 공개 지원표의 판정은
+별도로 기록한다. C5 자동 검증에 사용한 Ubuntu는 24.04 LTS, macOS는 26이며, 각 OS의 실제 장치 검증을
+기록해야 한다. Windows 10과 Ubuntu 26.10은 v0.6.0 범위에서 제외했다.
 
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
-| Windows10 | x64 | NOT_RUN — 기존 Core 호환 범위의 별도 회귀 |
-| Windows11 | x64 | NOT_RUN — 현재 개발 PC 회귀는 별도 결과가 필요 |
-| Ubuntu24.04 LTS | AMD64 | NOT_RUN |
-| Ubuntu26.04 LTS | AMD64 | NOT_RUN |
-| Ubuntu26.10 | AMD64 | NOT_RUN |
-| macOS26 | Apple Silicon | NOT_RUN |
-| macOS27 | Apple Silicon | NOT_RUN |
+| Windows 11 | x64 | 조건부 J-Link와 격리 CLI 갱신 통과. IDE·USB 재연결·기본 CMSIS-DAP 대기 |
+| Ubuntu 24.04 LTS | AMD64 | CI 설치·빌드 통과. 사용자 실기 대기 |
+| Ubuntu 26.04 LTS | AMD64 | 해당 OS 설치·빌드·사용자 실기 대기 |
+| macOS 26 | Apple Silicon | CI 설치·빌드 통과. 사용자 실기 대기 |
+| macOS 27 | Apple Silicon | 해당 OS 설치·빌드·사용자 실기 대기 |
 
-Ubuntu22.04와 macOS15는 현재 최소 조건 아래여서 지원 후보에 넣지 않는다. beta·다른 architecture·
-미래 release를 descriptor의 version 비교만으로 정식 지원에 추가하지 않는다. RC 공개 전 공식 표를
-다시 확인하고 실제 source/package에 결과를 결합한다.
+macOS 실기는 NU54DK와 CMSIS-DAP이 실제로 연결된 Apple Silicon Mac에서 진행한다. 대여 장비나
+테스터가 같은 kit를 실행한 결과도 OS·kit hash·단계별 로그가 일치하면 검토할 수 있다.
 
 ## 기본 실행 순서
 

@@ -1,6 +1,6 @@
 # Nordic prerequisite 설치 계약
 
-2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<../../00_Docs/04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<../../00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
 HOST-W06을 마감하고 HOST-W07을 준비하며 OS별 고정 자산과 공통 Python backend는
