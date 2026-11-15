@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 CMSIS-DAP DTR 교정·새 WSL2 검증 준비, Host 6/8**. C5 Windows 11·전체204·CI와 기존 FAIL은 보존한다. C8 설치·대표8·IDE·단일 보드 실기는 PASS이며 BLE 원형은 FAIL이다. DTR만 켠 C8 진단에서 기존 양방향 nonce가 통과해 C9에 명시적 `--assert-dtr`를 추가했다. C9 실기·전체204·CI는 아직 미완료이며 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,7 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 나머지 네 OS를 준비합니다. Ubuntu/macOS 지원에는
+HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 Ubuntu 24.04/WSL2 검증을 준비합니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
@@ -53,3 +53,6 @@ tag와 Release 자산은 삭제하지 않지만 모두 지원 종료 상태입�
 identity와 역사 version 생성 allowlist는 재현·감사용이며 현재 공개 공급 목록을 뜻하지 않습니다.
 
 비공개 v0.6.0 Host RC1 준비는 `host_rc_kit.py`·`host_rc_entry.py`·`host_native_lifecycle.py`와 [Host RC1 절차](<../../00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 사용합니다. 게시 명령은 제공하지 않으며 exact source의 새 실제 검증이 필요합니다.
+
+NU54DK CMSIS-DAP의 `ble-pair`는 C9부터 `--assert-dtr`로 VCOM 수신 준비를 명시한다.
+기본 DTR=false·RTS=false 조건과 nonce 판정은 유지하며, 이 옵션은 DTR만 켠다.

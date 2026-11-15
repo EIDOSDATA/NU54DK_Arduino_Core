@@ -1,13 +1,13 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 CMSIS-DAP DTR 교정·새 WSL2 검증 준비, Host 6/8**. C5 Windows 11·전체204·CI와 기존 FAIL은 보존한다. C8 설치·대표8·IDE·단일 보드 실기는 PASS이며 BLE 원형은 FAIL이다. DTR만 켠 C8 진단에서 기존 양방향 nonce가 통과해 C9에 명시적 `--assert-dtr`를 추가했다. C9 실기·전체204·CI는 아직 미완료이며 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 | 항목 | 현재 상태 |
 | --- | --- |
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [W06 수락 마감 근거](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 C5 Windows 11 완료 보존·C6 Ubuntu 24.04/WSL2 착수 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 C5 Windows 11 완료 보존·C8 부분 실적 보존·C9 Ubuntu 24.04/WSL2 검증 준비 |
 | v0.6.0 지원 목표 | Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
@@ -16,7 +16,7 @@
 
 이 문서는 v0.6.0의 계획 진입점이다. 버전 배정은 기능 구현 완료, Host 보류 해제, 실물 작업,
 tag·Release·index 공개 승인을 뜻하지 않는다. 소스의 `coreVersion()` 식별 문자열과 공개 stable은
-`0.5.0`이며 현재 비공개 C5 검증 패키지는 `0.6.0-rc.1`이다. 공개 v0.5.0 자산을 바꾸거나 재명명하지 않는다.
+`0.5.0`이며 현재 비공개 C8 검증 패키지는 `0.6.0-rc.1`이다. 공개 v0.5.0 자산을 바꾸거나 재명명하지 않는다.
 
 ## 1. 후속 버전 배정
 
@@ -90,7 +90,7 @@ Beacon 600광고 HIL을 완료했다. 시험 소유 bond만 제한 정리했으�
 M33-W03은 exact `17182660…`에서 Host 13/13, 공개 예제 2/2, native template 4/4와 두 보드
 scripted-peer HIL 9/9를 PASS했다. W04 DTM/HCI와 W05 전체 설치 예제도 완료했으며 W05 exact
 `5f9b2257…`에서 catalog·발견·compile 204/204와 negative 9/9를 PASS했다. M33-W06은 사용자 수락으로 마감했고
-#29 원인 분석은 유예했다. W07의 C5 RC1 준비와 Windows 11 검증은 완료했고 나머지 네 OS·HOST-W08은 대기다.
+#29 원인 분석은 유예했다. W07의 C5 RC1 준비와 Windows 11 검증은 완료했고 C8 부분 실적을 보존하고 C9 Ubuntu 24.04/WSL2 검증을 준비하며 나머지 세 OS·HOST-W08은 대기다.
 남은 OS 실기와 Host 문서 마감 후 M33-W07을 완료하고 별도 공개 승인 단계인 M33-W08로 진행한다.
 W06의 개발 수정순회·최종 source 고정·전체 검증·마감 순서는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
@@ -117,6 +117,6 @@ HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_na
 각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07의 C5 RC1 준비·Windows 11 실기를 마감했다.
 나머지 네 OS의 실제 USB 최종 gate와 정식 지원 판정은 대기 중이다.
 
-HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 후속 C5의 Windows 11 검증까지 완료했다. 사용자 Ubuntu/macOS 네 OS의 실물 gate는 NOT_RUN이다.
+HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 후속 C5의 Windows 11 검증까지 완료했다. C8 Ubuntu 24.04/WSL2의 부분 PASS와 BLE FAIL을 보존하며 C9에서 새 검증을 준비한다. 나머지 세 OS 실기는 NOT_RUN이다.
 
-HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. Host6/8, OS1/5 완료와 나머지 네 OS 물리 gate NOT_RUN을 구분한다.
+HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. Host6/8, C5 당시 OS1/5 완료와 C8 Ubuntu24.04/WSL2 부분 PASS 보존과 현재 C9 OS완료0을 구분한다. 서로 다른 source의 OS 행을 합산하지 않는다.

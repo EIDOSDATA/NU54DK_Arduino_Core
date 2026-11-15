@@ -4,6 +4,120 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "review_date": "2026-11-16",
+      "baseline_commit": "e1037a4ee51217195f1a715173ce37efec689731",
+      "purpose": "C8 IDE·부분 실기와 BLE FAIL·DTR 원인 분리를 보존하고 C9 명시적 수신 준비 교정 및 새 검증 착수 반영",
+      "scope": "관련 현행 문서 16개; C5/C6/C7 원본·완료 TODO·W06 FAIL 불변",
+      "current_state": {
+        "stage": "M33-W07 / HOST-W07",
+        "candidate": "C9_DEVELOPMENT",
+        "C8_formal_BLE": "FAIL_PRESERVED",
+        "C8_DTR_diagnostic": "PASS_DIAGNOSTIC_ONLY",
+        "new_OS_PASS": 0,
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "Windows_focused": "2a39dd/exit0; 15 PASS",
+        "Linux_focused": "2a39dd/exit0; 15 PASS",
+        "docs_gate": {
+          "exit_code": 0,
+          "files": 537,
+          "log": "D:\\w06\\h7c9\\development\\docs-final-a001.log",
+          "sha256": "9f5070019b89f2a541b5347e11f81c598d243428d76474955a970adf67705254"
+        },
+        "diff_check": "4e7592/exit0",
+        "C8_DTR_actual": "14891e/exit0; unchanged firmware/nonce2/timeout10, DTRtrue only",
+        "C5_original_results_changed": false,
+        "previous_source_credit_transferred": false,
+        "independent_code_review": "PASS_NO_BLOCKING_FINDINGS",
+        "independent_document_review": "FINDINGS_CORRECTED_C9_POINTERS_AND_CURRENT_SCOPE"
+      },
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "472cd64a46d0af09b426b501f9c037510dc5afb6025305098ac07e83aa2d2365"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "3813aaa2980a38ace88185f8c7c60a17c88d2c2b26d88b66ce28d37b2f1b31fc"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "7d88b2ba9ad9397f5bae528210083354781147f41f67703068f46a638385f2dc"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "bb89806e72b4bc15f02a677eabfe8eb87681cea8151dd0c7ce4b656311862aba"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "68907ac8289864b927bc9b78b8b9e58d58ac9b71d445e369cc200a2c1250fdbe"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "f6393f9855dc2f88d69cf86daaf4a2289c973c39310a5c5e168553fd99aa8ebd"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "c4e89e26c8d4baf548643cca1b5429dfe49c6bd5a54de224ed257a03faedfea6"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "31a35fe6e634bd6e4790531fb619a2a31554331f14fcac40fb9a2662925a2da5"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "5ed9dfbaabf758b230642feeb37c5150080e513dd890653f1a5a35d1c402e9bd"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "7dfdd576dbb62d748df01bec57bdba86dd35f6c6fc71af69bf99c27737c0169e"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "445322940d5cbf663a578227c62662226076f6d2aae9c6c6643923b797ff1e69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "800459ee85d03ec606787d2750be857e53576d14791a2c9214fe43d518ba74a1"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "d27b79975b2350384afd5e342937e53e2273552bd5d87ee619947618108f11e3"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "d914e8ee76628a3bc5af70d253890927dc87552b60eb33539ccac1568732a450"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "86fb2463ad13f66ee513eb5457fbbd8cb7bd8a132fa5b2b2e14a60541243768d"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "f181bc6edc1d94cba87e9b2fdea688181393c3bab5b1b60d3bc6713078f8c00d"
+        }
+      ]
+    },
+    {
       "review_date": "2026-11-15",
       "baseline_commit": "a18bf356fa5d0528e826448c9aa87bf413291485",
       "purpose": "C7 SDK 설치·verify·lifecycle PASS와 inventory FAIL을 보존하고 C8 SDK child 환경 교정 기록",

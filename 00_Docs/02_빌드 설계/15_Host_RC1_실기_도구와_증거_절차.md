@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 C8 WSL2 SDK 실행 환경 교정 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C8의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6·C7·C8 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 CMSIS-DAP DTR 교정·새 WSL2 검증 준비, Host 6/8**. C5 Windows 11·전체204·CI와 기존 FAIL은 보존한다. C8 설치·대표8·IDE·단일 보드 실기는 PASS이며 BLE 원형은 FAIL이다. DTR만 켠 C8 진단에서 기존 양방향 nonce가 통과해 C9에 명시적 `--assert-dtr`를 추가했다. C9 실기·전체204·CI는 아직 미완료이며 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
-HOST-W07은 Windows 11 RC1 검증을 완료했으며 나머지 네 OS는 대기다. Host 완료는 6/8이다.
+HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 Ubuntu 24.04/WSL2 새 검증을 준비한다. Host 완료는 6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -49,7 +49,7 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
-| Ubuntu 24.04 LTS | AMD64 | CI 설치·빌드 통과. 사용자 실기 대기 |
+| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. DTR 교정 C9의 새 실기·전체204·최종 CI 미완료 |
 | Ubuntu 26.04 LTS | AMD64 | 해당 OS 설치·빌드·사용자 실기 대기 |
 | macOS 26 | Apple Silicon | CI 설치·빌드 통과. 사용자 실기 대기 |
 | macOS 27 | Apple Silicon | 해당 OS 설치·빌드·사용자 실기 대기 |
@@ -90,6 +90,10 @@ Host는 `native=false`, `execution_environment=wsl2`로 기록한다. WSL2 PASS�
 6. Linux `lsusb`와 kit inventory로 CMSIS-DAP·두 VCOM·권한·probe/serial/path hash를 새로 확인한다.
    Windows COM 번호를 Linux 경로로 추정하지 않는다. 그 후 검증된 새 source image로 upload·
    Blink·Serial·debug를 실행하고 IDE는 Linux판과 WSLg를 사용한다.
+   Linux Arduino IDE 2.3.11은 공식 ZIP을 별도 경로에 풀고 WSLg에서 실행한다. 기본 Ubuntu에 없는
+   `libnss3`, `libasound2t64`를 준비하고 한국어 표시에는 `fonts-noto-cjk`를 설치한다.
+   새 IDE 설정·Boards Manager 데이터·cache를 사용하고 해당 검증 source의 새 SDK 설치본을 지정한다. 언어 서버의
+   초기 분석이 끝난 뒤 단일 스케치 창에서 Verify하며 SDK당 compile1을 유지한다.
 7. 물리 재연결은 사용자가 신호에 맞춰 분리하고10초 뒤 같은 포트에 연결한다. 새 usbipd state에서
    같은 물리 장치인지 확인한 뒤 attach·Linux inventory를 새로 수집한다. 분리·WSL 재시작 후
    attach 해제와 BUSID/port 변경을 정상적으로 처리하며 이전 identity를 무조건 재사용하지 않는다.
@@ -134,6 +138,11 @@ START.cmd --work-root D:/w06/host-w07 upload --example nus-central --probe-sha25
 START.cmd --work-root D:/w06/host-w07 ble-pair --probe-sha256 A --peer-probe-sha256 B --serial-sha256 SA --peer-serial-sha256 SB --path-sha256 PA --peer-path-sha256 PB
 ~~~
 
+NU54DK CMSIS-DAP의 BLE 검증에서는 C9부터 위 `ble-pair` 명령 끝에 `--assert-dtr`를 추가한다.
+이 옵션은 양쪽 VCOM을 열기 전에 DTR 수신 준비 신호를 켜며 RTS는 끈다. C8의 DTR=false 실패와
+DTR=true 단독 진단 결과는 [330번](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)에 보존한다.
+기본 false를 사용하는 기존 조건부 J-Link 절차와 구분하고, 임의 timeout 연장·사전 payload·자동 재시도는 하지 않는다.
+
 기본 경로는 CMSIS-DAP이다. 조건부 J-Link-via-pyOCD에는 exact identity와 `--allow-jlink-backend`를 장치 명령에 함께 지정한다. 검토한 SDK의 공식 user script가 probe open 전 자동FW 갱신·GUI·전력 제어를 제한한다. 이 실적은 CMSIS-DAP 물리 PASS와 구분한다.
 
 path hash는 같은 serial에 VCOM이 둘 이상일 때 혼동을 막는다. 실제 cable 재연결로 path가 바뀌면
@@ -163,6 +172,6 @@ AppData/Local·AppData/Roaming을 준비하고 process-local 환경으로 지정
 작업이 같은 SDK의 임시 patch를 동시에 사용하면 `E_SDK_PATCH`로 거부될 수 있다. 이는 기록된 제한이며
 SDK 파일 수동 수정·보호 검사 해제·자동 재시도로 해결하지 않는다. 원본 FAIL은 별도로 보존한다.
 
-현재 RC1은 고정 C5 ZIP을 로컬 HTTP index URL로 공급해 Boards Manager에서 설치한 비공개 검증이다.
+C5 Windows 검증 당시 RC1은 고정 C5 ZIP을 로컬 HTTP index URL로 공급해 Boards Manager에서 설치한 비공개 검증이다.
 정식 배포는 GitHub의 ZIP·index 게시 후 Preferences URL→Boards Manager 설치를 확인한다.
 코드 commit만으로 게시용 ZIP과 index가 생성되거나 갱신되지는 않는다. 공개 URL 검증은 공개 승인 뒤 수행한다.

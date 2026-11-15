@@ -94,8 +94,12 @@ def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, fa
         dtr_requested=False,rts_requested=False,port_closed=True)
 
 
-def serial_pair(first,second,timeout=10,*,ports=None,factory=None):
-    """! @brief 두 NUS 공개 예제의 UART→BLE→UART를 양방향 fresh nonce로 검사합니다. """
+def serial_pair(first,second,timeout=10,*,ports=None,factory=None,assert_dtr=False):
+    """! @brief 두 NUS 공개 예제의 UART→BLE→UART를 양방향 fresh nonce로 검사합니다.
+    @param assert_dtr 수신 준비에 DTR이 필요한 VCOM에서 명시적으로 준비 신호를 켭니다.
+    """
+    if type(assert_dtr) is not bool:
+        raise ValueError('DTR 준비 신호는 bool이어야 합니다.')
     if ports is None:
         from serial.tools import list_ports
         ports = list_ports.comports
@@ -113,7 +117,8 @@ def serial_pair(first,second,timeout=10,*,ports=None,factory=None):
                 write_timeout=min(timeout,2),exclusive=True if os.name!='nt' else None)
             connections.append(connection)
             stack.callback(connection.close)
-            connection.dtr = connection.rts = False
+            connection.dtr = assert_dtr
+            connection.rts = False
             connection.port = port.device
             connection.open()
         for sender,receiver in ((0,1),(1,0)):
@@ -136,6 +141,7 @@ def serial_pair(first,second,timeout=10,*,ports=None,factory=None):
     if any(connection.is_open for connection in connections):
         raise AdapterError('[NU54:E_HOST_SERIAL_CLOSE] NUS VCOM이 닫히지 않았습니다.')
     return dict(status='PASS',directions=rows,ports_closed=True,
+        dtr_requested=assert_dtr,rts_requested=False,
         security_or_external_interoperability_claimed=False)
 
 
@@ -240,9 +246,12 @@ def worker(arguments):
     parser.add_argument('--peer-probe-sha256')
     parser.add_argument('--peer-serial-sha256')
     parser.add_argument('--peer-path-sha256')
+    parser.add_argument('--assert-dtr',action='store_true')
     parser.add_argument('--elf',type=Path)
     parser.add_argument('--timeout-seconds',type=finite_timeout,default=5)
     args = parser.parse_args(arguments)
+    if args.assert_dtr and args.operation != '_pair':
+        parser.error('--assert-dtr은 _pair에서만 사용할 수 있습니다.')
     try:
         select_identity(discover_pyocd_probe_ids(),args.probe_sha256,lambda value:value,'probe')
         if args.operation == '_serial':
@@ -250,7 +259,8 @@ def worker(arguments):
         elif args.operation == '_pair':
             select_identity(discover_pyocd_probe_ids(),args.peer_probe_sha256,lambda value:value,'peer probe')
             result = serial_pair(dict(serial_sha256=args.serial_sha256,path_sha256=args.path_sha256),
-                dict(serial_sha256=args.peer_serial_sha256,path_sha256=args.peer_path_sha256),args.timeout_seconds)
+                dict(serial_sha256=args.peer_serial_sha256,path_sha256=args.peer_path_sha256),args.timeout_seconds,
+                assert_dtr=args.assert_dtr)
         elif args.operation == '_blink':
             result = blink_gpio(args.probe_sha256,args.elf)
         else:
@@ -262,6 +272,8 @@ def worker(arguments):
     except Exception as error:
         with args.result.open('x',encoding='utf-8') as stream:
             json.dump(dict(status='FAIL',error_type=type(error).__name__,
+                dtr_requested=args.assert_dtr if args.operation=='_pair' else False,
+                rts_requested=False,
                 marker=re.search(r'\[NU54:[A-Z_]+\]',str(error)).group(0)
                 if re.search(r'\[NU54:[A-Z_]+\]',str(error)) else 'UNCLASSIFIED'),stream)
         print('NU54_HOST_WORKER_FAIL')
@@ -362,7 +374,8 @@ def physical_pair(args):
         raise AdapterError('[NU54:E_HOST_ATTEMPT] 새 절대 output directory가 필요합니다.')
     output.mkdir(parents=True)
     receipt = dict(status='FAIL',operation='ble-pair',physical_USB_replug='NOT_RUN',
-        user_physical_OS_gate='PARTIAL_SINGLE_OPERATION',source_credits_combined=False)
+        user_physical_OS_gate='PARTIAL_SINGLE_OPERATION',source_credits_combined=False,
+        dtr_requested=getattr(args,'assert_dtr',False),rts_requested=False)
     try:
         pair = [args,manifest_namespace(args.peer_manifest)]
         if canonical_path(pair[0].platform_root) != canonical_path(pair[1].platform_root):
@@ -403,6 +416,8 @@ def physical_pair(args):
                 '--probe-sha256',args.probe_sha256,'--peer-probe-sha256',args.peer_probe_sha256,
                 '--serial-sha256',args.serial_sha256,'--peer-serial-sha256',args.peer_serial_sha256,
                 '--timeout-seconds','10']
+            if receipt['dtr_requested']:
+                command += ['--assert-dtr']
             for name in ('path_sha256','peer_path_sha256'):
                 if getattr(args,name,None):
                     command += ['--'+name.replace('_','-'),getattr(args,name)]
@@ -455,6 +470,8 @@ def main(arguments=None):
             command.add_argument('--serial-sha256',required=True)
             command.add_argument('--path-sha256')
         if name == 'ble-pair':
+            command.add_argument('--assert-dtr',action='store_true',
+                help='수신 준비에 DTR이 필요한 VCOM에서 두 포트의 DTR을 켭니다. RTS는 끕니다.')
             command.add_argument('--peer-manifest',type=Path,required=True)
             command.add_argument('--peer-probe-sha256',required=True)
             command.add_argument('--peer-serial-sha256',required=True)

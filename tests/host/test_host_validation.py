@@ -117,6 +117,85 @@ class HostValidationTests(unittest.TestCase):
         self.assertEqual([(row['sender'],row['receiver']) for row in result['directions']],[(0,1),(1,0)])
         self.assertTrue(all(not item.is_open for item in instances.values()))
         self.assertNotEqual(result['directions'][0]['nonce_sha256'],result['directions'][1]['nonce_sha256'])
+        self.assertFalse(result['dtr_requested'])
+        self.assertFalse(result['rts_requested'])
+
+    def test_receive_only_peer_requires_explicit_dtr_before_first_write(self):
+        """! @brief 최초 host 송신 전에는 DTR 준비가 필요한 수신 peer에서 원래 실패를 재현합니다. """
+        for assert_dtr in (False,True):
+            instances,writes = {},[]
+            class Connection:
+                """! @brief DTR이 없는 수신은 버리며 사전 payload로 우회할 수 없게 기록합니다. """
+                def __init__(self,**kwargs):
+                    """! @brief 포트를 열기 전 독립 수신 상태를 만듭니다. """
+                    self.buffer = b''
+                    self.is_open = False
+                def open(self):
+                    """! @brief open 시점의 명시한 DTR과 고정 RTS를 검증합니다. """
+                    if self.dtr is not assert_dtr or self.rts is not False:
+                        raise AssertionError('control lines must be set before open')
+                    instances[self.port] = self
+                    self.is_open = True
+                def write(self,payload):
+                    """! @brief DTR 수신 준비가 된 상대에게만 원형 payload를 전달합니다. """
+                    writes.append((self.port,payload))
+                    peer = instances['pair-b' if self.port=='pair-a' else 'pair-a']
+                    if peer.dtr:
+                        peer.buffer += payload
+                    return len(payload)
+                def read(self,size):
+                    """! @brief 전달된 byte만 반환하며 수신을 합성하지 않습니다. """
+                    value,self.buffer = self.buffer[:size],self.buffer[size:]
+                    return value
+                def close(self):
+                    """! @brief 성공과 시간 초과 모두 닫힘을 검증합니다. """
+                    self.is_open = False
+            ports = [SimpleNamespace(device='pair-a',serial_number='serial-a'),
+                SimpleNamespace(device='pair-b',serial_number='serial-b')]
+            with self.subTest(assert_dtr=assert_dtr):
+                arguments = (dict(serial_sha256=M.identity_hash('serial-a')),
+                    dict(serial_sha256=M.identity_hash('serial-b')),0.01)
+                options = dict(ports=lambda:ports,factory=Connection,assert_dtr=assert_dtr)
+                if assert_dtr:
+                    result = M.serial_pair(*arguments,**options)
+                    self.assertEqual(len(result['directions']),2)
+                    self.assertTrue(result['dtr_requested'])
+                    self.assertEqual([name for name,payload in writes],['pair-a','pair-b'])
+                    self.assertTrue(all(payload.startswith(b'nu54-nus-') and len(payload)==34
+                        for name,payload in writes))
+                else:
+                    with self.assertRaisesRegex(BUILDER.AdapterError,'E_HOST_NUS_TIMEOUT'):
+                        M.serial_pair(*arguments,**options)
+                    self.assertEqual(len(writes),1)
+                self.assertTrue(all(not item.is_open for item in instances.values()))
+
+    def test_invalid_dtr_request_is_rejected_before_enumeration(self):
+        """! @brief 문자열 등 bool 아닌 요청은 실제 포트를 열거하기 전에 거부합니다. """
+        ports = mock.Mock(side_effect=AssertionError('unexpected enumeration'))
+        with self.assertRaises(ValueError):
+            M.serial_pair({}, {},ports=ports,assert_dtr='false')
+        ports.assert_not_called()
+
+
+class HostWorkerControlLineTests(unittest.TestCase):
+    """! @brief worker argv의 준비 신호가 실행과 실패 증거에 같은 값으로 전달되는지 검사합니다. """
+    def test_pair_worker_forwards_explicit_dtr_and_preserves_failure_request(self):
+        """! @brief 기본·명시 설정의 PASS와 FAIL에서 실제 장치를 열지 않고 경계를 확인합니다. """
+        for requested,failed in ((False,False),(True,False),(False,True),(True,True)):
+            with self.subTest(requested=requested,failed=failed),tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary)/'worker.json'
+                arguments = ['_pair','--result',str(output),'--probe-sha256',M.identity_hash('first'),
+                    '--peer-probe-sha256',M.identity_hash('second'),'--serial-sha256','1'*64,
+                    '--peer-serial-sha256','2'*64,'--timeout-seconds','10']
+                if requested:
+                    arguments.append('--assert-dtr')
+                with mock.patch.object(M,'discover_pyocd_probe_ids',return_value=['first','second']),\
+                        mock.patch.object(M,'serial_pair',return_value=dict(status='PASS',dtr_requested=requested),
+                            side_effect=BUILDER.AdapterError('[NU54:E_HOST_NUS_TIMEOUT] fixture') if failed else None) as pair:
+                    self.assertEqual(M.worker(arguments),1 if failed else 0)
+                self.assertEqual(pair.call_args.kwargs['assert_dtr'],requested)
+                self.assertEqual(pair.call_args.args[2],10)
+                self.assertEqual(json.loads(output.read_text(encoding='utf-8'))['dtr_requested'],requested)
 
 
 class HostDebugCleanupTests(unittest.TestCase):
@@ -306,6 +385,7 @@ class HostWorkerLaunchTests(unittest.TestCase):
             args.peer_probe_sha256 = M.identity_hash('fixture-peer')
             args.peer_serial_sha256 = '2'*64
             args.peer_path_sha256 = None
+            args.assert_dtr = True
             calls = []
             with mock.patch.object(M,'manifest_namespace',return_value=peer),self.parent_environment(
                     args,tools,{id(args):context,id(peer):peer_context},
@@ -315,7 +395,11 @@ class HostWorkerLaunchTests(unittest.TestCase):
             self.assertEqual(len(calls),1)
             self.assertEqual(calls[0][0][0],sdk)
             self.assertIn('_pair',calls[0][0])
+            self.assertIn('--assert-dtr',calls[0][0])
+            self.assertEqual(calls[0][0][calls[0][0].index('--timeout-seconds')+1],'10')
             self.assertEqual(calls[0][1]['environment'],tools['environment'])
+            result = json.loads((args.output_root/'result.json').read_text(encoding='utf-8'))
+            self.assertTrue(result['dtr_requested'])
 
 
 if __name__ == '__main__':

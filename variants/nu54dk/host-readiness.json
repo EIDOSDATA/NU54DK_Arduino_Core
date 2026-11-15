@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
-  "updated_date": "2026-11-15",
-  "status": "HOST_W07_C8_SDK_CHILD_ENVIRONMENT_CORRECTION",
+  "updated_date": "2026-11-16",
+  "status": "HOST_W07_C9_DTR_CORRECTION_FRESH_VALIDATION_PREPARATION",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "C8_DEVELOPMENT_BASE_a18bf356_NOT_FINAL_SOURCE",
+  "implementation_revision": "e1037a4ee51217195f1a715173ce37efec689731",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -52,7 +52,7 @@
       "id": "HOST-W07",
       "status": "physical_validation_in_progress",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "PARTIAL_WINDOWS11_CONDITIONAL_JLINK"
+      "physical_OS_gate": "C9_NOT_RUN_C5_C8_RESULTS_PRESERVED_SEPARATELY"
     },
     {
       "id": "HOST-W08",
@@ -443,7 +443,7 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C5_WINDOWS11_REQUIRED_GATES_COMPLETE_OTHER4_PENDING",
+    "status": "C9_DTR_FRESH_VALIDATION_PREPARATION_C5_C8_RECORDS_PRESERVED",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
@@ -968,10 +968,10 @@
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     },
     "C8_development": {
-      "status": "SDK_CHILD_ENVIRONMENT_CORRECTED_DEVELOPMENT_CHECKS_PASS",
+      "status": "EXACT_C8_FRESH_WSL2_PARTIAL_PASS",
       "base_commit": "a18bf356fa5d0528e826448c9aa87bf413291485",
-      "source_revision": null,
-      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "source_revision": "e1037a4ee51217195f1a715173ce37efec689731",
+      "source_scope": "EXACT_COMMITTED_PRODUCT_SOURCE",
       "development_checks": {
         "Linux": {
           "actual": "bc94b4/exit0",
@@ -989,18 +989,89 @@
         }
       },
       "validation": {
-        "producer": "NOT_RUN",
-        "kit": "NOT_RUN",
-        "SDK": "NOT_RUN",
-        "SDK_verify": "NOT_RUN",
-        "lifecycle": "NOT_RUN",
-        "inventory": "NOT_RUN",
-        "build": "NOT_RUN",
-        "USB": "NOT_RUN",
-        "IDE": "NOT_RUN"
+        "producer": "PASS",
+        "kit": "PASS",
+        "SDK": "PASS_FRESH_INSTALL",
+        "SDK_verify": "PASS",
+        "lifecycle": "PASS_WSL2_PRIVATE_LIFECYCLE",
+        "inventory": "PASS",
+        "build": "PASS_REPRESENTATIVE_8_ONLY",
+        "USB": "PASS_UPLOAD_BLINK_SERIAL_DEBUG_RECONNECT_WRONG_UID",
+        "IDE": "PASS_960_FILES_EXACT_VERIFY_AND_NORMAL_EXIT",
+        "BLE_pair": "FAIL_TIMEOUT_A001_A002_AND_TWO_PORT_BASELINE_PRESERVED",
+        "all204": "NOT_RUN"
       },
       "previous_source_credit_transferred": false,
       "SDK_pin_changed": false,
+      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+      "kit_manifest_sha256": "f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837b7eb88ed27d3",
+      "evidence": "D:/w06/control/host-w07-c8-linux-physical-milestone-20261115.json",
+      "wrong_probe_actual": "8d011b/exit0",
+      "reconnect_first_attach_failure_preserved": true,
+      "reconnect_busy_root_cause": "UNCONFIRMED",
+      "IDE_evidence": "D:/w06/h7c8/ide-audit-a002/closure-a001.json",
+      "BLE_failures": [
+        {
+          "attempt": "D:/w06/h7c8/ble-pair-a001/result.json",
+          "actual": "52ee47/exit1"
+        },
+        {
+          "attempt": "D:/w06/h7c8/ble-pair-a002/result.json",
+          "actual": "5d1eec/exit1"
+        },
+        {
+          "attempt": "D:/w06/h7c8/nus-two-port-start-a001/result.json",
+          "actual": "22bdde/exit1"
+        }
+      ],
+      "BLE_cleanup_both_boards": "PASS_SERIAL_ECHO_AT_DTR_DIAGNOSTIC_END",
+      "current_source_validation_snapshot": {
+        "candidate": "C8",
+        "final_source_revision": "e1037a4ee51217195f1a715173ce37efec689731",
+        "completed_OS_rows": 0,
+        "WSL2_physical": "PARTIAL_PASS_BLE_TIMEOUT_DIAGNOSIS",
+        "native_Ubuntu_physical": "NOT_RUN",
+        "C5_credit_transferred": false,
+        "C6_credit_transferred": false,
+        "C7_credit_transferred": false,
+        "WSL2_representative_build": "PASS_4_COLD_4_WARM",
+        "WSL2_all204": "NOT_RUN_PENDING_BLE_DIAGNOSIS",
+        "C8_CI": "RUNNING",
+        "C8_CI_runs": [
+          43724111551,
+          43724084567,
+          43724084541,
+          43724084533
+        ],
+        "WSL2_IDE": "PASS",
+        "WSL2_BLE": "FAIL_ORIGINALS_PRESERVED_CAUSE_UNCONFIRMED"
+      },
+      "BLE_DTR_diagnostic": {
+        "actual": "14891e/exit0",
+        "path": "D:/w06/h7c8/nus-dtr-diagnostic-a001/diagnostic.json",
+        "status": "PASS_DIAGNOSTIC_ONLY",
+        "changed_condition": "DTR_TRUE_RTS_FALSE",
+        "firmware_changed": false,
+        "nonce_or_timeout_changed": false
+      },
+      "BLE_root_cause": "VALIDATOR_DTR_FALSE_PREVENTS_INITIAL_CMSIS_DAP_VCOM_RECEIVE; BRIDGE_INTERNAL_IMPLEMENTATION_NOT_CLAIMED",
+      "current_source_validation_snapshot_scope": "HISTORICAL_PRE_DTR_DIAGNOSIS_STATUS"
+    },
+    "C9_development": {
+      "status": "DTR_CORRECTION_LOCAL_CHECKS_PASS",
+      "base_commit": "e1037a4ee51217195f1a715173ce37efec689731",
+      "source_revision": null,
+      "source_scope": "UNCOMMITTED_DEVELOPMENT",
+      "change": "EXPLICIT_BLE_PAIR_ASSERT_DTR",
+      "validation": {
+        "Windows_unit": "15_PASS",
+        "Ubuntu_unit": "15_PASS",
+        "actual": "2a39dd/exit0",
+        "fresh_physical": "NOT_RUN"
+      },
+      "firmware_changed": false,
+      "SDK_pin_changed": false,
+      "previous_source_credit_transferred": false,
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     }
   },
@@ -1026,17 +1097,20 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C8_DEVELOPMENT",
-  "active_candidate_record": "W07_preparation.C8_development",
+  "active_candidate": "C9_DEVELOPMENT",
+  "active_candidate_record": "W07_preparation.C9_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
-    "candidate": "C8",
+    "candidate": "C9",
     "final_source_revision": null,
+    "source_scope": "PENDING_EXACT_C9_COMMIT",
     "completed_OS_rows": 0,
     "WSL2_physical": "NOT_RUN",
+    "WSL2_IDE": "NOT_RUN",
+    "WSL2_BLE": "NOT_RUN",
+    "WSL2_all204": "NOT_RUN",
     "native_Ubuntu_physical": "NOT_RUN",
-    "C5_credit_transferred": false,
-    "C6_credit_transferred": false,
-    "C7_credit_transferred": false
-  }
+    "previous_source_credit_transferred": false
+  },
+  "implementation_revision_scope": "C8_COMMITTED_BASE_C9_EXACT_COMMIT_PENDING"
 }

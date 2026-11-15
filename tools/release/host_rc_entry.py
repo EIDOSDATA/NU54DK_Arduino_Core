@@ -95,6 +95,8 @@ def main(arguments=None):
     pair.add_argument('--path-sha256')
     pair.add_argument('--peer-path-sha256')
     pair.add_argument('--allow-jlink-backend',action='store_true')
+    pair.add_argument('--assert-dtr',action='store_true',
+        help='NU54DK CMSIS-DAP VCOM의 수신 준비를 위해 DTR을 켭니다. RTS는 끕니다.')
     args = parser.parse_args(arguments)
     if not args.kit.is_absolute() or not args.work_root.is_absolute() or args.work_root.resolve().is_relative_to(args.kit.resolve()):
         raise ValueError('kit 밖의 새 절대 work root가 필요합니다.')
@@ -131,6 +133,8 @@ def main(arguments=None):
     if state['source_revision'] != manifest['source_revision']:
         raise ValueError('기존 work root는 다른 RC source입니다. 새 work root를 지정하십시오.')
     receipt = dict(plan,operation=args.operation,status='FAIL',steps=[])
+    if args.operation=='ble-pair':
+        receipt.update(dtr_requested=args.assert_dtr,rts_requested=False)
 
     def run(name,command,timeout=180,expected_rejection=None,command_environment=None):
         """! @brief 무한 대기·자동 재시도 없이 실제 출력과 cleanup을 보존합니다. """
@@ -256,6 +260,8 @@ def main(arguments=None):
                     command = [sdk_python,'-I','-X','utf8','-B',platform/'tools/nu54-prerequisites/host-check.py',
                         'ble-pair',*common,'--output-root',attempt/'physical',
                         '--peer-manifest',state['builds']['nus-central']]
+                    if args.assert_dtr:
+                        command += ['--assert-dtr']
                     for name in ('probe_sha256','serial_sha256','peer_probe_sha256','peer_serial_sha256',
                         'path_sha256','peer_path_sha256'):
                         if getattr(args,name,None):
