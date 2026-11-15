@@ -1,9 +1,9 @@
 # Nordic prerequisite 설치 계약
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<../../00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<../../00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
-HOST-W06을 마감하고 HOST-W07을 준비하며 OS별 고정 자산과 공통 Python backend는
+HOST-W06과 HOST-W07의 Windows 11 검증을 완료했으며 나머지 네 OS 실기는 대기 중이다. OS별 고정 자산과 공통 Python backend는
 [Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
 [`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행과 사용자 실기 `NOT_RUN`은
 [Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.

@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-기준일: 2026-11-10. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했고 HOST-W07을 준비한다.
+기준일: 2026-11-15. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 나머지 네 OS 실기는 대기 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -112,4 +112,4 @@ CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는
 보존하며 Host 실적과 합산하지 않는다. #29 원인 분석은 사용자 지시로 유예한다.
 
-H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. 사용자 실물 gate는 별도 `NOT_RUN`이다.
+H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. H12 당시 사용자 실물 gate는 `NOT_RUN`이었다. 후속 C5의 Windows 11 완료와 나머지 네 OS 대기는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분한다.

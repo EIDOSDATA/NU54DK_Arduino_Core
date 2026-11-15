@@ -3,7 +3,8 @@
 W06 전용 build/artifact/개발 smoke/최종 검증의 다음 구조는
 [재설계 문서](11_M33_W06_검증_파이프라인_재설계.md)에서 관리한다. 현재 실행 범위는
 [M33 인계](../M33_HANDOFF.md)를 따르며 기존 workflow·stable gate와 구분한다.
-이번 문서 commit/push는 `[skip ci]`로 대규모 빌드를 유예하며 CI PASS를 주장하지 않는다.
+문서 commit/push 뒤에도 해당 exact SHA의 Software gates를 확인한다. 문서 전용 분류에 따른
+대표 target build 생략은 성공한 실행과 구분하며 기존 C5 전체 빌드 실적을 새 커밋의 실적으로 옮기지 않는다.
 문서 수정만으로 CI shard 수나 캐시 계약을 바꾸지 않는다.
 
 2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
@@ -25,11 +26,11 @@ artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI
 macOS 지원을 뜻하지 않는다. `v0.5.0`은 M31 완료 뒤 Windows 10/11 x64 우선 릴리스이며
 최종 package·설치·예제·RC gate를 [v0.5.0 TODO](../TODO_v0.5.0.md)에서 판정한다.
 Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 계획과 연계한다.
-버전 배정은 OS 지원 확정이 아니며 기존 세 Host 계획·OS별 최종 gate를 완화하지 않는다.
+버전 배정은 OS 지원 확정이 아니며 기존 Host 계획·OS별 최종 gate를 완화하지 않는다.
 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
 릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
-다만 현재 Host 구현은 W01~W03 완료(3/8)에서 사용자 지시로 보류했다. 위 단계는 재개 후의
-검증 계약이며 새 Host 작업·CI 실행·상태 조회를 허가하는 지시가 아니다.
+Host는 사용자 지시로 재개해 W01~W06 완료(6/8)와 W07 Windows 11 비공개 RC1 검증을 마쳤다.
+나머지 Ubuntu/macOS 네 OS 실기와 HOST-W08은 대기 중이다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
 
 ---
 
@@ -54,7 +55,7 @@ Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workf
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
 현재 M12 workflow에는 `main`과 과거 `0.5.0-RC2` push trigger가 남아 있다. RC2 브랜치는 정식
-승격 후 삭제했으므로 일반 개발은 `main`에서 검사한다. 문서 전용 변경은 classifier 근거가 있을 때
+승격 후 삭제했다. `Dev-0.6.0-M33`의 문서 커밋은 같은 브랜치의 exact SHA를 고정해 수동 실행한다. 문서 전용 변경은 classifier 근거가 있을 때
 대표 target build를 생략할 수 있지만 문서·Host·계약·package 검사는 유지한다. NCS/toolchain
 설치 cache와 configuration/source compile cache는 서로 다른 key·경로로 관리한다.
 
@@ -322,16 +323,19 @@ Exact 실행·허용 범위는 [RC2 검증 기록](<../04_검증 기록/271_v0.5
 
 | CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
 | --- | --- | --- |
-| Windows 10/11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
-| Ubuntu 24.04+ AMD64 | 지원 release별 clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
-| macOS 26+ Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
+| Windows 11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
+| Ubuntu 24.04 LTS AMD64 | 해당 OS clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
+| Ubuntu 26.04 LTS AMD64 | 해당 OS clean install·build·artifact 비교 | 다른 Ubuntu 버전의 PASS·실물 upload |
+| macOS 26 Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
+| macOS 27 Apple Silicon | 해당 OS native ARM64 install·build·artifact 비교 | 다른 macOS 버전의 PASS·실물 upload |
 | Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
 
 새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
 clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu/macOS의 해당 실물 증거는
 사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 제공한다. 그 전의 `NOT_RUN`은 해당 OS
 지원 gate 미완료를 뜻하며 M31 v0.5.0 Windows 릴리스를 차단하지 않는다. Windows 최종 후보의
-회귀는 v0.5.0 공개 gate에서, 다중 Host 구현·package 준비는 Host 작업 재개 뒤 진행한다.
+회귀는 v0.5.0 공개 gate에서 완료했다. 후속 C5의 Windows 11 검증 완료와 나머지 네 OS 실기 대기는
+[329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분한다.
 
 ---
 

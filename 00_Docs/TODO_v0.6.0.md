@@ -1,13 +1,13 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 | 항목 | 현재 상태 |
 | --- | --- |
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
-| 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [현행 상태·실행 순서](TODO_M33.md#m33-w06--자원회귀상호운용) |
+| 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [W06 수락 마감 근거](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 Windows 11 실기 진행 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 Windows 11 완료·나머지 네 OS 대기 |
 | v0.6.0 지원 목표 | Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |
@@ -15,8 +15,8 @@
 | 최종 갱신일 | 2026-11-15 |
 
 이 문서는 v0.6.0의 계획 진입점이다. 버전 배정은 기능 구현 완료, Host 보류 해제, 실물 작업,
-tag·Release·index 공개 승인을 뜻하지 않는다. 소스·설치 패키지의 제품 버전은 아직 0.5.0이며,
-공개 v0.5.0 자산을 바꾸거나 v0.6.0으로 재명명하지 않는다.
+tag·Release·index 공개 승인을 뜻하지 않는다. 소스의 `coreVersion()` 식별 문자열과 공개 stable은
+`0.5.0`이며 현재 비공개 C5 검증 패키지는 `0.6.0-rc.1`이다. 공개 v0.5.0 자산을 바꾸거나 재명명하지 않는다.
 
 ## 1. 후속 버전 배정
 
@@ -90,8 +90,8 @@ Beacon 600광고 HIL을 완료했다. 시험 소유 bond만 제한 정리했으�
 M33-W03은 exact `17182660…`에서 Host 13/13, 공개 예제 2/2, native template 4/4와 두 보드
 scripted-peer HIL 9/9를 PASS했다. W04 DTM/HCI와 W05 전체 설치 예제도 완료했으며 W05 exact
 `5f9b2257…`에서 catalog·발견·compile 204/204와 negative 9/9를 PASS했다. M33-W06은 사용자 수락으로 마감했고
-#29 원인 분석은 유예했다. W07~W08 Host·package·공개 gate는 미착수다.
-HOST-W04는 M33-W06 완료 직후 시작하며, RC1 준비와 OS별 실기 마감을 거쳐 M33-W08로 진행한다.
+#29 원인 분석은 유예했다. W07의 C5 RC1 준비와 Windows 11 검증은 완료했고 나머지 네 OS·HOST-W08은 대기다.
+남은 OS 실기와 Host 문서 마감 후 M33-W07을 완료하고 별도 공개 승인 단계인 M33-W08로 진행한다.
 W06의 개발 수정순회·최종 source 고정·전체 검증·마감 순서는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 과거 source별 PASS/FAIL은 원본으로 보존하며 문서 정리를 W06 완료로 표시하지 않는다.
@@ -114,9 +114,9 @@ v0.6.0의 package·제품 식별자·RC 전환은 실제 개발 및 배포 준�
 
 HOST-W04 설치 범위는 H4의 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>),
 HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_native_마감과_HOST_W06_package_착수.md>)에서
-각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07 준비를 마감했다. Windows 11부터 확정한 다섯 OS의 실기를 진행한다.
-실제 USB 최종 gate와 추가 OS 정식 지원은 후속 범위로 유지한다.
+각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07의 C5 RC1 준비·Windows 11 실기를 마감했다.
+나머지 네 OS의 실제 USB 최종 gate와 정식 지원 판정은 대기 중이다.
 
-HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 W07 실행기·Windows 회귀·RC1을 준비한다. 사용자 Ubuntu/macOS 실물 gate는 NOT_RUN이다.
+HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8이며 후속 C5의 Windows 11 검증까지 완료했다. 사용자 Ubuntu/macOS 네 OS의 실물 gate는 NOT_RUN이다.
 
-HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. Host6/8과 사용자 물리 gate NOT_RUN은 유지한다.
+HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. Host6/8, OS1/5 완료와 나머지 네 OS 물리 gate NOT_RUN을 구분한다.

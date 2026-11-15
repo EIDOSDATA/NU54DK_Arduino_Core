@@ -1,13 +1,13 @@
-# M33 개발 인계 — W06 보존과 HOST-W07 준비
+# M33 개발 인계 — W06 보존과 HOST-W07 OS 검증
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
 [310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)과
 [공개 hash 참조](<04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json>)가 최종 결과다. 현행 범위는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
-2026-11-10 사용자가 HOST-W04부터의 순차 진행과 모든 문서 갱신을 지시했다. HOST-W04 설치 범위를 같은 H4 source의 native3OS PASS로 마감했다. 현재 Host는 6/8이며 M33-W07의 HOST-W07에서 Windows 11 실기를 진행한다.
+2026-11-10 사용자가 HOST-W04부터의 순차 진행과 모든 문서 갱신을 지시했다. HOST-W04 설치 범위를 같은 H4 source의 native3OS PASS로 마감했다. 현재 Host는 6/8이며 M33-W07의 HOST-W07에서 Windows 11 RC1 검증을 마감했고 나머지 네 OS는 준비 대기다.
 최신 Host 완료 검증은 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>), W07 초기 통합은 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), C1 START FAIL·C2 교정은 [324번](<04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json)을 따른다.
 W06 명시 수락 정정은 [311번 기록](<04_검증 기록/311_M33_W06_명시_수락_정정과_HOST_W04_착수.md>)에 보존한다.
 이 문서는 실제 재개 입력과 과거 증거의 위치를 안내한다.

@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<../../00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<../../00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,7 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 사용자 지시로 HOST-W06 완료 후 HOST-W07 준비 진행 중입니다. Ubuntu/macOS 지원에는
+HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 나머지 네 OS를 준비합니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
@@ -23,7 +23,7 @@ stable package를 최종 exact commit에서 두 번 새로 생성했습니다. �
 
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
-| `v0.6.0` / M32·M33 | [M33 TODO](../../00_Docs/TODO_M33.md) | 배포 준비 단계에서 exact version·plan·도구를 확정 | 미공개; 기존 `v050_release.py`를 새 버전 게시 도구로 재사용하지 않음 |
+| `v0.6.0` / M32·M33 | [M33 TODO](../../00_Docs/TODO_M33.md) | 비공개 `0.6.0-rc.1`은 `host_rc_kit.py`·`host_rc_entry.py`; 공개 도구는 별도 확정 | 미공개; 기존 `v050_release.py`를 새 버전 게시 도구로 재사용하지 않음 |
 | `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `v050_release.py`, `m31_release.py`, `m31_windows_lifecycle.py`, `m31_windows_example_shard.py`, `m31_ci_aggregate.py` | 정식 공개·stable catalog·공개 smoke 완료 |
 | `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 역사적·지원 종료 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |

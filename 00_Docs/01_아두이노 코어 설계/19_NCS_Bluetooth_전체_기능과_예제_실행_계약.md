@@ -4,11 +4,11 @@
 | --- | --- |
 | 목표 | 고정 NCS `v3.4.0`에서 nRF54L15에 적용 가능한 Bluetooth 기능·예제를 NU54DK Arduino 환경에서 사용할 수 있게 한다 |
 | 대상 | stable/source `v0.5.0`의 M31 Windows 릴리스와 `v0.6.0` 계획의 M32·M33, M34~M45 인계 의존성 |
-| 현재 상태 | **M31 8/8 완료, M32 12/12 완료, M33 5/8**. M33-W01~W05 원장·기능·진단·전체 설치 예제 PASS |
+| 현재 상태 | **M31 8/8 완료, M32 12/12 완료, M33 수락 6/8·기술 5/8**. M33-W01~W05 기술 완료와 W06 수락 예외를 구분 |
 | 장비 입력 | 사용자가 NU54DK 3개 연결·보드만 보유한다고 확인. 실제 시험 전 identity·serial·role·firmware를 다시 대조 |
 | 기능 검증 범위 | 예제의 실제 송수신·제어·보안·오류 복구와 Arduino 사용성. 합성 데이터·합성 PCM을 사용할 수 있음 |
 | 범위 제외·후속 | 정밀 RF·거리/각도·음질 보증은 범위 밖. Apple/Google와 외장 I/O 실물 운용·검증은 사용자 후속이며 개발·릴리스 필수 gate가 아님 |
-| 최종 갱신일 | 2026-10-04 |
+| 최종 갱신일 | 2026-11-15 |
 
 전체 번호·제품선은 [제품 로드맵](02_구현_로드맵.md), 작업 묶음은 [M31 TODO](../TODO_M31.md),
 [M32 TODO](../TODO_M32.md), [M33 TODO](../TODO_M33.md), 현재 상태는
@@ -19,9 +19,9 @@
 
 완료 근거는 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와
 [W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. Host는 W01~W06 완료
-6/8이고 **HOST-W06 완료 후 HOST-W07 준비 진행 중**이다. M33-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했으며
-[검증 설계](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의 실패별 집중 검증과
-[최신 체크포인트](../M33_HANDOFF.md)를 따른다. 기능별 합격 조건은 유지하고 Host를 M33 기능 개발과 병행하지 않는다.
+6/8이고 **HOST-W07 Windows 11 완료·나머지 네 OS 대기**이다. M33-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했으며
+[검증 설계](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의 당시 개발·최종 검증 경계를 보존한다.
+현재는 #29 분석을 유예하고 [최신 체크포인트](../M33_HANDOFF.md)의 Host 순서를 따른다. 기능별 합격 조건은 유지하고 Host를 M33 기능 개발과 병행하지 않는다.
 
 ### 2026-09-21 릴리스 범위 결정
 
@@ -37,7 +37,7 @@ stack/heap 안전 여유·최종 크기, 동일 조건 Nordic native FLASH/RAM �
 SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
-다중 Host·RC·공개를 계속 소유하며 Host 보류·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
+다중 Host·RC·공개를 계속 소유하며 Host 순차 진행·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
 현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 수락6/8·기술5/8·HOST6/8을 구분한다.
 M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
@@ -190,12 +190,12 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | 완료 / P0 | M32-C W09 단독 radio → W10 공존 | BLE/Mesh 단독 PASS, 최소 802.15.4/ESB profile | 세 내부 조합·중재·복구 예제와 HIL; M38/M39 재사용 |
 | 완료 / P0 | M32-W11~W12 회귀·HIL·인계 | M32-A/B/C | exact 회귀·soak·자원 상한·적용 조합·전체 원장 감사 |
 | 7 / P1 | M33-W01~W04 catalog·GATT·ecosystem·DTM/HCI | 각 기능의 owner 산출물 | 누락 없는 예제 경로, 조건부 external template |
-| 8 / P0 | M33-W05~W08 예제·설치·통합·Host 확대·공개 | 기능 원장, native Host, exact image·package | v0.6.0 계획의 기능별 지원표와 공개 gate; Host 보류·실물 조건 유지 |
+| 8 / P0 | M33-W05~W08 예제·설치·통합·Host 확대·공개 | 기능 원장, native Host, exact image·package | v0.6.0 계획의 기능별 지원표와 공개 gate; Host 순차 진행·실물 조건 유지 |
 
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W06 완료 후 HOST-W07 준비 진행 중이다. W02는 표준 GATT·Beacon 공개 예제 9/9와
+M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W07 Windows 11 완료·나머지 네 OS 대기 상태다. W02는 표준 GATT·Beacon 공개 예제 9/9와
 두/세 보드 exact HIL, W03은 Apple 예제 2/2·native template 4/4·scripted-peer HIL 9/9,
 W04는 DTM two-wire/H4 12/12씩, W05는 설치 예제 204/204 compile과 negative 9/9를 PASS했다.
 외부 제품 상호운용은 사용자 후속 `NOT_RUN`이다. M32의 개별 기능·통합 HIL은 M31 인계와

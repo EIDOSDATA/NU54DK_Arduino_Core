@@ -1,9 +1,9 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
-HOST-W07은 Windows 11 실기 진행 중이며 Host 완료는 6/8이다.
-마지막 완료 기술 source는 [322번 H12 마감](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이다.
+HOST-W07은 Windows 11 RC1 검증을 완료했으며 나머지 네 OS는 대기다. Host 완료는 6/8이다.
+마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
 실제 RC source·archive·kit manifest SHA-256과 해당 CI·Windows 결과가 고정되기 전 이 절차를 PASS로 세지 않는다.
@@ -48,7 +48,7 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
-| Windows 11 | x64 | 조건부 J-Link와 격리 CLI 갱신 통과. IDE·USB 재연결·기본 CMSIS-DAP 대기 |
+| Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
 | Ubuntu 24.04 LTS | AMD64 | CI 설치·빌드 통과. 사용자 실기 대기 |
 | Ubuntu 26.04 LTS | AMD64 | 해당 OS 설치·빌드·사용자 실기 대기 |
 | macOS 26 | Apple Silicon | CI 설치·빌드 통과. 사용자 실기 대기 |
@@ -109,3 +109,17 @@ cache·exact probe lock을 유지하며 timeout·중단 시 소유 process를 �
 OS/version/arch, 단계 result·log·build manifest와 허용한 ELF/HEX다. `private/`와 원시 UID·인증정보를
 포함하지 않는다. 기존 W06 S19 actual46PASS·수락3·FAIL·soak는 이 kit의 실적과 분리한다.
 사용자 실기 전 Host8/8·M33-W07 완료·정식 다중 OS 지원으로 표시하지 않는다.
+
+
+## Windows IDE 검증의 실행 조건과 배포 경계
+
+IDE 2.3.11은 Arduino 설정을 사용자 홈의 `.arduinoIDE`에서 읽는다. 격리 프로필에서는
+AppData/Local·AppData/Roaming을 준비하고 process-local 환경으로 지정한다. 별도 SDK를 쓰면
+설치기용 `NUCODE_NCS_INSTALL_ROOT`와 빌더용 `NUCODE_NCS_ROOT`가 같은 SDK 설치를 가리켜야 한다.
+예제 창을 연 뒤 초기 빈 스케치 창을 닫고 백그라운드 구성 종료 후 Verify를 실행한다. 서로 다른
+작업이 같은 SDK의 임시 patch를 동시에 사용하면 `E_SDK_PATCH`로 거부될 수 있다. 이는 기록된 제한이며
+SDK 파일 수동 수정·보호 검사 해제·자동 재시도로 해결하지 않는다. 원본 FAIL은 별도로 보존한다.
+
+현재 RC1은 고정 C5 ZIP을 로컬 HTTP index URL로 공급해 Boards Manager에서 설치한 비공개 검증이다.
+정식 배포는 GitHub의 ZIP·index 게시 후 Preferences URL→Boards Manager 설치를 확인한다.
+코드 commit만으로 게시용 ZIP과 index가 생성되거나 갱신되지는 않는다. 공개 URL 검증은 공개 승인 뒤 수행한다.

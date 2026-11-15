@@ -268,6 +268,6 @@ Source 근거는 `nrf/samples/bluetooth/direct_test_mode`, `hci_lpuart`, `rpc_ho
 `zephyr/samples/bluetooth/hci_uart`, `hci_uart_async`, `hci_uart_3wire`, `hci_spi`, `hci_usb`, `hci_ipc`,
 `hci_pwr_ctrl`, `hci_vs_scan_req`의 README·sample metadata·source다. 실제 inventory는 도구의 `inventory`가 출력한다.
 
-다음 단계는 [BLE 예제](../../../libraries/NUCODE_BLE/examples) 또는
-[M33 전체 TODO](../../../00_Docs/TODO_M33.md)의 W05/통합 검증이다. Native build, 실제 두 보드 DTM,
+관련 범위는 [BLE 예제](../../../libraries/NUCODE_BLE/examples)와
+[M33 전체 TODO](../../../00_Docs/TODO_M33.md)를 참조하며 완료 여부와 현재 단계는 해당 TODO의 최신 판정을 따른다. Native build, 실제 두 보드 DTM,
 외부 HCI Host interoperability, 정밀 RF/전력 계측은 독립 결과로 기록한다.

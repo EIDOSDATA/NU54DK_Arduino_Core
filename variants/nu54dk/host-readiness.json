@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-15",
-  "status": "in_progress",
+  "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W07_C5_FIVE_OS_RELEASE_TARGET_WINDOWS11_IN_PROGRESS",
+  "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -155,7 +155,7 @@
     "current_W06_worktree_validation": "EXACT_H12_COMMIT_PASS"
   },
   "user_physical_OS_gate": {
-    "status": "IN_PROGRESS_WINDOWS11_PARTIAL",
+    "status": "WINDOWS11_COMPLETE_OTHER4_NOT_RUN",
     "owner": "user",
     "execution_stage": "M33-W07_RC1_FINAL_HOST_VALIDATION",
     "fields": [
@@ -165,7 +165,8 @@
       "debug",
       "upgrade_reinstall_uninstall"
     ],
-    "release_target_count": 5
+    "release_target_count": 5,
+    "completed_OS_rows": 1
   },
   "W06_preservation": {
     "status": "USER_ACCEPTED_CLOSED",
@@ -442,14 +443,14 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C5_PREPARATION_COMPLETE_WINDOWS11_PHYSICAL_REMAINDER",
+    "status": "C5_WINDOWS11_REQUIRED_GATES_COMPLETE_OTHER4_PENDING",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
-    "windows_physical_regression": "NOT_RUN",
+    "windows_physical_regression": "PASS_C5_WINDOWS11_REQUIRED_GATES_SEE_CANDIDATE_OS_ROWS",
     "private_RC1": "C5_PRIVATE_KIT_AUTOMATIC_VERIFIED_NOT_PUBLISHED",
-    "user_physical_OS_gate": "NOT_RUN",
-    "physical_OS_gate": "PARTIAL_CONDITIONAL_JLINK_PASS",
+    "user_physical_OS_gate": "WINDOWS11_COMPLETE_OTHER4_NOT_RUN",
+    "physical_OS_gate": "WINDOWS11_PASS_WITH_PRESERVED_ORIGINAL_FAILURES",
     "new_HIL_runs": 0,
     "documentation": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
     "development_checks": [
@@ -486,15 +487,22 @@
       {
         "OS": "Windows11",
         "architecture": "x64",
-        "physical_gate": "PARTIAL_CONDITIONAL_JLINK_PASS",
+        "physical_gate": "PASS_PRIVATE_RC1_SINGLE_COMPILE_PER_SDK",
         "RC1_target_build": "PASS_C5_WINDOWS11_GATES",
-        "support_status": "target_pending_validation",
+        "support_status": "candidate_validated_not_published",
         "stable_to_RC1_migration": "PASS_ISOLATED_CLI",
-        "remaining": [
-          "IDE_2",
-          "physical_USB_reconnect",
-          "default_CMSIS_DAP_and_wrong_UID"
-        ]
+        "conditional_JLink": "PASS",
+        "physical_USB_reconnect": "PASS",
+        "default_CMSIS_DAP_wrong_UID": "EXPECTED_REJECTION_PASS",
+        "default_CMSIS_DAP_actual_upload": "PASS_COM17_COM18",
+        "default_CMSIS_DAP_Blink_GPIO": "PASS_COM17_COM18",
+        "previous_COM5_COM6_upload": "FAIL_BEFORE_FLASH_INTERMITTENT_SWD_NO_ACK",
+        "serial_runtime_after_physical_reconnect": "PASS_COM18_AFTER_STABLE_REENUMERATION",
+        "first_post_reconnect_UART_identity": "FAIL_ORIGINAL_PRESERVED",
+        "remaining": [],
+        "IDE_2": "PASS_2.3.11_RC1_INSTALL_960_FILES_AND_BLINK_VERIFY",
+        "IDE_concurrency": "E_SDK_PATCH_LIMITATION_PRESERVED_SERIAL_EXECUTION_REQUIRED",
+        "public_URL_installation": "NOT_RUN_PRIVATE_CANDIDATE"
       },
       {
         "OS": "Ubuntu24.04 LTS",
@@ -596,7 +604,7 @@
       "input_only_not_RC1_credit": true
     },
     "CLI_assets": "THREE_OS_FIXED_INPUT_BYTES_VERIFIED_2da55b",
-    "Windows_physical_regression": "NOT_RUN",
+    "Windows_physical_regression": "PASS_C5_WINDOWS11_REQUIRED_GATES_SEE_CANDIDATE_OS_ROWS",
     "original_W06_FAIL_reclassified": false,
     "local_SDK_input": {
       "status": "READY",
@@ -778,10 +786,17 @@
       "image_comparisons": 204,
       "CI_success_jobs": 48,
       "private_kit_entries": 221,
-      "all_user_OS_gate": "NOT_RUN",
-      "CMSIS_DAP_physical": "NOT_RUN",
+      "all_user_OS_gate": "WINDOWS11_1_OF_5_OTHER4_NOT_RUN",
+      "CMSIS_DAP_physical": "PASS_WINDOWS11_COM17_COM18_PREVIOUS_COM5_COM6_FAIL_PRESERVED",
       "source_credits_combined": false,
-      "group29_analysis": "DEFERRED_BY_USER"
+      "group29_analysis": "DEFERRED_BY_USER",
+      "Windows11_IDE": {
+        "status": "PASS_SERIALIZED_PRIVATE_RC1_IDE",
+        "source_revision": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+        "evidence_sha256": "4638b33f09a921c14eaa5ee09c3e6b8b47020214ec246af7b3708772fcad8562",
+        "installed_files_matched": 960,
+        "artifact_hashes_verified": 4
+      }
     },
     "candidate_OS_scope_change": {
       "decision_date": "2026-11-15",

@@ -1,6 +1,6 @@
 # Host별 고정 Nordic 환경 설치
 
-상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 준비 중.
+상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·나머지 네 OS 실기 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.
@@ -18,11 +18,14 @@ Windows·Ubuntu는 설치와 등록에 같은 `--install-dir`를 지정한다. m
 sdk-manager1.16.1의 SDK `--tarball` 설치는 이 archive의 다중 행 `VERSION`을 해석하지 못하므로 사용하지 않는다.
 기존 SDK 경로는 덮어쓰지 않고 revision을 재검사한다. 추출 실패 staging은 진단용으로 보존한다.
 
-| Host 후보 | Toolchain bundle | 설치 위치 |
+| 설치기 인식 범위 | Toolchain bundle | 설치 위치 |
 | --- | --- | --- |
 | Windows 10/11 x86-64 | `dcbdc366a1` | 사용자 `ncs`, 명시적 절대 경로 override 가능 |
 | Ubuntu 24.04+ AMD64 | `fbf7391cab` | 사용자 `~/ncs`, 명시적 절대 경로 override 가능 |
 | macOS 26+ Apple Silicon | `ccc010f809` | upstream 고정 `/opt/nordic/ncs` |
+
+위 표는 설치기의 플랫폼 인식 범위이며 공개 지원 확정표가 아니다. v0.6.0 검증 목표는 Windows 11,
+Ubuntu 24.04 LTS·26.04 LTS, macOS 26·27이며 [RC1 실기 절차](15_Host_RC1_실기_도구와_증거_절차.md)를 따른다.
 
 macOS 고정 경로의 쓰기 권한은 OS 관리 절차로 준비한다. 설치기는 전역 권한·Gatekeeper·quarantine을
 변경하지 않는다. Linux USB 접근은 manifest에 고정한 upstream `nrf-udev`와 장치 권한 절차를 따른다.

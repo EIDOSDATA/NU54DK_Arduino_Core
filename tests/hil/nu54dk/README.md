@@ -14,13 +14,13 @@ v0.4.0의 T01~T25와 합의한 HIL 범위도 완료했으며, 이 문서는 재�
 | M31 ISO/LE Audio/DF/CS | W01~W08 완료(8/8), W03 profile 11/11·W04 DF·W05 CS·W06 자원/회귀·W07 설치 예제/HIL·W08 Windows RC 준비 PASS | [M31 TODO](../../../00_Docs/TODO_M31.md) · [W08 완료](<../../../00_Docs/04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) |
 | M32 최신 LE·Mesh·다중 protocol | W01~W12 완료(12/12); `94f02544…` exact family 12/12·signed MDFU·1,800초 soak와 W12 정합성 감사 PASS | [M32 TODO](../../../00_Docs/TODO_M32.md) · [현재 재개 지점](../../../00_Docs/HANDOFF.md) |
 
-M32는 미공개 v0.6.0 개발 범위이며 M33은 W01~W05 5/8 완료입니다. W06은 미완료이며
-실패 한 항목을 수정하고 로컬 해당 항목의 실제 PASS를 확인한 뒤 다음 실패로 이동합니다.
+M32는 미공개 v0.6.0 개발 범위이며 M33은 수락 6/8·기술 5/8입니다. W06은 실제 PASS 46개와
+사용자 수락 #29·#40·#44를 구분해 마감했고 기존 FAIL과 source별 실적을 보존합니다. #29 분석은 유예합니다.
 현재 문서 작업 중에는 실기를 시작하지 않으며, 범위와 재개 절차는 [M33 인계](../../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 과거 inventory·image·STOP/cleanup이 현재도 유효하다고 가정하지 않습니다. 현재 파일·보드 상태를
 확인하고 실기 writer와 로컬 무거운 build/HIL은 하나씩 실행합니다.
-HOST는 3/8이며 M33-W06 완료 전에는 W04 이후를 시작하지 않습니다. Ubuntu/macOS 실물 gate는
-해당 OS를 지원하는 후속 릴리스에서 판정합니다.
+HOST는 6/8이며 HOST-W07의 Windows 11 비공개 RC1 검증을 완료했습니다(OS 1/5).
+나머지 Ubuntu/macOS 네 OS 실기는 대기 중이며 해당 OS의 증거를 별도로 판정합니다.
 NCS v3.4.0 pin을 유지하며 [v0.7.0](../../../00_Docs/TODO_v0.7.0.md)의 SDK 3.4.1 전환은
 별도 0/6 미착수 작업입니다. 현재 보드 mapping·접근성·image는 새 실기 직전에 다시 확인합니다.
 

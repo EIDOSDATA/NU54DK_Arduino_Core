@@ -22,7 +22,7 @@ M31 ISO·LE Audio·Direction Finding·Channel Sounding은 정식 설치본에 �
 [M30 계약](17_M30_BLE_Security_Profile_DFU_착수_계약.md)에서 별도로 확인합니다.
 M31 완료 범위와 정식 공개는 [M31 TODO](../TODO_M31.md)와
 [v0.5.0 문서](../05_릴리스/v0.5.0/README.md)를 따릅니다. M32·M33은 [v0.6.0 후속 계획](../TODO_v0.6.0.md)이며,
-Ubuntu/macOS 확대의 기존 Host 실물 gate와 보류 상태는 유지합니다. 계획 버전 배정은 현재 지원 확대가 아닙니다.
+Ubuntu/macOS 확대의 기존 Host 실물 gate는 유지하며 네 OS의 실기는 대기 중입니다. 계획 버전 배정은 현재 지원 확대가 아닙니다.
 
 역사 [v0.5.0-rc.2](../05_릴리스/v0.5.0-rc.2/README.md)는 같은 M28~M31 API 범위를 검증하며
 예제별 설정 안내·업로드 선택·한국어 진단·빌드 진행 표시를 교정했습니다. 전체 113개 설치 예제와

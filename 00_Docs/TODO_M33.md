@@ -1,16 +1,16 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
 | 현재 구현 상태 | **W01~W05 기술 완료 5/8; W06 사용자 수락 마감으로 6/8** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 순차 Host 계획 | M33-W06 수락 마감. Host 6/8, M33-W07의 HOST-W07 Windows 11 실기 진행 |
+| 순차 Host 계획 | M33-W06 수락 마감. Host 6/8, M33-W07의 HOST-W07 Windows 11 완료·나머지 네 OS 대기 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-11-10 |
+| 최종 갱신일 | 2026-11-15 |
 
 W06의 현행 상태·개발 수정순회·최종 마감 순서는 [아래 W06 절](#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·native 종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
@@ -25,7 +25,7 @@ M32는 W01~W12 **12/12 완료**다. W11 clean `94f02544…`에서 exact family 1
 1,800초 soak를 PASS했고 W12 원장·문서·지원 gate·후속 인계 감사도 완료했다. M33은
 W01~W05 기술 완료 5/8에 W06 사용자 수락 마감을 더해 **수락 기준 6/8**이다.
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하며 원형 strict 기술 완료를 주장하지 않는다.
-현행 실행 순서는 아래 W06 절을 따른다.
+W06 절은 수락 마감과 원형 strict 예외의 보존 근거다. 현행 실행은 아래 W07과 [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다.
 미완료 항목은 완료 실적이 아니다. 2026-10-03 사용자 결정에 따라
 Host는 M33-W06 완료 후 순차 진행하며 그 전에는 착수하지 않는다.
 
@@ -74,10 +74,10 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
-| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 Windows 11 실기 진행, HOST-W08 미완료 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 Windows 11 완료·나머지 네 OS 대기, HOST-W08 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
-W02~W05는 완료했다. W06의 실기와 실패 수정은 한 항목씩 순차 처리한다. 이번에 허용한 병렬
+W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07의 나머지 OS를 순차 검증하며 #29 분석은 유예한다. 이번에 허용한 병렬
 문서/파일 검토와 실기 병렬 실행을 구분한다. W06~W08에서 실제 배포 입력을 고정하고
 HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 
@@ -317,12 +317,12 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
   실제 각 Host에서 마감한다. Ubuntu/macOS는 해당 OS를 포함하는 후속 릴리스 단계에서 사용자가 실행하며 설치·USB upload·
   serial·debug·수명주기 증거를 인계받는다. 그때까지 해당 행은 `NOT_RUN`이고 해당 OS 정식 지원 공개
   gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
-- [ ] Release candidate의 source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고 package를
-  독립 두 번 생성해 재현성과 runtime payload·예제 포함 목록을 검증한다.
+- [x] C5 `5ee7c103…`의 비공개 `0.6.0-rc.1` source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고
+  package를 독립 두 번 생성해 재현성과 runtime payload·예제 포함 목록을 검증했다. [328번 C5 근거](<04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>)를 보존하며 새 후보 source가 생기면 변경 범위의 증거를 별도로 확보한다.
 - [ ] API/profile migration·known limitation·experimental opt-in·미검증 template·외부 ecosystem·Host
   상태를 release notes와 readiness에 동일하게 기록한다.
 - [ ] `M33-PACKAGE-01`, `M33-INSTALL-01`을 HOST-W08 증거와 연결하고 공개할 필수 행의 미완료를 차단한다.
-- [ ] 기능 구현 완료, 지원 범위 결정 완료, 세 Host 완료, RC 준비 완료를 각각 보고한다. Apple/Google·
+- [ ] 기능 구현 완료, 지원 범위 결정 완료, 다섯 OS 완료, RC 준비 완료를 각각 보고한다. Apple/Google·
   외장 장치의 사용자 후속 실물 행은 지원 제한으로 남기되 개발·릴리스 blocker로 사용하지 않는다.
   최종 사용자 장비 검증 gate는 Ubuntu/macOS이며 공개 승인·제품 인증은 별도 절차다.
 

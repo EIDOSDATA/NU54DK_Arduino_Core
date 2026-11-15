@@ -1,10 +1,10 @@
 # 개발 인계
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 실기 진행, Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증과 Windows 11 격리 CLI 갱신은 통과했으며, IDE·USB 재연결·기본 CMSIS-DAP 실기가 남았다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
-[310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)과
+[310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>), [311번 명시 수락 정정](<04_검증 기록/311_M33_W06_명시_수락_정정과_HOST_W04_착수.md>)과
 [공개 hash 참조](<04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json>)가 최종 결과다. 현행 범위는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·종료 증거와 과거 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾는다.
@@ -15,26 +15,25 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, **M33-W07의 HOST-W07 Windows 11 실기 진행**. 이후 Ubuntu 24.04 LTS → Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
+| Host | **6/8**, **M33-W07의 HOST-W07 Windows 11 완료·나머지 OS 준비 대기**. 이후 Ubuntu 24.04 LTS → Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C5 자동 검증·Windows 11 조건부 J-Link 및 격리 CLI 갱신 통과. Windows 11 IDE·USB·기본 CMSIS-DAP 실기와 나머지 네 OS 대기. [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>) |
+| HOST-W07 현재 | C5 자동 검증·Windows 11 조건부 J-Link 및 격리 CLI 갱신 통과. Windows 11 IDE·USB·기본 CMSIS-DAP 실기 완료. 나머지 네 OS 대기; 공개 URL 설치 검증은 공개 승인 뒤 별도다. [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>) |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
 | 개발 검증 방식 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 실패별 수정과 최종 동일 source gate를 분리 |
-| 현행 실행 순서 | [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용) |
+| 현행 실행 순서 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) · [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>) · [M33 TODO](TODO_M33.md) |
 | 검증 결과·종료 증거 | `continuation.json.active_workflow`에서 해당 source·attempt의 원본을 확인. 과거 PASS를 현재 source 실적으로 합성하지 않음 |
 | 실제 재개 절차·보존 자료 | [M33 인계](M33_HANDOFF.md) |
 
 ## 먼저 읽기
 
 1. [AGENTS](../AGENTS.md)와 [M33 인계](M33_HANDOFF.md).
-2. [M33 TODO](TODO_M33.md)의 W06 완료 조건과 [재설계 문서](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>).
-3. 필요한 범위의 [전체 기능 계약](<01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
-   [도구 안내](../tools/ci/m33_w06_artifacts.md).
+2. [M33 TODO](TODO_M33.md)의 W07·W08, [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>).
+3. 현행 [329번 Windows 11 마감](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json).
 4. 과거 실패 원인이 필요할 때 [302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)·
    [303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>)의 해당 절만 참조.
-5. 과거 개발49 완료와 판단 정정은 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)·[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)의 역사 기록이다. 현행 범위는 M33 TODO의 W06 절을 따른다.
+5. 과거 개발49 완료와 판단 정정은 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)·[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)의 역사 기록이다. W06 증거 해석이 필요할 때만 [W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)과 [재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 참조하며 #29 분석은 유예한다.
 
 완료 TODO 6개와 과거 실기·릴리스 기록은 현행 지시가 아니다. [읽기·보존 범위](README.md#todo-읽기갱신-범위)를 따른다.
 이전 인계의 긴 source별 일지는 Git 이력과 번호별 검증 기록에 보존하며 이 진입점에 반복하지 않는다.
@@ -65,6 +64,6 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 
 공개 tag·Release·asset, 최초 FAIL/HOLD/NOT_RUN 원본은 보존한다. 2026-10-11 문서 정리·push와
 이후 사용자가 승인한 실패별 수정·로컬 실기는 구분한다. main 통합·추가 squash·공개 게시 권한은
-추정하지 않으며 현행 실행 순서는 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)을 따른다.
+추정하지 않으며 현행 실행 순서는 [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)와 [M33 TODO](TODO_M33.md)를 따른다.
 
 HOST-W04 완료 source·설치3OS 원문과 HOST-W05 착수 범위는 [313번](<04_검증 기록/313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md>)을 따른다.

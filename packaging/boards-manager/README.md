@@ -11,9 +11,10 @@
 | 이전 RC2 | `v0.5.0-rc.2`; 공개 tag·asset 보존, 지원·catalog 공급 종료 |
 
 현재 source version은 `0.5.0`입니다. M28~M31과 RC1/RC2, runtime PM 연속 Upload 교정,
-stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST는 3/8이며
-W04~W08은 M33-W06 완료 전까지 착수 대기입니다. 미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의
-M32는 12/12, M33은 W01~W05 5/8 완료입니다. W06은 미완료·기존 실행 정리 후 검증 체계 재설계 준비 상태이며
+stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST는 6/8이며
+HOST-W07의 Windows 11 비공개 C5 RC1 검증을 완료하고 나머지 네 OS 실기를 기다리고 있습니다.
+미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의 M32는 12/12, M33은 수락 6/8·기술 5/8입니다.
+W06은 실제 PASS 46개와 명시 수락 #29·#40·#44를 구분해 마감했으며 원본 FAIL을 보존합니다.
 새 채팅의 재개 지점은 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 개발 source의 기능 추가나 main 통합은 공개 v0.5.0 ZIP을 변경하지 않습니다.
 v0.6.0 동안 NCS v3.4.0 pin을 유지하고, SDK 3.4.1 전환은 별도 [v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)의
