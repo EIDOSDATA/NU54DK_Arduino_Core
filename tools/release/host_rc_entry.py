@@ -89,6 +89,8 @@ def main(arguments=None):
         if name == 'serial':
             command.add_argument('--serial-sha256',required=True)
             command.add_argument('--path-sha256')
+            command.add_argument('--synchronize-line',action='store_true',
+                help='각 open의 기존 입력 줄을 LF 한 번으로 동기화한 뒤 nonce를 검사합니다.')
     pair = sub.add_parser('ble-pair')
     for name in ('probe-sha256','serial-sha256','peer-probe-sha256','peer-serial-sha256'):
         pair.add_argument('--'+name,required=True)
@@ -135,6 +137,8 @@ def main(arguments=None):
     receipt = dict(plan,operation=args.operation,status='FAIL',steps=[])
     if args.operation=='ble-pair':
         receipt.update(dtr_requested=args.assert_dtr,rts_requested=False)
+    if args.operation=='serial':
+        receipt.update(line_sync_requested=args.synchronize_line)
 
     def run(name,command,timeout=180,expected_rejection=None,command_environment=None):
         """! @brief 무한 대기·자동 재시도 없이 실제 출력과 cleanup을 보존합니다. """
@@ -287,6 +291,8 @@ def main(arguments=None):
                         command += ['--serial-sha256',args.serial_sha256]
                         if args.path_sha256:
                             command += ['--path-sha256',args.path_sha256]
+                        if args.synchronize_line:
+                            command += ['--synchronize-line']
                     if args.allow_jlink_backend:
                         command += ['--allow-jlink-backend']
                     run('physical',command,90,command_environment=sdk_environment)

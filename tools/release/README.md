@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 Ubuntu 24.04/WSL2 실기·IDE PASS, 전체204 실행 중, Host 6/8**. C9 `8bdf4c4a`의 새 설치·대표8·Blink·UART·debug·BLE 양방향·UID 거부·Linux IDE Verify가 통과했다. C9 USB 재연결은 사용자 조작 대기이며 전체204·최종 CI·OS 마감은 미완료다. C5 Windows 11·전체204·CI와 C8 부분 PASS·원형 BLE FAIL을 보존하고 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,7 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증합니다. Ubuntu/macOS 지원에는
+HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비합니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
@@ -56,3 +56,12 @@ identity와 역사 version 생성 allowlist는 재현·감사용이며 현재 �
 
 NU54DK CMSIS-DAP의 `ble-pair`는 C9부터 `--assert-dtr`로 VCOM 수신 준비를 명시한다.
 기본 DTR=false·RTS=false 조건과 nonce 판정은 유지하며, 이 옵션은 DTR만 켠다.
+
+### C10 SerialEcho 첫 입력 줄 동기화
+
+NU54DK CMSIS-DAP/WSL2의 재연결 UART는 `serial` 명령에 `--synchronize-line`을 추가한다.
+각 open의 LF1회·완성된 setup echo를 별도 기록하고, 그 뒤 기존2open×3fresh nonce·정확 비교·
+각5초 제한을 적용한다. setup는 PASS nonce에 포함하지 않으며 DTR/RTS=false와 재시도 금지를
+유지한다. 옵션 기본값은 false다. setup 오류·timeout도 FAIL로 보존한다. USB attach 후에는
+Linux udev 준비와 inventory의 identity·by-id·접근 권한을 확인한다. C9 재연결 FAIL은 보존하며
+C10 새 attempt의 결과만 C10으로 기록한다. BLE의 `--assert-dtr`와 다른 옵션이다.

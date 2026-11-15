@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-16",
-  "status": "HOST_W07_C9_PHYSICAL_IDE_PASS_ALL204_RUNNING",
+  "status": "HOST_W07_C10_NEW_SOURCE_PREPARATION",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+  "implementation_revision": null,
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -52,7 +52,7 @@
       "id": "HOST-W07",
       "status": "physical_validation_in_progress",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "C9_WSL2_PHYSICAL_IDE_PASS_REPLUG_PENDING_ALL204_CI_RUNNING_OS_ROWS_0"
+      "physical_OS_gate": "C10_NOT_RUN_C5_TO_C9_PRESERVED_NO_SOURCE_CREDIT_TRANSFER"
     },
     {
       "id": "HOST-W08",
@@ -443,7 +443,7 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C9_PHYSICAL_IDE_PASS_ALL204_RUNNING_C5_C8_RECORDS_PRESERVED",
+    "status": "C10_DEVELOPMENT_CHECKS_PASS_C5_TO_C9_RECORDS_PRESERVED",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
@@ -1058,7 +1058,7 @@
       "current_source_validation_snapshot_scope": "HISTORICAL_PRE_DTR_DIAGNOSIS_STATUS"
     },
     "C9_development": {
-      "status": "EXACT_C9_FRESH_PHYSICAL_IDE_PASS_ALL204_RUNNING",
+      "status": "PRESERVED_PARTIAL_PASS_REPLUG_UART_FAIL_ALL204_CONTROLLED_STOP_13",
       "base_commit": "e1037a4ee51217195f1a715173ce37efec689731",
       "source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
       "source_scope": "COMMITTED_PUSHED_EXACT_C9",
@@ -1086,9 +1086,9 @@
         "IDE_audit": "4865ca/exit0",
         "IDE_evidence": "D:/w06/h7c9/ide-audit-a001/closure-a001.json",
         "post_IDE_SDK": "c572e1/exit0",
-        "USB_replug": "PENDING_USER_PHYSICAL_ACTION",
+        "USB_replug": "RETURN_ATTACH_PASS_FIRST_UART_FAIL_PRESERVED",
         "USB_observation_a001": "616c83/exit1_OBSERVATION_TIMEOUT_NO_REPLUG",
-        "all204": "RUNNING_NOT_PASS",
+        "all204": "CONTROLLED_SUPERSESSION_13_COLD_0_WARM_NOT_PASS",
         "all204_evidence": "D:/w06/h7c9/all-build-a001",
         "CI": "RUNNING_NOT_PASS",
         "CI_runs": [
@@ -1097,13 +1097,67 @@
           43733172566,
           43733172792
         ],
-        "push_actual": "6e7d70/exit0"
+        "push_actual": "6e7d70/exit0",
+        "USB_physical_actual": "02ddf2/exit0",
+        "USB_post_inventory": "3727e5/exit0",
+        "USB_UART_FAIL": "07f6ef/exit1; child2 worker1 E_HOST_SERIAL_TIMEOUT",
+        "USB_UART_FAIL_evidence": "D:/w06/h7c9/post-replug-a001",
+        "USB_target_diagnostic": "06d026/exit0; exact flash match, resumed",
+        "USB_UART_baseline_diagnostic": "7fcb98/exit0; original DTRfalse, nonce6 matched; DIAGNOSTIC_ONLY",
+        "USB_followup": "SECOND_PHYSICAL_REPLUG_COMPLETED_FIRST_UART_FAIL_TRACE_EXTRA_0xF0",
+        "software_CI": "PASS_9_OF_9_C9_M12_43733186637",
+        "document_revision": "c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c",
+        "document_CI": "RUNNING",
+        "USB_UART_second_FAIL": "f8bdc2/exit1",
+        "USB_readiness_helper_FAIL": "a42450/exit1_BEFORE_UART_OPEN",
+        "USB_UART_trace": "D:/w06/h7c9/post-replug-a003/tty-system-calls.log",
+        "all204_actual": "351ba6/exit1",
+        "all204_cleanup": "0edce1/exit0_NO_BUILD_PROCESSES",
+        "firmware_failure_confirmed": false
       },
       "firmware_changed": false,
       "SDK_pin_changed": false,
       "previous_source_credit_transferred": false,
       "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
       "kit_manifest_sha256": "a210e1b58ea29bd7c10bbcc023bc67219b0aa2587598241d1aadb08d4f4c3ade"
+    },
+    "C9_source_validation_preserved": {
+      "candidate": "C9",
+      "final_source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+      "source_scope": "EXACT_C9_PRODUCT_SOURCE",
+      "completed_OS_rows": 0,
+      "WSL2_physical": "PASS_C9_FRESH",
+      "WSL2_IDE": "PASS_C9_FRESH_PRIVATE_RC1",
+      "WSL2_BLE": "PASS_C9_FRESH_ASSERT_DTR",
+      "WSL2_all204": "CONTROLLED_SUPERSESSION_13_COLD_0_WARM_NOT_PASS",
+      "native_Ubuntu_physical": "NOT_RUN",
+      "previous_source_credit_transferred": false,
+      "WSL2_USB_replug": "RETURN_ATTACH_PASS_FIRST_UART_FAIL_PRESERVED",
+      "CI": "RUNNING_NOT_PASS"
+    },
+    "C10_development": {
+      "status": "DEVELOPMENT_CHECKS_PASS_FRESH_VALIDATION_NOT_RUN",
+      "base_product_source": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+      "base_commit": "c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c",
+      "source_revision": null,
+      "source_scope": "COMMIT_PENDING",
+      "change": "EXPLICIT_SERIAL_SYNCHRONIZE_LINE",
+      "validation": {
+        "Windows_unit": "24_PASS",
+        "Ubuntu_unit": "24_PASS",
+        "receipt_exit_codes": [
+          0,
+          0
+        ],
+        "evidence": "D:/w06/h7c10/development",
+        "evidence_read_actual": "42d015/exit0; 5c046e/exit0",
+        "fresh_physical": "NOT_RUN",
+        "all204": "NOT_RUN",
+        "CI": "NOT_RUN"
+      },
+      "firmware_changed": false,
+      "SDK_pin_changed": false,
+      "previous_source_credit_transferred": false
     }
   },
   "W06_document_closure_CI": {
@@ -1128,22 +1182,22 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C9",
-  "active_candidate_record": "W07_preparation.C9_development",
+  "active_candidate": "C10",
+  "active_candidate_record": "W07_preparation.C10_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
-    "candidate": "C9",
-    "final_source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
-    "source_scope": "EXACT_C9_PRODUCT_SOURCE",
+    "candidate": "C10",
+    "final_source_revision": null,
+    "source_scope": "COMMIT_PENDING",
     "completed_OS_rows": 0,
-    "WSL2_physical": "PASS_C9_FRESH",
-    "WSL2_IDE": "PASS_C9_FRESH_PRIVATE_RC1",
-    "WSL2_BLE": "PASS_C9_FRESH_ASSERT_DTR",
-    "WSL2_all204": "RUNNING_NOT_PASS",
+    "WSL2_physical": "NOT_RUN",
+    "WSL2_IDE": "NOT_RUN",
+    "WSL2_BLE": "NOT_RUN",
+    "WSL2_USB_replug": "NOT_RUN",
+    "WSL2_all204": "NOT_RUN",
+    "CI": "NOT_RUN",
     "native_Ubuntu_physical": "NOT_RUN",
-    "previous_source_credit_transferred": false,
-    "WSL2_USB_replug": "PENDING_USER_PHYSICAL_ACTION",
-    "CI": "RUNNING_NOT_PASS"
+    "previous_source_credit_transferred": false
   },
-  "implementation_revision_scope": "EXACT_C9_PRODUCT_SOURCE_DOCUMENT_FOLLOWUP_SEPARATE"
+  "implementation_revision_scope": "C10_COMMIT_PENDING_BASE_C9"
 }

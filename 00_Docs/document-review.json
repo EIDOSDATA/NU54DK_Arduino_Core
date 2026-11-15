@@ -5,6 +5,219 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-16",
+      "observed_utc": "2026-11-15T17:04:53.242418+00:00",
+      "baseline_commit": "c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c",
+      "purpose": "C9 재연결 첫 UART trace FAIL·전체204 중단13개 보존과 C10 명시적 입력 줄 동기화 교정",
+      "current_state": {
+        "candidate": "C10",
+        "source_scope": "COMMIT_PENDING",
+        "fresh_physical": "NOT_RUN",
+        "all204": "NOT_RUN",
+        "new_OS_PASS": 0,
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "Windows_unit": "24_PASS_EXIT0",
+        "Ubuntu_unit": "24_PASS_EXIT0",
+        "independent_code_review": "PASS_READ_ONLY",
+        "docs_gate": "836cf9/exit0_537_MARKDOWN_UTF8_LOCAL_LINK_PASS",
+        "diff_check": "836cf9/exit0",
+        "previous_source_credit_transferred": false,
+        "docs_log_sha256": "9f5070019b89f2a541b5347e11f81c598d243428d76474955a970adf67705254",
+        "independent_docs_review": "RESIDUAL_C9_STATUS_AND_POINTER_CORRECTED_HISTORY_PRESERVED"
+      },
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "e5e61003749ea2a0c813605dfaa65c86449596b92a5528927e28c19013d7506c"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "02c90bc27eb24905c2e931cd488a80bda70591c667a9625a96e00fbfbe730cca"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "562c4112608aab3ea9f2011aacb1baff7b089105b982fb8dfd9c0b6e90d4b4eb"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "e9a92faa34e8013f0adf518f8a792fc9bed7f8a7bb33c348f5b12922738730c1"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "74301d2be402b13cb56f028374fd46d6919ceb1d26c11251231147130ac0407e"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "038f45e6157d4cff32b1dedb9afeb10e9e0e587270d0b1aa9e69ea6aa1f89282"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "f4bf08414728b4ecca44cd8903144171c085ce5056d3b6e5b72d90ad1026753f"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "3923eacfa02378e35b6c20221b193da5c6785e8ad5703d1bc3d320982112eff3"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "c71632449deb207cd736937484275250862feae8952f6d91634bc78644236ba8"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "35ac50f3293445eaff388850478bf630ffe0d84c26a6e5719c2cad4e370d9960"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "c2d70b1242a9533d2835aca046b345fa613ec8be2d7e7318c3632aef369c46f8"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "a0202ccad3a4ebf0b7f667be78ed79948aa692e5a6c4091849bf368c024c858c"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "0ea4c8566aff16cb616c654f24353b9de1aa1b10cccc558e5ccd78f8762982cf"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "8e6fc9ae74923d2c817f4c47b7641bec95b1338e37222dba0b36baa3e945ec73"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "6c68d976e092fda4b5f6127cb12e59d7a9ba71e24d19ffd8875be5b90df1b3c8"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "df6fd5339524745397eae5ebbeecacb6c31f3c63a63390017dd145ebb06eb955"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-16",
+      "observed_utc": "2026-11-15T16:47:17.492898+00:00",
+      "baseline_commit": "c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c",
+      "purpose": "C9 USB 실제 재연결과 최초 UART FAIL·원형 진단 PASS를 구분해 기록",
+      "current_state": {
+        "candidate": "C9",
+        "product_source": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+        "USB_UART": "FIRST_FAIL_PRESERVED_DIAGNOSTIC_PENDING",
+        "all204": "RUNNING",
+        "new_OS_PASS": 0,
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "USB_return": "02ddf2/exit0",
+        "UART_first": "07f6ef/exit1",
+        "flash_diagnostic": "06d026/exit0",
+        "UART_diagnostic": "7fcb98/exit0",
+        "docs_gate": "PENDING"
+      },
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "8fdfbde6917d1411fe5c93cf3a72bc4a15aefb8e840c075bc7edb54724bbf517"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "1c043faf992e9142cfb8a5e2d7058f782ba3724898e91216f5d922dbb25228c9"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "186d99d23def1e1fdbe70d5ac53eb9c2dbb3f11a9ae214bee96e8453de9fc36c"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "bab126fedd30344807f2bfaea2de0be4ecaac05afef1e887fe72e9cb87338c2b"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "39ce6b5d6589ee1d5f0a2235ceb136b96f076bd3c116d467eda44572e1afe7c2"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "4acc25a92b13e4c2ab74eae567b1d9698363af60dcd0b69cf5ec01f1136da876"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "902d8efba4a628cadb2c390bb183ca868e662805901903ca8dbba944e878a257"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "647418ab0d7e7ec61ff9bc39585a829a29466dafa40791b3f1f7574afc89adb7"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "eee4fac7132d00e38641f086551e3d51b06066f5c2fa476c2df17a2e03a7760d"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "42239455c07d795f905204cab7b0258ef425167cadb9b2f2adfbcd1e5d9166ce"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "e82ebfff0bf9e167748ec83d43352821745cf21d61fc893e343d8c3a466adc3b"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "5c2c3c56c4f037e1270515043eeb26c08aaecfe3c669cc9e94323d6b5ec1a83e"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "0042257711b4cc7da788da9d0f27194776ca558c5558baf45df347c9ec7cba97"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "87e2902de80f7ba85a6a3fada8d9b0fce78a0e6b47dff2547d81dfb705f4b3ff"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "d6d08fd6035c618e6dc5f5713c7a402cbac9f3b095d5571d4d4c9cfcfc8452d8"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "50cc0eb5ac4c4a142e61c654e7a0854c9cccf4e8ede843395e07e0437800d0e7"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-16",
       "observed_utc": "2026-11-15T16:21:11.471234+00:00",
       "baseline_commit": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
       "purpose": "C9 exact source 새 실기·BLE·IDE PASS와 전체204 실행·재연결 사용자 대기를 현행 문서에 반영",

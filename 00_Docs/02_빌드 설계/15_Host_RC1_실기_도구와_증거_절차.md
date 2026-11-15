@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 Ubuntu 24.04/WSL2 실기·IDE PASS, 전체204 실행 중, Host 6/8**. C9 `8bdf4c4a`의 새 설치·대표8·Blink·UART·debug·BLE 양방향·UID 거부·Linux IDE Verify가 통과했다. C9 USB 재연결은 사용자 조작 대기이며 전체204·최종 CI·OS 마감은 미완료다. C5 Windows 11·전체204·CI와 C8 부분 PASS·원형 BLE FAIL을 보존하고 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
-HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증한다. Host 완료는 6/8이다.
+HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비한다. Host 완료는 6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -49,7 +49,7 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
-| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 새 설치·대표8·실기·BLE·IDE PASS, 재연결·전체204·최종 CI 미완료 |
+| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 새 검증 준비 |
 | Ubuntu 26.04 LTS | AMD64 | 해당 OS 설치·빌드·사용자 실기 대기 |
 | macOS 26 | Apple Silicon | CI 설치·빌드 통과. 사용자 실기 대기 |
 | macOS 27 | Apple Silicon | 해당 OS 설치·빌드·사용자 실기 대기 |
@@ -175,3 +175,12 @@ SDK 파일 수동 수정·보호 검사 해제·자동 재시도로 해결하지
 C5 Windows 검증 당시 RC1은 고정 C5 ZIP을 로컬 HTTP index URL로 공급해 Boards Manager에서 설치한 비공개 검증이다.
 정식 배포는 GitHub의 ZIP·index 게시 후 Preferences URL→Boards Manager 설치를 확인한다.
 코드 commit만으로 게시용 ZIP과 index가 생성되거나 갱신되지는 않는다. 공개 URL 검증은 공개 승인 뒤 수행한다.
+
+### C10 SerialEcho 첫 입력 줄 동기화
+
+NU54DK CMSIS-DAP/WSL2의 재연결 UART는 `serial` 명령에 `--synchronize-line`을 추가한다.
+각 open의 LF1회·완성된 setup echo를 별도 기록하고, 그 뒤 기존2open×3fresh nonce·정확 비교·
+각5초 제한을 적용한다. setup는 PASS nonce에 포함하지 않으며 DTR/RTS=false와 재시도 금지를
+유지한다. 옵션 기본값은 false다. setup 오류·timeout도 FAIL로 보존한다. USB attach 후에는
+Linux udev 준비와 inventory의 identity·by-id·접근 권한을 확인한다. C9 재연결 FAIL은 보존하며
+C10 새 attempt의 결과만 C10으로 기록한다. BLE의 `--assert-dtr`와 다른 옵션이다.

@@ -1,6 +1,6 @@
 # 문서 안내
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 Ubuntu 24.04/WSL2 실기·IDE PASS, 전체204 실행 중, Host 6/8**. C9 `8bdf4c4a`의 새 설치·대표8·Blink·UART·debug·BLE 양방향·UID 거부·Linux IDE Verify가 통과했다. C9 USB 재연결은 사용자 조작 대기이며 전체204·최종 CI·OS 마감은 미완료다. C5 Windows 11·전체204·CI와 C8 부분 PASS·원형 BLE FAIL을 보존하고 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 일반 사용자는 **stable v0.5.0** 문서를 선택합니다. Windows 10/11 x64 대상이며,
 이전 stable과 RC는 지원·catalog 공급이 끝난 역사 기록으로 보존합니다.
@@ -39,14 +39,14 @@ Native package의 초기 runtime·private CI·204개 예제·artifact 비교 계
 | Bluetooth qualification 적용성 | [M33 qualification 조사](<00_사전 리서치/04_M33_Bluetooth_qualification_적용성.md>) — NCS 3.4.0 component 공개 상태와 별도 제품 절차 |
 
 M28~M31과 Windows v0.5.0 정식 공개, M32 12/12를 완료했습니다. M33은 W01~W05 기술 완료 5/8에 W06 사용자 수락을 더해 수락 6/8입니다.
-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했고 현재 HOST-W07의 C5 Windows 11 완료를 보존하며 C8 실적 보존 후 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증합니다. W06 당시 개발·최종 검증의 해석은 [W06 절](TODO_M33.md#m33-w06--자원회귀상호운용), 현행 실행 순서는
+W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했고 현재 HOST-W07의 C5 Windows 11 완료를 보존하며 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비합니다. W06 당시 개발·최종 검증의 해석은 [W06 절](TODO_M33.md#m33-w06--자원회귀상호운용), 현행 실행 순서는
 [M33 TODO](TODO_M33.md)와 [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따릅니다.
 실제 작업본·source·진행 항목·종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인하며,
 재개 입력과 보존 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾습니다.
 병렬 검토는 읽기 전용이며 실기 writer는 하나입니다. 옛 로컬 경로나 PASS를 최신 입력·결과로 가정하지 않습니다.
 작업 브랜치는 `main`에서 분기한 `Dev-0.6.0-M33`입니다. M32/M33의 목표는 미공개 v0.6.0이며
 v0.7.0은 SDK 전환 전용입니다. M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0입니다.
-HOST는 6/8이며 C5 Windows 11 완료와 C8 부분 실적·FAIL을 보존하고 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증합니다. 기존 최종 OS별 gate는 유지하고, 후속 계획을 완료된 v0.5.0의
+HOST는 6/8이며 C5 Windows 11 완료와 C8 부분 실적·FAIL을 보존하고 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비합니다. 기존 최종 OS별 gate는 유지하고, 후속 계획을 완료된 v0.5.0의
 추가 조건으로 합치지 않습니다. 현재 버전 배정 근거는 [293번](<04_검증 기록/293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md>)입니다.
 세부 진행 수치와 남은 조건은 현행 [M33 TODO](TODO_M33.md)와 [v0.6.0 계획](TODO_v0.6.0.md)을 기준으로 봅니다.
 

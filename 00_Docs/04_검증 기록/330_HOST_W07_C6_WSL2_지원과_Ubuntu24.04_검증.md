@@ -1,12 +1,12 @@
-# HOST-W07 C6~C9 WSL2 지원과 Ubuntu 24.04 검증
+# HOST-W07 C6~C10 WSL2 지원과 Ubuntu 24.04 검증
 
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
-현재 단계는 M33-W07 / HOST-W07이며 Host 완료는 6/8이다. **C9의 새 설치·대표8·Blink·UART·
-ELF debug·BLE 양방향·잘못된 probe 거부·Linux IDE Verify가 통과했다.** 같은 exact C9에서
-전체204cold·대표4warm·profile 거부9개를 실행 중이다. USB 재연결은 사용자 물리 조작 대기이며
-최종 CI와 OS 마감은 아직 미완료다. C8의 부분 PASS·원형 BLE FAIL과 C5 Windows 완료를 보존하고,
-새 후보 실적으로 합산하지 않는다. DTR=false 초기화 문제는 C9의 명시적 `--assert-dtr`로 교정했으며
-새 C9 정식 BLE에서 기존 순차 nonce2개·각10초 판정으로 확인했다.
+현재 단계는 **M33-W07 / HOST-W07**, Host 완료는6/8이다. C9의 새 설치·대표8·Blink·UART·
+ELF debug·BLE 양방향·잘못된 probe 거부·Linux IDE Verify PASS는 보존한다. 이후 두 차례 실제 USB
+재연결의 첫 UART가 FAIL했다. 두 번째 첫 송수신 trace에서 정확한 nonce 앞의 추가 `0xF0`를
+확인했다. 검증기의 초기 입력 줄 동기화를 C10에서 교정하며 하위 byte 발생 원인은 미확정이다.
+C9 전체204는13cold·0warm에서 의도적으로 정리했다. C10 개발 검사는 Windows·Ubuntu 각24개 PASS,
+새 source·패키지·실기·전체204·CI는 준비 중이다. C5~C9 PASS/FAIL을 C10 실적으로 합산하지 않는다.
 
 ## 승인과 source 경계
 
@@ -16,8 +16,9 @@ ELF debug·BLE 양방향·잘못된 probe 거부·Linux IDE Verify가 통과했�
   C6 실적을 C7 실적으로 합산하지 않는다. 후속 문서 기록 커밋은 제품 source와 구분한다.
 - C8 exact source는 `e1037a4ee51217195f1a715173ce37efec689731`다. C7 기준으로 RC 실행기의 SDK child 환경을 교정한 별도 후보다. C7의 inventory FAIL과 이전 PASS를 보존한다.
 - C9 exact source는 `8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c`다. C8을 기준으로 검증기의 명시적 DTR 수신 준비를 교정했으며 firmware·SDK는 변경하지 않았다.
+- C10은 C9 제품 source와 문서 후속 `c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c`를 기준으로 `serial --synchronize-line`을 추가한 후보이며 exact SHA는 커밋 후 외부 실행 원장에 고정한다. 현재 이 문서의 검토 시점은 COMMIT_PENDING이다.
 - 보존할 C5 제품 source: `5ee7c10368b554ca23d68f8f82e39308b91df6de`.
-- WSL2 지원은 C6, POSIX kit 경로 교정은 C7, SDK child 환경 교정은 C8, DTR 검증 절차 교정은 C9이다. 개발 검사를 실제 OS PASS로 세지 않는다.
+- WSL2 지원은 C6, POSIX kit 경로 교정은 C7, SDK child 환경 교정은 C8, DTR 검증 절차 교정은 C9, 첫 입력 줄 동기화 교정은 C10이다. 개발 검사를 실제 OS PASS로 세지 않는다.
 - C5 kit·ZIP·manifest와 [328번](328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md),
   [329번](329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md), 원본 FAIL은 보존한다.
 - W06 실제 PASS46·수락29/40/44와 분석 유예를 유지한다. w06 PAUSED, 새 예약 없음.
@@ -83,11 +84,19 @@ USB 미발견 메시지는 usbipd와 Linux 권한 확인을 안내한다. SDK pi
 | C9 BLE 감사 | `af9fcf/exit0`: RC·실기·worker 세 층 DTR=true·RTS=false, fresh nonce 양방향 일치, 양쪽 SerialEcho 복원 PASS |
 | C9 Linux IDE | `d967a4/exit0`: 새 설정·Boards Manager RC1 설치·NU54DK Standard·설치 Blink Verify 통과, 정상 종료, 설치960파일 원본 일치 |
 | C9 IDE 감사·SDK | `4865ca/exit0`: 실제 source·WSL2·산출물4개 확인. 종료 후 고정 SDK verify `c572e1/exit0` |
-| C9 USB 재연결 | 첫 관찰 `616c83/exit1`은 사용자 분리가 관측되지 않은 OBSERVATION_TIMEOUT이며 원본 보존. 연장 관찰은 조작 대기, 재연결 PASS 아님 |
-| C9 전체204 | 2026-11-16 01:18:30 KST fresh attempt 시작. 실행 중이며 종료 전 PASS로 세지 않음 |
+| C9 USB 재연결 | 첫 관찰 `616c83/exit1`은 사용자 분리가 관측되지 않은 OBSERVATION_TIMEOUT이며 원본 보존. 후속 실제 관찰 결과는 아래 행에 분리 |
+| C9 첫 실제 재연결 | `02ddf2/exit0`: 분리15.453초·동일 identity 복귀·일반 WSL attach 성공. inventory `3727e5/exit0` |
+| C9 재연결 UART a001 | `07f6ef/exit1`, 실제 child exit2·worker exit1, `E_HOST_SERIAL_TIMEOUT`. DTR=false·RTS=false·각5초 원형 FAIL 보존 |
+| C9 실행 상태 진단 | `06d026/exit0`: 실제 Flash78,776byte가 C9 SerialEcho와 완전 일치, CPU arch_cpu_idle·resume·probe close 확인. firmware·reset 변경 없음 |
+| C9 UART 관측 진단 | `7fcb98/exit0`: firmware·DTR·timeout 변경 없이 원형 oracle의 2회 open×3nonce 모두 일치. 진단 PASS이며 최초 FAIL 해소나 재연결 정식 PASS로 세지 않음 |
+| C9 두 번째 재연결 | 사용자 분리10.063초·동일 identity 일반 attach 성공. 첫 helper `a42450/exit1`은 Linux tty/by-id 준비 전 선택 실패이며 UART open 이전. udev settle 뒤 inventory `357aaf/exit0` |
+| C9 재연결 UART a003 | `f8bdc2/exit1`, 첫 실제 송수신 syscall에서 `NUCODE_M6_ECHO:` 뒤 `0xF0`+정확 nonce 수신. 원형 정확 비교는 FAIL을 유지. `post-replug-a003/tty-system-calls.log` 보존 |
+| C9 전체204 | 01:18:30 KST 시작,13cold·0warm 후 C10 교정을 위해 정상 정리. `351ba6/exit1` 원본 보존, `0edce1/exit0`에서 OwnedInterrupted·leader reap·잔여 build0 확인. 컴파일 결함 판정이나204 PASS가 아님 |
 | C9 push·CI | push `6e7d70/exit0`, M12 요청 `23bd2c/exit0`. exact C9 네 workflow 실행 중, 설치 prerequisite workflow success. 최종 완료 아님 |
 | C8 CI 후속 관측 | 2026-11-16 01:23:55 KST API `08f3c6/exit0`: M12 9/9·prerequisites 3/3·W06 build 6/6 success. native package 20성공·9진행. metadata 관측이며 artifact byte 감사는 별도 |
 | C8 미완료 보존 | 원형 BLE FAIL과 WSL2 전체204 NOT_RUN 유지, exact C8 CI 진행. C9에 실적 이월하지 않음 |
+| C10 개발 검사 | Windows·Ubuntu 각각24개/exit0. `D:/w06/h7c10/development/*-a002.json`과 개별 원본 로그, 관측 `42d015/exit0`·`5c046e/exit0`. 새 source 실기 PASS 아님 |
+| C10 독립 검토 | read(1)로 setup LF 뒤의 분할 runtime 오류를 소비하지 않도록 교정. 오류 뒤 정상 nonce도 FAIL·close 회귀 검사, 읽기 전용 최종 검토 추가 지적 없음 |
 
 C6 kit manifest SHA-256은 `c9281b8ee65cb896bc3a4e58ccf0f370968a84dc21fdd4c136795a541554dcfe`다.
 두 실패는 firmware나 SWD 실행 이전의 kit 준비 단계다. C7은 raw archive의 `python/` 루트를 실행 경로에
@@ -139,6 +148,25 @@ RTS=false를 설정한다. 기본 false와 J-Link 기존 사용 조건은 유지
 PASS·FAIL 기록에 요청한 DTR을 남긴다. nonce2회·각10초·identity·lock·실패 보존 조건은 유지한다.
 펌웨어·NUS 예제·SDK·보안·재시도 정책은 변경하지 않는다. C8 진단 PASS는 C9 정식 PASS가 아니다.
 
+## C9 재연결 원인 구분과 C10 교정
+
+C9 첫 FAIL 뒤 read-only 진단에서 Flash78,776byte가 원래 SerialEcho BIN과 일치했고 CPU는
+`arch_cpu_idle`에서 정상 대기했다. 이후 원형 nonce6개 진단은 통과했지만 이미 첫 입력 줄이 끝난
+상태이므로 최초 재연결 PASS로 세지 않았다. 두 번째 물리 재연결의 첫 UART를 syscall로 기록하자
+추가 `0xF0`가 정확한 fresh nonce 앞에 붙었다. 전체 응답은 즉시 도착했지만 정확 비교에 실패해
+timeout이 났다. USB bridge/UART의 byte 발생 원인이나 firmware 결함까지 확정한 결과는 아니다.
+
+C10은 `serial --synchronize-line`을 선택했을 때만 각 open에서 LF를 한 번 보내고 완성된 setup
+echo 한 줄을 기다린다. 제거한 setup payload의 길이·hash를 별도로 기록하고 nonce 실적으로 세지
+않는다. 이후2open×3fresh nonce·정확 응답·각5초·DTR=false·RTS=false를 유지한다. 실제 nonce의
+추가 byte를 제거하거나 자동 재송신하지 않는다. setup 부분 쓰기·runtime 오류·timeout도 FAIL이다.
+setup LF까지 한 byte씩 읽어 뒤의 오류를 버리지 않는다. C8 BLE DTR 문제와 구분하며 BLE는 C9의
+명시적 `--assert-dtr`를 유지한다. firmware·SDK·보안 pin은 바꾸지 않는다.
+
+Windows attach 성공만으로 Linux UART가 준비됐다고 판단하지 않는다. `udevadm settle` 후 새
+inventory에서 hashed identity·interface·by-id·접근 권한을 확인한 뒤 포트를 연다. C9 a002의
+readiness helper 실패는 UART 실행 이전의 제어기 실패로 보존한다.
+
 ## 원본과 남은 순서
 
 C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837b7eb88ed27d3`다.
@@ -148,19 +176,20 @@ C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837
 새 일반 attach와 후속 inventory·UART PASS를 연결한다. 강제 attach·mass erase·unlock·recover·FW 변경은 없다.
 DTR 단독 진단 종료 시 두 NU54DK를 C8 SerialEcho로 복귀했다. 후속 역할 image 변경은 새 attempt에 기록한다.
 
-1. 실행 중인 C9 전체204cold·대표4warm·profile 거부9개와 실제 서명 검사를 완료하고 원본을 감사한다.
-2. 사용자 첫 보드 USB 분리·재연결을 관찰하고, 같은 identity의 일반 attach·inventory·UART를 C9으로 확인한다.
-3. exact C8 CI 원본을 보존하고 C9 최종 CI·Windows11 변경 영향 검증을 수행한다.
-4. Ubuntu26.04 LTS, macOS26, macOS27의 환경별 검증을 순차 수행한다.
-5. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감한 뒤 M33-W07을 닫는다.
-6. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
+1. C10 검증기 교정·문서·개발 검사를 마치고 exact source·새 producer/kit/work/SDK를 고정한다.
+2. 새 C10 대표8·Blink·UART·debug·BLE·UID 거부와 실제 USB 재연결을 검증한다. 재연결은 Linux 장치 준비 후 첫 통신부터 기록한다.
+3. C10 Linux IDE Verify 후 전체204cold·대표4warm·profile 거부9개·원본 byte 감사를 수행한다.
+4. C8/C9 CI 원본은 보존하고 C10 exact CI와 Windows11 변경 영향 검증을 완료한다.
+5. Ubuntu26.04 LTS → macOS26 → macOS27의 환경별 실기를 수행한다. Mac 환경 확보는 별도 준비가 필요하다.
+6. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
+7. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
 
 C9 kit manifest SHA-256은 `a210e1b58ea29bd7c10bbcc023bc67219b0aa2587598241d1aadb08d4f4c3ade`다.
 새 실기 원본은 `D:/w06/h7c9/physical-sequence-a001`·`ble-pair-a001`, 감사는
 `physical-audit-a001.json`·`ide-audit-a001/closure-a001.json`에 보존한다. 전체 빌드는
 `/home/eidos/nu54-c9/work/attempts/build-20261115T161830936993Z`와
 `D:/w06/h7c9/all-build-a001`에 별도로 기록한다. 현재 양쪽 보드는 C9 SerialEcho이며
-전체 빌드는 하드웨어를 변경하지 않는다. 반복·예약 작업을 추가하지 않았다.
+C9 빌드는 중단·정리됐고 두 보드의 다음 변경은 C10 새 실기에 기록한다. 반복·예약 작업을 추가하지 않았다.
 
 WSL2 PASS는 해당 Ubuntu/WSL2 환경의 실적이다. 지원표에는 OS와 실행 환경을 함께 표시하며
 native Ubuntu 실기·다른 Ubuntu 버전·macOS·C5 Windows 결과와 합성하지 않는다.

@@ -43,10 +43,38 @@ def select_serial(ports, serial_sha256, path_sha256=None):
     return select_identity(values,serial_sha256,lambda item:item.serial_number,'serial')
 
 
-def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, factory=None):
+def synchronize_serial_line(connection, timeout):
+    """! @brief LF 한 번으로 기존 입력 줄을 마치고 setup 응답만 별도로 기록합니다. """
+    if connection.write(b'\n') != 1:
+        raise AdapterError('[NU54:E_HOST_SERIAL_SYNC_WRITE] 줄 동기화 부분 쓰기입니다.')
+    deadline = time.monotonic()+timeout
+    received = bytearray()
+    while time.monotonic() < deadline:
+        ## @brief setup LF 뒤의 오류나 다음 응답을 소비하지 않도록 한 byte씩 읽습니다.
+        received.extend(connection.read(1))
+        if b'NUCODE_M6_ERROR:' in received:
+            raise AdapterError('[NU54:E_HOST_SERIAL_RUNTIME] 줄 동기화 중 SerialEcho 오류입니다.')
+        if len(received) > 65536:
+            raise AdapterError('[NU54:E_HOST_SERIAL_LIMIT] 줄 동기화 출력 제한을 초과했습니다.')
+        for line in bytes(received).split(b'\n')[:-1]:
+            prefix = b'NUCODE_M6_ECHO:'
+            if line.startswith(prefix):
+                payload = line[len(prefix):].removesuffix(b'\r')
+                return dict(write_bytes=1, received_bytes=len(received),
+                    received_sha256=hashlib.sha256(received).hexdigest(),
+                    discarded_echo_payload_bytes=len(payload),
+                    discarded_echo_payload_sha256=hashlib.sha256(payload).hexdigest(),
+                    counted_as_nonce=False)
+    raise AdapterError('[NU54:E_HOST_SERIAL_SYNC_TIMEOUT] 줄 동기화 echo를 받지 못했습니다.')
+
+
+def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, factory=None,
+                synchronize_line=False):
     """! @brief 두 번 열기·닫기와 재열거 뒤 유한 nonce echo를 확인합니다.
     @see https://pyserial.readthedocs.io/en/latest/pyserial_api.html
     """
+    if type(synchronize_line) is not bool:
+        raise ValueError('줄 동기화 요청은 bool이어야 합니다.')
     if ports is None:
         from serial.tools import list_ports
         ports = list_ports.comports
@@ -56,7 +84,7 @@ def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, fa
     timeout = finite_timeout(timeout)
     if type(rounds) is not int or not 1 <= rounds <= 10:
         raise ValueError('Serial round는1~10이어야 합니다.')
-    rows = []
+    rows, synchronization = [], []
     for cycle in range(2):
         selected = select_serial(ports(),serial_sha256,path_sha256)
         connection = factory(port=None,baudrate=115200,timeout=0.05,
@@ -66,6 +94,8 @@ def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, fa
         connection.port = selected.device
         try:
             connection.open()
+            if synchronize_line:
+                synchronization.append(dict(cycle=cycle, **synchronize_serial_line(connection, timeout)))
             for number in range(rounds):
                 payload = ('nu54-host-'+secrets.token_hex(12)).encode('ascii')
                 expected = b'NUCODE_M6_ECHO:'+payload
@@ -91,7 +121,8 @@ def serial_echo(serial_sha256, path_sha256, timeout, rounds=3, *, ports=None, fa
             raise AdapterError('[NU54:E_HOST_SERIAL_CLOSE] Serial port가 닫히지 않았습니다.')
     return dict(status='PASS',serial_sha256=serial_sha256,path_sha256=path_sha256,
         open_close_cycles=2,re_enumerated=True,rounds=rows,physical_USB_replug='NOT_RUN',
-        dtr_requested=False,rts_requested=False,port_closed=True)
+        dtr_requested=False,rts_requested=False,port_closed=True,
+        line_sync_requested=synchronize_line,line_synchronization=synchronization)
 
 
 def serial_pair(first,second,timeout=10,*,ports=None,factory=None,assert_dtr=False):
@@ -247,15 +278,19 @@ def worker(arguments):
     parser.add_argument('--peer-serial-sha256')
     parser.add_argument('--peer-path-sha256')
     parser.add_argument('--assert-dtr',action='store_true')
+    parser.add_argument('--synchronize-line',action='store_true')
     parser.add_argument('--elf',type=Path)
     parser.add_argument('--timeout-seconds',type=finite_timeout,default=5)
     args = parser.parse_args(arguments)
     if args.assert_dtr and args.operation != '_pair':
         parser.error('--assert-dtr은 _pair에서만 사용할 수 있습니다.')
+    if args.synchronize_line and args.operation != '_serial':
+        parser.error('--synchronize-line은 _serial에서만 사용할 수 있습니다.')
     try:
         select_identity(discover_pyocd_probe_ids(),args.probe_sha256,lambda value:value,'probe')
         if args.operation == '_serial':
-            result = serial_echo(args.serial_sha256,args.path_sha256,args.timeout_seconds)
+            result = serial_echo(args.serial_sha256,args.path_sha256,args.timeout_seconds,
+                synchronize_line=args.synchronize_line)
         elif args.operation == '_pair':
             select_identity(discover_pyocd_probe_ids(),args.peer_probe_sha256,lambda value:value,'peer probe')
             result = serial_pair(dict(serial_sha256=args.serial_sha256,path_sha256=args.path_sha256),
@@ -274,6 +309,7 @@ def worker(arguments):
             json.dump(dict(status='FAIL',error_type=type(error).__name__,
                 dtr_requested=args.assert_dtr if args.operation=='_pair' else False,
                 rts_requested=False,
+                line_sync_requested=args.synchronize_line if args.operation=='_serial' else False,
                 marker=re.search(r'\[NU54:[A-Z_]+\]',str(error)).group(0)
                 if re.search(r'\[NU54:[A-Z_]+\]',str(error)) else 'UNCLASSIFIED'),stream)
         print('NU54_HOST_WORKER_FAIL')
@@ -288,7 +324,8 @@ def physical_check(args):
     output.mkdir(parents=True)
     receipt = dict(status='FAIL',operation=args.operation,probe_sha256=args.probe_sha256,
         user_physical_OS_gate='PARTIAL_SINGLE_OPERATION',started_at_utc=time.time(),
-        firmware_source_relabelled=False,physical_recovery_pending=False)
+        firmware_source_relabelled=False,physical_recovery_pending=False,
+        line_sync_requested=getattr(args,'synchronize_line',False) if args.operation=='serial' else False)
     try:
         tools = tool_environment(canonical_path(args.platform_root))
         sdk_python = resolve_toolchain_executable(tools['toolchain_root'],'python')
@@ -314,6 +351,8 @@ def physical_check(args):
                     command += ['--serial-sha256',args.serial_sha256]
                     if args.path_sha256:
                         command += ['--path-sha256',args.path_sha256]
+                    if receipt['line_sync_requested']:
+                        command += ['--synchronize-line']
                 else:
                     command += ['--elf',inputs['elf']]
                 receipt.update(manifest_sha256=file_sha256(inputs['manifest_path']),
@@ -325,8 +364,9 @@ def physical_check(args):
                     interrupted = None
                     receipt['physical_recovery_pending'] = args.operation in ('debug','blink')
                     try:
+                        exchanges = 8 if receipt['line_sync_requested'] else 6
                         result = run_owned(command,cwd=tools['ncs_root'],environment=child_environment,
-                            capture_directory=output,timeout=min(1800,max(60,(args.timeout_seconds+min(args.timeout_seconds,2))*6+15)))
+                            capture_directory=output,timeout=min(1800,max(60,(args.timeout_seconds+min(args.timeout_seconds,2))*exchanges+15)))
                         raw = result.stdout
                         receipt.update(child_exit_code=result.returncode,cleanup=result.cleanup)
                     except (OwnedTimeout,OwnedInterrupted,OwnedExecutionError) as error:
@@ -469,6 +509,9 @@ def main(arguments=None):
         if name in ('serial','ble-pair'):
             command.add_argument('--serial-sha256',required=True)
             command.add_argument('--path-sha256')
+        if name == 'serial':
+            command.add_argument('--synchronize-line',action='store_true',
+                help='각 open 뒤 LF 한 번으로 기존 줄을 마친 후 원래 nonce 검사를 시작합니다.')
         if name == 'ble-pair':
             command.add_argument('--assert-dtr',action='store_true',
                 help='수신 준비에 DTR이 필요한 VCOM에서 두 포트의 DTR을 켭니다. RTS는 끕니다.')

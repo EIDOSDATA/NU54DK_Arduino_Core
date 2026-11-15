@@ -1,11 +1,11 @@
 # Native Boards Manager package와 CI
 
-2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 수신 준비를 새 source로 검증한다.
+2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 교정 실적·재연결 UART FAIL을 보존하며 C10의 명시적 입력 줄 동기화를 새 source로 검증할 준비다.
 고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
 설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE는 PASS이며 재연결·전체204·최종 CI는 미완료다. [C6~C9 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE PASS와 재연결 UART FAIL·전체204의13cold·0warm 중단을 보존한다. C10 새 실기·전체204·CI는 NOT_RUN이다. [C6~C10 진행과 설치 상태](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
-기준일: 2026-11-16. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 C8 실적을 보존하고 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증하며 나머지 세 OS는 대기 중이다.
+기준일: 2026-11-16. HOST-W06까지6/8 완료. H12의 같은 source에서 세 OS 각204예제·거부9개와 실제204 image 비교를 통과했다. 후속 C5로 HOST-W07 Windows 11 검증을 완료했고 C8·C9 실적과 FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비하며 나머지 세 OS는 대기 중이다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
