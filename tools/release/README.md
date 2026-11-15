@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 CMSIS-DAP DTR 교정·새 WSL2 검증 준비, Host 6/8**. C5 Windows 11·전체204·CI와 기존 FAIL은 보존한다. C8 설치·대표8·IDE·단일 보드 실기는 PASS이며 BLE 원형은 FAIL이다. DTR만 켠 C8 진단에서 기존 양방향 nonce가 통과해 C9에 명시적 `--assert-dtr`를 추가했다. C9 실기·전체204·CI는 아직 미완료이며 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 Ubuntu 24.04/WSL2 실기·IDE PASS, 전체204 실행 중, Host 6/8**. C9 `8bdf4c4a`의 새 설치·대표8·Blink·UART·debug·BLE 양방향·UID 거부·Linux IDE Verify가 통과했다. C9 USB 재연결은 사용자 조작 대기이며 전체204·최종 CI·OS 마감은 미완료다. C5 Windows 11·전체204·CI와 C8 부분 PASS·원형 BLE FAIL을 보존하고 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,7 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 Ubuntu 24.04/WSL2 검증을 준비합니다. Ubuntu/macOS 지원에는
+HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 Ubuntu 24.04/WSL2 실기·IDE를 마치고 전체204를 검증합니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,

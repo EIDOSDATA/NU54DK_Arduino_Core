@@ -3,7 +3,7 @@
 2026-11-16 후속: C6 WSL2·C7 POSIX kit·C8 SDK child 환경 교정과 실적을 보존하고 C9의 명시적 DTR 수신 준비를 새 source로 검증한다.
 고정 Linux SDK bundle `fbf7391cab`은 유지하고 `native=false`, `execution_environment=wsl2`로
 설치·cache·kit·실기 증거를 구분한다. C5 package/실적은 원형 보존하며 새 source에 합산하지 않는다.
-C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 새 실기·전체204·최종 CI는 미완료다. [C6~C9 진행과 설치 상태](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+C8 Ubuntu 24.04/WSL2 단일 보드·IDE PASS와 BLE 원형 FAIL을 보존한다. DTR 단독 진단을 근거로 C9을 교정했으며 C9 실기·IDE는 PASS이며 재연결·전체204·최종 CI는 미완료다. [C6~C9 진행과 설치 상태](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
 
 현재 stable·지원 대상은 v0.5.0 하나이며 이전 stable·RC·preview는 catalog 공급을 종료합니다.
 정식 상태는 [v0.5.0 TODO](<../../00_Docs/TODO_v0.5.0.md>)에서 관리합니다.

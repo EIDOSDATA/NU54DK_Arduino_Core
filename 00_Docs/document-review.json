@@ -5,6 +5,131 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-16",
+      "observed_utc": "2026-11-15T16:21:11.471234+00:00",
+      "baseline_commit": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+      "purpose": "C9 exact source 새 실기·BLE·IDE PASS와 전체204 실행·재연결 사용자 대기를 현행 문서에 반영",
+      "scope": "현행 문서16개와 Host 원장; C5/C6/C7/C8 원본과 완료 TODO 불변",
+      "current_state": {
+        "stage": "M33-W07 / HOST-W07",
+        "candidate": "C9",
+        "source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+        "C9_physical": "PASS",
+        "C9_IDE": "PASS",
+        "C9_all204": "RUNNING",
+        "C9_USB_replug": "PENDING_USER_ACTION",
+        "C9_CI": "RUNNING",
+        "new_OS_PASS": 0,
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "physical": "10c4c4/exit0",
+        "physical_audit": "af9fcf/exit0",
+        "IDE": "d967a4/exit0",
+        "IDE_audit": "4865ca/exit0",
+        "post_IDE_SDK": "c572e1/exit0",
+        "docs_gate": {
+          "actual": "437d33/exit0",
+          "files": 537,
+          "log": "D:/w06/h7c9/development/docs-physical-IDE-a001.log",
+          "sha256": "9f5070019b89f2a541b5347e11f81c598d243428d76474955a970adf67705254"
+        },
+        "diff_check": "553fc0/exit0",
+        "previous_source_credit_transferred": false,
+        "independent_document_review": "PASS_NO_MATERIAL_FINDINGS_DATES_AND_C8_OBSERVATION_SCOPE_CORRECTED",
+        "CI_metadata": {
+          "actual": "08f3c6/exit0",
+          "path": "D:/w06/h7c9/CI/exact-snapshot-20261115T162355995990Z.json",
+          "C9_failed_jobs": 0,
+          "artifact_bytes_verified": false
+        }
+      },
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "0fadf20e7ad7d5a42437928567b52ee0af3da09cadc1f7059d3abeb69dd28a46"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "1c043faf992e9142cfb8a5e2d7058f782ba3724898e91216f5d922dbb25228c9"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "186d99d23def1e1fdbe70d5ac53eb9c2dbb3f11a9ae214bee96e8453de9fc36c"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "1c56c5db00be94c0c33e430e70be167de91e5c4a0fb4c29947542f756124dad1"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "347201d9c93bc80260747343663cd30e27d532322f83cedc51820b8a9734066e"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "4acc25a92b13e4c2ab74eae567b1d9698363af60dcd0b69cf5ec01f1136da876"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "bc6cc85256e9821b5e66047729828789652981470d465bd03658cedab96ab5d1"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "8a9340a8b81ab48b8686e0a18b60776f6fac05d18043edaa4eb2a25dfde047e0"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "6cebb3d1fa48a3e2131c0d947b32835f4864785583da22c22f1053c442567ab4"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "2d6a1ba97848bf2848acf3ee8393fbdedb86af9f00d35d97445c1b8c11d56a7e"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "57fa2d11c1d0766b38d09b224c2f807e953a67ae2dad6b499f7b56b7ccca7fe2"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "34e793b0a65405943568316943c543720acc79560ef8ad176f4a5dbcfedf8f58"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "c9d721a06fc8d95e71a77a13e87dea805de5051d636998a0bbc2940c88f9dc6b"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "87e2902de80f7ba85a6a3fada8d9b0fce78a0e6b47dff2547d81dfb705f4b3ff"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "edfdc5921f51625422e120df4220c8bdbcc78c7254f967b3da5562f6f0c34dcd"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "38440d0f5241b994d02bc8a33d6e7352dddb7c098a2c2821e97838152bfca2c2"
+        }
+      ]
+    },
+    {
+      "review_date": "2026-11-16",
       "baseline_commit": "e1037a4ee51217195f1a715173ce37efec689731",
       "purpose": "C8 IDE·부분 실기와 BLE FAIL·DTR 원인 분리를 보존하고 C9 명시적 수신 준비 교정 및 새 검증 착수 반영",
       "scope": "관련 현행 문서 16개; C5/C6/C7 원본·완료 TODO·W06 FAIL 불변",

@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-16",
-  "status": "HOST_W07_C9_DTR_CORRECTION_FRESH_VALIDATION_PREPARATION",
+  "status": "HOST_W07_C9_PHYSICAL_IDE_PASS_ALL204_RUNNING",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "e1037a4ee51217195f1a715173ce37efec689731",
+  "implementation_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -52,7 +52,7 @@
       "id": "HOST-W07",
       "status": "physical_validation_in_progress",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "C9_NOT_RUN_C5_C8_RESULTS_PRESERVED_SEPARATELY"
+      "physical_OS_gate": "C9_WSL2_PHYSICAL_IDE_PASS_REPLUG_PENDING_ALL204_CI_RUNNING_OS_ROWS_0"
     },
     {
       "id": "HOST-W08",
@@ -443,7 +443,7 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C9_DTR_FRESH_VALIDATION_PREPARATION_C5_C8_RECORDS_PRESERVED",
+    "status": "C9_PHYSICAL_IDE_PASS_ALL204_RUNNING_C5_C8_RECORDS_PRESERVED",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
@@ -1058,21 +1058,52 @@
       "current_source_validation_snapshot_scope": "HISTORICAL_PRE_DTR_DIAGNOSIS_STATUS"
     },
     "C9_development": {
-      "status": "DTR_CORRECTION_LOCAL_CHECKS_PASS",
+      "status": "EXACT_C9_FRESH_PHYSICAL_IDE_PASS_ALL204_RUNNING",
       "base_commit": "e1037a4ee51217195f1a715173ce37efec689731",
-      "source_revision": null,
-      "source_scope": "UNCOMMITTED_DEVELOPMENT",
+      "source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+      "source_scope": "COMMITTED_PUSHED_EXACT_C9",
       "change": "EXPLICIT_BLE_PAIR_ASSERT_DTR",
       "validation": {
         "Windows_unit": "15_PASS",
         "Ubuntu_unit": "15_PASS",
         "actual": "2a39dd/exit0",
-        "fresh_physical": "NOT_RUN"
+        "fresh_physical": "PASS",
+        "producer": "PASS",
+        "kit": "PASS",
+        "SDK": "PASS",
+        "SDK_verify": "PASS",
+        "lifecycle": "PASS",
+        "inventory": "PASS",
+        "representative_build": "PASS_COLD4_WARM4",
+        "preparation_actual": "9e268f/exit0",
+        "physical_actual": "10c4c4/exit0",
+        "BLE_pair": "PASS_DTR_TRUE_RTS_FALSE_TWO_FRESH_NONCES",
+        "wrong_probe": "PASS_EXPECTED_PREOPEN_REJECTION",
+        "physical_evidence": "D:/w06/h7c9/physical-audit-a001.json",
+        "physical_audit": "af9fcf/exit0",
+        "IDE": "PASS_C9_PRIVATE_BOARDS_MANAGER_VERIFY_NORMAL_EXIT",
+        "IDE_actual": "d967a4/exit0",
+        "IDE_audit": "4865ca/exit0",
+        "IDE_evidence": "D:/w06/h7c9/ide-audit-a001/closure-a001.json",
+        "post_IDE_SDK": "c572e1/exit0",
+        "USB_replug": "PENDING_USER_PHYSICAL_ACTION",
+        "USB_observation_a001": "616c83/exit1_OBSERVATION_TIMEOUT_NO_REPLUG",
+        "all204": "RUNNING_NOT_PASS",
+        "all204_evidence": "D:/w06/h7c9/all-build-a001",
+        "CI": "RUNNING_NOT_PASS",
+        "CI_runs": [
+          43733186637,
+          43733172572,
+          43733172566,
+          43733172792
+        ],
+        "push_actual": "6e7d70/exit0"
       },
       "firmware_changed": false,
       "SDK_pin_changed": false,
       "previous_source_credit_transferred": false,
-      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
+      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+      "kit_manifest_sha256": "a210e1b58ea29bd7c10bbcc023bc67219b0aa2587598241d1aadb08d4f4c3ade"
     }
   },
   "W06_document_closure_CI": {
@@ -1097,20 +1128,22 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C9_DEVELOPMENT",
+  "active_candidate": "C9",
   "active_candidate_record": "W07_preparation.C9_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
     "candidate": "C9",
-    "final_source_revision": null,
-    "source_scope": "PENDING_EXACT_C9_COMMIT",
+    "final_source_revision": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
+    "source_scope": "EXACT_C9_PRODUCT_SOURCE",
     "completed_OS_rows": 0,
-    "WSL2_physical": "NOT_RUN",
-    "WSL2_IDE": "NOT_RUN",
-    "WSL2_BLE": "NOT_RUN",
-    "WSL2_all204": "NOT_RUN",
+    "WSL2_physical": "PASS_C9_FRESH",
+    "WSL2_IDE": "PASS_C9_FRESH_PRIVATE_RC1",
+    "WSL2_BLE": "PASS_C9_FRESH_ASSERT_DTR",
+    "WSL2_all204": "RUNNING_NOT_PASS",
     "native_Ubuntu_physical": "NOT_RUN",
-    "previous_source_credit_transferred": false
+    "previous_source_credit_transferred": false,
+    "WSL2_USB_replug": "PENDING_USER_PHYSICAL_ACTION",
+    "CI": "RUNNING_NOT_PASS"
   },
-  "implementation_revision_scope": "C8_COMMITTED_BASE_C9_EXACT_COMMIT_PENDING"
+  "implementation_revision_scope": "EXACT_C9_PRODUCT_SOURCE_DOCUMENT_FOLLOWUP_SEPARATE"
 }

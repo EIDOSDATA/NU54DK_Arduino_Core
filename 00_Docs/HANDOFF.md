@@ -1,6 +1,6 @@
 # 개발 인계
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 CMSIS-DAP DTR 교정·새 WSL2 검증 준비, Host 6/8**. C5 Windows 11·전체204·CI와 기존 FAIL은 보존한다. C8 설치·대표8·IDE·단일 보드 실기는 PASS이며 BLE 원형은 FAIL이다. DTR만 켠 C8 진단에서 기존 양방향 nonce가 통과해 C9에 명시적 `--assert-dtr`를 추가했다. C9 실기·전체204·CI는 아직 미완료이며 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C9 Ubuntu 24.04/WSL2 실기·IDE PASS, 전체204 실행 중, Host 6/8**. C9 `8bdf4c4a`의 새 설치·대표8·Blink·UART·debug·BLE 양방향·UID 거부·Linux IDE Verify가 통과했다. C9 USB 재연결은 사용자 조작 대기이며 전체204·최종 CI·OS 마감은 미완료다. C5 Windows 11·전체204·CI와 C8 부분 PASS·원형 BLE FAIL을 보존하고 다른 source 실적을 합산하지 않는다. [C6~C9 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -15,9 +15,9 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, **M33-W07의 HOST-W07 C8 부분 실적 보존·C9 Ubuntu 24.04/WSL2 새 검증 준비**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
+| Host | **6/8**, **M33-W07의 HOST-W07 C8 부분 실적 보존·C9 Ubuntu 24.04/WSL2 실기·IDE PASS·전체204 실행 중**. C5 Windows 완료 보존. 이후 Ubuntu 26.04 LTS → macOS 26 → macOS 27 → HOST-W08 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C7 inventory FAIL 보존. C8 `e1037a4ee51217195f1a715173ce37efec689731`의 새 kit·SDK·lifecycle·inventory·대표8·Blink·UART·debug·재연결·UID 거부 PASS. Linux IDE Verify PASS와 BLE 원형 timeout을 보존한다. DTR 단독 진단 통과 후 C9 교정·새 검증 준비, exact C8 CI 진행. C9 OS 완료0. [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)은 C5 Windows 완료 기록이며 새 source 실적과 합산하지 않는다. 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
+| HOST-W07 현재 | C7 inventory FAIL 보존. C8 `e1037a4ee51217195f1a715173ce37efec689731`의 새 kit·SDK·lifecycle·inventory·대표8·Blink·UART·debug·재연결·UID 거부 PASS. Linux IDE Verify PASS와 BLE 원형 timeout을 보존한다. C9 `8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c`의 새 설치·대표8·실기·BLE·IDE PASS. C9 재연결 대기·전체204와 exact CI 진행. C9 OS 완료0. [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)은 C5 Windows 완료 기록이며 새 source 실적과 합산하지 않는다. 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
 | 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
