@@ -1,6 +1,6 @@
 # NU54DK Arduino Core
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 NU54DK의 **nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Core**입니다.
 `setup()`/`loop()`와 Arduino API로 시작하고, BLE·LE Audio·Channel Sounding과
@@ -164,7 +164,7 @@ M28~M31·P0~P2와 RC2 사용자 경험 교정, 연속 Upload runtime PM 교정�
 결정·검증·공개 근거는 [274번 기록](<00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
 
 개발 소스의 **M32는 12/12, M33은 수락 6/8·기술 5/8**입니다. W06은 실제 PASS46과 명시 수락
-#29·40·44를 구분하여 마감했고 원인 분석은 유예했습니다. 현재는 HOST-W07에서 C5 Windows 11 완료와 C8 부분 실적을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비합니다. BLE 제어·Mesh·무선 공존의
+#29·40·44를 구분하여 마감했고 원인 분석은 유예했습니다. 현재는 HOST-W07에서 C5 Windows 11 완료와 C8 부분 실적을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감합니다. BLE 제어·Mesh·무선 공존의
 완료 근거는 [M32 TODO](00_Docs/TODO_M32.md), 예제·배포 잔여 계획은 [M33 TODO](00_Docs/TODO_M33.md)에 있습니다.
 M32 구현과 문서를 한 커밋으로 통합한 `main`에서 `Dev-0.6.0-M33`을 분기했습니다.
 M32 브랜치는 사용자 요청으로 로컬·원격에서 삭제했고 원본 이력은 로컬 Git bundle로 보관했습니다.

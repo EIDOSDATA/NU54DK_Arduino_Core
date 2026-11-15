@@ -1,12 +1,11 @@
 # HOST-W07 C6~C10 WSL2 지원과 Ubuntu 24.04 검증
 
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
-현재 단계는 **M33-W07 / HOST-W07**, Host 완료는6/8이다. C9의 새 설치·대표8·Blink·UART·
-ELF debug·BLE 양방향·잘못된 probe 거부·Linux IDE Verify PASS는 보존한다. 이후 두 차례 실제 USB
-재연결의 첫 UART가 FAIL했다. 두 번째 첫 송수신 trace에서 정확한 nonce 앞의 추가 `0xF0`를
-확인했다. 검증기의 초기 입력 줄 동기화를 C10에서 교정하며 하위 byte 발생 원인은 미확정이다.
-C9 전체204는13cold·0warm에서 의도적으로 정리했다. C10 개발 검사는 Windows·Ubuntu 각24개 PASS,
-새 source·패키지·실기·전체204·CI는 준비 중이다. C5~C9 PASS/FAIL을 C10 실적으로 합산하지 않는다.
+현재 단계는 **M33-W07 / HOST-W07**, Host 완료6/8이다. C10 새 설치·대표8·Blink·UART·
+debug·BLE·잘못된 UID 거부와 실제 USB 재연결 후 첫 UART6개·IDE Verify가 PASS다.
+Ubuntu24.04 기준 전체204와 exact CI 마감은 진행 중이다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
+
+2026-11-16 사용자 지시에 따라 Ubuntu 24.04 LTS/WSL2의 C10 기준 검증을 우선 마감한다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.
 
 ## 승인과 source 경계
 
@@ -16,7 +15,7 @@ C9 전체204는13cold·0warm에서 의도적으로 정리했다. C10 개발 검�
   C6 실적을 C7 실적으로 합산하지 않는다. 후속 문서 기록 커밋은 제품 source와 구분한다.
 - C8 exact source는 `e1037a4ee51217195f1a715173ce37efec689731`다. C7 기준으로 RC 실행기의 SDK child 환경을 교정한 별도 후보다. C7의 inventory FAIL과 이전 PASS를 보존한다.
 - C9 exact source는 `8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c`다. C8을 기준으로 검증기의 명시적 DTR 수신 준비를 교정했으며 firmware·SDK는 변경하지 않았다.
-- C10은 C9 제품 source와 문서 후속 `c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c`를 기준으로 `serial --synchronize-line`을 추가한 후보이며 exact SHA는 커밋 후 외부 실행 원장에 고정한다. 현재 이 문서의 검토 시점은 COMMIT_PENDING이다.
+- C10 exact 제품 source는 `4890f697ab80dfed3cff62bd42acc42b0f3e1a34`다. C9 제품과 문서 후속 `c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c`를 기준으로 `serial --synchronize-line`을 추가했으며 이 문서 후속 개정과 제품 source를 구분한다.
 - 보존할 C5 제품 source: `5ee7c10368b554ca23d68f8f82e39308b91df6de`.
 - WSL2 지원은 C6, POSIX kit 경로 교정은 C7, SDK child 환경 교정은 C8, DTR 검증 절차 교정은 C9, 첫 입력 줄 동기화 교정은 C10이다. 개발 검사를 실제 OS PASS로 세지 않는다.
 - C5 kit·ZIP·manifest와 [328번](328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md),
@@ -98,6 +97,15 @@ USB 미발견 메시지는 usbipd와 Linux 권한 확인을 안내한다. SDK pi
 | C10 개발 검사 | Windows·Ubuntu 각각24개/exit0. `D:/w06/h7c10/development/*-a002.json`과 개별 원본 로그, 관측 `42d015/exit0`·`5c046e/exit0`. 새 source 실기 PASS 아님 |
 | C10 독립 검토 | read(1)로 setup LF 뒤의 분할 runtime 오류를 소비하지 않도록 교정. 오류 뒤 정상 nonce도 FAIL·close 회귀 검사, 읽기 전용 최종 검토 추가 지적 없음 |
 
+| C10 준비·대표8 | `e7f101/exit0`: 새 producer·kit·plan·SDK 설치/verify·lifecycle·inventory·대표8 PASS |
+| C10 실기·감사 | `b61a6a/exit0`·`35f83b/exit0`: Blink·debug·UART·BLE 양방향·양쪽 SerialEcho 복원·UID 거부 PASS |
+| C10 실제 USB 재연결 | `59a156/exit0`: 분리10.031초·동일 identity·일반 attach·Linux 준비 확인 뒤 첫 UART6개 PASS. setup payload0byte 두 회, 모든 포트 닫힘 |
+| C10 재연결 감사 | `replug-audit-a001.json` PASS. `21d689` 호출은 이 감사를 저장한 뒤 별도 Git helper의 사전 hash guard에서 exit1; 감사 PASS와 helper FAIL 구분 |
+| C10 Git helper FAIL·교정 | 잘못 복사된 외부 helper hash 문자열로 인증 전 중단. `github-helper-failure-a001.json`과 failed.py 보존. `61d9a2/exit0` 교정 후 `651658/exit0` push |
+| C10 Linux IDE | 새 profile·비공개 RC1 설치·NU54DK Standard·설치 Blink Verify·정상 종료 PASS. `ide-audit-a001/closure-a001.json`에서960파일·산출물4개·source·WSL2 대조 |
+| C10 exact CI | push `651658/exit0`, M12 요청 `a5291e/exit0`. M12 43743792396·prerequisite 43743775292·native package 43743775319·W06 build43743775285, 모두 attempt1. 최종 완료 전 PASS 아님 |
+| C9 문서 CI 후속 | 문서 source `c2c62a6b`의 M12 43736743850은8PASS+조건부SKIP1. 관측 `d2787e/exit0`. 앞선 observer timeout 원본을 CI 실패로 재분류하지 않음 |
+
 C6 kit manifest SHA-256은 `c9281b8ee65cb896bc3a4e58ccf0f370968a84dc21fdd4c136795a541554dcfe`다.
 두 실패는 firmware나 SWD 실행 이전의 kit 준비 단계다. C7은 raw archive의 `python/` 루트를 실행 경로에
 반영하고, Linux bzip2를 추출 전에 검사한다. 완전한 추출 후 archive hash marker를 기록하며 실행파일만
@@ -176,20 +184,40 @@ C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837
 새 일반 attach와 후속 inventory·UART PASS를 연결한다. 강제 attach·mass erase·unlock·recover·FW 변경은 없다.
 DTR 단독 진단 종료 시 두 NU54DK를 C8 SerialEcho로 복귀했다. 후속 역할 image 변경은 새 attempt에 기록한다.
 
-1. C10 검증기 교정·문서·개발 검사를 마치고 exact source·새 producer/kit/work/SDK를 고정한다.
-2. 새 C10 대표8·Blink·UART·debug·BLE·UID 거부와 실제 USB 재연결을 검증한다. 재연결은 Linux 장치 준비 후 첫 통신부터 기록한다.
-3. C10 Linux IDE Verify 후 전체204cold·대표4warm·profile 거부9개·원본 byte 감사를 수행한다.
-4. C8/C9 CI 원본은 보존하고 C10 exact CI와 Windows11 변경 영향 검증을 완료한다.
-5. Ubuntu26.04 LTS → macOS26 → macOS27의 환경별 실기를 수행한다. Mac 환경 확보는 별도 준비가 필요하다.
-6. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
-7. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
+1. 완료한 C10 설치·대표8·실기·재연결·IDE 결과를 보존하고 같은 시험을 반복하지 않는다.
+2. Ubuntu24.04/WSL2 기준 전체204cold·대표4warm·profile 거부9개와 원본 byte 감사를 마친다.
+3. C10 exact CI·artifact 감사를 마감한다. C8/C9 완료·FAIL·중단 원본은 별도 보존한다.
+4. Ubuntu26.04 LTS의 설치·대표 build·USB/serial/debug·lifecycle 호환성을 확인한다. 전체204 중복은 하지 않는다.
+5. macOS26 → macOS27의 실제 환경 호환성을 확인한다. Mac 환경 확보가 필요하며 버전별 전체204는 반복하지 않는다.
+6. C5 Windows11 완료 기준선에 공통 도구의 제한 회귀 결과를 연결한다.
+7. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
+8. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
 
 C9 kit manifest SHA-256은 `a210e1b58ea29bd7c10bbcc023bc67219b0aa2587598241d1aadb08d4f4c3ade`다.
 새 실기 원본은 `D:/w06/h7c9/physical-sequence-a001`·`ble-pair-a001`, 감사는
 `physical-audit-a001.json`·`ide-audit-a001/closure-a001.json`에 보존한다. 전체 빌드는
 `/home/eidos/nu54-c9/work/attempts/build-20261115T161830936993Z`와
-`D:/w06/h7c9/all-build-a001`에 별도로 기록한다. 현재 양쪽 보드는 C9 SerialEcho이며
-C9 빌드는 중단·정리됐고 두 보드의 다음 변경은 C10 새 실기에 기록한다. 반복·예약 작업을 추가하지 않았다.
+`D:/w06/h7c9/all-build-a001`에 별도로 기록한다. C9 실기 종료 당시 양쪽은 C9 SerialEcho였고 빌드는 중단·정리됐다.
+후속 C10 실기 뒤 현재 양쪽은 C10 SerialEcho이며 포트는 닫혔다. 반복·예약 작업을 추가하지 않았다.
 
 WSL2 PASS는 해당 Ubuntu/WSL2 환경의 실적이다. 지원표에는 OS와 실행 환경을 함께 표시하며
 native Ubuntu 실기·다른 Ubuntu 버전·macOS·C5 Windows 결과와 합성하지 않는다.
+
+C10 kit manifest SHA-256은 `9041bd68091e1214c7999bcdb8666390ae4268e2c44ab9425c1a4c303e0c3af2`다.
+원본은 `D:/w06/h7c10`과 `/home/eidos/nu54-c10`에 source·attempt별 보존한다.
+이번 재연결의 setup payload는 두 회 모두0byte이므로 C9의0xF0가 실제 제거됐다고 주장하지 않는다.
+C9 하위 byte 발생 원인은 미확정이며 이번 새 C10 절차의 PASS와 구분한다.
+
+### C10 macOS prerequisite CI 원본 FAIL과 별도 진단
+
+C10 prerequisite run43743775292/attempt1은 Windows·Ubuntu2PASS, macOS1FAIL이다. 실패 job132902468528의
+원형 로그를 `4f59d6/exit0`으로 보존했다. SDK 설치 이전141개 unit 중 정상 leader 종료 후 손자 정리
+검사1개가 `OwnedExecutionError: PermissionError`다. SDK·USB·firmware 실행 실패가 아니다.
+해당 제품 코드와 test는 C9→C10에서 동일하다. Apple XNU의 zombie-only process group은
+[killpg1 구현](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/kern_sig.c#L1580)상 EPERM 후보가 되지만
+원형 로그에는 실패 호출·errno가 없어 이번 발생 원인은 아직 미확정이다.
+
+별도 macOS CI 진단은 exact C10 원형 test10회와 controlled zombie-only 그룹1회를 고정 관측한다.
+signal·예외·PASS 조건을 변경하지 않고 같은 소유PGID 상태와 errno를 추가 기록한다. 진단 성공은
+C10 원형 CI FAIL을 PASS로 바꾸지 않는다. SDK 설치·전체 예제·USB/HIL을 반복하지 않으며
+Ubuntu24.04의 실행 중인 전체 빌드와 실기·IDE PASS를 보존한다.

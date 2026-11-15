@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-16",
-  "status": "HOST_W07_C10_NEW_SOURCE_PREPARATION",
+  "status": "HOST_W07_C10_BASELINE_CLOSURE_IN_PROGRESS",
   "current_work_package": "HOST-W07",
-  "implementation_revision": null,
+  "implementation_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -52,7 +52,7 @@
       "id": "HOST-W07",
       "status": "physical_validation_in_progress",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "C10_NOT_RUN_C5_TO_C9_PRESERVED_NO_SOURCE_CREDIT_TRANSFER"
+      "physical_OS_gate": "C10_WSL2_PHYSICAL_REPLUG_IDE_PASS_BASELINE_CLOSURE_PENDING_C5_WINDOWS_PRESERVED"
     },
     {
       "id": "HOST-W08",
@@ -443,7 +443,7 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C10_DEVELOPMENT_CHECKS_PASS_C5_TO_C9_RECORDS_PRESERVED",
+    "status": "C10_PHYSICAL_REPLUG_IDE_PASS_BASELINE_CLOSURE_PENDING",
     "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
@@ -1136,11 +1136,11 @@
       "CI": "RUNNING_NOT_PASS"
     },
     "C10_development": {
-      "status": "DEVELOPMENT_CHECKS_PASS_FRESH_VALIDATION_NOT_RUN",
+      "status": "FRESH_PHYSICAL_REPLUG_IDE_PASS_BASELINE_CLOSURE_IN_PROGRESS",
       "base_product_source": "8bdf4c4ae8aeb6f36cb04df94b9ab932daf6704c",
       "base_commit": "c2c62a6b690b6e81f4c0a4d12b6acc31d4c72e4c",
-      "source_revision": null,
-      "source_scope": "COMMIT_PENDING",
+      "source_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "source_scope": "EXACT_PRODUCT_COMMIT",
       "change": "EXPLICIT_SERIAL_SYNCHRONIZE_LINE",
       "validation": {
         "Windows_unit": "24_PASS",
@@ -1151,9 +1151,18 @@
         ],
         "evidence": "D:/w06/h7c10/development",
         "evidence_read_actual": "42d015/exit0; 5c046e/exit0",
-        "fresh_physical": "NOT_RUN",
-        "all204": "NOT_RUN",
-        "CI": "NOT_RUN"
+        "fresh_physical": "PASS",
+        "all204": "RUNNING_20261115T180802545594Z",
+        "CI": "PREREQUISITES_MACOS_UNIT_FAIL_PRESERVED_OTHER_WORKFLOWS_PENDING",
+        "representative": "8_PASS",
+        "USB_replug": "PASS_FIRST_UART_6_NONCES",
+        "IDE": "PASS_960_FILES_4_ARTIFACTS",
+        "physical_evidence": "D:\\w06\\h7c10\\physical-audit-a001.json",
+        "replug_evidence": "D:\\w06\\h7c10\\replug-audit-a001.json",
+        "IDE_evidence": "D:\\w06\\h7c10\\ide-audit-a001\\closure-a001.json",
+        "external_Git_helper_FAIL": "PRESERVED_PREAUTH_GUARD_CORRECTED",
+        "CI_failure_record": "D:/w06/h7c10/CI/prerequisites-macos-failure-a001.json",
+        "CI_failure_cause": "UNCONFIRMED"
       },
       "firmware_changed": false,
       "SDK_pin_changed": false,
@@ -1187,17 +1196,61 @@
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
     "candidate": "C10",
-    "final_source_revision": null,
-    "source_scope": "COMMIT_PENDING",
+    "final_source_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+    "source_scope": "EXACT_PRODUCT_COMMIT",
     "completed_OS_rows": 0,
-    "WSL2_physical": "NOT_RUN",
-    "WSL2_IDE": "NOT_RUN",
-    "WSL2_BLE": "NOT_RUN",
-    "WSL2_USB_replug": "NOT_RUN",
-    "WSL2_all204": "NOT_RUN",
-    "CI": "NOT_RUN",
+    "WSL2_physical": "PASS",
+    "WSL2_IDE": "PASS",
+    "WSL2_BLE": "PASS",
+    "WSL2_USB_replug": "PASS_FIRST_UART",
+    "WSL2_all204": "RUNNING_20261115T180802545594Z",
+    "CI": "PREREQUISITES_MACOS_UNIT_FAIL_PRESERVED_OTHER_WORKFLOWS_PENDING",
     "native_Ubuntu_physical": "NOT_RUN",
-    "previous_source_credit_transferred": false
+    "previous_source_credit_transferred": false,
+    "completed_OS_rows_scope": "Direct closure at C10 source; preserved C5 Windows baseline remains completed."
   },
-  "implementation_revision_scope": "C10_COMMIT_PENDING_BASE_C9"
+  "implementation_revision_scope": "C10_EXACT_PRODUCT_SOURCE_DOCUMENT_CHILD_SEPARATE",
+  "validation_policy": {
+    "approved_date": "2026-11-16",
+    "user_instruction": "2026-11-16 사용자 지시에 따라 Ubuntu 24.04 LTS/WSL2의 C10 기준 검증을 우선 마감한다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.",
+    "authorization_record": "D:/w06/control/host-w07-c10-validation-policy-20261115T175742441103Z.json",
+    "whole_suite_per_OS_version": false,
+    "expand_only_on": "Observed failure or demonstrated change impact",
+    "original_results_immutable": true,
+    "mixed_source_single_run_credit": false
+  },
+  "release_support_rows": [
+    {
+      "OS": "Windows 11",
+      "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "validation_scope": "PRESERVED_BASELINE_PLUS_LIMITED_COMMON_TOOL_REGRESSION",
+      "status": "C5_COMPLETE_C10_IMPACT_PENDING"
+    },
+    {
+      "OS": "Ubuntu 24.04 LTS",
+      "execution_environment": "wsl2",
+      "baseline_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "validation_scope": "BASELINE_FULL",
+      "status": "PHYSICAL_REPLUG_IDE_PASS_ALL204_CI_PENDING"
+    },
+    {
+      "OS": "Ubuntu 26.04 LTS",
+      "baseline_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "validation_scope": "VERSION_COMPATIBILITY",
+      "status": "NOT_RUN",
+      "execution_environment": "RECORD_ACTUAL_ON_EXECUTION"
+    },
+    {
+      "OS": "macOS 26",
+      "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "validation_scope": "COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
+      "status": "NATIVE_CI_BASELINE_PRESERVED_PHYSICAL_NOT_RUN"
+    },
+    {
+      "OS": "macOS 27",
+      "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "validation_scope": "VERSION_COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
+      "status": "NOT_RUN"
+    }
+  ]
 }

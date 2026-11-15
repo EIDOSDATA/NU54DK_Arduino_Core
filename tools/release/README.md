@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,7 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비합니다. Ubuntu/macOS 지원에는
+HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감합니다. Ubuntu/macOS 지원에는
 OS별 최종 실물 gate가 필요합니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,

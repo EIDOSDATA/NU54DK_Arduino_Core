@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 UART 줄 동기화 교정·새 검증 준비, Host 6/8**. C9 `8bdf4c4a`의 설치·대표8·실기·BLE·IDE PASS와 재연결 첫 UART FAIL을 구분해 보존한다. 두 번째 재연결 trace에서 정확한 nonce 앞의 추가 `0xF0`를 확인했고 하위 발생 원인은 미확정이다. C9 전체 빌드는 13/204에서 정상 정리했으며 C10 Windows·Ubuntu 개발 검사 각24개가 통과했다. C10 새 실기·전체204·CI·OS 마감은 미완료이며 C5~C9 실적을 이월하지 않는다. [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
+2026-11-16 현행 상태: **M33-W07·HOST-W07 C10 Ubuntu 24.04/WSL2 실기·재연결·IDE PASS, Host 6/8**. C10 `4890f697`의 새 설치·대표8·Blink·UART·debug·BLE·UID 거부와 물리 재연결 후 첫 UART6개를 통과했다. 비공개 RC1 IDE Verify와 설치960파일 감사도 PASS다. 전체204는 진행 중이고 macOS prerequisite CI unit1FAIL을 보존·진단 중이다. Ubuntu 24.04 완료 선언 전이다. C5 Windows 11 완료와 C6~C9 PASS·FAIL은 보존한다. Ubuntu 26.04는 호환성 중심으로 확인하며 OS 버전마다 전체204를 반복하지 않는다. [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
-HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 새 검증을 준비한다. Host 완료는 6/8이다.
+HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu 24.04/WSL2 기준 검증을 마감한다. Host 완료는 6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -49,10 +49,10 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | RC 검증 후보 | arch | 현재 사용자 실물 gate |
 | --- | --- | --- |
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
-| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 새 검증 준비 |
-| Ubuntu 26.04 LTS | AMD64 | 해당 OS 설치·빌드·사용자 실기 대기 |
-| macOS 26 | Apple Silicon | CI 설치·빌드 통과. 사용자 실기 대기 |
-| macOS 27 | Apple Silicon | 해당 OS 설치·빌드·사용자 실기 대기 |
+| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS·전체204/CI 미완료 |
+| Ubuntu 26.04 LTS | AMD64 | 호환성 검증 NOT_RUN. 24.04 마감 후 설치·대표 build·장치 경로 확인, 전체204 중복 없음 |
+| macOS 26 | Apple Silicon | C5 native 전체 빌드 PASS 보존. 설치·대표 build·USB·IDE 호환성 실기 대기, 환경 확보 필요 |
+| macOS 27 | Apple Silicon | 버전 호환성 검증 NOT_RUN, 환경 확보 필요. 버전 차이만으로 전체204 반복하지 않음 |
 
 macOS 실기는 NU54DK와 CMSIS-DAP이 실제로 연결된 Apple Silicon Mac에서 진행한다. 대여 장비나
 테스터가 같은 kit를 실행한 결과도 OS·kit hash·단계별 로그가 일치하면 검토할 수 있다.
@@ -121,8 +121,10 @@ macOS SDK root는 고정 `/opt/nordic/ncs`다. 폴더 소유권·실행 권한�
 serial 그룹 준비는 사용자 OS 환경에서 확인한다. 전역 권한을 완화하거나 Gatekeeper/quarantine을
 자동 우회하지 않는다. 차단 시 OS 원문과 읽기 전용 진단을 실패 증거로 보존한다.
 
-최종 Target build 행은 `build --all-examples` 결과가 필요하다. 대표4예제만 실행한 결과를
-전체204PASS로 바꾸지 않는다. 해당 단계에는 NUS Peripheral·Central 두 역할도 포함된다.
+전체 검증 대상으로 지정한 Ubuntu24.04 C10 기준 행에는 `build --all-examples` 결과가 필요하다.
+Ubuntu26.04와 macOS 버전별 호환성 행은 대표 build·설치·장치 경로와 변경 영향을 판정한다.
+대표4예제 결과를 전체204 PASS로 바꾸지 않으며 버전 차이만으로 전체204를 반복하지 않는다.
+대표 단계에는 NUS Peripheral·Central 두 역할도 포함한다. Windows11 C5 완료는 보존하고 공통 도구 영향만 제한 회귀한다.
 
 inventory의 SHA-256을 사용해 다음 명령을 실행한다. 아래 `A`, `B`, `SA`, `SB`, `PA`, `PB`는
 각각 실제 inventory에서 고른 probe·serial·path SHA-256으로 바꾼다. 원시 UID는 기록하지 않는다.

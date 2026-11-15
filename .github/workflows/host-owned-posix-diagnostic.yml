@@ -1,0 +1,41 @@
+name: HOST macOS Owned Process Diagnostic
+
+on:
+  push:
+    branches: [Dev-0.6.0-M33]
+    paths:
+      - '.github/workflows/host-owned-posix-diagnostic.yml'
+      - 'tools/ci/diagnose_owned_posix.py'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    name: C10 original cleanup and Darwin zombie boundary
+    runs-on: macos-26
+    timeout-minutes: 8
+    steps:
+      - name: Checkout diagnostic revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: diagnostic-source
+      - name: Checkout unchanged C10 product source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 4890f697ab80dfed3cff62bd42acc42b0f3e1a34
+          path: original-c10
+      - name: Set up original Python version
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Observe original cleanup without suppressing exceptions
+        run: python -I -B diagnostic-source/tools/ci/diagnose_owned_posix.py --repository original-c10 --output owned-process-diagnostic
+      - name: Preserve each diagnostic result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: c10-owned-posix-diagnostic-${{ github.sha }}
+          path: owned-process-diagnostic/*.json
+          if-no-files-found: error
+          retention-days: 14
