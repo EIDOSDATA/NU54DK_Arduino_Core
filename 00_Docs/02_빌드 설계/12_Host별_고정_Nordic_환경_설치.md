@@ -1,8 +1,8 @@
 # Host별 고정 Nordic 환경 설치
 
-현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
+현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
 
-상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·macOS26/27 대기.
+상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software PASS·Mac USB/IDE 실기 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.

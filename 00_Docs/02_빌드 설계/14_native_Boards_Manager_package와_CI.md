@@ -1,8 +1,8 @@
 # Native Boards Manager package와 CI
 
-현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
+현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
 
-기준일: 2026-11-16. HOST-W06까지6/8 완료했다. 최신 전체 native 기준선은 C5다. HOST-W07은 Windows11 기준선·Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료로 지원3/5이며 macOS26·27이 남았다.
+기준일: 2026-11-16. HOST-W06까지6/8 완료했다. 최신 전체 native 기준선은 C5다. HOST-W07은 Windows11 기준선·Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료로 지원3/5이며 C11 macOS26·27 software는 PASS했고 Mac USB·IDE 실기가 남았다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과
 [v0.6.0 TODO](../TODO_v0.6.0.md)를 따른다. 이 문서는 private CI package의 계약이며 공개 승인이 아니다.
 
@@ -129,7 +129,7 @@ CI에는 물리 upload·Serial·debug·USB lifecycle이 없다. Ubuntu/macOS 실
 gate `NOT_RUN`으로 남긴다. 기존 W06 S19의 PASS46과 명시 수락 #29·40·44, 원형 FAIL·soak는
 보존하며 Host 실적과 합산하지 않는다. #29 원인 분석은 사용자 지시로 유예한다.
 
-H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. H12 당시 사용자 실물 gate는 `NOT_RUN`이었다. C5 Windows 11 완료는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다. 현행 추가 OS 진행은 [330번](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)과 Host 계약을 따른다.
+H12의 최종 원형·로컬 재집계·CI 대조와 마감은 [322번](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)을 따른다. H12 당시 사용자 실물 gate는 `NOT_RUN`이었다. C5 Windows11 완료는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다. C6~C10은330번, 현행 C11 macOS 진행은 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>)과 Host 계약을 따른다.
 
 ## 실행 범위 선택
 

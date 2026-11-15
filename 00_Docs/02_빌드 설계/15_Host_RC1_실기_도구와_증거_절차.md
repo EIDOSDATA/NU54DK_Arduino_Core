@@ -1,6 +1,6 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
 
 HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2 마감과26.04/WSL2 호환성 검증을 완료했다. 지원3/5·Host 완료6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 위 329번에 구분한다.
@@ -51,8 +51,8 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
 | Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS; C5 전체 빌드 기준선+C10 변경 영향 검증 완료 |
 | Ubuntu 26.04 LTS | AMD64 | C10 WSL2 버전 호환성 완료. 고정 SDK 설치·대표4cold/4warm·lifecycle·한 보드 USB/serial/debug·IDE PASS. 전체204·BLE·물리 재연결 반복 없음; native 사용자 실기 NOT_RUN |
-| macOS 26 | Apple Silicon | C5 native 전체 빌드 PASS 보존. 설치·대표 build·USB·IDE 호환성 실기 대기, 환경 확보 필요 |
-| macOS 27 | Apple Silicon | 버전 호환성 검증 NOT_RUN, 환경 확보 필요. 버전 차이만으로 전체204 반복하지 않음 |
+| macOS 26 | Apple Silicon | C5 native 전체 빌드 PASS 보존. C11 실행기 교정·고정 SDK 새 설치·설치/lifecycle·대표4cold/4warm CI PASS. USB·IDE 실기 NOT_RUN; Mac 확보 필요 |
+| macOS 27 | Apple Silicon | C11 macOS27 ARM64 고정 SDK 새 설치·설치/lifecycle·대표4cold/4warm CI PASS. USB·IDE 실기 NOT_RUN; Mac 확보 필요. 전체204 반복 없음 |
 
 macOS 실기는 NU54DK와 CMSIS-DAP이 실제로 연결된 Apple Silicon Mac에서 진행한다. 대여 장비나
 테스터가 같은 kit를 실행한 결과도 OS·kit hash·단계별 로그가 일치하면 검토할 수 있다.
@@ -92,7 +92,7 @@ Host는 `native=false`, `execution_environment=wsl2`로 기록한다. WSL2 PASS�
    Blink·Serial·debug를 실행하고 IDE는 Linux판과 WSLg를 사용한다.
    Linux Arduino IDE 2.3.11은 공식 ZIP을 별도 경로에 풀고 WSLg에서 실행한다. 기본 Ubuntu에 없는
    `libnss3`, `libasound2t64`를 준비하고 한국어 표시에는 `fonts-noto-cjk`를 설치한다.
-   새 IDE 설정·Boards Manager 데이터·cache를 사용하고 해당 검증 source의 새 SDK 설치본을 지정한다. 언어 서버의
+   새 IDE 설정·Boards Manager 데이터·cache를 사용하고 해당 검증 source의 고정 SDK 새 설치 설치본을 지정한다. 언어 서버의
    초기 분석이 끝난 뒤 단일 스케치 창에서 Verify하며 SDK당 compile1을 유지한다.
 7. 물리 재연결은 사용자가 신호에 맞춰 분리하고10초 뒤 같은 포트에 연결한다. 새 usbipd state에서
    같은 물리 장치인지 확인한 뒤 attach·Linux inventory를 새로 수집한다. 분리·WSL 재시작 후

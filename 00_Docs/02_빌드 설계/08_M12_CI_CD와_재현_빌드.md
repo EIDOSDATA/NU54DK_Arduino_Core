@@ -30,7 +30,7 @@ Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 �
 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
 릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
 Host는 사용자 지시로 재개해 W01~W06 완료(6/8)와 W07 Windows 11 비공개 RC1 검증을 마쳤다.
-C5 Windows 기준선을 보존하며, 추가 OS의 진행과 남은 호환성·증거 마감은 현행 Host 계약과330번 기록을 따른다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
+C5 Windows와 C10 Ubuntu24.04·26.04/WSL2 완료를 보존하며, C11 macOS 진행과 남은 실기는 현행 Host 계약과331번 기록을 따른다. C6~C10 원형은330번에 보존한다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
 
 ---
 
@@ -325,7 +325,8 @@ Exact 실행·허용 범위는 [RC2 검증 기록](<../04_검증 기록/271_v0.5
 | --- | --- | --- |
 | Windows Server2025 x64 | 고정 prerequisite·Host unit·설치 smoke·image 비교 | Windows11 사용자 USB·IDE 실기 |
 | Ubuntu24.04 AMD64 | 고정 prerequisite·Host unit·설치 smoke·image 비교 | WSL2/native 장치 권한·USB 실기 |
-| macOS26 ARM64 | 고정 prerequisite·Host unit·설치 smoke·image 비교 | macOS27·Intel/Rosetta·USB 실기 |
+| macOS26 ARM64 | 기존 native 기준선과 C11 집중 Host 회귀·설치·lifecycle·대표 cold/warm | macOS27·Intel/Rosetta·USB·IDE 실기 |
+| macOS27 ARM64 (`xcode-27`) | C11 별도 버전 호환성 CI·실제 major 검사 | macOS26 실적 대체·USB·IDE 실기 |
 
 전체204는 실제 영향이 확인돼 명시 요청한 경우만 실행한다. 기존 전체 native 기준선은 보존한다.
 다섯 지원 버전은 CI 실행기 수와 다른 분모다. Windows11은 C5 실기+C10 제한 영향 검증을 연결하고,
@@ -337,7 +338,7 @@ clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu
 사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 제공한다. 그 전의 `NOT_RUN`은 해당 OS
 지원 gate 미완료를 뜻하며 M31 v0.5.0 Windows 릴리스를 차단하지 않는다. Windows 최종 후보의
 회귀는 v0.5.0 공개 gate에서 완료했다. C5 Windows 기준선은329번에 보존하며 현행 진행은
-[330번](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다.
+[331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>)을 따른다. C6~C10 원형은330번에 보존한다.
 
 ---
 

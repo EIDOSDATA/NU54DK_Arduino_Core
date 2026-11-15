@@ -4,6 +4,145 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "HOST_W07_C11_MACOS_SOFTWARE_CLOSURE_20261116",
+      "date": "2026-11-16",
+      "reviewed_parent": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "corrected_documents": [
+        "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+        "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/05_릴리스/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "tests/hil/nu54dk/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/peripheral/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "status": "PASS",
+        "results": [
+          {
+            "name": "docs",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c11\\docs-final-a001.log",
+            "sha256": "c2dcd89fb53cf9e0770a36300f29998bc835a82e5a67fac10e7d36eb5ce6d65c"
+          },
+          {
+            "name": "diff",
+            "exit_code": 0,
+            "log": "D:\\w06\\h7c11\\diff-final-a001.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "docs_gate": 538,
+        "changed_markdown_count": 20,
+        "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "CI_run": 43760678488,
+        "CI_attempt": 1,
+        "CI_jobs": "5/5_SUCCESS",
+        "contract_local": "a28384/exit0:46PASS",
+        "independent_code_review": "PASS",
+        "independent_document_review": "PASS",
+        "old_PASS_FAIL_preserved": true,
+        "physical_Mac": "NOT_RUN"
+      },
+      "preservation": "C5 Windows baseline, C10 Ubuntu24/26 closure and original Mac FAIL retained; C11 software only, Mac physical NOT_RUN, support3/5 and Host6/8.",
+      "documents": [
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+          "sha256_utf8_lf": "2b4e40a318548ac265eb1afefb321671d8cb4dcb65870f0ba01236203dcdecf1"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/08_M12_CI_CD와_재현_빌드.md",
+          "sha256_utf8_lf": "eddfb0c7da0e5d882a24850bb185b0009f0a2578ef036760102c783df7d10629"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "ec9e7414e1ffa85cd107463e996fc5f019b7d5a4547f245c12b34b2ab1d55c55"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "def8842e27cb2f02b56ba188dfb93b152faac3e1d501a674b0b6e04186843e44"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "9f561d9e6f85080d4218d55c450ebae55857e9062c570387f0f57a7daab65233"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "b5f1c014ace2b6bb04799d1c90d9c1ef8fd886980678bbd0a321aaa9fbb121c2"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md",
+          "sha256_utf8_lf": "a97a7b5b65fb45ea7cd240789dcf98a76f83742c43b0620e1b91dc665c24fdc2"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "4f8988c3938b8aca1f0a87e8c1c1b5d0b5672a84f4104faa5ac23f18522db679"
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "ae7af424162804744b73bf5c53ce9513bc714433fa71eb474421d363db33d584"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "02d7ed48fb6604d4674a2d87493718b2b23c1903b5c642ecdaf9ae6fd2b7694a"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "29e7d47e51a60e17d8292693f8479a78a9cb19d2ed528ce860736a03d01f0b73"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "3fce1428671710026d436945bbe4cb3623cc376f2a8a7212576f061f6f9f2ffc"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "8b2beca62e268de29f7eaf165aeed892839cdd678756c7fe844afcd3f0d5251d"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "1ac826df001821e942d02a7c450818c116f5d663733e6d36ef45719ccee2e7bb"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "49f451de2b883f75242d6f713ebf2c5bb9b279532e70e26eae1c273fdaa4c839"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "c04415ff0ca40ad4b75c28746b786c189564b63ef5f81c5b352dc07953bbd9f9"
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "433c8a7320cf7c824efa11a10ad48820d836d2663e6f8f7d79392d7041fb4c22"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "3e62ae4359ef9d100fa3d84ae466a601645ae30d17cde9e0776d36ce3e28ad0f"
+        },
+        {
+          "path": "tools/peripheral/README.md",
+          "sha256_utf8_lf": "1a0385fbcc483a95c9b0457f471baebbb0aa249c03785d7ac491dbe04256765d"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "979eab07911c8bdc65eaf7595d361ea771807e0867b43efafc9c59ea9c2cf421"
+        }
+      ]
+    },
+    {
       "id": "HOST_W07_UBUNTU26_VERSION_COMPATIBILITY_CLOSURE_20261116",
       "date": "2026-11-16",
       "reviewed_parent": "6a8da3f7809234b31a01818912384111137c6fc2",

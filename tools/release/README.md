@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../../00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는
@@ -10,8 +10,7 @@ M33-W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 수락 마감
 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 v0.6.0에서는 NCS v3.4.0 pin을 유지하고, [v0.7.0](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 NCS 3.4.1 전체 전환을 진행합니다. 이후 제품선 배정은 해당 계획을 따릅니다.
-HOST는 6/8이며 HOST-W07 Windows 11 RC1 검증을 완료하고 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했습니다. Ubuntu/macOS 지원에는
-OS별 최종 실물 gate가 필요합니다.
+HOST는6/8·지원3/5입니다. C5 Windows11과 C10 Ubuntu24.04·26.04/WSL2 완료를 보존하며 C11 macOS26·27 software 호환성도 PASS했습니다. Mac USB·IDE 실기는 별도 대기 상태입니다.
 
 정식 공개에서는 RC2의 Full RC package·evidence와 이후 runtime PM 교정 결과를 검토하고,
 stable package를 최종 exact commit에서 두 번 새로 생성했습니다. 전체 예제 113/113·설치 수명주기·

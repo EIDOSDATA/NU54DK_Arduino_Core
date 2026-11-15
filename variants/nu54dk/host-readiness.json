@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-16",
-  "status": "HOST_W07_WINDOWS11_BASELINE_UBUNTU24_26_WSL2_COMPLETE_MACOS2_PENDING",
+  "status": "HOST_W07_C11_MACOS_SOFTWARE_COMPLETE_PHYSICAL_PENDING",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+  "implementation_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -1254,6 +1254,154 @@
       "firmware_changed": false,
       "SDK_pin_changed": false,
       "previous_source_credit_transferred": false
+    },
+    "C10_source_validation_preserved": {
+      "candidate": "C10",
+      "final_source_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "source_scope": "EXACT_PRODUCT_COMMIT",
+      "completed_OS_rows": 2,
+      "WSL2_physical": "PASS",
+      "WSL2_IDE": "PASS",
+      "WSL2_BLE": "PASS",
+      "WSL2_USB_replug": "PASS_FIRST_UART",
+      "WSL2_all204": "STOPPED_SCOPE_CORRECTION_15_COLD_0_WARM_NOT_FULL_PASS",
+      "CI": "M12_PASS_NATIVE_SMOKE_PASS_LINUX_WINDOWS_PREREQUISITES_PASS_MACOS_UNIT_FAIL_FULL_NATIVE_CANCELLED",
+      "native_Ubuntu_physical": "NOT_RUN",
+      "previous_source_credit_transferred": false,
+      "completed_OS_rows_scope": "Two C10 direct WSL2 rows: Ubuntu24 baseline-plus-impact and Ubuntu26 version compatibility; C5 Windows11 remains a separate baseline.",
+      "Ubuntu24_WSL2_closure": "COMPLETE_BASELINE_PLUS_CHANGE_IMPACT",
+      "closure_record": "D:\\w06\\h7c10\\ubuntu24-baseline-impact-closure-a001.json",
+      "closure_record_sha256": "48bbd45a481abf5cab4f41270207dda07e997f74484a0a84f8c7d8f5e07098be",
+      "Ubuntu26_WSL2_closure": "COMPLETE_VERSION_COMPATIBILITY_WSL2",
+      "Ubuntu26_closure_record": "D:\\w06\\h7u26\\closure-a001.json"
+    },
+    "C11_development": {
+      "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "policy_source": "7a01a1ead9f694008cd191dcdf8ef30227d37ec4",
+      "validation": {
+        "candidate": "C11",
+        "final_source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "source_scope": "EXACT_PRODUCT_COMMIT",
+        "completed_OS_rows": 0,
+        "software_CI": "SUCCESS_5_OF_5",
+        "run": 43760678488,
+        "attempt": 1,
+        "previous_source_credit_transferred": false,
+        "physical_MAC_gate": "NOT_RUN",
+        "full204_run": false,
+        "completed_software_OS_rows": 2,
+        "closure_record": "D:\\w06\\h7c11\\closure-a001.json",
+        "software_audit_sha256": "d9af250f9237e94481afbe145211a7475a1fc8edac2f8de73f3c80bd1a20e7eb"
+      },
+      "sdk_compiler_firmware_board_recipe_changed": false,
+      "local_windows": {
+        "passed": 68,
+        "skipped": 2,
+        "actual": "fd23ad/exit0"
+      },
+      "local_linux": {
+        "passed": 14,
+        "actual": "2f4da3/exit0"
+      },
+      "record": "00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md",
+      "unit_checks": [
+        {
+          "OS": "linux-x86_64",
+          "total": 70,
+          "passed": 69,
+          "skipped": 1,
+          "job": 132955379179,
+          "capture": {
+            "kind": "host_exact_CI_job_log_capture",
+            "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+            "job_id": 132955379179,
+            "run_id": 43760678488,
+            "status": "completed",
+            "conclusion": "success",
+            "raw_path": "D:\\w06\\control\\host-w04-job-132955379179.raw.log",
+            "raw_sha256": "a1550f8bdacf620a978081dbb8f599f7f2bedbcf8d773268d09c8de5951463a5",
+            "clean_path": "D:\\w06\\control\\host-w04-job-132955379179.clean.log",
+            "clean_sha256": "cf6f4de806b4d1bee3cf3f02609c1b0f67b293af502f470122b18cd259743dfd"
+          }
+        },
+        {
+          "OS": "windows-x86_64",
+          "total": 70,
+          "passed": 68,
+          "skipped": 2,
+          "job": 132955379204,
+          "capture": {
+            "kind": "host_exact_CI_job_log_capture",
+            "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+            "job_id": 132955379204,
+            "run_id": 43760678488,
+            "status": "completed",
+            "conclusion": "success",
+            "raw_path": "D:\\w06\\control\\host-w04-job-132955379204.raw.log",
+            "raw_sha256": "9f3521b87e637720c6f54695f2291e83c135938763ab0bc39763c6dc632db10a",
+            "clean_path": "D:\\w06\\control\\host-w04-job-132955379204.clean.log",
+            "clean_sha256": "f7093ecd45ea4c1008dccf358bc0ff7d363d4d4324744a354a38dac4d7f996a7"
+          }
+        },
+        {
+          "OS": "macos27-arm64",
+          "total": 70,
+          "passed": 67,
+          "skipped": 3,
+          "job": 132955379219,
+          "capture": {
+            "kind": "host_exact_CI_job_log_capture",
+            "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+            "job_id": 132955379219,
+            "run_id": 43760678488,
+            "status": "completed",
+            "conclusion": "success",
+            "raw_path": "D:\\w06\\control\\host-w04-job-132955379219.raw.log",
+            "raw_sha256": "54dd716d41eb36727aa20add55cbfdc3dc40b554e457de34bde49a67d41ee349",
+            "clean_path": "D:\\w06\\control\\host-w04-job-132955379219.clean.log",
+            "clean_sha256": "14d7100dbdab2c149a301c536870d964c9a3dfe1ba4a7f3fface3188fa9ac9b5"
+          }
+        },
+        {
+          "OS": "macos26-arm64",
+          "total": 70,
+          "passed": 67,
+          "skipped": 3,
+          "job": 132955379258,
+          "capture": {
+            "kind": "host_exact_CI_job_log_capture",
+            "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+            "job_id": 132955379258,
+            "run_id": 43760678488,
+            "status": "completed",
+            "conclusion": "success",
+            "raw_path": "D:\\w06\\control\\host-w04-job-132955379258.raw.log",
+            "raw_sha256": "3bb1661d9b1f8b9a0d53bfd213b6261fc62908933f4aa3b25ee7e40456d27f47",
+            "clean_path": "D:\\w06\\control\\host-w04-job-132955379258.clean.log",
+            "clean_sha256": "a88d753e14602c79c9a0bd45affbdded04d26fa81909497316e1c612e3a8ab34"
+          }
+        }
+      ],
+      "macOS_software": [
+        {
+          "OS": "macOS 26",
+          "version": "26.7.2",
+          "artifact": 14180863023,
+          "cold": 4,
+          "warm": 4,
+          "lifecycle": "PASS",
+          "physical": "NOT_RUN"
+        },
+        {
+          "OS": "macOS 27",
+          "version": "27.0.1",
+          "artifact": 14180588447,
+          "cold": 4,
+          "warm": 4,
+          "lifecycle": "PASS",
+          "physical": "NOT_RUN"
+        }
+      ]
     }
   },
   "W06_document_closure_CI": {
@@ -1278,30 +1426,25 @@
     "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
     "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
   },
-  "active_candidate": "C10",
-  "active_candidate_record": "W07_preparation.C10_development",
+  "active_candidate": "C11",
+  "active_candidate_record": "W07_preparation.C11_development",
   "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
   "current_source_validation": {
-    "candidate": "C10",
-    "final_source_revision": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+    "candidate": "C11",
+    "final_source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
     "source_scope": "EXACT_PRODUCT_COMMIT",
-    "completed_OS_rows": 2,
-    "WSL2_physical": "PASS",
-    "WSL2_IDE": "PASS",
-    "WSL2_BLE": "PASS",
-    "WSL2_USB_replug": "PASS_FIRST_UART",
-    "WSL2_all204": "STOPPED_SCOPE_CORRECTION_15_COLD_0_WARM_NOT_FULL_PASS",
-    "CI": "M12_PASS_NATIVE_SMOKE_PASS_LINUX_WINDOWS_PREREQUISITES_PASS_MACOS_UNIT_FAIL_FULL_NATIVE_CANCELLED",
-    "native_Ubuntu_physical": "NOT_RUN",
+    "completed_OS_rows": 0,
+    "software_CI": "SUCCESS_5_OF_5",
+    "run": 43760678488,
+    "attempt": 1,
     "previous_source_credit_transferred": false,
-    "completed_OS_rows_scope": "Two C10 direct WSL2 rows: Ubuntu24 baseline-plus-impact and Ubuntu26 version compatibility; C5 Windows11 remains a separate baseline.",
-    "Ubuntu24_WSL2_closure": "COMPLETE_BASELINE_PLUS_CHANGE_IMPACT",
-    "closure_record": "D:\\w06\\h7c10\\ubuntu24-baseline-impact-closure-a001.json",
-    "closure_record_sha256": "48bbd45a481abf5cab4f41270207dda07e997f74484a0a84f8c7d8f5e07098be",
-    "Ubuntu26_WSL2_closure": "COMPLETE_VERSION_COMPATIBILITY_WSL2",
-    "Ubuntu26_closure_record": "D:\\w06\\h7u26\\closure-a001.json"
+    "physical_MAC_gate": "NOT_RUN",
+    "full204_run": false,
+    "completed_software_OS_rows": 2,
+    "closure_record": "D:\\w06\\h7c11\\closure-a001.json",
+    "software_audit_sha256": "d9af250f9237e94481afbe145211a7475a1fc8edac2f8de73f3c80bd1a20e7eb"
   },
-  "implementation_revision_scope": "C10_EXACT_PRODUCT_SOURCE_DOCUMENT_CHILD_SEPARATE",
+  "implementation_revision_scope": "C11_EXACT_PRODUCT_SOURCE_DOCUMENT_CHILD_SEPARATE",
   "validation_policy": {
     "approved_date": "2026-11-16",
     "user_instruction": "2026-11-16 사용자 지시에 따라 Ubuntu 24.04 LTS/WSL2의 C10 기준 검증을 우선 마감한다. Ubuntu 26.04 LTS는 호환성 중심으로 확인한다. C5 Windows 11 완료를 유지하고 공통 도구 변경 영향만 제한 회귀한다. OS 버전 차이만으로 전체204를 반복하지 않으며 macOS 26·27도 보존된 기준선과 버전별 호환성을 구분한다. 각 증거의 실제 source·환경·PASS·FAIL을 보존하고 기준선과 변경 영향의 연결을 서로 다른 source의 단일 시험 실적으로 합산하지 않는다.",
@@ -1333,7 +1476,13 @@
         "conditional_skipped": 7
       },
       "impact_record": "D:/w06/h7c10/windows-limited-impact-audit-a001.json",
-      "impact_record_sha256": "f90c96d5728a21c8b461cec7b4907ca04b0911ba42de8497ad452a6171a557db"
+      "impact_record_sha256": "f90c96d5728a21c8b461cec7b4907ca04b0911ba42de8497ad452a6171a557db",
+      "C11_common_executor_impact": {
+        "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "run": 43760678488,
+        "scope": "WINDOWS2025_AND_UBUNTU24_NATIVE_RELATED_HOST_UNITS_NOT_NEW_USER_PHYSICAL",
+        "prior_baseline_source_preserved": true
+      }
     },
     {
       "OS": "Ubuntu 24.04 LTS",
@@ -1343,7 +1492,13 @@
       "status": "COMPLETE_BASELINE_PLUS_CHANGE_IMPACT",
       "validation_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
       "closure_record": "D:\\w06\\h7c10\\ubuntu24-baseline-impact-closure-a001.json",
-      "closure_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34"
+      "closure_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
+      "C11_common_executor_impact": {
+        "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "run": 43760678488,
+        "scope": "WINDOWS2025_AND_UBUNTU24_NATIVE_RELATED_HOST_UNITS_NOT_NEW_USER_PHYSICAL",
+        "prior_baseline_source_preserved": true
+      }
     },
     {
       "OS": "Ubuntu 26.04 LTS",
@@ -1354,19 +1509,39 @@
       "native": false,
       "validation_source": "4890f697ab80dfed3cff62bd42acc42b0f3e1a34",
       "closure_record": "D:\\w06\\h7u26\\closure-a001.json",
-      "closure_record_sha256": "66bc9ae637a2237592038e9e4d548507740c789be58e2f5f0340c8f3c1c0798a"
+      "closure_record_sha256": "66bc9ae637a2237592038e9e4d548507740c789be58e2f5f0340c8f3c1c0798a",
+      "C11_common_executor_impact": {
+        "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "run": 43760678488,
+        "scope": "WINDOWS2025_AND_UBUNTU24_NATIVE_RELATED_HOST_UNITS_NOT_NEW_USER_PHYSICAL",
+        "prior_baseline_source_preserved": true
+      }
     },
     {
       "OS": "macOS 26",
       "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
       "validation_scope": "COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
-      "status": "NATIVE_CI_BASELINE_PRESERVED_PHYSICAL_NOT_RUN"
+      "status": "C11_SOFTWARE_COMPATIBILITY_PASS_PHYSICAL_NOT_RUN",
+      "pre_C11_status": "NATIVE_CI_BASELINE_PRESERVED_PHYSICAL_NOT_RUN",
+      "validation_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "CI_run": 43760678488,
+      "physical_gate": "NOT_RUN",
+      "OS_version": "26.7.2",
+      "artifact": 14180863023,
+      "closure_record": "D:\\w06\\h7c11\\closure-a001.json"
     },
     {
       "OS": "macOS 27",
       "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
       "validation_scope": "VERSION_COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
-      "status": "NOT_RUN"
+      "status": "C11_SOFTWARE_COMPATIBILITY_PASS_PHYSICAL_NOT_RUN",
+      "pre_C11_status": "NOT_RUN",
+      "validation_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "CI_run": 43760678488,
+      "physical_gate": "NOT_RUN",
+      "OS_version": "27.0.1",
+      "artifact": 14180588447,
+      "closure_record": "D:\\w06\\h7c11\\closure-a001.json"
     }
   ],
   "compiler_selection_review": {
@@ -1394,7 +1569,8 @@
       "macOS 26",
       "macOS 27"
     ],
-    "HOST_W07_complete": false
+    "HOST_W07_complete": false,
+    "current_validation_rows_scope": "Completed release evidence remains C10 WSL2; active C11 Mac software is separate and physical rows remain incomplete."
   },
   "macOS_cleanup_diagnostic": {
     "run": 43745916309,
@@ -1415,7 +1591,8 @@
     "zombie_only_original_state_proven": false,
     "controlled_zombie_EPERM_observed": true,
     "status": "UNRESOLVED_PRODUCT_CORRECTION_PENDING",
-    "product_PASS_credit": false
+    "product_PASS_credit": false,
+    "status_scope": "HISTORICAL_C10_DIAGNOSTIC_SNAPSHOT_SEE_macOS_cleanup_resolution"
   },
   "document_scope_CI": {
     "source": "6a8da3f7809234b31a01818912384111137c6fc2",
@@ -1427,5 +1604,16 @@
     "native_policy_source": "441eca8fd9654c91d784c0bc0438b8cbfc98aa9f",
     "native_policy_run": 43749521754,
     "native_policy": "SUCCESS_5_PASS_2_INTENTIONAL_SKIP"
+  },
+  "macOS_cleanup_resolution": {
+    "status": "RESOLVED_ON_C11_FRESH_SOFTWARE_VALIDATION",
+    "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+    "run": 43760678488,
+    "attempt": 1,
+    "original_FAIL_run": 43743775292,
+    "original_diagnostic": 43745916309,
+    "original_C10_FAIL_preserved": true,
+    "original_zombie_only_state_proven": false,
+    "physical_credit": false
   }
 }

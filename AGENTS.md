@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-16 현행 상태: **M33-W07 / HOST-W07, Host 6/8**. C5 Windows 11 기준선+C10 영향 검사와 Ubuntu24.04/WSL2 행을 마감했다. OS 버전별 전체 빌드는 반복하지 않는다. 상세 결과·미해결 FAIL·남은 순서는 [C6~C10 진행 기록](<00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>).
+현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
 
 ## 시작 전에
 
@@ -21,7 +21,7 @@
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- 현재 작업은 HOST-W07의 C5 Windows 11 완료 보존과 C8 실적 보존·C10 Ubuntu 24.04/WSL2 새 source 검증이다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
+- 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 검증을 완료한 뒤 실제 Mac USB·IDE 검증을 준비하는 단계다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
 - 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
   실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
   `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
@@ -67,8 +67,8 @@
   위치·hash와 새 채팅 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)를 따릅니다.
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
-  소스의 `coreVersion()` 식별 문자열과 공개 stable은 **0.5.0**, 비공개 C10 검증 후보 패키지는 **0.6.0-rc.1**입니다. M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·macOS26/27 대기**입니다. W05 exact `5f9b2257…`에서
+  소스의 `coreVersion()` 식별 문자열과 공개 stable은 **0.5.0**, 비공개 C11 검증 후보 패키지는 **0.6.0-rc.1**입니다. M32의 38개 지원 후보는 `not_published`입니다.
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software PASS·Mac 실기 대기**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고
