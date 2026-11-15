@@ -105,7 +105,8 @@ def cache_input_manifest(
     host_descriptor = describe_host()
     manifest = {
         "schema_version": CACHE_SCHEMA_VERSION,
-        "host": {key: host_descriptor[key] for key in ('os', 'architecture', 'distribution', 'version', 'native')},
+        "host": {key: host_descriptor[key] for key in (
+            'os', 'architecture', 'distribution', 'version', 'native', 'execution_environment')},
         "adapter": {
             "version": ADAPTER_VERSION,
             "platform_root": platform_root.as_posix(),

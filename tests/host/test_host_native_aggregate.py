@@ -78,6 +78,15 @@ class HostNativeAggregateTests(unittest.TestCase):
         self.assertEqual(len(set(compared['ELF_original_sha256'].values())), 3)
         self.assertEqual(compared['flash_bytes'], 4)
 
+    def test_wsl2_cannot_fill_native_ubuntu_matrix(self):
+        """! @brief WSL2의 실제 성공도 native Ubuntu CI 실적으로 합산하지 않습니다. """
+        rows = [self.record(platform) for platform in A.PLATFORMS]
+        for row in rows:
+            if row['context']['platform_key'] == 'linux-x86_64':
+                row['context']['host'].update(native=False, execution_environment='wsl2')
+        with self.assertRaises(ValueError):
+            A.partition(rows, self.source, self.version, 'smoke')
+
     def test_changed_instruction_or_memory_budget_fails_comparison(self):
         """! @brief 서로 다른 실제 명령과 RAM 사용량을 동일 firmware로 합치지 않습니다. """
         rows = self.image_rows()

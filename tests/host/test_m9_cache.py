@@ -242,12 +242,21 @@ class M9CacheContractTests(unittest.TestCase):
         baseline = collect()
         baseline_key = MODULE.cache_key_for_manifest(baseline)
         for host in (
-            {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu', 'version': '24.04', 'native': True},
-            {'os': 'macos', 'architecture': 'arm64', 'distribution': 'macos', 'version': '26', 'native': True},
+            {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu', 'version': '24.04', 'native': True, 'execution_environment': 'native'},
+            {'os': 'macos', 'architecture': 'arm64', 'distribution': 'macos', 'version': '26', 'native': True, 'execution_environment': 'native'},
         ):
             if host != baseline['host']:
                 with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=host):
                     self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+        native_linux = {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu',
+            'version': '24.04', 'native': True, 'execution_environment': 'native'}
+        wsl2 = dict(native_linux, native=False, execution_environment='wsl2')
+        with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=native_linux):
+            native_key = MODULE.cache_key_for_manifest(collect())
+        with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=wsl2):
+            wsl_manifest = collect()
+            self.assertEqual(wsl_manifest['host']['execution_environment'], 'wsl2')
+            self.assertNotEqual(MODULE.cache_key_for_manifest(wsl_manifest), native_key)
         self.assertEqual(
             baseline["adapter"]["embedded_core_revision"], "f" * 40
         )

@@ -1,13 +1,13 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C6 WSL2 지원 개발 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C6의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
 | 현재 구현 상태 | **W01~W05 기술 완료 5/8; W06 사용자 수락 마감으로 6/8** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 순차 Host 계획 | M33-W06 수락 마감. Host 6/8, M33-W07의 HOST-W07 Windows 11 완료·나머지 네 OS 대기 |
+| 순차 Host 계획 | M33-W06 수락 마감. Host 6/8, M33-W07의 HOST-W07 C5 Windows 11 완료 보존·C6 Ubuntu 24.04/WSL2 착수 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
 | 최종 갱신일 | 2026-11-15 |
@@ -74,7 +74,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
-| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 Windows 11 완료·나머지 네 OS 대기, HOST-W08 미완료 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 C5 Windows 11 완료 보존·C6 Ubuntu 24.04/WSL2 착수, HOST-W08 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
 W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07의 나머지 OS를 순차 검증하며 #29 분석은 유예한다. 이번에 허용한 병렬

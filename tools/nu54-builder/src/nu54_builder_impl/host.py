@@ -21,6 +21,7 @@ class HostDescriptor(TypedDict):
     distribution: str
     version: str
     native: bool
+    execution_environment: str
     supported: bool
     reason: str
 
@@ -138,14 +139,22 @@ def describe_host(
 ) -> HostDescriptor:
     host_os = canonical_host_os(system_name or platform.system())
     architecture = canonical_architecture(machine or platform.machine())
+    execution_environment = "non_native" if native is False else "native"
     if native is None:
         native = True
         if system_name is None and machine is None:
             if host_os == "linux":
-                native = "microsoft" not in platform.release().casefold() and not os.environ.get("WSL_DISTRO_NAME")
+                kernel = platform.release().casefold()
+                if "microsoft" in kernel or os.environ.get("WSL_DISTRO_NAME"):
+                    native = False
+                    execution_environment = "wsl_unverified"
+                    if "microsoft" in kernel and ("wsl2" in kernel or "microsoft-standard" in kernel):
+                        execution_environment = "wsl2"
             elif host_os == "windows":
                 underlying = os.environ.get("PROCESSOR_ARCHITEW6432", os.environ.get("PROCESSOR_ARCHITECTURE", ""))
                 native = not (architecture == "x86_64" and underlying.casefold() == "arm64")
+                if not native:
+                    execution_environment = "non_native"
 
     if host_os == "windows":
         host_distribution = (distribution or "windows").casefold()
@@ -161,14 +170,14 @@ def describe_host(
             and host_distribution == "ubuntu"
             and version_tuple(host_version) >= (24, 4)
         )
-        requirement = "Ubuntu 24.04+ AMD64 native"
+        requirement = "Ubuntu 24.04+ AMD64 native 또는 확인된 WSL2 (WSL1·판별 불명 WSL 제외)"
     else:
         host_distribution = (distribution or "macos").casefold()
         host_version = version or platform.mac_ver()[0] or "unknown"
         supported = architecture == "arm64" and version_tuple(host_version) >= (26,)
         requirement = "macOS 26+ Apple Silicon native"
 
-    if not native:
+    if not native and execution_environment != "wsl2":
         supported = False
     reason = "supported" if supported else f"필요 조건: {requirement}"
     return {
@@ -177,6 +186,7 @@ def describe_host(
         "distribution": host_distribution,
         "version": host_version,
         "native": native,
+        "execution_environment": execution_environment,
         "supported": supported,
         "reason": reason,
     }
@@ -190,7 +200,8 @@ def require_supported_host(descriptor: HostDescriptor | None = None) -> HostDesc
             "[NU54:E_HOST_UNSUPPORTED] 지원하지 않는 Host입니다: "
             f"os={current['os']} distribution={current['distribution']} "
             f"version={current['version']} architecture={current['architecture']} "
-            f"native={str(current['native']).lower()}; {current['reason']}"
+            f"native={str(current['native']).lower()} "
+            f"environment={current.get('execution_environment', 'unknown')}; {current['reason']}"
         )
     return current
 

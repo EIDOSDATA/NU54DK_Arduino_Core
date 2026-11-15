@@ -128,7 +128,8 @@ def main(arguments=None):
     url = address+'/'+index_name
     thread = threading.Thread(target=server.serve_forever,daemon=True)
     thread.start()
-    receipt = dict(kind='NATIVE_PRIVATE_LIFECYCLE',status='FAIL',source_revision=args.source,
+    receipt = dict(kind=('NATIVE_PRIVATE_LIFECYCLE' if descriptor['native'] else 'WSL2_PRIVATE_LIFECYCLE'),
+        status='FAIL',source_revision=args.source,
         previous_source_revision=args.previous_source,host=descriptor,
         prior_source_build_credit_transferred=False,hardware_operations=0,
         physical_USB_gate='NOT_RUN',public_stable_migration='NOT_RUN_SEPARATE_WINDOWS_ROW',

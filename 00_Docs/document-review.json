@@ -5,6 +5,110 @@
   "follow_up_reviews": [
     {
       "review_date": "2026-11-15",
+      "baseline_commit": "29e2a6bcb17c64b6002d252be3d0a51fbef21cb1",
+      "purpose": "사용자 승인 WSL2 지원·Ubuntu24.04 준비를 C6로 구분하고 C5/FAIL 보존",
+      "method": "Host 판별·cache·설치·RC 실행 경로와 관련 현행 문서 직접 대조; 병렬 읽기 전용 코드·문서·공식 설치 절차 검토",
+      "scope": "관련 현행 문서; 과거 전체 문서·실기를 재판정하지 않음",
+      "current_state": {
+        "stage": "M33-W07 / HOST-W07",
+        "candidate": "C6_DEVELOPMENT",
+        "C5_preserved": true,
+        "Ubuntu_WSL2": "WAIT_WINDOWS_REBOOT",
+        "new_OS_PASS": 0,
+        "automation": "PAUSED"
+      },
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "packaging/boards-manager/README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "a24ef0d73f932edeb7e911d2430bb558985a023b2b96591a433c83818e9c6c9f"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "d601eb525a9ee65d2c4f1f6ae77cc510ee8917863fa7daedecf5a8ab512234a6"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "6af71d32d06a42ee1f4d0d2f3c534e7babb1b0c2fa896040ee06ea5f9a4a311a"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "9f6e6fbaa0eb8b4e7d781d4192b414916b15e61f4bae313396875dfc87f32b8f"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md",
+          "sha256_utf8_lf": "3bfcb73ede3e48e888c9b18a573f464154746246cd3411b0668e55250869ec5b"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "c20f5565e82028c0452f9ffccda2794a2626cbb1f4228cf4b20a063c1f38e295"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "df7df22684ae7e7ce7237e362298e074b55194b4462c091cd0fb0512dad3ebe6"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "0ec436045bfcbe16628711aec12b8fe1056c2d79124f1fb0c000252d26d0eadc"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "7ba82a2797d83fe3e844894eb6496ce83e556925ea809ea47b7f2d59db435398"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "7d24e0aefaf0ebf1ccf5a7d573a9c08f40a564b898c8a04ae67a72b47385bfee"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "01d1db95c87b07869fe9748faa9d0cf61173803b94c0de391a502b7335d9f694"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "92ca2d222f84ed6e371f895706c249a9bad8854b73181a362b5755a0e60b7837"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "13c3b6998df806e9878f8bb52d5b06c1439d652eb24da8cd95b5574c355faaa9"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "12dc9659dd1227f0db221bd4695de4668c9829bd7047b6387f7d25d44f94d2b3"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "2ccecd02c05808458150a52cdd24a0f4e524b56cd421f841f2e4e90210c54f38"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "504f3084ee5917dbe456a01c22e216e50c69be201a06ebf1611524432e0cfe28"
+        }
+      ],
+      "checks": {
+        "docs_gate": "a25e86/exit0; 537 Markdown UTF8/local-link PASS",
+        "focused_Host": "3b3c9a/exit0; 102 PASS + 5 POSIX conditional SKIP",
+        "C5_original_results_changed": false
+      }
+    },
+    {
+      "review_date": "2026-11-15",
       "baseline_commit": "1309187a028fb695ce38040d79533832f74f4ccd",
       "purpose": "사용자 지시: Windows 11 검증 문서 전면 정합화와 별도 기록 커밋·푸시·exact CI",
       "method": "추적 Markdown 536개 전체 UTF-8 내용·충돌 표식·상태 검색 및 local-link gate; 병렬 읽기 전용 검토로 현행 계약·실행 안내·릴리스 문맥을 검토하고 근거와 대조",

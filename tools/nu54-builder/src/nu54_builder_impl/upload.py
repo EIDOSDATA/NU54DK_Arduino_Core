@@ -201,7 +201,8 @@ def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None =
     if not probe_ids:
         raise AdapterError(
             "[NU54:E_PROBE_NONE] No CMSIS-DAP probe detected. 데이터 USB cable, target 전원, "
-            "Windows 장치 관리자의 CMSIS-DAP를 확인하십시오."
+            "CMSIS-DAP 열거와 USB 접근 권한을 확인하십시오. "
+            "WSL2에서는 Windows의 usbipd 연결 상태와 Linux udev 권한을 확인하십시오."
         )
     if len(probe_ids) != 1:
         raise AdapterError(

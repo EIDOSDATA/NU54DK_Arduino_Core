@@ -2,9 +2,9 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-15",
-  "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
+  "status": "HOST_W07_C6_WSL2_DEVELOPMENT_WAIT_WINDOWS_REBOOT",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING",
+  "implementation_revision": "C6_DEVELOPMENT_BASE_29e2a6_NOT_FINAL_SOURCE",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -850,6 +850,50 @@
         }
       ],
       "decision_record": "00_Docs/04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md"
+    },
+    "C6_development": {
+      "status": "WSL2_IMPLEMENTED_DEVELOPMENT_CHECKS_PASS_WAIT_WINDOWS_REBOOT",
+      "authorization_date": "2026-11-15",
+      "base_commit": "29e2a6bcb17c64b6002d252be3d0a51fbef21cb1",
+      "source_revision": null,
+      "source_scope": "DEVELOPMENT_WORKTREE_NOT_FINAL_CLEAN_SOURCE",
+      "preserved_C5_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "C5_credit_transferred": false,
+      "host_descriptor": {
+        "native": false,
+        "execution_environment": "wsl2"
+      },
+      "target_environment": {
+        "os": "Ubuntu",
+        "version": "24.04 LTS",
+        "architecture": "AMD64",
+        "execution_environment": "WSL2"
+      },
+      "development_checks": {
+        "actual": "3b3c9a/exit0",
+        "total": 107,
+        "pass": 102,
+        "conditional_skip": 5,
+        "errors": 0,
+        "failures": 0
+      },
+      "setup": {
+        "WSL": "3.0.5.0",
+        "usbipd": "5.3.0",
+        "VirtualMachinePlatform_exit": 3010,
+        "reboot_required": true,
+        "automatic_reboot": false
+      },
+      "validation": {
+        "Ubuntu_registration": "NOT_RUN",
+        "SDK": "NOT_RUN",
+        "lifecycle": "NOT_RUN",
+        "build": "NOT_RUN",
+        "USB": "NOT_RUN",
+        "IDE": "NOT_RUN",
+        "native_Ubuntu_credit": false
+      },
+      "record": "00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md"
     }
   },
   "W06_document_closure_CI": {
@@ -869,5 +913,20 @@
       "job_id": 129867520315,
       "raw_log_sha256": "acddf2a1869c320bcd97b6be80ec3f888ace37eae8b6c214ef3256575160045f"
     }
+  },
+  "previous_candidate_summary": {
+    "status": "HOST_W07_WINDOWS11_COMPLETE_OTHER4_PENDING",
+    "implementation_revision": "HOST_W07_C5_WINDOWS11_COMPLETE_OTHER4_PENDING"
+  },
+  "active_candidate": "C6_DEVELOPMENT",
+  "active_candidate_record": "W07_preparation.C6_development",
+  "user_physical_OS_gate_scope_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+  "current_source_validation": {
+    "candidate": "C6",
+    "final_source_revision": null,
+    "completed_OS_rows": 0,
+    "WSL2_physical": "NOT_RUN",
+    "native_Ubuntu_physical": "NOT_RUN",
+    "C5_credit_transferred": false
   }
 }

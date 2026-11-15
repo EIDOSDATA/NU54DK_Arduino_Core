@@ -1,13 +1,13 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-15 현행 상태: **M33-W07·HOST-W07 Windows 11 RC1 검증 완료, OS 1/5·Host 6/8**. v0.6.0 지원 목표는 Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon이다. C5 자동 검증, Windows 11 격리 CLI 갱신, USB 재연결과 잘못된 probe UID 거부가 통과했다. COM17·18에서 기본 CMSIS-DAP 업로드와 Blink 실기가 통과했다. COM18 재연결 후 UART와 IDE 2.3.11의 비공개 RC1 설치·단독 Blink Verify도 통과했다. IDE 자동 분석과 Verify의 동시 SDK 사용 제한은 별도로 보존한다. COM5·6의 SWD 초기화 실패는 보존했다. [지원 범위와 진행 기록](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>). W06 실제 PASS 46개·수락 3개와 기존 FAIL을 보존한다. #29 분석 유예, w06 PAUSED.
+2026-11-15 현행 상태: **M33-W07·HOST-W07 C6 WSL2 지원 개발 중, Host 6/8**. C5의 Windows 11 완료·전체204·자동 검증 실적과 기존 FAIL은 원형 보존한다. 사용자 승인으로 Ubuntu 24.04 LTS AMD64/WSL2 설치·USB 검증을 진행하며 C6의 실제 OS 완료는 아직 없다. 다섯 OS 지원 목표와 native/WSL2 실행 환경을 구분한다. [C6 진행 기록](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>). W06 실제 PASS46·수락3 보존, #29 분석 유예, w06 PAUSED.
 
 | 항목 | 현재 상태 |
 | --- | --- |
 | 목표 버전 | **v0.6.0 — 계획, 미공개** |
 | 진행 범위 | M32 완료; M33-W06 사용자 수락 마감(실제 PASS 46 + 승인 3) — [W06 수락 마감 근거](TODO_M33.md#m33-w06--자원회귀상호운용) |
 | 기능 작업 | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8** — W06 strict 예외는 310번 참조 |
-| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 Windows 11 완료·나머지 네 OS 대기 |
+| Host 트랙 | HOST-W01~W06 완료 **6/8**. M33-W07의 HOST-W07에서 C5 Windows 11 완료 보존·C6 Ubuntu 24.04/WSL2 착수 |
 | v0.6.0 지원 목표 | Windows 11 x64, Ubuntu 24.04 LTS·26.04 LTS AMD64, macOS 26·27 Apple Silicon |
 | 현재 지원·설치 | Windows 10/11 x64용 **v0.5.0** |
 | 개발·보존 | `main`에서 분기한 `Dev-0.6.0-M33`; M32 브랜치 삭제·로컬 bundle 보관, 원격 `Release-0.5.0` 기준선 보존 |

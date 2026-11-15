@@ -69,7 +69,7 @@ class HostPrerequisiteTests(unittest.TestCase):
             P.load_manifest(path)
 
     def test_unsupported_os_architecture_and_emulation_are_rejected(self):
-        """! @brief native Ubuntu AMD64 외 Linux와 emulation을 승인하지 않습니다. """
+        """! @brief 지원 Ubuntu AMD64 외 Linux와 CPU emulation을 승인하지 않습니다. """
         for arguments in (
             dict(system_name='Linux', machine='arm64', distribution='ubuntu', version='24.04'),
             dict(system_name='Linux', machine='x86_64', distribution='debian', version='13'),
@@ -87,16 +87,51 @@ class HostPrerequisiteTests(unittest.TestCase):
         with self.assertRaisesRegex(P.AdapterError, 'E_HOST_ASSET_URL'):
             P.validate_asset(asset)
 
-    def test_actual_wsl_host_is_not_native_supported(self):
-        """! @brief 실제 Host 탐색에서 WSL을 native Ubuntu 지원으로 오인하지 않습니다. """
+    def test_wsl2_is_supported_without_native_evidence_credit(self):
+        """! @brief WSL2 설치를 허용하되 native Ubuntu 실적으로 기록하지 않습니다. """
         host = BUILDER.implementation.host
-        with mock.patch.object(host.platform, 'system', return_value='Linux'), \
-             mock.patch.object(host.platform, 'machine', return_value='x86_64'), \
-             mock.patch.object(host.platform, 'release', return_value='5.15.0-microsoft-standard-WSL2'), \
-             mock.patch.object(host, 'linux_release', return_value=('ubuntu', '24.04')):
-            descriptor = host.describe_host()
-        self.assertFalse(descriptor['native'])
-        self.assertFalse(descriptor['supported'])
+        for kernel in ('6.6.87.2-microsoft-standard-WSL2', '4.19.104-microsoft-standard'):
+            with self.subTest(kernel=kernel), \
+                 mock.patch.object(host.platform, 'system', return_value='Linux'), \
+                 mock.patch.object(host.platform, 'machine', return_value='x86_64'), \
+                 mock.patch.object(host.platform, 'release', return_value=kernel), \
+                 mock.patch.object(host, 'linux_release', return_value=('ubuntu', '24.04')), \
+                 mock.patch.dict(os.environ, {}, clear=True):
+                descriptor = host.require_supported_host()
+                self.assertFalse(descriptor['native'])
+                self.assertEqual(descriptor['execution_environment'], 'wsl2')
+                self.assertEqual(P.select_platform(self.manifest, descriptor)[0], 'linux-x86_64')
+
+    def test_wsl1_and_environment_hint_without_wsl2_kernel_are_rejected(self):
+        """! @brief WSL1과 환경 변수만 있는 판별 불명 환경은 설치 전에 거부합니다. """
+        host = BUILDER.implementation.host
+        for kernel in ('4.4.0-19041-Microsoft', '6.8.0-generic'):
+            with self.subTest(kernel=kernel), \
+                 mock.patch.object(host.platform, 'system', return_value='Linux'), \
+                 mock.patch.object(host.platform, 'machine', return_value='x86_64'), \
+                 mock.patch.object(host.platform, 'release', return_value=kernel), \
+                 mock.patch.object(host, 'linux_release', return_value=('ubuntu', '24.04')), \
+                 mock.patch.dict(os.environ, {'WSL_DISTRO_NAME': 'Ubuntu-24.04'}, clear=True):
+                descriptor = host.describe_host()
+                self.assertFalse(descriptor['native'])
+                self.assertEqual(descriptor['execution_environment'], 'wsl_unverified')
+                with self.assertRaisesRegex(P.AdapterError, 'E_HOST_UNSUPPORTED'):
+                    P.select_platform(self.manifest, descriptor)
+
+    def test_wsl2_keeps_distribution_architecture_and_version_limits(self):
+        """! @brief WSL2 표식이 다른 배포판·CPU·구형 Ubuntu를 허용하지 않습니다. """
+        host = BUILDER.implementation.host
+        for architecture, distribution, version in (
+            ('arm64', 'ubuntu', '24.04'), ('x86_64', 'debian', '13'),
+            ('x86_64', 'ubuntu', '22.04'),
+        ):
+            with self.subTest(architecture=architecture, distribution=distribution, version=version), \
+                 mock.patch.object(host.platform, 'system', return_value='Linux'), \
+                 mock.patch.object(host.platform, 'machine', return_value=architecture), \
+                 mock.patch.object(host.platform, 'release', return_value='6.6.87.2-microsoft-standard-WSL2'), \
+                 mock.patch.object(host, 'linux_release', return_value=(distribution, version)):
+                with self.assertRaisesRegex(P.AdapterError, 'E_HOST_UNSUPPORTED'):
+                    host.require_supported_host()
 
     def test_macos_sdk_root_is_fixed_without_changing_permissions(self):
         """! @brief macOS 고정 위치와 사용자 권한 준비 경계를 유지합니다. """
