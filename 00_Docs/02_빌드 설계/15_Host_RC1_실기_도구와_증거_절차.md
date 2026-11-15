@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<../04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<../04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
-상태: HOST-W07 준비 중, Host6/8. 비공개 RC1 도구 구현과 실제 완료 판정을 구분한다.
+상태: HOST-W07 준비 완료·사용자 OS 실기 대기, Host6/8. 비공개 RC1 도구 구현과 실제 완료 판정을 구분한다.
 마지막 완료 기술 source는 [322번 H12 마감](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.

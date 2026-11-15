@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<../../00_Docs/04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<../../00_Docs/04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 정식 지원 버전은 **v0.5.0**입니다. 설치 방법은
 [릴리스 안내](../../00_Docs/05_릴리스/README.md)를, 정식 package·승인·공개 절차는

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
-  "updated_date": "2026-11-14",
+  "updated_date": "2026-11-15",
   "status": "in_progress",
   "current_work_package": "HOST-W07",
-  "implementation_revision": "HOST_W06_H12_CLOSED_W07_C5_VERIFIER_CORRECTION",
+  "implementation_revision": "HOST_W07_C5_AUTOMATIC_PASS_USER_OS_GATES_PENDING",
   "completed_work_packages": 6,
   "total_work_packages": 8,
   "work_packages": [
@@ -441,12 +441,12 @@
     "HIL_credit": 0
   },
   "W07_preparation": {
-    "status": "C5_FINITE_NEGATIVE_BUDGET_CORRECTION_FINAL_PENDING",
-    "product_integration": "C5_WORKTREE_FROM_85812309fca62b9fa418490becbe7696aa2aa148",
+    "status": "C5_PREPARATION_COMPLETE_USER_PHYSICAL_OS_GATES_PENDING",
+    "product_integration": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
     "process_draft": "CONTROL_ONLY_V002_SDK_PYTHON_7_TESTS_PASS",
     "draft_not_final_source_credit": true,
     "windows_physical_regression": "NOT_RUN",
-    "private_RC1": "C4_REPRESENTATIVE_PHYSICAL_PASS_NATIVE_NEGATIVE_TIMEOUT_C5_PENDING",
+    "private_RC1": "C5_PRIVATE_KIT_AUTOMATIC_VERIFIED_NOT_PUBLISHED",
     "user_physical_OS_gate": "NOT_RUN",
     "physical_OS_gate": "NOT_RUN",
     "new_HIL_runs": 0,
@@ -584,7 +584,7 @@
         "sha256": "8d63c2dd08cc3b7f61d4bb75ec7a3d57f712890e5e88935b2f1a3644aaec444f"
       }
     ],
-    "final_same_source_CI": "C5_NOT_RUN",
+    "final_same_source_CI": "PASS_C5_48_JOBS",
     "no_system_Git_input_check": {
       "first_actual": "b612eb/exit1",
       "cause": "DIAGNOSTIC_INPUT_FOLDER_LACKED_CORE_ZIP",
@@ -745,6 +745,41 @@
       "final_CI": "NOT_RUN",
       "final_same_source_credit": false,
       "group29_cause_inferred": false
+    },
+    "preparation_complete": true,
+    "C5_final_validation": {
+      "source_revision": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
+      "Windows_cold204": 204,
+      "warm4": 4,
+      "negative9": 9,
+      "Windows_continuation_actual": "native-pid13264/exit0",
+      "Windows_single_attempt_pass": false,
+      "Windows_build_segments": [
+        {
+          "cold": 146,
+          "warm": 2,
+          "negative": 0,
+          "status": "INTERRUPTED"
+        },
+        {
+          "cold": 58,
+          "warm": 2,
+          "negative": 9,
+          "status": "PASS"
+        }
+      ],
+      "representative_actual": "f519d8/exit0",
+      "physical_actual": "81d7b4/exit0",
+      "native_workers": 24,
+      "native_positive_compiles": 612,
+      "native_negative_rejections": 27,
+      "image_comparisons": 204,
+      "CI_success_jobs": 48,
+      "private_kit_entries": 221,
+      "all_user_OS_gate": "NOT_RUN",
+      "CMSIS_DAP_physical": "NOT_RUN",
+      "source_credits_combined": false,
+      "group29_analysis": "DEFERRED_BY_USER"
     }
   },
   "W06_document_closure_CI": {

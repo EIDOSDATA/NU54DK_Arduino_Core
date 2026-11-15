@@ -1,13 +1,13 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-14 현행 상태: **Host6/8·HOST-W07 C5 검증 예산 교정 중**. C4 대표8빌드·실기11단계는 통과했고 CI software9·prerequisite3·build6개가 성공했다. native Windows shard5는 positive25 PASS 후 negative 준비120초 timeout으로 실패했다. C4 전체빌드는 cold37개 완료 후 통제 종료로 보존하며, C5 유한 예산300초 교정 뒤 새 exact 검증을 진행한다. [source별 결과](<04_검증 기록/327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
+2026-11-15 현행 상태: **Host6/8·HOST-W07 C5 준비 완료·사용자 OS 실기 대기**. C5 exact source의 전체204·negative9·대표8빌드·조건부 Windows11 실기11단계와 CI48 job·native204비교는 PASS다. OS7행·IDE·물리 USB·기본 CMSIS-DAP은 미완료다. [source별 결과](<04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>). W06 실제 PASS46·수락3·FAIL 보존, #29 분석 유예, w06 PAUSED를 유지한다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
 | 현재 구현 상태 | **W01~W05 기술 완료 5/8; W06 사용자 수락 마감으로 6/8** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 순차 Host 계획 | W06 사용자 수락 마감; HOST 6/8, W06 완료·W07 준비 중 |
+| 순차 Host 계획 | W06 사용자 수락 마감; HOST 6/8, W06 완료·W07 준비 완료·사용자 OS 실기 대기 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
 | 최종 갱신일 | 2026-11-10 |
@@ -74,7 +74,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
-| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | 미착수 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | RC1·Host 준비 진행, 필수 OS 실기·W08 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
 W02~W05는 완료했다. W06의 실기와 실패 수정은 한 항목씩 순차 처리한다. 이번에 허용한 병렬
