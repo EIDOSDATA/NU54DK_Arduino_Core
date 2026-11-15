@@ -2,7 +2,7 @@
 
 현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
 
-상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 완료·C8 실적 보존·C9 부분 PASS·재연결 FAIL 보존·C10 Ubuntu24.04/WSL2 기준선·변경 영향 검증 완료·나머지 세 OS 대기.
+상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·macOS26/27 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.
@@ -108,3 +108,5 @@ Twister의 PLY 생성물은 고정 SDK가 제공하는 `PARSETAB_DIR`를 사용�
 공식 근거는 [고정 NCS 요구사항](https://github.com/nrfconnect/sdk-nrf/blob/99553055607b2e9885fbc80ccd11fa9da81c2df0/doc/nrf/installation/recommended_versions.rst),
 [nrfutil 특정 version 설치](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util),
 [sdk-manager 기본 설치 위치](https://docs.nordicsemi.com/r/bundle/nrfutil/page/nrfutil-sdk-manager/nrfutil-sdk-manager-install.html/default-installation-locations)다.
+
+새 Ubuntu/WSLg에서 한글 주석이 네모로 보이면 배포판 공식 `fonts-noto-cjk`를 설치한다. 이 글꼴 설정은 고정 SDK·컴파일러와 별개이며 펌웨어 재빌드 조건이 아니다.

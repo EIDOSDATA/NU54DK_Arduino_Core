@@ -1,7 +1,8 @@
-# HOST-W07 C6~C10 WSL2 지원과 Ubuntu 24.04 검증
+# HOST-W07 C6~C10 WSL2 지원과 Ubuntu 24.04·26.04 검증
 
 2026-11-15 사용자 지시로 WSL2 지원과 Ubuntu 24.04 LTS의 설치·NU54DK USB 실기를 착수했다.
-현재 단계는 **M33-W07 / HOST-W07**, Host 완료6/8이다. C10 새 설치·대표8·Blink·UART·
+현재 단계는 **M33-W07 / HOST-W07**, Host 완료6/8·지원표3/5다. Ubuntu26.04/WSL2 호환성도 마감했다.
+Ubuntu24.04/WSL2의 C10 새 설치·대표8·Blink·UART·
 debug·BLE·잘못된 UID 거부와 실제 USB 재연결 후 첫 UART6개·IDE Verify가 PASS다.
 C5 전체 native 기준선에 C10 변경 영향 증거를 연결해 Ubuntu24.04/WSL2 행을 마감했다. 중복 전체204는15cold 뒤 범위 정정으로 중단·정리했다. 전체 PASS로 세지 않는다. C5 Windows 완료와 C6~C9 원본 PASS/FAIL을 보존한다.
 
@@ -185,8 +186,8 @@ C8 kit manifest SHA-256은 `f1ef61550fd52fc2d295cda5eabcbac780bcbd4c5cba41467837
 DTR 단독 진단 종료 시 두 NU54DK를 C8 SerialEcho로 복귀했다. 후속 역할 image 변경은 새 attempt에 기록한다.
 
 1. 완료한 C5 기준선과 C10 설치·대표8·실기·재연결·IDE·변경 영향 증거를 보존한다. Ubuntu24.04/WSL2 행은 마감했다.
-2. 이번 문서·CI 설정 후속의 exact CI를 확인한다. C10의 불필요한 전체 native shard는 smoke 원본을 보존한 뒤 취소했다.
-3. Ubuntu26.04 LTS의 설치·대표 cold/warm build·USB/serial/debug·lifecycle 호환성을 확인한다. 전체204는 반복하지 않는다.
+2. 문서·CI 설정 검증을 완료했다. C10의 불필요한 전체 native shard는 smoke 원본을 보존한 뒤 취소했다.
+3. Ubuntu26.04/WSL2 호환성을 마감했다. 전체204·BLE·물리 재연결은 반복하지 않았으며 실제 결과는 아래 절에 보존한다.
 4. macOS 프로세스 정리 FAIL을 교정·집중 검증하고 macOS26 →27의 설치·장치·IDE 호환성을 확인한다. 실제 Mac 환경 확보가 필요하다.
 5. HOST-W08 지원표·설치 안내·제한·검증 원장을 마감하고 M33-W07을 닫는다.
 6. M33-W08의 별도 릴리스 승인 뒤 tag·Release·공개 index와 공개 URL 설치 검증을 수행한다.
@@ -252,8 +253,7 @@ lifecycle9단계·설치960파일·발견204·실기·물리 재연결·IDE를 �
 140PASS·조건부SKIP1과 SDK 설치·재검증 PASS다. C10 M12는9/9이며 native smoke3OS 원본 byte 재집계는
 `f7ddc5/exit0`으로 통과했다. 최초 재집계는 다른 문서 HEAD에서 실행해 source 가드가 거부했다
 (`a95518/exit1`). 원본을 보존하고 actual C10 checkout에서 새 감사만 수행했으며 재빌드하지 않았다.
-지원표는 Windows11 기준선 유지와 Ubuntu24.04/WSL2 완료로2/5다. C10 직접 마감은1행이며
-native Ubuntu 사용자 실기 NOT_RUN, 나머지3행 및 HOST-W07/W08 미완료를 유지한다.
+Ubuntu24 행 마감 당시 지원표는 Windows11 기준선 유지와 Ubuntu24.04/WSL2 완료로2/5였다. 당시 C10 직접 마감은1행이었다. 이후 Ubuntu26 결과는 아래에 분리하며 native Ubuntu 사용자 실기와 HOST-W07/W08 미완료 경계는 유지한다.
 
 C10 native run43743775319는 완료한 producer·세 smoke·비교5job과 원본 artifact8개를 보존한 뒤
 중복 전체 shard를 취소했다. 실행 전체는 CANCELLED이며 전체204 PASS가 아니다. 취소 원문과
@@ -266,3 +266,36 @@ SIGKILL이 EPERM(errno1)을 반환했고 `OwnedExecutionError`로 기록됐다. 
 실행 실패가 아니며 제품 교정 전의 미해결 FAIL이다. 진단 workflow 성공은 제품 PASS로 세지 않는다.
 원본 ZIP hash는 `e01b128bde4e760b987a20742a641138f8131d2908f516429ad87525e1c8c1af`,
 보존은 `24009a/exit0`·`ee0889/exit0`이다.
+
+## Ubuntu26.04/WSL2 호환성 마감
+
+`a93b76/exit0`과 `D:/w06/h7u26/closure-a001.json`에서 C10 `4890f697…`의
+Ubuntu26.04.1/WSL2 버전 호환성을 마감했다. 지원표는 Windows11 기준선 유지와
+Ubuntu24.04·26.04/WSL2 완료로 **3/5**, C10 직접 완료는 **2행**이다.
+macOS26·27, HOST-W07/W08 및 M33-W07은 아직 미완료다. native Ubuntu 실기로 확대하지 않는다.
+
+| 항목 | 실제 결과 |
+| --- | --- |
+| 새 배포판 | 공식 Ubuntu26.04.1/WSL2, eidos 일반 계정. 기존 Ubuntu24와 기록 유지 |
+| 고정 도구 | NCS3.4.0·Linux bundle `fbf7391cab`·Zephyr SDK1.0.1/GCC14.3.0. 공식 archive만 hash 확인 후 재사용, 설치본·compiled cache 복사 없음 |
+| 설치·대표 빌드 | `0162dd/exit0`: SDK 설치·verify, lifecycle9단계·설치960파일·발견204, 대표4cold/4warm PASS |
+| 이미지 비교 | `2a820d/exit0`: 대표4역할의 실제 BIN·HEX가 동일 C10 Ubuntu24 결과와 모두 같음. 이 비교로 다른 환경의 시험 실적을 이월하지 않음 |
+| 한 보드 USB 실기 | `b00eb8/exit0`·`24cb1d/exit0`: 새 inventory로 선택, Blink/SerialEcho 업로드, GPIO9회, ELF 명령 일치·resume, nonce6개와 sync2회, probe·port 닫힘 |
+| IDE | 공식2.3.11·WSLg·별도 profile. Boards Manager RC1 설치·NU54DK Standard·설치 Blink Verify322/322·Flash81572/RAM29439·정상 종료 `bf3885/exit0`, 설치960파일 일치 |
+| IDE 감사 a001 | `ef1d70/exit1`: IDE 정상 종료로 임시 sketch가 삭제되어 사후 helper가 FileNotFoundError. 원본 helper·부분 산출물·FAIL 보존, 제품 빌드 FAIL 아님 |
+| IDE 감사 a002 | `85287f/exit0`: 빌드시 sketch tree hash=설치 예제 tree hash, 실제 compiled source SHA와 산출물4개 대조. 새 감사만 수행하고 재빌드하지 않음 |
+| 한글 표시 | 최초 GUI의 글꼴 미설치 관측은 보존. 종료 뒤 공식 `fonts-noto-cjk` 설치 `8adde9/exit0`, `fc-match :lang=ko`에서 Noto Sans CJK KR 확인 |
+| 범위 | 전체204·두 보드 BLE·물리 USB 재연결은 반복하지 않음. Ubuntu24 기준선과26 버전 호환성을 별도 연결 |
+
+## 문서·CI 범위 교정의 최종 결과
+
+문서537개와 보드 하위 문서6개를 검토해 기존 관련 문서41개를 교정했고, 이 후속은 Ubuntu26 실제 결과만 갱신한다.
+`441eca8f…` native CI run43749521754는5PASS·의도한SKIP2이며 artifact8개를 보존했다.
+OS 버전별 전체204 반복은 기본 실행에서 제외했고 명시적인 전체 영향 검증에만 남겼다.
+
+문서 source `6a8da3f…` M12 run43750924124 attempt1의 Windows Host unit은 첫 CMake configure의
+90초 timeout으로 FAIL이다. raw SHA `3ef43cd2045ceb972f5b83fdd83dcebbbef78baebc40003b4d68993dc3d5c969`를 보존했다.
+코드·환경·timeout을 바꾸지 않고 실패 job만1회 새로 실행한 attempt2는8PASS·조건부SKIP1로 완료했다.
+같은 CMake 시험은7.760초에 통과했으나 최초 내부 지연 원인은 미확정이다. NCS 펌웨어 빌드 실패로 분류하지 않는다.
+후속 PASS raw SHA는 `9c0dab42cc1c777ad695d7bc645d8ce9205fff17369b1cbc5b1884e8b3022e6d`다.
+이후 증거 기록 전용 변경은 문서·원장 검사로 확인하며 같은 Host unit·전체 예제를 다시 실행하지 않는다.
