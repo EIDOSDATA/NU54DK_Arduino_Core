@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 ## 시작 전에
 
@@ -21,7 +21,7 @@
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 검증을 완료한 뒤 실제 Mac USB·IDE 검증을 준비하는 단계다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
+- 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 완료 뒤 HOST-W08 문서·지원표를 선행 정리한 단계다. Mac이 없으므로 실제 USB·IDE 검증은 NOT_RUN으로 유지하며 최종 Host gate는 열어 둔다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
 - 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
   실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
   `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
@@ -73,8 +73,8 @@
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고
   **HOST-W07 C5 Windows 기준선을 보존하며 추가 OS는 Host 계약의 호환성 범위로 검증**합니다. 2026-11-10 사용자가 Host 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
-  M33 기능 개발과 Host를 병렬 진행하지 않습니다. M33-W07 RC1으로 남은 Host 실기·HOST-W08을
-  마감한 뒤 M33-W08로 진행하며 v0.6.0 공개는 별도 승인 단계입니다.
+  M33 기능 개발과 Host를 병렬 진행하지 않습니다. 사용자 지시로 HOST-W08 문서 준비를 먼저 완료했습니다.
+  남은 Host 실기·최종 배포 후보·HOST-W08 gate를 마감한 뒤 M33-W08로 진행하며 v0.6.0 공개는 별도 승인 단계입니다.
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
   과거 94bb halt 수정·로컬 자료 삭제와 미커밋 패치 인계는
   [302번](<00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)의 역사 기록입니다.

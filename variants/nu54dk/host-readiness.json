@@ -2,8 +2,8 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-16",
-  "status": "HOST_W07_C11_MACOS_SOFTWARE_COMPLETE_PHYSICAL_PENDING",
-  "current_work_package": "HOST-W07",
+  "status": "HOST_W08_DOCUMENTATION_PREPARED_MAC_PHYSICAL_NOT_RUN",
+  "current_work_package": "HOST-W08",
   "implementation_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
   "completed_work_packages": 6,
   "total_work_packages": 8,
@@ -50,14 +50,17 @@
     },
     {
       "id": "HOST-W07",
-      "status": "physical_validation_in_progress",
+      "status": "physical_validation_pending_mac_hardware",
       "title": "physical_upload_debug_serial",
       "physical_OS_gate": "HOST_W07_WINDOWS11_BASELINE_UBUNTU24_26_WSL2_COMPLETE_MACOS2_PENDING"
     },
     {
       "id": "HOST-W08",
-      "status": "not_started",
-      "title": "release_regression_support_matrix"
+      "status": "documentation_prepared_final_gate_pending",
+      "title": "release_regression_support_matrix",
+      "documentation_status": "complete",
+      "final_gate_complete": false,
+      "record": "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md"
     }
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
@@ -1615,5 +1618,34 @@
     "original_C10_FAIL_preserved": true,
     "original_zombie_only_state_proven": false,
     "physical_credit": false
+  },
+  "ongoing_validation_package": "HOST-W07",
+  "W08_documentation_preparation": {
+    "status": "COMPLETE_FINAL_GATE_PENDING",
+    "date": "2026-11-16",
+    "user_scope": "Mac physical NOT_RUN; prepare HOST-W08 documentation now; preserve all PASS/FAIL",
+    "reviewed_parent": "4d7dff44666b0ab1c01311bf6350dd675d6f8e9e",
+    "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+    "record": "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md",
+    "release_documents": "00_Docs/05_릴리스/v0.6.0/README.md",
+    "support_matrix": "00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md",
+    "release_checklist": "00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md",
+    "Mac_physical": "NOT_RUN",
+    "HOST_W07_complete": false,
+    "HOST_W08_complete": false,
+    "scope_waiver": false,
+    "release_approved": false,
+    "source_credits_combined": false,
+    "full204_repeated": false,
+    "hardware_operations": 0,
+    "strict_m33_ledger_scope": "Preserved generated original cases; current Host preparation is recorded here until final evidence closure.",
+    "remaining_order": [
+      "Mac support gate",
+      "final publication candidate identity/package/reproducibility and scoped impact",
+      "HOST-W07/HOST-W08 and M33-W07 final closure",
+      "exact publication plan owner approval",
+      "approved tag/Release/assets/index",
+      "public URL installation and M33-W08 handoff"
+    ]
   }
 }

@@ -4,6 +4,267 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "HOST_W08_DOCUMENTATION_PREPARATION_20261116",
+      "date": "2026-11-16",
+      "reviewed_parent": "4d7dff44666b0ab1c01311bf6350dd675d6f8e9e",
+      "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+        "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+        "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/05_릴리스/README.md",
+        "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+        "00_Docs/05_릴리스/v0.6.0/MIGRATION.md",
+        "00_Docs/05_릴리스/v0.6.0/README.md",
+        "00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md",
+        "00_Docs/05_릴리스/v0.6.0/RELEASE_NOTES.md",
+        "00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md",
+        "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+        "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/README.md",
+        "00_Docs/TODO_M33.md",
+        "00_Docs/TODO_v0.6.0.md",
+        "AGENTS.md",
+        "README.md",
+        "tools/nu54-prerequisites/README.md",
+        "tools/release/README.md"
+      ],
+      "checks": {
+        "status": "PASS",
+        "observed_utc": "2026-11-16T05:55:15.142128+00:00",
+        "reviewed_parent": "4d7dff44666b0ab1c01311bf6350dd675d6f8e9e",
+        "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "results": [
+          {
+            "name": "docs",
+            "exit_code": 0,
+            "log": "D:\\w06\\h8docs\\docs-a002.log",
+            "sha256": "ff6573b5bc5545f11e7185507655b584bd822c68e0007ab0dcc6df70a876daa3"
+          },
+          {
+            "name": "diff",
+            "exit_code": 0,
+            "log": "D:\\w06\\h8docs\\diff-a002.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "docs_gate": 547,
+        "changed_markdown_count": 24,
+        "files": [
+          "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md",
+          "00_Docs/04_검증 기록/README.md",
+          "00_Docs/05_릴리스/README.md",
+          "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+          "00_Docs/05_릴리스/v0.6.0/MIGRATION.md",
+          "00_Docs/05_릴리스/v0.6.0/README.md",
+          "00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md",
+          "00_Docs/05_릴리스/v0.6.0/RELEASE_NOTES.md",
+          "00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md",
+          "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "00_Docs/HANDOFF.md",
+          "00_Docs/M33_HANDOFF.md",
+          "00_Docs/README.md",
+          "00_Docs/TODO_M33.md",
+          "00_Docs/TODO_v0.6.0.md",
+          "AGENTS.md",
+          "README.md",
+          "tools/nu54-prerequisites/README.md",
+          "tools/release/README.md",
+          "variants/nu54dk/host-readiness.json"
+        ],
+        "preserved_ledger_keys": [
+          "schema_version",
+          "scope",
+          "updated_date",
+          "implementation_revision",
+          "completed_work_packages",
+          "total_work_packages",
+          "platform_prerequisite_manifest",
+          "native_CI",
+          "user_physical_OS_gate",
+          "W06_preservation",
+          "release_publication",
+          "local_correction_checks",
+          "local_followup_checks",
+          "registration_correction",
+          "W05_validation",
+          "H4_additional_CI",
+          "W06_validation",
+          "H5_additional_CI",
+          "W07_preparation",
+          "W06_document_closure_CI",
+          "previous_candidate_summary",
+          "active_candidate",
+          "active_candidate_record",
+          "user_physical_OS_gate_scope_source",
+          "current_source_validation",
+          "implementation_revision_scope",
+          "validation_policy",
+          "release_support_rows",
+          "compiler_selection_review",
+          "release_support_summary",
+          "macOS_cleanup_diagnostic",
+          "document_scope_CI",
+          "macOS_cleanup_resolution"
+        ],
+        "old_PASS_FAIL_preserved": true,
+        "old_numbered_records_unchanged": true,
+        "frozen_TODOs_unchanged": true,
+        "classifier": {
+          "schema_version": 1,
+          "paths": [
+            "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+            "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+            "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+            "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+            "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md",
+            "00_Docs/04_검증 기록/README.md",
+            "00_Docs/05_릴리스/README.md",
+            "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+            "00_Docs/05_릴리스/v0.6.0/MIGRATION.md",
+            "00_Docs/05_릴리스/v0.6.0/README.md",
+            "00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md",
+            "00_Docs/05_릴리스/v0.6.0/RELEASE_NOTES.md",
+            "00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md",
+            "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+            "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+            "00_Docs/HANDOFF.md",
+            "00_Docs/M33_HANDOFF.md",
+            "00_Docs/README.md",
+            "00_Docs/TODO_M33.md",
+            "00_Docs/TODO_v0.6.0.md",
+            "AGENTS.md",
+            "README.md",
+            "tools/nu54-prerequisites/README.md",
+            "tools/release/README.md",
+            "variants/nu54dk/host-readiness.json"
+          ],
+          "categories": [
+            "documentation"
+          ],
+          "docs_only": true,
+          "run_contract": true,
+          "run_six_profiles": false,
+          "run_all_examples": false,
+          "release_sensitive": false,
+          "profiles": [],
+          "affected_examples": []
+        },
+        "physical_Mac": "NOT_RUN",
+        "hardware_operations": 0
+      },
+      "independent_reviews": "PASS after correcting approval/hash order, current index and 311 explicit acceptance reference",
+      "preservation": "C5/C10/C11 original PASS/FAIL untouched; Mac physical NOT_RUN; Host6/8 and support3/5; W08 documents only.",
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "d3711a1efbc19ee35d151a3543b920412d17ac6a408867c91d680f947a249de8"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "aee6080656211d953558c4548127df58dff855d63c69c18c5ac4d4ddb1934d49"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "eabfd98dedeef7792cc3d090e8219f64eaf1196eb93a51c6ec776ad82a9cb43b"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "44a57724d04374917e4651633318bcbbbd79987f010deed647d2b82835c7567f"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md",
+          "sha256_utf8_lf": "88a62b6d020e1e65c4864a97bd3f42aea6a676eb269c44c4804ef294651b1db0"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "4e0349986ca305c6157dbb4636e9debe66e6808f1dbcc55ffa73b973014ae5f2"
+        },
+        {
+          "path": "00_Docs/05_릴리스/README.md",
+          "sha256_utf8_lf": "bd76d0a153e1dc14cddc73a423b72d1c91b3bdba754da9b4a16a9ec54538b4ac"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+          "sha256_utf8_lf": "47d0493154a1ed1425db034ec38851e68192d7a86063d3d0c07d99befb2cb3b4"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/MIGRATION.md",
+          "sha256_utf8_lf": "88323e2491edf31da009005e20ecf0308405ede6c6d42bc768e3da79abfcafd3"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/README.md",
+          "sha256_utf8_lf": "45284da08a58c8db76e68abb6913672901aff1bfd31668dec703db48d82ea24f"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md",
+          "sha256_utf8_lf": "894245027a1097577aeba70ad1a00ac30991930b4a663cfc21fe9209e5d1e5f2"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/RELEASE_NOTES.md",
+          "sha256_utf8_lf": "e6c644a4f91a17d1db4bb22ca6f49c56ba533b44ac100e845c5a780054064bc0"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md",
+          "sha256_utf8_lf": "f2a47d4610357d12bf0348c6999022ff3733e7ada648cfca2398c44c9743b67d"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "sha256_utf8_lf": "fd7fc3856700e1ec2c0652ded539a9fbbb028ad002e5ce944ab1ed3fabfa1974"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "5c5b13a4046c0a9cc08e66a82d7f38c538096e0b677d8f2141200c9afb90c467"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "127c3173d01529d3f6f4997412e17275abe0780d1ea8bc21388fa5492d8d18ca"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "7f7efc739913304cc5fbc07843ad255f4ba22b9e199e7b6d2f7ec4ed14b43e7f"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "9dcbb4988f2295b120c829565dd86c64e2f89ee422847474e5f4662893bd9f83"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "8a57c5c573c15177409561fcfd3a3c74727ad5ec432cd49938dc8fe4f3b6bba1"
+        },
+        {
+          "path": "00_Docs/TODO_v0.6.0.md",
+          "sha256_utf8_lf": "00e117759e86101391e33605be7238a4b9910267f35cc2b0ee555422ca988a30"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "2de7ab2e1b59af8af23af4081465589ccc0402a9d7cb2d79c38b23c7c4883e38"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "d225b785b6faadf6c94b2ac4276c51a2dddd4b73fe447227823f834e231d98af"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "389268b42659e3e523a40906c8d89e4808b00ed018a63c1bd02e8ef527c7177e"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "24a9d4a6cfd39c03714b75c04eeb010fc03a4ec25947e97c1d9d06c983e97bc6"
+        }
+      ]
+    },
+    {
       "id": "HOST_W07_C11_MACOS_SOFTWARE_CLOSURE_20261116",
       "date": "2026-11-16",
       "reviewed_parent": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",

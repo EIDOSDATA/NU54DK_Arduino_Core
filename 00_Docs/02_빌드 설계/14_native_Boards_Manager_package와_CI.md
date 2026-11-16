@@ -1,6 +1,6 @@
 # Native Boards Manager package와 CI
 
-현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<../04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 기준일: 2026-11-16. HOST-W06까지6/8 완료했다. 최신 전체 native 기준선은 C5다. HOST-W07은 Windows11 기준선·Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료로 지원3/5이며 C11 macOS26·27 software는 PASS했고 Mac USB·IDE 실기가 남았다.
 현행 순서는 [Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)과

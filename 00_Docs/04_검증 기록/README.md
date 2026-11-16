@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [332 — HOST-W08 문서·지원표 선행 정리와 릴리스 잔여](332_HOST_W08_문서_지원표_선행_정리.md)
+
 - [331 — C11 macOS 실행기 교정과26·27 호환성](331_HOST_W07_C11_macOS_26_27_호환성.md)
 
 - [330 — C6~C10 WSL2 검증·C10 재연결/IDE PASS·Ubuntu24 기준/26 호환성](330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md)
@@ -32,7 +34,7 @@
 
 - [316 — HOST-W06 native package 구현과 검증 착수](316_HOST_W06_native_package_구현과_검증_착수.md)
 
-최신 개발 기록은331번 C11 macOS 실행기 교정·26/27 호환성이다. 330번은 C6~C10 WSL2 교정·Ubuntu24/26 완료와 원본 FAIL 보존 기록이다. 329번은 C5 Windows 11 완료, 328번은 C5 자동 검증,
+현행 문서 준비는332번 HOST-W08 선행 정리이며 최근 제품 검증은331번 C11 macOS 실행기 교정·26/27 호환성이다. 330번은 C6~C10 WSL2 교정·Ubuntu24/26 완료와 원본 FAIL 보존 기록이다. 329번은 C5 Windows 11 완료, 328번은 C5 자동 검증,
 322번 H12는 마지막으로 완료한 전체 Host 작업 묶음(HOST-W06)의 근거다. [315번](315_HOST_W05_native_마감과_HOST_W06_package_착수.md)은 W05 마감 당시 기록이다.
 W05 초기 로컬 실패·교정·회귀는 [314번](314_HOST_W05_경로_cache_lock_교정과_native_검증.md)에 보존한다.
 W04 같은-source 설치·전체 CI 완료는 [313번](313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md)을 따른다.

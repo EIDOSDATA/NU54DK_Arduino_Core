@@ -1,6 +1,6 @@
 # Host별 고정 Nordic 환경 설치
 
-현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<../04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 상태: HOST-W04 설치 범위 완료(같은 H4 source의 native3OS 설치·재검증3/3), W05 경로·cache·lock native 검증 완료, HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software PASS·Mac USB/IDE 실기 대기.
 현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.

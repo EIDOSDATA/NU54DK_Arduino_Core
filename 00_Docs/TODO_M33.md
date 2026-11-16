@@ -1,6 +1,6 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 | 항목 | 내용 |
 | --- | --- |
@@ -74,10 +74,10 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
-| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 C5 Windows 11 기준선·C10 영향 검사와 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료, HOST-W08 미완료 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 C5 Windows 11 기준선·C10 영향 검사와 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료, HOST-W08 문서 준비 완료·최종 gate 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
-W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07의 나머지 OS를 순차 검증하며 #29 분석은 유예한다. 이번에 허용한 병렬
+W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07 안에서 HOST-W08 문서 준비를 먼저 완료했고 Mac 실기는 NOT_RUN으로 남긴다. #29 분석은 유예한다. 이번에 허용한 병렬
 문서/파일 검토와 실기 병렬 실행을 구분한다. W06~W08에서 실제 배포 입력을 고정하고
 HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 
@@ -86,8 +86,9 @@ HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 1. M33-W01~W06의 기능·예제·통합 검증을 먼저 완료한다. Host 이식은 병렬 진행하지 않는다.
 2. HOST-W04~W06과 HOST-W07 도구·검증 절차를 준비한다.
 3. M33-W07에서 exact source·hash를 고정한 시험용 RC1 package를 만든다.
-4. 해당 RC로 Windows·Ubuntu·macOS의 HOST-W07 실제 검증과 HOST-W08 지원표·문서를 마감한다.
-   수정된 후보는 영향 범위를 다시 검증하고, 필요한 Host 증거를 모아 M33-W07을 완료한다.
+4. 해당 RC로 HOST-W07의 배정 검증을 진행한다. 2026-11-16 사용자 지시로 Mac 실기를 NOT_RUN으로 두고
+   HOST-W08 문서·지원표 준비를 먼저 완료했다. 남은 Mac 실기와 최종 후보의 변경 영향 증거를 모아
+   HOST-W07/W08 최종 gate와 M33-W07을 마감한다.
 5. M33-W08에서 별도 공개 승인·게시·공개 설치 검증을 수행한다.
 
 W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경과 공통 단위 검사를 뜻한다.
@@ -319,9 +320,10 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
   gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
 - [x] C5 `5ee7c103…`의 비공개 `0.6.0-rc.1` source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고
   package를 독립 두 번 생성해 재현성과 runtime payload·예제 포함 목록을 검증했다. [328번 C5 근거](<04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>)를 보존하며 새 후보 source가 생기면 변경 범위의 증거를 별도로 확보한다.
-- [ ] API/profile migration·known limitation·experimental opt-in·미검증 template·외부 ecosystem·Host
-  상태를 release notes와 readiness에 동일하게 기록한다.
-- [ ] `M33-PACKAGE-01`, `M33-INSTALL-01`을 HOST-W08 증거와 연결하고 공개할 필수 행의 미완료를 차단한다.
+- [x] HOST-W08 선행 문서: [v0.6.0 준비 문서](<05_릴리스/v0.6.0/README.md>)에 API/profile migration·제한·experimental opt-in·template·외부 ecosystem·Host 상태와 증거 색인을 작성했다.
+- [ ] 최종 공개 source·범위가 확정되면 release notes와 생성 readiness의 최종 case 판정을 정합화한다.
+- [x] `M33-PACKAGE-01`, `M33-INSTALL-01`의 기존 근거와 잔여를 [검증 색인](<05_릴리스/v0.6.0/TESTING.md>)으로 연결했다.
+- [ ] 최종 package/install case의 필수 행을 마감한다. Mac 실기와 공개 source 미확정은 문서 준비로 PASS 처리하지 않는다.
 - [ ] 기능 구현 완료, 지원 범위 결정 완료, 다섯 OS 완료, RC 준비 완료를 각각 보고한다. Apple/Google·
   외장 장치의 사용자 후속 실물 행은 지원 제한으로 남기되 개발·릴리스 blocker로 사용하지 않는다.
   최종 사용자 장비 검증 gate는 Ubuntu/macOS이며 공개 승인·제품 인증은 별도 절차다.

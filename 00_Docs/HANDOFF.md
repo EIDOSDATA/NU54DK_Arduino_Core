@@ -1,6 +1,6 @@
 # 개발 인계
 
-현행 위치는 **M33-W07 / HOST-W07, Host6/8·지원3/5**다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 macOS 실행기 교정·26/27 CI와 남은 실기는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원본은 그 기록에 연결된330번을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -15,7 +15,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, 현재 **M33-W07의 HOST-W07**. Windows11 기준선·Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료로 지원3/5. 이후 macOS26 →27 → HOST-W08 |
+| Host | **6/8**, 현재 **M33-W07의 HOST-W08 문서 선행 정리 완료**. Windows11·Ubuntu24/26 WSL2 검증3/5. Mac26/27 실기 NOT_RUN, W07·W08 최종 gate 미완료 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
 | HOST-W07 현재 | C5 Windows 기준선과 C10 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 교정·macOS26/27 CI 결과는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원형 PASS·FAIL은 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
 | 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
@@ -47,7 +47,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 - NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
 - 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
 - 개발 smoke·Host·build와 최종 실제 보드 PASS를 분리한다. 문서 정비는 W06 완료가 아니다.
-- W06 수락 마감 후 사용자 지시로 HOST-W04를 시작했다. HOST-W04~W06 → W07 도구 → M33-W07 RC1 → 실제 OS 검증·HOST-W08 → M33-W07 마감 → M33-W08 별도 공개 승인 순서다.
+- W06 수락 마감 후 사용자 지시로 HOST-W04를 시작했다. HOST-W04~W06 → W07 도구 → M33-W07 RC1 → HOST-W08 문서 선행 정리 → 남은 Mac 실기·최종 후보 정합화 → HOST-W07/W08·M33-W07 마감 → M33-W08 별도 공개 승인 순서다.
 - Apple/Google·외장 장치는 사용자 후속 NOT_RUN, Ubuntu/macOS 실제 지원 검증은 RC 단계다.
 
 ## 과거 결과 찾기
