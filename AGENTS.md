@@ -2,6 +2,8 @@
 
 현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
+**Mac에서 재개:** [Mac 인계](00_Docs/MAC_HANDOFF.md)와 [복사용 작업지시문](00_Docs/MAC_START_PROMPT.txt)을 먼저 확인한다. Windows의 D드라이브 경로는 보존 위치이며 Mac의 필수 경로가 아니다.
+
 ## 시작 전에
 
 1. [HANDOFF](00_Docs/HANDOFF.md)에서 현재 작업의 정본을 찾고 해당 현행 TODO·계약·검증 기록을 읽습니다.
@@ -22,13 +24,14 @@
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
 - 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 완료 뒤 HOST-W08 문서·지원표를 선행 정리한 단계다. Mac이 없으므로 실제 USB·IDE 검증은 NOT_RUN으로 유지하며 최종 Host gate는 열어 둔다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
-- 기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 개발 브랜치는 `Dev-0.6.0-M33`이다.
-  실제 작업본·source·단일 writer·진행 항목·native 종료 증거는
-  `D:\w06\control\continuation.json`의 `active_workflow`에서 확인한다.
+- 개발 브랜치는 `Dev-0.6.0-M33`이다. Windows 보존 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`,
+  해당 실행·writer 원장은 `D:\w06\control\continuation.json`의 `active_workflow`다.
+  Mac 재개는 실제 checkout과 [이식 인계](00_Docs/MAC_HANDOFF.md)의 전달 manifest·Windows writer 해제 receipt를 확인한 뒤 새 control 원장을 만든다.
 - W06의 개발 단계 수정별 검증과 최종 source 고정 후 전체 검증은 해당 W06 계약 범위다.
   Host 후속 변경은 다중 Host 계약의 기준선·호환성·영향 검증을 따르며 매 변경마다 전체 시험을 반복하지 않는다.
   과거 source의 PASS/FAIL 원본은 보존하며 다른 source의 최종 실적으로 합성하지 않는다.
-- 단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:\w06`, 최소 여유4GiB를 유지한다.
+- 단일 writer·단일 heavy job·기존 SDK/build/probe lock 정책과 최소 여유4GiB를 유지한다.
+  Windows 출력/TMP는 `D:\w06`, Mac은 새 로컬 work root를 사용한다. Windows lock 경로를 Mac에 억지로 이식하지 않는다.
 - 병렬 검토는 읽기 전용이다. 자동점검 w06은 PAUSED 유지. DAP/J-Link firmware 작업,
   Defender 보호 해제·예외·우회, mass erase·unlock·recover는 금지한다.
 - 중복·폐기 지시는 현행 문서에서 제거하되 과거 PASS/FAIL 원본·완료 TODO·공개 자산은 보존한다.
@@ -78,7 +81,7 @@
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
   과거 94bb halt 수정·로컬 자료 삭제와 미커밋 패치 인계는
   [302번](<00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)의 역사 기록입니다.
-  해당 패치는 이미 이력에 반영됐습니다. 현행 계획은 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용), 실제 작업본·source·종료 상태는 `D:\w06\control\continuation.json`의 `active_workflow`를 따릅니다.
+  해당 패치는 이미 이력에 반영됐습니다. 현행 계획은 [M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용), Windows의 실제 작업본·source·종료 상태는 `D:\w06\control\continuation.json`의 `active_workflow`, Mac 재개는 [Mac 인계](00_Docs/MAC_HANDOFF.md)를 따릅니다.
 - M33 구현 전에는 [전체 Bluetooth 기능·예제 계약](<00_Docs/01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
   현행 [M33 TODO](00_Docs/TODO_M33.md)를 읽습니다. 완료된 [M31](00_Docs/TODO_M31.md)·[M32](00_Docs/TODO_M32.md)는 관련 근거만 참조합니다.
   계획 분모는 8·12·8이고 문서 개정은 구현 완료가 아닙니다. 2026-09-16 사용자 결정에 따라 보드 기반

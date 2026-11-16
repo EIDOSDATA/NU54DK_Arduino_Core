@@ -10,8 +10,9 @@ C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 
 
 ## 실행 단위와 경계
 
-`tools/release/host_rc_kit.py`는 exact clean source에서 검증한 private producer·이전 H12 후보·
-고정 세 OS CLI·초기 Python을 묶는다. 공개 tag·Release·catalog는 만들지 않는다.
+`tools/release/host_rc_kit.py`는 exact clean source의 private producer·해당 kit에 지정한 이전 후보·
+고정 세 OS CLI·초기 Python을 묶는다. C11은 같은 C11 source의 host.1→RC1 version fixture이며 이전 H12 입력을 강제하지 않는다.
+Mac 재개 입력·전달 자료·실제 명령은 [Mac 인계](../MAC_HANDOFF.md)를 따른다. 공개 tag·Release·catalog는 만들지 않는다.
 kit의 `START.cmd` 또는 `START.sh`는 OS 기본 hash 도구로 초기 archive를 확인하고 관리 Python을
 실행한다. 시스템 Python/Git 설치를 요구하지 않는다. 각 단계는 kit 원형 hash를 재검사한다.
 

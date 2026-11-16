@@ -17,6 +17,8 @@ firmware로 빌드하고 온보드 CMSIS-DAP으로 업로드합니다.
 | --- | --- | --- | --- |
 | NU54DK · nRF54L15 CPUAPP | Windows 10/11 x64 · Arduino IDE 2.x / CLI | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
 
+개발 작업을 Mac에서 이어가려면 [Mac 재개 문서](00_Docs/MAC_HANDOFF.md)와 [작업지시문](00_Docs/MAC_START_PROMPT.txt)을 사용합니다. 실제 Mac 검증은 아직 NOT_RUN입니다.
+
 ## 버전 선택
 
 | 채널 | 버전 | 포함 범위 | 예제 |

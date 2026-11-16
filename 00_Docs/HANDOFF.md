@@ -9,6 +9,8 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·종료 증거와 과거 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾는다.
 
+**다음 실행 환경은 Mac이다.** [Mac 재개 문서](MAC_HANDOFF.md)·[작업지시문](MAC_START_PROMPT.txt)·[기계 판독 인계](mac-handoff.json)를 사용한다. Mac 실기는 아직 NOT_RUN이며 기존 Windows continuation을 Mac 필수 입력으로 요구하지 않는다.
+
 ## 현재 상태
 
 | 범위 | 상태·정본 |
@@ -18,12 +20,12 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | Host | **6/8**, 현재 **M33-W07의 HOST-W08 문서 선행 정리 완료**. Windows11·Ubuntu24/26 WSL2 검증3/5. Mac26/27 실기 NOT_RUN, W07·W08 최종 gate 미완료 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
 | HOST-W07 현재 | C5 Windows 기준선과 C10 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 교정·macOS26/27 CI 결과는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원형 PASS·FAIL은 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
-| 기준 저장소·브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
-| 실제 작업본·source | `D:/w06/control/continuation.json`의 `active_workflow` |
+| 저장소·브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac은 실제 checkout · `Dev-0.6.0-M33` |
+| 실제 작업본·source | Windows는 `D:/w06/control/continuation.json`의 `active_workflow`; Mac은 전달 manifest·해제 receipt 확인 뒤 새 control 원장 |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
 | 개발 검증 방식 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 실패별 수정과 최종 동일 source gate를 분리 |
 | 현행 실행 순서 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) · [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>) · [M33 TODO](TODO_M33.md) |
-| 검증 결과·종료 증거 | `continuation.json.active_workflow`에서 해당 source·attempt의 원본을 확인. 과거 PASS를 현재 source 실적으로 합성하지 않음 |
+| 검증 결과·종료 증거 | 해당 Host control 원장과 전달 manifest에서 source·attempt 원본 확인. 과거 PASS를 현재 source 실적으로 합성하지 않음 |
 | 실제 재개 절차·보존 자료 | [M33 인계](M33_HANDOFF.md) |
 
 ## 먼저 읽기
@@ -43,7 +45,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 - 실기 writer와 로컬 무거운 build/HIL은 하나. 이번에 허용된 병렬 문서/파일 검토는 같은 범위만 다룬다.
 - 2026-10-11 문서 push는 개발 문서 동기화이며 W06 완료가 아니다. 현재 실패별 로컬 수정·검증에서도
   개별 항목마다 대규모 공식 CI를 재시작하지 않는다.
-- 모든 새 작업·cache·임시는 D 아래. C의 NCS/toolchain 설치본은 입력으로만 사용한다.
+- Windows 새 작업·cache·임시는 D 아래이며 C의 NCS/toolchain은 입력으로만 사용한다. Mac은 새 로컬 work root와 고정 `/opt/nordic/ncs`를 사용한다.
 - NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
 - 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
 - 개발 smoke·Host·build와 최종 실제 보드 PASS를 분리한다. 문서 정비는 W06 완료가 아니다.

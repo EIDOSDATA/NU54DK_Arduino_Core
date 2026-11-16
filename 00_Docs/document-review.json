@@ -4,6 +4,147 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "MAC_RESUME_HANDOFF_20261116",
+      "date": "2026-11-16",
+      "reviewed_parent": "09da4d740fb751904e939ca0f1ef944cdf1b720b",
+      "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+      "corrected_documents": [
+        "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+        "00_Docs/04_검증 기록/333_Mac_재개_문서와_전달_자료.md",
+        "00_Docs/04_검증 기록/README.md",
+        "00_Docs/05_릴리스/v0.6.0/README.md",
+        "00_Docs/HANDOFF.md",
+        "00_Docs/M33_HANDOFF.md",
+        "00_Docs/MAC_HANDOFF.md",
+        "00_Docs/README.md",
+        "AGENTS.md",
+        "README.md"
+      ],
+      "checks": {
+        "status": "PASS",
+        "observed_utc": "2026-11-16T06:30:31.314829+00:00",
+        "reviewed_parent": "09da4d740fb751904e939ca0f1ef944cdf1b720b",
+        "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+        "results": [
+          {
+            "name": "docs",
+            "exit_code": 0,
+            "log": "D:\\w06\\h8mac\\docs-a001.log",
+            "sha256": "9772c517bdfa183fce3383abb2d4e60d2ad90765f18b5f751e641366eddfc8be"
+          },
+          {
+            "name": "shell-syntax",
+            "exit_code": 0,
+            "log": "D:\\w06\\h8mac\\shell-syntax-a001.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "name": "diff",
+            "exit_code": 0,
+            "log": "D:\\w06\\h8mac\\diff-a001.log",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "docs_gate": 549,
+        "files": [
+          "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "00_Docs/04_검증 기록/333_Mac_재개_문서와_전달_자료.md",
+          "00_Docs/04_검증 기록/README.md",
+          "00_Docs/05_릴리스/v0.6.0/README.md",
+          "00_Docs/HANDOFF.md",
+          "00_Docs/M33_HANDOFF.md",
+          "00_Docs/MAC_HANDOFF.md",
+          "00_Docs/MAC_START_PROMPT.txt",
+          "00_Docs/README.md",
+          "00_Docs/mac-handoff.json",
+          "AGENTS.md",
+          "README.md",
+          "variants/nu54dk/host-readiness.json"
+        ],
+        "changed_markdown_count": 10,
+        "text_prompt_utf8": "PASS",
+        "shell_syntax_blocks": 7,
+        "Mac_command_execution": false,
+        "old_ledger_fields_preserved": 38,
+        "old_PASS_FAIL_preserved": true,
+        "classifier": {
+          "schema_version": 1,
+          "paths": [
+            "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+            "00_Docs/04_검증 기록/333_Mac_재개_문서와_전달_자료.md",
+            "00_Docs/04_검증 기록/README.md",
+            "00_Docs/05_릴리스/v0.6.0/README.md",
+            "00_Docs/HANDOFF.md",
+            "00_Docs/M33_HANDOFF.md",
+            "00_Docs/MAC_HANDOFF.md",
+            "00_Docs/MAC_START_PROMPT.txt",
+            "00_Docs/README.md",
+            "00_Docs/mac-handoff.json",
+            "AGENTS.md",
+            "README.md",
+            "variants/nu54dk/host-readiness.json"
+          ],
+          "categories": [
+            "documentation"
+          ],
+          "docs_only": true,
+          "run_contract": true,
+          "run_six_profiles": false,
+          "run_all_examples": false,
+          "release_sensitive": false,
+          "profiles": [],
+          "affected_examples": []
+        },
+        "physical_Mac": "NOT_RUN",
+        "hardware_operations": 0,
+        "independent_review": "PASS after guards, policy/status split, environment-vs-product fixes and document SHA takeover check"
+      },
+      "independent_reviews": "PASS after shell guards, finalization policy, environment correction scope and writer SHA match",
+      "preservation": "C5/C10/C11 original PASS/FAIL untouched; Mac physical NOT_RUN; Host6/8 and support3/5; Mac handoff documents only; new Mac runtime state required.",
+      "documents": [
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "7552a1bbf12b06389ee5aa3d083bbdfc8d7a6ef755af839e59f47bb8c882046b"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/333_Mac_재개_문서와_전달_자료.md",
+          "sha256_utf8_lf": "d8d812049a622660b16a4cfe85502697fdf976a9a38adae0fa4ced0e9fcf1f2c"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "5d06105f8f933fee60fae2b129d421669c6e7e1029308cc3fd58983b21ac67e9"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/README.md",
+          "sha256_utf8_lf": "504ae7c867c868e3bdb982e79a7706623cc62bcf4ab6707db2aa64fa1caeb052"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "fbd93f1a70fac0778a03adde5a63070c60963ec0488b01faaf6f6f262590c788"
+        },
+        {
+          "path": "00_Docs/M33_HANDOFF.md",
+          "sha256_utf8_lf": "a5bb9b284f2c8a6c40782d472bac2116e39b002dd77dca6d24058523092c8841"
+        },
+        {
+          "path": "00_Docs/MAC_HANDOFF.md",
+          "sha256_utf8_lf": "2aeb8db6a00606e26904b98d055737d36d8aa74811b9606d3c4cf7eb6d6cf748"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "1c6a219a440ef9a838092bbf5e46f12bb4bb12446371b556d6a3046ed68fba3e"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256_utf8_lf": "c17c4a889aa5c47db353b93b067d4152c4b6b76fc6c2e723df9c8597d2b26d2c"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "98aee3afbeed8308616fda4a65ac0d879c74bc03037fee7952f5e8a532e9ddd4"
+        }
+      ]
+    },
+    {
       "id": "HOST_W08_DOCUMENTATION_PREPARATION_20261116",
       "date": "2026-11-16",
       "reviewed_parent": "4d7dff44666b0ab1c01311bf6350dd675d6f8e9e",

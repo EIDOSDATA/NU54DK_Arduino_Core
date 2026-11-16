@@ -12,18 +12,20 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 W06 명시 수락 정정은 [311번 기록](<04_검증 기록/311_M33_W06_명시_수락_정정과_HOST_W04_착수.md>)에 보존한다.
 이 문서는 실제 재개 입력과 과거 증거의 위치를 안내한다.
 
+다음 실행은 **Mac**에서 한다. [Mac 인계](MAC_HANDOFF.md)와 [복사용 작업지시문](MAC_START_PROMPT.txt)에 읽기 순서·전달 파일·writer 인수·명령을 정리했다.
+
 ## 현재 기준선
 
 | 항목 | 확인 위치 |
 | --- | --- |
-| 기준 저장소·개발 브랜치 | `D:/w06/a/user/hardware/nucode/zephyr` · `Dev-0.6.0-M33` |
-| 실제 작업본·source·단일 writer | `D:/w06/control/continuation.json`의 `active_workflow` |
-| 진행 항목·source별 결과·native 종료 | 같은 `active_workflow`와 연결된 원본 terminal·tool completion·receipt |
+| 저장소·개발 브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac 실제 checkout · `Dev-0.6.0-M33` |
+| 실제 작업본·source·단일 writer | Windows는 `D:/w06/control/continuation.json`; Mac은 해제 receipt를 확인한 뒤 새 control 원장·claim |
+| 진행 항목·source별 결과·native 종료 | 해당 Host control 원장·원본 terminal·receipt; Mac 전달 자료는 manifest의 상대 경로로 조회 |
 | 현행 실행 순서·완료 분모 | [v0.6.0 TODO](TODO_v0.6.0.md)와 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |
 | 자동점검 | w06 PAUSED 유지·재활성화 금지 |
 
 현재 source와 프로세스·보드 상태를 과거 인계에서 추정하지 않는다.
-재개 시 실제 종료 증거와 공통3lock·COM·작업본 상태를 확인한다.
+재개 시 이전 writer 종료 receipt와 실제 process·lock·작업본을 확인한다. 장치명은 Windows COM 또는 Mac의 현재 probe/serial 열거를 따른다.
 
 아래는 보존된 #29 재현 조건이며 현재 실행 지시가 아니다. 사용자 지시로 원인 분석과 추가 실기는 유예한다.
 실패 후 현재 시험 peer의 bond가 남은 상태에서 #29 native-only campaign을 새 fresh attempt로
@@ -58,7 +60,7 @@ S16의 #1~#17 PASS와 #18 FAIL, secondary RRAM 초기화 120초 timeout 및
 
 ## 운영·보존 경계
 
-단일 writer·단일 heavy job·공통3lock, 출력/TMP `D:/w06`, 여유4GiB를 유지한다.
+단일 writer·단일 heavy job·기존 lock 정책과 최소 여유4GiB를 유지한다. 출력/TMP는 Windows `D:/w06`, Mac은 새 로컬 work root다.
 정상 sector program·software reset·halt/resume·읽기 진단은 기존 승인 범위다.
 DAP/J-Link firmware 작업, Defender 보호 해제·예외·우회, mass erase·unlock·recover는 금지한다.
 공개 tag/Release/main 변경과 외부 제품 interop PASS 승격은 이 작업 범위가 아니다.

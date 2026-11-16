@@ -1647,5 +1647,20 @@
       "approved tag/Release/assets/index",
       "public URL installation and M33-W08 handoff"
     ]
+  },
+  "Mac_resume_handoff": {
+    "status": "WAITING_FOR_MAC_PHYSICAL_NOT_RUN",
+    "date": "2026-11-16",
+    "instruction": "Next work continues on the user-provided Mac",
+    "entry_document": "00_Docs/MAC_HANDOFF.md",
+    "start_prompt": "00_Docs/MAC_START_PROMPT.txt",
+    "portable_identity": "00_Docs/mac-handoff.json",
+    "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+    "document_parent": "09da4d740fb751904e939ca0f1ef944cdf1b720b",
+    "Windows_writer_release": "Verify windows-writer-release.json from the finalized transfer bundle before takeover",
+    "new_Mac_control_root_required": true,
+    "Windows_state_reuse": false,
+    "Mac_physical": "NOT_RUN",
+    "full204_repeat": false
   }
 }
