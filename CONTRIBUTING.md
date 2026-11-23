@@ -1,13 +1,13 @@
 # 개발에 기여하기
 
-v0.6.0 개발은 `Dev-0.6.0-M33` 브랜치에서 진행합니다. 작업 전 실제 checkout, HEAD, 미커밋 변경, 보드 submodule과 현재 writer를 확인하세요. 새 빌드와 캐시는 해당 OS의 쓰기 가능한 로컬 경로에 둡니다. `D:/w06`은 이전 Windows 실행의 보존 위치입니다. 실기 writer와 무거운 작업은 하나씩 실행하고 병렬 검토는 읽기 전용으로 진행합니다.
+v0.6.0 배포 기록과 해당 버전의 유지보수는 `Release-0.6.0` 브랜치에서 관리합니다. 작업 전 실제 checkout, HEAD, 미커밋 변경, 보드 submodule과 현재 writer를 확인하세요. 새 빌드와 캐시는 해당 OS의 쓰기 가능한 로컬 경로에 둡니다. `D:/w06`은 이전 Windows 실행의 보존 위치입니다. 실기 writer와 무거운 작업은 하나씩 실행하고 병렬 검토는 읽기 전용으로 진행합니다.
 
-현재 단계는 최종 배포 후보의 식별자, 패키지 자산과 변경 영향을 검토하는 M33-W07입니다. [개발 인계](00_Docs/HANDOFF.md), [체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
+v0.6.0을 게시했고 macOS 27에서 공개 설치를 확인했습니다. [개발 인계](00_Docs/HANDOFF.md), [체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
 ## 소스와 환경 준비
 
 ```powershell
-git clone --branch Dev-0.6.0-M33 --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
+git clone --branch Release-0.6.0 --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
 cd NU54DK_Arduino_Core
 git status --short --branch
 git submodule status --recursive

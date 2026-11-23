@@ -1,51 +1,16 @@
 # 릴리스 문서 안내
 
-**현재 stable·지원 버전은 v0.5.0입니다.** Windows 10/11 x64 대상이며,
-이전 stable과 RC는 지원·catalog 공급이 끝난 역사 배포로 보존합니다.
+**현재 stable은 v0.6.0입니다.** NCS 3.4.0과 라이브러리 24개, 예제 204개를 제공합니다. [설치 안내](v0.6.0/README.md), [GitHub Release](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.6.0)
 
-## v0.6.0 개발 후보
-
-검증용 패키지는 `0.6.0-rc.1`입니다. C11과 C12는 소스 SHA로 구별합니다. 라이브러리 24개와 예제 204개가 포함됩니다. [후보 설치](v0.6.0/README.md), [OS별 검증 범위](v0.6.0/SUPPORT_MATRIX.md), [릴리스까지 남은 작업](v0.6.0/RELEASE_CHECKLIST.md)
-
-## 현재 사용자 문서
-
-| 목적 | Stable v0.5.0 |
+| 필요한 정보 | 문서 |
 | --- | --- |
-| 설치·버전 identity | [시작하기](v0.5.0/README.md) |
-| 변경 기능 | [Release notes](v0.5.0/RELEASE_NOTES.md) |
-| 이전 버전에서 이동·복귀 | [Migration](v0.5.0/MIGRATION.md) |
-| 검증 범위와 기본 시험 | [Testing](v0.5.0/TESTING.md) |
-| 설치·compile·upload 문제 | [Troubleshooting](v0.5.0/TROUBLESHOOTING.md) |
-| 제한·미검증 범위 | [Known issues](v0.5.0/KNOWN_ISSUES.md) |
-| 설치 예제 | 16개 library·113개 |
+| 이전 버전에서 이동 | [버전 전환](v0.6.0/MIGRATION.md) |
+| 새 기능과 예제 | [릴리스 노트](v0.6.0/RELEASE_NOTES.md) |
+| 지원 OS와 검증 범위 | [지원표](v0.6.0/SUPPORT_MATRIX.md), [시험 기록](v0.6.0/TESTING.md) |
+| 설치, 컴파일, 업로드 문제 | [문제 해결](v0.6.0/TROUBLESHOOTING.md), [알려진 제한](v0.6.0/KNOWN_ISSUES.md) |
+| 게시, 해시, 공개 설치 | [릴리스 체크리스트](v0.6.0/RELEASE_CHECKLIST.md) |
 
-Stable Boards Manager index:
-
-```text
-https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
-```
-
-정식 [GitHub Release](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/tag/v0.5.0)와
-공개 검증 결과는 [274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을 따릅니다.
-
-## 개발 소스와 다음 릴리스
-
-현재 작업 브랜치는 M32를 통합한 `main`에서 분기한 `Dev-0.6.0-M33`입니다. M32 브랜치는
-로컬·원격에서 삭제했고 단계별 구현·실기 source의 원본 이력은 [M33 인계](../M33_HANDOFF.md)의
-로컬 Git bundle에 보관했습니다. 원격 `Release-0.5.0`은 정식 릴리스 기준선으로 보존합니다.
-통합 범위와 squash 대응은 [295번 기록](<../04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
-
-| 제품선·트랙 | 현재 상태 | 다음 작업 |
-| --- | --- | --- |
-| v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
-| [v0.6.0](v0.6.0/README.md) | M32 12/12, M33 수락 6/8 및 기술 완료 5/8 | 최종 후보의 버전과 자산 확정 |
-| Host | 작업 7/8, 배정 검증 5/5 | [최종 후보의 변경 영향 심사](v0.6.0/RELEASE_CHECKLIST.md) |
-| [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
-
-M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가
-관리합니다. M34-M37은 v0.8.0, M38-M41은 v0.9.0, M42-M45는 v0.10.0 계획입니다.
-현행 소스의 제품 식별자는 `0.6.0`이고 v0.6.0 개발은 NCS v3.4.0을 유지합니다. 개발 소스의
-M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개는 M33의 검증·승인 경계를 따릅니다.
+`Release-0.6.0`에서 배포 기록을 관리합니다. 다음 SDK 전환의 범위는 [v0.7.0 계획](../TODO_v0.7.0.md)에 있습니다.
 
 ## 이전 버전 — 지원·공급 종료
 
@@ -54,6 +19,7 @@ M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개�
 
 | 버전 | 보존 문서와 당시 특징 |
 | --- | --- |
+| v0.5.0 | [릴리스 문서](v0.5.0/README.md). Windows 10/11 x64 대상 공개판 |
 | v0.5.0-rc.2 | [RC2 문서](v0.5.0-rc.2/README.md) — 정식 릴리스 이전 공개 후보, 기존 자산 보존 |
 | v0.5.0-rc.1 | [RC1 문서](v0.5.0-rc.1/README.md) — RC2 이전 공개 후보, 기존 자산 보존 |
 | v0.4.1 | [릴리스 문서](v0.4.1/README.md) — 이전 stable |

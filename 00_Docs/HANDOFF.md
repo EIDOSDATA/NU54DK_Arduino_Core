@@ -1,6 +1,6 @@
 # 개발 인계
 
-**현재 단계는 M33-W07 최종 후보 심사입니다.** 버전 `0.6.0`의 자산을 생성하고 macOS 27 설치 전이를 확인했습니다. [339번 기록](<04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>) Host 작업 8개 중 7개와 다섯 목표 환경의 배정 검증을 완료했습니다. C11의 Mac 실기와 C12의 일반 Arduino IDE Upload 결과는 [검증 근거](<05_릴리스/v0.6.0/TESTING.md>)에서 확인합니다. [최종 후보 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
+**v0.6.0을 공개했습니다.** GitHub 릴리스, 공개 인덱스와 설치 검증은 [340번 기록](<04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)에 있습니다. C11 실기와 C12의 Arduino IDE Upload 결과는 [소스별 검증 근거](<05_릴리스/v0.6.0/TESTING.md>)에서 확인할 수 있습니다.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -13,12 +13,12 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 
 | 범위 | 상태·정본 |
 | --- | --- |
-| 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
-| v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **7/8**, 지원 목표 검증 **5/5**. HOST-W07 배정 완료, HOST-W08 문서 완료·최종 gate 미완료 |
+| 현재 제품 | [stable v0.6.0](<05_릴리스/v0.6.0/README.md>) |
+| v0.6.0 개발 | M32 12/12, M33 W07 최종 후보와 W08 공개 설치 완료. W06 수락 예외 보존 — [계획](TODO_v0.6.0.md) |
+| Host | **8/8**, 지원 목표 검증 **5/5**. HOST-W08 최종 패키지와 공개 설치 확인 완료 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
 | HOST-W07 배정 검증 | 다섯 목표 행 완료. [v0.6.0 지원표](<05_릴리스/v0.6.0/SUPPORT_MATRIX.md>), [소스별 실행 근거](<05_릴리스/v0.6.0/TESTING.md>) |
-| 저장소·브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac은 실제 checkout · `Dev-0.6.0-M33` |
+| 저장소·브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; v0.6.0 배포 기록 브랜치는 `Release-0.6.0` |
 | 실제 작업본·source | Windows는 `D:/w06/control/continuation.json`의 `active_workflow`; Mac은 최신 writer 해제 기록과 현재 checkout 대조 후 새 control 원장 |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
 | 개발 검증 방식 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 실패별 수정과 최종 동일 source gate를 분리 |
@@ -46,7 +46,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 - NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
 - 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
 - Host 단위 검사, 빌드와 실제 장치 결과는 각 소스에 연결한다. Apple/Google 서비스 및 외부 장치는 사용자 후속 `NOT_RUN`이다.
-- 다음 순서는 최종 후보의 자산과 변경 영향 확인, HOST-W08과 M33-W07 마감, M33-W08 공개 승인이다.
+- v0.6.0 공개와 설치 검증은 [릴리스 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)에 기록했다. 후속 SDK 전환은 [v0.7.0 계획](TODO_v0.7.0.md)의 범위에서 시작한다.
 
 ## 과거 결과 찾기
 

@@ -2,10 +2,10 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-24",
-  "status": "HOST_W07_ASSIGNED_VALIDATION_COMPLETE_HOST_W08_FINAL_GATE_PENDING",
-  "current_work_package": "HOST-W08",
+  "status": "HOST_W08_COMPLETE_PUBLIC_V060_INSTALL_VERIFIED",
+  "current_work_package": null,
   "implementation_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
-  "completed_work_packages": 7,
+  "completed_work_packages": 8,
   "total_work_packages": 8,
   "work_packages": [
     {
@@ -60,11 +60,11 @@
     },
     {
       "id": "HOST-W08",
-      "status": "documentation_prepared_final_gate_pending",
+      "status": "completed",
       "title": "release_regression_support_matrix",
       "documentation_status": "complete",
-      "final_gate_complete": false,
-      "record": "00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md"
+      "final_gate_complete": true,
+      "record": "00_Docs/04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md"
     }
   ],
   "platform_prerequisite_manifest": "tools/nu54-prerequisites/platform-pins.json",
@@ -1918,5 +1918,20 @@
     "first_candidate_native_package_conclusion": "SUCCESS_5_PASS_2_SKIPPED",
     "record": "00_Docs/04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md",
     "final_gate_complete": false
+  },
+  "v0.6.0_public_release": {
+    "source_revision": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+    "release_branch": "Release-0.6.0",
+    "host": "macOS 27.2.1 (26B131) arm64",
+    "archive_sha256": "574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a",
+    "index_main_commit": "21819ea1df010625ec366fd367de279e5a42b3a1",
+    "index_sha256": "6c45d5526ce37b5a696a8a207eda6b399643b965c93e2e01223f926d380f3b22",
+    "public_files_verified": 960,
+    "examples_discovered": 204,
+    "Blink_and_BoardInfo_build": "PASS",
+    "public_reinstall": "PASS",
+    "public_software_evidence_sha256": "a281bd295bdf0c48cf8eec9c00fef44d44f3dee338d3298a5bc757d78942ca4c",
+    "record": "00_Docs/04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md",
+    "hardware_operations": 0
   }
 }

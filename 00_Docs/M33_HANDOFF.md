@@ -1,13 +1,13 @@
 # M33 개발 인계
 
-HOST-W07의 배정 실기를 마쳤습니다. 각 제품 소스와 IDE 결과는 [검증 근거](<05_릴리스/v0.6.0/TESTING.md>)에서 확인합니다. 다음 작업은 최종 패키지의 식별자와 변경 영향을 확인하는 것입니다. [최종 후보 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
+v0.6.0을 공개했고 macOS 27에서 공개 설치를 확인했습니다. 배포 기록 브랜치는 `Release-0.6.0`입니다. [340번 기록](<04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
 [310번 수락 마감](<04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)과
 [공개 hash 참조](<04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json>)가 최종 결과다. 현행 범위는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
-HOST-W07의 배정 검증을 완료했다. C11 software는 331번, macOS26·27 실기는 336·337번, C6~C10 원형 PASS·FAIL은 330번에 보존한다. 최종 후보 정합화 뒤 HOST-W08과 M33-W07을 마감한다.
+HOST-W07의 배정 검증을 완료했다. C11 software는 331번, macOS26·27 실기는 336·337번, C6~C10 원형 PASS·FAIL은 330번에 보존한다. 최종 후보와 공개 설치 근거는 [340번 기록](<04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)에 있다.
 HOST-W06 마감 근거는 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>), W07 초기 통합은 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), C1 START FAIL·C2 교정은 [324번](<04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json)을 따른다.
 W06 명시 수락 정정은 [311번 기록](<04_검증 기록/311_M33_W06_명시_수락_정정과_HOST_W04_착수.md>)에 보존한다.
 이 문서는 실제 재개 입력과 과거 증거의 위치를 안내한다.
@@ -16,7 +16,7 @@ W06 명시 수락 정정은 [311번 기록](<04_검증 기록/311_M33_W06_명시
 
 | 항목 | 확인 위치 |
 | --- | --- |
-| 저장소·개발 브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac 실제 checkout · `Dev-0.6.0-M33` |
+| 저장소·개발 브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; v0.6.0 배포 기록 `Release-0.6.0` |
 | 실제 작업본·source·단일 writer | Windows는 `D:/w06/control/continuation.json`; Mac은 최신 writer 해제 기록과 checkout을 대조한 뒤 새 control 원장과 claim |
 | 진행 항목·source별 결과·native 종료 | 해당 Host control 원장·원본 terminal·receipt; Mac 전달 자료는 manifest의 상대 경로로 조회 |
 | 현행 실행 순서·완료 분모 | [v0.6.0 TODO](TODO_v0.6.0.md)와 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) |

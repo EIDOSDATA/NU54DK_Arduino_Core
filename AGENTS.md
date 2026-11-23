@@ -1,6 +1,6 @@
 # 저장소 작업 안내
 
-v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인계](00_Docs/HANDOFF.md)와 [릴리스 체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)에서 남은 범위를 확인합니다.
+v0.6.0은 공개 stable입니다. 작업 전 [현행 인계](00_Docs/HANDOFF.md)와 [릴리스 체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)에서 남은 범위를 확인합니다.
 
 ## 시작 전에
 
@@ -21,8 +21,8 @@ v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인�
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- HOST-W07의 배정 검증은 다섯 목표 행에서 완료했다. HOST-W08 최종 gate는 최종 후보의 제품 식별자·version·package·공개 계획과 변경 영향 근거를 확인한 뒤 닫는다. [현행 인계](00_Docs/HANDOFF.md)
-- 개발 브랜치는 `Dev-0.6.0-M33`이다. Windows 보존 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`,
+- HOST-W07의 배정 검증은 다섯 목표 행에서 완료했다. HOST-W08 최종 패키지와 공개 설치 확인을 완료했다. [현행 인계](00_Docs/HANDOFF.md)
+- v0.6.0 배포 기록 브랜치는 `Release-0.6.0`이다. Windows 보존 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`,
   해당 실행·writer 원장은 `D:\w06\control\continuation.json`의 `active_workflow`다.
   Mac에서 작업을 인수할 때는 실제 checkout과 원격 HEAD를 최신 writer 해제 기록과 대조한 뒤 새 control 원장을 만든다. 최초 Windows 전달 기록은 [Mac 인계](00_Docs/MAC_HANDOFF.md)에 보존한다.
 - W06의 개발 단계 수정별 검증과 최종 source 고정 후 전체 검증은 해당 W06 계약 범위다.
@@ -53,7 +53,7 @@ v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인�
 - **v0.4.0의 T01-T25와 R00-R14는 완료됐습니다.** 공개·T24 설치 수명주기·T25 마감은
   [125번 기록](<00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
   과거의 “U 진행 중”, “다음 T22 승인”을 현재 작업으로 재개하지 않습니다.
-- **현재 stable·지원 대상은 v0.5.0입니다.** 이전 stable·RC·preview는 지원·stable catalog
+- **현재 stable·지원 대상은 v0.6.0입니다.** 이전 stable·RC·preview는 지원·stable catalog
   공급을 종료하며, 과거 tag·Release·자산·검증 기록은 삭제하거나 소급 수정하지 않습니다.
 - **M28~M31과 Windows v0.5.0 정식 공개, M32 12/12를 완료했습니다.**
   M31은 W01~W08 8/8·W03 LE Audio 11/11입니다. M30 전원 차단 4지점×3회(12/12),
@@ -62,20 +62,20 @@ v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인�
   M32 W11 exact `94f02544…`의 12-family HIL·signed MDFU·1,800초 soak와
   W12 `49099e74…`의 정합성·CI 9/9를 완료했습니다. 기능별 근거는 [M32 TODO](00_Docs/TODO_M32.md)에 있습니다.
   M32 test family는 **23 PASS + Flushable ACL 1 HOLD / 24**이며 미지원 ACL을 PASS로 세지 않습니다.
-- **현재 작업 브랜치는 `main`에서 분기한 `Dev-0.6.0-M33`입니다.** M32 squash 통합과 문서 정비는
+- **v0.6.0 배포 기록은 `Release-0.6.0` 브랜치에 있습니다.** M32 squash 통합과 문서 정비는
   [295번](<00_Docs/04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>)을 따릅니다.
   `Dev-0.6.0-M32`는 사용자 요청으로 로컬·원격에서 삭제했고 원본 이력은 로컬 Git bundle에 보관했습니다.
   위치·hash와 새 채팅 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)를 따릅니다.
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
-  현재 소스의 `coreVersion()`은 **0.6.0**이고 공개 stable은 **0.5.0**입니다. C11과 C12는 비공개 **0.6.0-rc.1** 패키지입니다. M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software 및 배정 실기 완료**입니다. W05 exact `5f9b2257…`에서
+  현재 소스의 `coreVersion()`은 **0.6.0**이고 공개 stable도 **0.6.0**입니다. C11과 C12는 비공개 **0.6.0-rc.1** 패키지입니다. M32의 38개 지원 후보는 `not_published`입니다.
+- W06 수락 마감 시점의 M33 집계는 **수락 6/8·기술 5/8**입니다. 이후 W07 최종 후보와 W08 공개 설치 범위를 완료했습니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고
   **HOST-W07 C5 Windows 기준선을 보존하며 추가 OS는 Host 계약의 호환성 범위로 검증**합니다. 2026-11-10 사용자가 Host 착수와 문서 전면 갱신을 지시했습니다. 기존 결정에 따라
   M33 기능 개발과 Host를 병렬 진행하지 않습니다. 사용자 지시로 HOST-W08 문서 준비를 먼저 완료했습니다.
-  남은 Host 실기·최종 배포 후보·HOST-W08 gate를 마감한 뒤 M33-W08로 진행하며 v0.6.0 공개는 별도 승인 단계입니다.
+  사용자 공개 승인 후 v0.6.0을 게시했습니다. 공개 자산의 해시, stable 인덱스 및 macOS 27 설치를 확인했습니다.
   재개 입력은 [HANDOFF](00_Docs/HANDOFF.md), 제품선 범위는 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
   과거 94bb halt 수정·로컬 자료 삭제와 미커밋 패치 인계는
   [302번](<00_Docs/04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)의 역사 기록입니다.

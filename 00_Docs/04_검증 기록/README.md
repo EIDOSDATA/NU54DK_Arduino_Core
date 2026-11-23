@@ -1,5 +1,6 @@
 # 검증 기록
 
+- [340. v0.6.0 게시와 공개 설치 검증](<340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 - [339. v0.6.0 최종 후보와 배포 자산 준비](<339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>)
 - [338. macOS 27 일반 IDE Upload 수정과 Blink 확인](<338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
 - [337. macOS 27 USB, UART 재연결, IDE Verify](<337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
