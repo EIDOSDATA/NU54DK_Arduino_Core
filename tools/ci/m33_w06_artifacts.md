@@ -1,7 +1,7 @@
 # M33-W06 exact target artifact 준비 계획
 
 > **현행 상태 — 2026-11-15:** W06은 실제 PASS46 + 명시 수락 #29·40·44를 구분하여 마감했다.
-> HOST는 6/8이며 HOST-W07의 Windows 11 비공개 RC1 검증을 완료하고 추가 OS의 현행 검증 범위는 다중 Host 계약과 인계를 따른다.
+> HOST-W07 배정 실기와 W06 기능 검증은 각각의 기준 소스로 기록한다. [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 > 아래 2026-10-11의 D 작업 지시·경로·실패 수정 순회는 당시 reference로 보존하며 현재 실행 지시가 아니다.
 > 현재 source·작업본은 [현행 인계](../../00_Docs/M33_HANDOFF.md)를 확인한다. #29 분석은 유예했고 새 HIL을 실행하지 않는다.
 
@@ -11,7 +11,7 @@
 > 실행 범위·원본 조사·미실행 항목은 [M33 인계](../../00_Docs/M33_HANDOFF.md), 개발/최종 검증 구분은
 > [검증 설계](<../../00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 따른다.
 
-> checkout은 `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`, 새 build·실행·cache·tmp는 `D:\w06`이다.
+> W06 당시 Windows checkout은 `C:\Users\eidos\GitHub\NU54DK_Arduino_Core`, 새 build·실행·cache·tmp는 `D:\w06`이다.
 > SDK/toolchain pin을 유지하고 실제 source·미커밋 변경·image·장치를 확인한다. 실기 writer와 무거운
 > 로컬 작업은 하나이며 build는 `--max-workers 1`이다. 실패 원본과 `.build-stages`·`.runtime-stages`를
 > 보존하고 SAFETY 실패를 자동 retry하지 않는다. 개발 후보·fake transport 결과는 최종 PASS가 아니다.

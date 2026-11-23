@@ -19,8 +19,7 @@ M32는 미공개 v0.6.0 개발 범위이며 M33은 수락 6/8·기술 5/8입니�
 현재 문서 작업 중에는 실기를 시작하지 않으며, 범위와 재개 절차는 [M33 인계](../../../00_Docs/M33_HANDOFF.md)를 따릅니다.
 과거 inventory·image·STOP/cleanup이 현재도 유효하다고 가정하지 않습니다. 현재 파일·보드 상태를
 확인하고 실기 writer와 로컬 무거운 build/HIL은 하나씩 실행합니다.
-HOST는 6/8이며 C5 Windows 11 완료 기준선을 보존합니다. C10 Ubuntu24.04/WSL2 실적과
-남은 OS의 호환성·변경 영향 검증은 [현행 Host 계약](<../../../00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [331번](<../../../00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>)을 따릅니다. C6~C10 원형은330번에 보존합니다.
+OS별 장치 검증 범위와 제품 소스는 [v0.6.0 지원표](<../../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있습니다.
 NCS v3.4.0 pin을 유지하며 [v0.7.0](../../../00_Docs/TODO_v0.7.0.md)의 SDK 3.4.1 전환은
 별도 0/6 미착수 작업입니다. 현재 보드 mapping·접근성·image는 새 실기 직전에 다시 확인합니다.
 
@@ -1130,7 +1129,7 @@ PASS가 아닙니다.
 
 | ID | 기능 | 전원 분리 상태에서 연결할 신호 | 판정 범위 |
 | --- | --- | --- | --- |
-| 401~404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0~P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0~3, AIN0~3, 32/256 sample과 DMA 길이 |
+| 401-404 | PWM→SAADC | peer P4.12(P1.14) → DUT P2.12/11/10/9의 P1.4/AIN0-P1.7/AIN3 중 해당 한 선, GND↔GND | PWM20/21/22 channel 0-3, AIN0-3, 32/256 sample과 DMA 길이 |
 | 405 | 오픈드레인→SAADC | B P1.14 → A P1.11/AIN4, GND↔GND | PMIC_INT 공유 입력의 LOW/해제/LOW·32/256 sample·단일/이중 DMA·GPIO readback |
 | 406 | 입력 바이어스→SAADC | B P1.14 → A P1.12/AIN5, GND↔GND | VBAT_MON/SB4·100nF 공유 입력; INPUT pull-down/up/down·25ms 정착·12 vector |
 | 407 | 입력 바이어스→SAADC | B P1.14 → A P1.13/AIN6, GND↔GND | 버튼 미누름; INPUT pull-down/up/down·25ms 정착·12 vector |
@@ -1140,7 +1139,7 @@ PASS가 아닙니다.
 | 440 | PDM | receiver P1.4 CLK→generator P1.5 SCK, receiver P1.6 DATA←generator P1.7 MISO, receiver P1.5 gate→generator P1.4 CSN, GND↔GND | PDM20/21, mono/stereo edge, 25/50/75% density 순서·channel 분리 |
 
 401~404/408/420의 peer P1.14/P1.10은 온보드 LED buffer 입력에도 연결되어 있으나 MCU 출력끼리 맞물리지
-않는 단방향 경로입니다. DUT의 P1.4~7과 403/404 양쪽 P1.4~7을 쓰려면 두 보드 debug-control의
+않는 단방향 경로입니다. DUT의 P1.4-7과 403/404 양쪽 P1.4-7을 쓰려면 두 보드 debug-control의
 `DISABLE_UART`를 DAP UART 분리 상태로 유지해야 합니다. `DISABLE_SWD`는 SWD 연결 상태로 둡니다.
 fixture를 바꿀 때 두 USB 전원을 먼저 분리하고, 표에 없는 전원·신호선은 연결하지 않습니다.
 AIN4 P1.11은 **SB1→PMIC_INT→BQ25186 /INT**와 공유합니다(원본 회로도 1·3쪽). 405는 B P1.14를
@@ -1151,7 +1150,7 @@ interrupt LOW를 허용하며 정확한 전압·PMIC 동작 검증으로 확대�
 명령 38의 실제 GPIO 설정과 전체 ADC sample·hash를 보존하고 양쪽 cleanup 시 B를 먼저 입력으로 해제합니다.
 AIN5 P1.12는 SB4→VBAT_MON→R8 470kΩ/VBAT·R11 1MΩ/GND·C12 100nF와 공유합니다.
 406은 B P1.14의 **INPUT 내부 pull-down/up/down**으로 필터를 충방전하며 출력 드라이버는 활성화하지 않습니다.
-25ms 정착 후 모든 LOW sample이 -256~512, 모든 HIGH sample이 1024 초과~4095여야 PASS입니다.
+25ms 정착 후 모든 LOW sample이 -256-512, 모든 HIGH sample이 1024 초과~4095여야 PASS입니다.
 GPIO raw PIN_CNF mask 0xF0F는 LOW 0x4/HIGH 0xC, 종료 no-pull 입력은 0이어야 합니다.
 SB4·PMIC 설정을 변경하지 않으며 실제 배터리 전압이나 SB4 연결 상태를 측정한 것으로 취급하지 않습니다.
 AIN6 P1.13은 SW1 신호(버튼 부품 SW2)와 공유하며 누르면 GND로 연결됩니다(회로도 1·8쪽).
@@ -1170,7 +1169,7 @@ PDM source는 receiver가 만든 MHz clock을 SPIS21 EasyDMA로 추종하므로 
 단일/이중 buffer 2의 96개 vector이며, I2S도 두 rate·네 width·세 channel mode·두 길이·단일/이중
 buffer의 96개 vector입니다. 수치는 준비된 실행 경우의 수이고 실기 PASS 수가 아닙니다.
 
-`v04_campaign.py`는 반복 횟수를 1~100회, 한 연속 soak를 최대 7,200초로 제한하고 1~60초 간격의
+`v04_campaign.py`는 반복 횟수를 1-100회, 한 연속 soak를 최대 7,200초로 제한하고 1-60초 간격의
 progress를 journal에 남깁니다. 중단된 실행은 `interrupted`이며 다음 실행에 경과 시간을 합산하지
 않습니다. UART/SPI/TWI와 signal CLI의 `--repetitions`, `--duration-seconds`,
 `--progress-interval-seconds`가 이 공통 계약을 사용합니다. 단독 기능 실기 PASS 전에는 soak를

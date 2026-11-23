@@ -1,5 +1,10 @@
 # 검증 기록
 
+- [338. macOS 27 일반 IDE Upload 수정과 Blink 확인](<338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
+- [337. macOS 27 USB, UART 재연결, IDE Verify](<337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
+- [336. macOS 26 USB 재연결과 IDE Verify](<336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
+- [335. macOS 26 SDK 설치와 대표 빌드](<335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)
+- [334. macOS 26 첫 시도 및 Gatekeeper 차단](<334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>)
 - [333 — Mac 재개 문서·작업지시문·전달 자료](333_Mac_재개_문서와_전달_자료.md)
 
 - [332 — HOST-W08 문서·지원표 선행 정리와 릴리스 잔여](332_HOST_W08_문서_지원표_선행_정리.md)
@@ -58,6 +63,8 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 
 과거 기록의 진행률·HOLD·다음 작업은 작성 당시 상태입니다. 아래 최종 기록부터 읽고,
 필요한 경우 번호별 원본과 [evidence](evidence/)로 내려가세요.
+
+<a id="최근-완료재개-기록"></a>
 
 <a id="최근-완료재개-기록"></a>
 
@@ -160,7 +167,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 기존 번호를 다시 매기지 않습니다.
 
 <details>
-<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·M33 W01~W05 — 238~301</summary>
+<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·M33 W01-W05 — 238-301</summary>
 
 - [238 — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
 - [239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
@@ -453,7 +460,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 </details>
 
 <details>
-<summary>초기 기반·v0.1~v0.3 공개·v0.4.0 범위 — 01~42</summary>
+<summary>초기 기반·v0.1-v0.3 공개·v0.4.0 범위 — 01-42</summary>
 
 - [1 — M1 도구 환경과 NU54DK 보드 실기 기준선](<01_M1_도구와_보드_기준선.md>)
 - [2 — M2 Zephyr module과 Arduino runtime 기준선](<02_M2_Zephyr_Module과_Runtime_기준선.md>)

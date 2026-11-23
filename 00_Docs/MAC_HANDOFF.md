@@ -1,10 +1,8 @@
-# Mac에서 HOST-W07 실기 재개하기
+# Mac 검증 결과와 C11 전달 자료
 
-2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
+macOS 26.7.3과 27.2.1의 C11 실기를 완료했습니다. C12에서는 macOS 27의 일반 IDE Upload와 Blink를 확인했습니다. 다음 단계는 최종 배포 후보 검토입니다. [336번 기록](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>), [337번 기록](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>), [338번 기록](<04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>), [최종 후보 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
-아래 명령은 2026-11-16 Windows→Mac 전달 절차와 배정 실기의 재현 근거다. 후속 검증이 필요한 경우 현행 인계의 범위를 먼저 확인한다.
-이번 전달 자료는 M33-W07에서 HOST-W08 문서 준비를 마치고 Mac 실기를 시작하기 전의 인계 기준선을 보존한다.
-이 문서는 Windows의 `D:/w06/control/continuation.json`을 Mac에 요구하지 않는 재개 진입점이다.
+아래 절차는 2026-11-16의 Windows 인계와 C11 검증을 재현하거나 원본을 복구할 때 사용합니다. 현재 작업을 재개할 때는 [새 작업 지시문](MAC_START_PROMPT.txt)과 최신 실제 writer 해제 기록을 확인하세요.
 
 ## 1. Mac에서 처음 할 일
 
@@ -54,9 +52,9 @@ Windows/WSL 원인이 필요하면329·330번의 해당 부분만 확인한다. 
 | 제품 C11 | `d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa` |
 | 문서 인계의 부모 | `09da4d740fb751904e939ca0f1ef944cdf1b720b`; 새 인계 문서 commit은 Git과 전달 receipt로 확인 |
 | board submodule | `fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3` |
-| Mac SDK | NCS3.4.0, bundle `ccc010f809`, SDK root `/opt/nordic/ncs` |
-| 비공개 package | current0.6.0-rc.1 / previous0.6.0-host.1, **둘 다 같은 C11 source** |
-| 원본 kit | `NU54DK-C11-d304f369-macOS-kit.tar.gz`,201857017bytes |
+| Mac SDK | NCS 3.4.0, bundle `ccc010f809`, SDK root `/opt/nordic/ncs` |
+| 비공개 package | 현재 `0.6.0-rc.1`, 이전 `0.6.0-host.1`, **둘 다 같은 C11 source** |
+| 원본 kit | `NU54DK-C11-d304f369-macOS-kit.tar.gz`, 201,857,017바이트 |
 | kit SHA-256 | `c1792818979453ce3150d7b19abf960f3d14a31f970c4578f5f41afcf5cf8208` |
 | C11 software CI | [43760678488/attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/43760678488),5/5SUCCESS |
 | Mac software 실적 | 실제26.7.2·27.0.1 ARM64, SDK 설치·lifecycle·대표4cold/4warm·관련 unit 통과 |

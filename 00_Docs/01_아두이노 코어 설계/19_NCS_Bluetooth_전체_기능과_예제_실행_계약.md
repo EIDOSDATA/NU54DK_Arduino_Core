@@ -18,8 +18,7 @@
 재생성하며 생성 Markdown을 수작업으로 수정하지 않는다.
 
 완료 근거는 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)와
-[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)다. Host는 W01~W06 완료
-6/8이고 **HOST-W07 Windows 11 완료·추가 OS 진행은 현행 인계 참조**이다. M33-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했으며
+[W03 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>)에 있다. M33-W06은 실제 PASS 46건과 사용자 수락 3건(#29, #40, #44)으로 마감했다.
 [검증 설계](<../02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)의 당시 개발·최종 검증 경계를 보존한다.
 현재는 #29 분석을 유예하고 [최신 체크포인트](../M33_HANDOFF.md)의 Host 순서를 따른다. 기능별 합격 조건은 유지하고 Host를 M33 기능 개발과 병행하지 않는다.
 
@@ -39,7 +38,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
 다중 Host·RC·공개를 계속 소유하며 Host 순차 진행·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-현재 stable `v0.5.0`, source 식별자 `0.5.0`, M31 8/8·M32 12/12·M33 수락6/8·기술5/8·HOST6/8을 구분한다.
+공개 버전과 소스 기본 식별자는 `0.5.0`이다. M31은 8/8, M32는 12/12, M33은 수락 6/8 및 기술 완료 5/8이다. Host 근거는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
 M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
 [M32 readiness](../../variants/nu54dk/m32-ble-readiness.json)가 소유한다. W08 BLOB·signed MDFU와
 W10 공존은 후속 exact HIL에서 완료했다. W11 clean `94f02544…`의 exact family 12/12·signed MDFU·
@@ -52,7 +51,7 @@ RC2의 예제 안내·Upload·UTF-8·진행 표시 교정과 자동 검사, 시�
 ### 2026-10-01 후속 목표 버전 배정
 
 M32·M33의 계획 목표는 `v0.6.0`이며 `v0.7.0`은 NCS 3.4.1 전체 SDK 전환 전용이다.
-M34~M37 Security/Update는 `v0.8.0`, M38~M41 Radio/Network는 `v0.9.0`, M42~M45 Matter는
+M34-M37 Security/Update는 `v0.8.0`, M38-M41 Radio/Network는 `v0.9.0`, M42-M45 Matter는
 `v0.10.0`이다. M번호·기능·인계 의존성과 완료 분모는 유지한다. 이 문서 갱신은 구현 착수·Host 보류
 해제·정식 공개 승인 또는 현재 지원 확대가 아니다.
 독립 ARF의 배포 버전은 별도 결정하며 SDK 전용 v0.7.0에는 포함하지 않는다. M32·M33은
@@ -113,7 +112,7 @@ M31~M33의 고정 v3.4.0 SDK와 제품 SDC를 이번 문서 정비에서 바꾸�
 | RPA/privacy와 link별 상태 | 여러 local identity, identity별 bond/filter/광고 격리 | M32-W04 |
 | Generic GATT server/client, long/reliable read/write, descriptor·authorization·cache | 표준 서비스·client와 외부 ecosystem 예제 | M33-W02~W03 |
 | CoC credit/buffer, legacy Signed Write, experimental EATT | OTS transport 및 새 profile 조합의 회귀 | M31-W06, M33-W02·W06 |
-| SMP/LESC·IO capability·bond·유선 OOB·BAS/DIS/HID/HRS/ESS | Audio/Mesh/profile별 보안 적용과 예제 catalog 확대 | M31-W03, M32-W06~W08, M33-W02~W03 |
+| SMP/LESC·IO capability·bond·유선 OOB·BAS/DIS/HID/HRS/ESS | Audio/Mesh/profile별 보안 적용과 예제 catalog 확대 | M31-W03, M32-W06-W08, M33-W02-W03 |
 | Secure BLE DFU·서명·rollback·실제 전원 복구 | Mesh DFU transport/배포자와 후속 다중 layout·key 정책 | M32-W08 → M34~M36 |
 
 ## 2. 고정 source와 판정 용어
@@ -181,7 +180,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 | --- | --- | --- | --- |
 | 완료 / P0 | M31-W01 전체 source inventory·capability·실행 계약 | M28~M30 기준선, lock, 세 보드 role inventory | 전체 예제 parity 원장 후보와 M31 capability 원장·parser·target |
 | 완료 / P0 | M31-A: W02 ISO → W03 Audio | controller capability·고정 stream/buffer | raw data/합성 PCM 예제, Audio role별 profile와 test |
-| 완료 / P0 | M31 메모리 최적화 | W01~W03 완료와 W04·W05 기존 성공/실패 원본 | P0~P2 완료, 최종 크기 유지; [262번 완료](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
+| 완료 / P0 | M31 메모리 최적화 | W01-W03 완료와 W04·W05 기존 성공/실패 원본 | P0-P2 완료, 최종 크기 유지; [262번 완료](<../04_검증 기록/262_M31_메모리_최적화_P2_세_축_완료.md>) |
 | 완료 / P0 | M31-B W04 DF | W01 controller별 판정과 최적화 image | 지원 CTE TX·연결 응답 PASS, 제품 SDC RX/AoD `UNSUPPORTED`; [263번 완료](<../04_검증 기록/263_M31_W04_Direction_Finding_완료.md>) |
 | 완료 / P0 | M31-C W05 CS | W01 controller별 판정과 최적화 image | connected CS 예제, negative·복구 완료; [264번](<../04_검증 기록/264_M31_W05_Channel_Sounding_완료.md>) |
 | 완료 / P0 | M31-W06 독립 image 자원·수명주기·회귀, W07 설치 예제·3보드 HIL, W08 Windows RC | 위 기능별 build/negative. 네 기능 전체 동시 실행은 요구하지 않음 | 기능 8/8·Windows package·설치·RC 및 stable 공개 smoke 완료; M32 자원 인계 |
@@ -195,7 +194,7 @@ Arduino 빌드 및 가능한 실제 역할 HIL을 통과해야 한다.
 P1은 생략 가능 표시가 아닌 구현 순서다. 공식 nRF54L15 적용 예제에는 실행 가능한 Arduino 경로를
 제공하고, 기능·외부 의존성의 정당한 예외만 원장에 기록한다. 문서 계획 진척과 구현·runtime 진척은
 각각 별도 분모로 보고한다. HOST-W04~HOST-W08은 Host 작업이며 M30 잔여 작업이 아니다.
-M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W07 Windows 11 완료·추가 OS 진행은 현행 인계를 따른다. W02는 표준 GATT·Beacon 공개 예제 9/9와
+M31, M32와 M33-W01~W05는 완료했고 M33-W06은 사용자 수락 마감했고 HOST-W07의 배정 실기를 완료했다. W02는 표준 GATT·Beacon 공개 예제 9/9와
 두/세 보드 exact HIL, W03은 Apple 예제 2/2·native template 4/4·scripted-peer HIL 9/9,
 W04는 DTM two-wire/H4 12/12씩, W05는 설치 예제 204/204 compile과 negative 9/9를 PASS했다.
 외부 제품 상호운용은 사용자 후속 `NOT_RUN`이다. M32의 개별 기능·통합 HIL은 M31 인계와
@@ -347,7 +346,7 @@ ARF-01 BLE role-budget의 `C1P1/C2P0/C0P2`는 M32-W04 자원 preset에 통합한
 | W09 최소 802.15.4·ESB 단독 radio | 고정 NCS radio/ESB/MPSL·Zephyr IEEE 802.15.4 API | 검증용 `profile/direct`: `Radio154Pair`, `EsbPair` | 2보드; 각 protocol 단독 TX/RX·channel·payload·종료/재시작 |
 | W10 BLE↔Mesh↔802.15.4↔ESB 공존 | MPSL/timeslot·profile 적용 조합; `N:radio_coex_1wire` | `profile/direct`: `BleMeshCoexistence`, `Ble154Coexistence`, `BleEsbCoexistence` | 최소 3보드; 조합별 단독 기준→공존·기아/지연·priority·자원 반환. 모든 protocol 동시 실행을 가정하지 않음 |
 | W10 외부 radio coexistence 제어선 | `N:radio_coex_1wire`와 해당 hardware 요구 | `template`: `RadioCoexistenceOneWire`, 실제 연결용 구현·예제·안내 필수 | build·계약·자동 검사 수행. 외장 실물 신호 검증은 사용자 후속 `NOT_RUN`이며 개발·릴리스 비차단 |
-| W11~W12 통합·회귀·마감 | 위 기능 + M19~M31 회귀; HOST-W07 절차 준비는 독립 | role별 runner·예제·readiness·handoff | 실제 topology별 2~3보드 또는 필요한 수; 초과 topology는 별도 필요 수·검증 범위. Ubuntu/macOS 실물은 최종 사용자 gate |
+| W11-W12 통합·회귀·마감 | 위 기능 + M19-M31 회귀; HOST-W07 절차 준비는 독립 | role별 runner·예제·readiness·handoff | 실제 topology별 2-3보드 또는 필요한 수; 초과 topology는 별도 필요 수·검증 범위. Ubuntu/macOS 실물은 최종 사용자 gate |
 
 Mesh 1.1이라는 버전명만으로 모든 선택 기능을 지원한다고 선언하지 않는다. 예를 들어 directed
 forwarding처럼 고정 source에서 적용성을 아직 확인하지 않은 기능은 W01/W07 조사 행으로 남기고,
@@ -558,7 +557,7 @@ mass erase/recover, 전체 flash 초기화, 임의 GPIO, 전원 차단은 자동
 
 ## 12. M34~M45로 넘길 산출물
 
-후속 M번호·주제는 유지하며 M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0 계획이다.
+후속 M번호·주제는 유지하며 M34-M37은 v0.8.0, M38-M41은 v0.9.0, M42-M45는 v0.10.0 계획이다.
 선행 v0.7.0은 기존 기능을 유지하는 SDK 전환만 수행하며 아래 새 기능 인계를 대신 완료하지 않는다.
 다음 표의 입력을 각 착수 계약에서 받아 무선 기능과 보안·저장·network의
 누락을 막는다. M31~M33에서 필요한 최소 기능을 전부 미래 마일스톤으로 미루는 의미는 아니다.

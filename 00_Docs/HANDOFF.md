@@ -1,10 +1,6 @@
 # 개발 인계
 
-2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
-
-C11에서 별도로 관측한 Arduino IDE Upload의 PyYAML 누락은 C12에서 교정했다. 새 private RC1의 일반 IDE Upload와 Blink GPIO 전이를 실제 macOS27 보드에서 검증했다. [338번](<04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
-
-현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다.
+**현재 단계는 M33-W07 최종 후보 심사입니다.** Host 작업 8개 중 7개와 다섯 목표 환경의 배정 검증을 완료했습니다. C11의 Mac 실기와 C12의 일반 Arduino IDE Upload 결과는 [검증 근거](<05_릴리스/v0.6.0/TESTING.md>)에서 확인합니다. [최종 후보 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -12,8 +8,6 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 [공개 hash 참조](<04_검증 기록/evidence/m33-w06-b46ce570/closure-reference.json>)가 최종 결과다. 현행 범위는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·종료 증거와 과거 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾는다.
-
-**다음 작업은 최종 배포 후보 정합화다.** Mac 실기 결과와 로컬 증거는 [Mac 재개 문서](MAC_HANDOFF.md)와 [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)에서 확인한다. 새 작업 전 현행 브랜치·local writer receipt와 장치 상태를 대조한다.
 
 ## 현재 상태
 
@@ -23,9 +17,9 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
 | Host | **7/8**, 지원 목표 검증 **5/5**. HOST-W07 배정 완료, HOST-W08 문서 완료·최종 gate 미완료 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
-| HOST-W07 현재 | C5 Windows 기준선과 C10 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 교정·macOS26/27 CI 결과는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원형 PASS·FAIL은 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
+| HOST-W07 배정 검증 | 다섯 목표 행 완료. [v0.6.0 지원표](<05_릴리스/v0.6.0/SUPPORT_MATRIX.md>), [소스별 실행 근거](<05_릴리스/v0.6.0/TESTING.md>) |
 | 저장소·브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac은 실제 checkout · `Dev-0.6.0-M33` |
-| 실제 작업본·source | Windows는 `D:/w06/control/continuation.json`의 `active_workflow`; Mac은 전달 manifest·해제 receipt 확인 뒤 새 control 원장 |
+| 실제 작업본·source | Windows는 `D:/w06/control/continuation.json`의 `active_workflow`; Mac은 최신 writer 해제 기록과 현재 checkout 대조 후 새 control 원장 |
 | 현재 이력 | 사용자 요청으로 M33의 main 이후 87 commit을 하나로 정리; [원본 bundle·복구](M33_HANDOFF.md#m33-원본-이력-보관--2026-10-07-squash) |
 | 개발 검증 방식 | [W06 재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>) — 실패별 수정과 최종 동일 source gate를 분리 |
 | 현행 실행 순서 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) · [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>) · [M33 TODO](TODO_M33.md) |
@@ -36,7 +30,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 
 1. [AGENTS](../AGENTS.md)와 [M33 인계](M33_HANDOFF.md).
 2. [M33 TODO](TODO_M33.md)의 W07·W08, [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>).
-3. 현행 [331번 C11 macOS 교정·호환성](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>)과 [Host 원장](../variants/nu54dk/host-readiness.json). C6~C10은330번, C5 Windows 완료는 [329번](<04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 보존한다.
+3. HOST-W07의 OS별 소스, 빌드, 장치 검증과 C12의 IDE Upload 결과는 [검증 근거](<05_릴리스/v0.6.0/TESTING.md>)에서 확인한다.
 4. 과거 실패 원인이 필요할 때 [302번](<04_검증 기록/302_M33_W06_빌드_통과와_runtime_중단_인계.md>)·
    [303번](<04_검증 기록/303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md>)의 해당 절만 참조.
 5. 과거 개발49 완료와 판단 정정은 [306번](<04_검증 기록/306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md>)·[307번](<04_검증 기록/307_M33_W06_연속검증_판단_정정과_마감_계획.md>)의 역사 기록이다. W06 증거 해석이 필요할 때만 [W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)과 [재설계](<02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)를 참조하며 #29 분석은 유예한다.
@@ -47,14 +41,12 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 ## 실행 경계
 
 - 실기 writer와 로컬 무거운 build/HIL은 하나. 이번에 허용된 병렬 문서/파일 검토는 같은 범위만 다룬다.
-- 2026-10-11 문서 push는 개발 문서 동기화이며 W06 완료가 아니다. 현재 실패별 로컬 수정·검증에서도
-  개별 항목마다 대규모 공식 CI를 재시작하지 않는다.
+- 실패를 다시 확인할 때는 원본을 보존하고 실제 변경의 영향 범위만 검증한다.
 - Windows 새 작업·cache·임시는 D 아래이며 C의 NCS/toolchain은 입력으로만 사용한다. Mac은 새 로컬 work root와 고정 `/opt/nordic/ncs`를 사용한다.
 - NCS 3.4.0과 board/toolchain pin 유지. 3.4.1 전체 전환은 [v0.7.0](TODO_v0.7.0.md)이다.
 - 현재 장치·symlink·firmware·STOP은 재개 시 실제 확인한다. 삭제된 파일이나 옛 hash로 PASS를 합성하지 않는다.
-- 개발 smoke·Host·build와 최종 실제 보드 PASS를 분리한다. 문서 정비는 W06 완료가 아니다.
-- W06 수락 마감 후 사용자 지시로 HOST-W04를 시작했다. HOST-W04~W06 → W07 도구 → M33-W07 RC1 → HOST-W08 문서 선행 정리 → Mac 실기 완료 → 최종 후보 정합화 → HOST-W08·M33-W07 마감 → M33-W08 별도 공개 승인 순서다.
-- Apple/Google·외장 장치는 사용자 후속 NOT_RUN, Ubuntu/macOS 실제 지원 검증은 RC 단계다.
+- Host 단위 검사, 빌드와 실제 장치 결과는 각 소스에 연결한다. Apple/Google 서비스 및 외부 장치는 사용자 후속 `NOT_RUN`이다.
+- 다음 순서는 최종 후보의 자산과 변경 영향 확인, HOST-W08과 M33-W07 마감, M33-W08 공개 승인이다.
 
 ## 과거 결과 찾기
 
@@ -64,7 +56,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | M29-W01~W08 8/8 완료와 M30 인계 | [ATT/GATT·L2CAP 계약](<01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md>) · [고정 readiness 원장](../variants/nu54dk/m29-ble-readiness.json) |
 | M30-W01~W08 완료와 M30-POWER-01 원본 근거 | [Security·Profile·DFU 계약](<01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md>) · [고정 readiness 원장](../variants/nu54dk/m30-ble-readiness.json) |
 | M32 완료 | [M32 완료 TODO](TODO_M32.md) · [287번](<04_검증 기록/287_M32_W12_정합성_감사와_후속_인계.md>) |
-| M33 W01~W05 완료 | [M33 TODO](TODO_M33.md)와 연결된 296·298~301번 기록 |
+| M33 W01-W05 완료 | [M33 TODO](TODO_M33.md)와 연결된 296·298-301번 기록 |
 | M32 통합·이력 보관 | [295번](<04_검증 기록/295_M32_문서_전수_정비와_main_Squash_통합.md>) · [이력 보관](M33_HANDOFF.md#m32-원본-이력-보관) |
 | 전체 문서 감사 | [문서 안내](README.md) · [감사 원장](document-review.json) |
 

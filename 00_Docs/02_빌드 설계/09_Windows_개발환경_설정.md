@@ -20,12 +20,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 이 절차는 현재 `v0.5.0`과 후속 개발 소스의 Windows 환경 기준이다. M30은 W01~W08 8/8·test ID
 10/10·실제 전원 차단 12/12를 완료했고 HOST-W01~HOST-W03도 완료했다. `v0.5.0`은 M31 완료 뒤
 Windows 10/11 x64 지원 릴리스다. 공개 RC와 stable v0.5.0 승격을 완료했다.
-Ubuntu AMD64·Apple Silicon macOS는 v0.6.0의 M32·M33 계획과 연계하며
-[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)의 HOST-W04~HOST-W08 구현·
-자동 검사·사용자 절차를 순차 진행한다. **Host 6/8·HOST-W07 Windows 11 완료·추가 OS 진행은 현행 인계 참조**다.
-Ubuntu/macOS의 실제 설치·USB upload·serial·debug·수명주기는 사용자가 해당 OS를 추가할 후속
-릴리스의 최종 단계에서 검증한다. 정식 지원의 최종 실물 gate는 유지한다.
-버전 배정만으로 Host 작업을 재개하거나 추가 OS 지원을 확정하지 않는다.
+v0.6.0 후보에서 Windows 11 및 각 OS에 배정한 검증을 완료했다. Ubuntu 사용자 실기는 WSL2에서 수행했다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 M31-W08의 Windows package·설치 예제·수명주기는 사용자 승인에 따라 GitHub Actions 병렬
 workflow로 검증했으며 [CI/CD 계약](08_M12_CI_CD와_재현_빌드.md)을 따른다.
 

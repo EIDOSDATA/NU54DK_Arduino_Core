@@ -1,8 +1,6 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
-
-현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다.
+다섯 목표 환경의 HOST-W07 배정 검증을 마쳤습니다. 다음 단계는 최종 후보의 식별자, 자산 및 변경 영향 심사입니다. [v0.6.0 지원표](<05_릴리스/v0.6.0/SUPPORT_MATRIX.md>), [최종 후보 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
 | 항목 | 내용 |
 | --- | --- |
@@ -12,7 +10,7 @@
 | 순차 Host 계획 | M33-W06 수락 마감. Host 7/8. HOST-W07에서 Windows11·Ubuntu24.04/26.04 WSL2·macOS26/27 배정 검증 완료 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
-| 최종 갱신일 | 2026-11-16 |
+| 최종 갱신일 | 2026-11-24 |
 
 W06의 현행 상태·개발 수정순회·최종 마감 순서는 [아래 W06 절](#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·native 종료 증거는 `D:/w06/control/continuation.json`의 `active_workflow`에서 확인한다.
@@ -79,7 +77,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | HOST-W07 배정 검증 5/5 및 HOST-W08 문서 준비 완료. 최종 배포 후보와 HOST-W08 최종 gate 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
-W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07 안에서 HOST-W08 문서 준비를 마쳤고 Mac26 실기를 완료했다. #29 분석은 유예한다. 이번에 허용한 병렬
+W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07 안에서 HOST-W08 문서 준비를 마쳤고 macOS 26 및 27의 배정 실기를 완료했다. #29 분석은 유예한다. 이번에 허용한 병렬
 문서/파일 검토와 실기 병렬 실행을 구분한다. W06~W08에서 실제 배포 입력을 고정하고
 HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 
@@ -269,7 +267,7 @@ readiness 기술 집계는 5/8·22/28, 별도 사용자 수락 집계는 6/8·25
 R1~R6은 별도 M33 작업 분모가 아니다. 이전 source의 R3 결과를 수정본 전체 PASS로 승격하지 않는다.
 #### 적용한 절차와 원형 기술 마감 조건
 
-개발 수정순회 후 최종 S19의 #1~49를 선택했다. #29와 동일 profile 참조 #40·44는 사용자 승인으로 수락했으며 #30~49 처리를 끝냈다.
+개발 수정순회 후 최종 S19의 #1-49를 선택했다. #29와 동일 profile 참조 #40·44는 사용자 승인으로 수락했으며 #30-49 처리를 끝냈다.
 아래는 보존하는 원형 기술 마감 절차다. 현재 #29 재실행이나 원인 분석을 시작하는 지시가 아니다.
 사용자 수락 마감과 실제 기록 커밋·CI 결과는 310번과 control의 최종 기록을 따른다.
 
@@ -316,16 +314,14 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
 - [ ] [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)에 따라 공개 시점에 각 행의 실제 OS·빌드와 결과를 확정한다.
 - [ ] HOST-W04~HOST-W07의 prerequisite/path/cache/package·자동 검사 결과와 최종 사용자 USB·serial·
   debug 검증 절차를 exact 입력과 대조한다. 중간 단계에서 Ubuntu/macOS PC 연결을 요구하지 않는다.
-- [ ] HOST-W08의 보존된 전체 예제 기준선과 각 지원 행에 배정한 설치·대표 build·실제 upload/runtime·수명주기 호환성 검증을
-  해당 실제 환경에서 마감한다. 버전 차이만으로 전체204를 중복하지 않는다. Ubuntu/macOS는 해당 OS를 포함하는 후속 릴리스 단계에서 사용자가 실행하며 설치·USB upload·
-  serial·debug·수명주기 증거를 인계받는다. 그때까지 해당 행은 `NOT_RUN`이고 해당 OS 정식 지원 공개
-  gate는 미완료다. Windows의 가능한 자동 회귀와 나머지 개발·RC 준비는 계속한다.
+- [x] 다섯 목표 행에서 배정한 실기와 호환성 검증을 마쳤다. Windows 11은 C5, Ubuntu 24.04 및 26.04 WSL2는 C10, macOS 26 및 27은 C11 결과를 사용한다. [v0.6.0 지원표](<05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
+- [ ] 최종 배포 후보의 변경 범위와 설치 근거를 대조한다. C12의 일반 IDE Upload는 macOS 27에서 별도로 확인했다. [338번 기록](<04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
 - [x] C5 `5ee7c103…`의 비공개 `0.6.0-rc.1` source/board/SDK/toolchain·profile/catalog·version·hash를 고정하고
   package를 독립 두 번 생성해 재현성과 runtime payload·예제 포함 목록을 검증했다. [328번 C5 근거](<04_검증 기록/328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md>)를 보존하며 새 후보 source가 생기면 변경 범위의 증거를 별도로 확보한다.
 - [x] HOST-W08 선행 문서: [v0.6.0 준비 문서](<05_릴리스/v0.6.0/README.md>)에 API/profile migration·제한·experimental opt-in·template·외부 ecosystem·Host 상태와 증거 색인을 작성했다.
 - [ ] 최종 공개 source·범위가 확정되면 release notes와 생성 readiness의 최종 case 판정을 정합화한다.
 - [x] `M33-PACKAGE-01`, `M33-INSTALL-01`의 기존 근거와 잔여를 [검증 색인](<05_릴리스/v0.6.0/TESTING.md>)으로 연결했다.
-- [ ] 최종 package/install case의 필수 행을 마감한다. Mac 실기와 공개 source 미확정은 문서 준비로 PASS 처리하지 않는다.
+- [ ] 최종 package/install case의 필수 행을 마감한다. 확정된 배포 소스와 자산에 해당하는 근거를 기록한다.
 - [ ] 기능 구현 완료, 지원 범위 결정 완료, 다섯 OS 완료, RC 준비 완료를 각각 보고한다. Apple/Google·
   외장 장치의 사용자 후속 실물 행은 지원 제한으로 남기되 개발·릴리스 blocker로 사용하지 않는다.
   최종 사용자 장비 검증 gate는 Ubuntu/macOS이며 공개 승인·제품 인증은 별도 절차다.
@@ -342,7 +338,7 @@ exact source가 바뀐 범위는 새 package와 해당 Host에서 검증한다. 
 - [ ] README·API/profile·example catalog·release-readiness·검증 기록·HANDOFF와 제품 지원 버전을 맞춘다.
 - [ ] v0.7.0 SDK-W01~W06에 기존 기능·예제·profile·지원 Host·검증 기준선과 SDK 전환 영향 항목을 인계한다.
   새 기능 개발을 SDK 전환 작업에 합치지 않는다.
-- [ ] v0.8.0 M34~M37, v0.9.0 M38~M41, v0.10.0 M42~M45와 별도 ARF에 남은 security/storage/radio/network/Matter·사용자 후속 외부 ecosystem·후속 Host 확대
+- [ ] v0.8.0 M34-M37, v0.9.0 M38-M41, v0.10.0 M42-M45와 별도 ARF에 남은 security/storage/radio/network/Matter·사용자 후속 외부 ecosystem·후속 Host 확대
   요구를 구체적 다음 행동·장비·owner·상태와 함께 인계한다.
 
 ## 4. 예정 test ID·장비·완료 입력

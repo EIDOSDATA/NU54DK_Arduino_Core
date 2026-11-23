@@ -1,40 +1,19 @@
-# 개발과 기여 안내
+# 개발에 기여하기
 
-사용자 설치는 [루트 README](README.md), 구현 변경은 이 안내와 [작업 지침](AGENTS.md)에서
-시작합니다. 현재 M33 개발은 `main`에서 분기한 `Dev-0.6.0-M33`에서 이어갑니다. M32 브랜치는
-로컬·원격 삭제 완료이며 원본 이력은 [M33 인계](00_Docs/M33_HANDOFF.md)의 로컬 Git bundle에,
-정식 릴리스 백업은 원격 `Release-0.5.0`에 보존합니다. M32는 12/12, M33은 수락 6/8·기술 5/8입니다.
-W06은 실제 PASS46 + 명시 수락 #29·40·44로 마감했고 원본 FAIL과 source별 실적을 보존합니다. 현행 상태·개발 수정순회·최종 마감 순서는
-[M33 TODO의 W06 절](00_Docs/TODO_M33.md#m33-w06--자원회귀상호운용)을 따릅니다.
-[W06 파이프라인 재설계](<00_Docs/02_빌드 설계/11_M33_W06_검증_파이프라인_재설계.md>)에 따라
-source별 개발 검증과 최종 같은 source의 완료 검증을 구분합니다.
-기준 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`, 새 build·실행·cache·tmp는 `D:\w06`입니다.
-실제 작업본·source·진행 항목·종료 증거는 `D:\w06\control\continuation.json`의 `active_workflow`에서 확인합니다.
-실기 writer와 무거운 작업은 하나이며 병렬 검토는 읽기 전용입니다.
-최종 source S와 기록 commit C는 각각 해당 exact SHA의 CI를 확인합니다. 문서 정리·push는 W06 완료가 아닙니다.
-HOST는 6/8이며 HOST-W07의 Windows 11 비공개 RC1 검증을 완료했습니다. 추가 OS의 검증 범위는 현행 Host 계약을 따르며 #29 원인 분석은 유예합니다.
-stable은 `v0.5.0`이며 버전별 지원 범위는
-[릴리스 문서](<00_Docs/05_릴리스/README.md>)에 있습니다.
+v0.6.0 개발은 `Dev-0.6.0-M33` 브랜치에서 진행합니다. 작업 전 실제 checkout, HEAD, 미커밋 변경, 보드 submodule과 현재 writer를 확인하세요. 새 빌드와 캐시는 해당 OS의 쓰기 가능한 로컬 경로에 둡니다. `D:/w06`은 이전 Windows 실행의 보존 위치입니다. 실기 writer와 무거운 작업은 하나씩 실행하고 병렬 검토는 읽기 전용으로 진행합니다.
 
-후속 개발 목표는 [v0.6.0의 M32·M33](00_Docs/TODO_v0.6.0.md)입니다.
-[v0.7.0](00_Docs/TODO_v0.7.0.md)은 NCS 3.4.0→3.4.1 전체 전환만 수행하며 신규 기능을 넣지 않습니다.
-M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0으로 옮기고 M 번호·기능 범위는 유지합니다.
-`Release-0.5.0`은 `4790e3fa` 완료 기준선입니다. 별도 새 기능 작업은 최신 `main`에서 분기하되,
-이미 생성된 M33 작업을 재개할 때는 기존 `Dev-0.6.0-M33`을 사용합니다.
-버전 배정은 구현 완료·Host 보류 해제·릴리스 공개 승인이 아니며 실제 제품 버전은 아직 0.5.0입니다.
+현재 단계는 최종 배포 후보의 식별자, 패키지 자산과 변경 영향을 검토하는 M33-W07입니다. [개발 인계](00_Docs/HANDOFF.md), [체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
 ## 소스와 환경 준비
 
 ```powershell
-git clone --branch main --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
+git clone --branch Dev-0.6.0-M33 --recurse-submodules https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git
 cd NU54DK_Arduino_Core
 git status --short --branch
 git submodule status --recursive
 ```
 
-[Windows 개발환경](<00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)의 prerequisite 절차로
-NCS v3.4.0과 고정 toolchain을 준비합니다. revision은
-[SDK lock](tools/ci/ncs-3.4.0.lock.json)이 소유합니다. 보드 정의는
+[Host별 고정 Nordic 환경 설치](<00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)에 따라 NCS 3.4.0과 운영체제에 맞는 toolchain을 준비합니다. [SDK lock](tools/ci/ncs-3.4.0.lock.json)에 revision이 있습니다. 보드 정의는
 `board_package/NU54DK_Zephyr_DTS` submodule이며 Core 변경과 별도로 관리합니다.
 
 NCS v3.4.1 전체 전환은 제품 v0.7.0의 유일한 목표입니다. 현재 v0.6.0 개발의 SDK·toolchain pin은

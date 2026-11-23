@@ -1,30 +1,21 @@
-# v0.6.0 설치 전이·profile 안내 — 미공개 후보
+# v0.6.0 후보 설치와 버전 전환
 
-공개 stable은0.5.0이고 개발 source의 `coreVersion()`도 아직0.5.0이다.
-비공개 검증 archive의0.6.0-rc.1과 구분하며 최종 배포 준비에서 식별자를 정합화한다.
-정식 v0.6.0으로의 일반 사용자 갱신 안내는 아직 개방하지 않는다.
+공개 v0.5.0과 비공개 검증 패키지는 별도 환경에서 유지합니다. Boards Manager의 표시 버전은 `0.6.0-rc.1`이고 개발 소스의 기본 `coreVersion()` 값은 `0.5.0`입니다. 정확한 설치본은 `release-manifest.json`의 `core_revision`으로 확인합니다. [후보별 소스](README.md)
 
-## 보존된 전이 증거
+## 검증한 설치 경로
 
-Windows11의 C5는 별도 CLI 환경에서 공개0.5.0→비공개 RC1 갱신, 사용자 데이터·SDK 보존과
-Blink build를 확인했다. C11 Mac의 host.1→RC1은 같은 C11 source로 만든 version fixture다.
-이것을 공개0.5.0에서 Mac으로 갱신한 실적으로 표시하지 않는다. 두 Mac의 IDE 설치·Verify는 `NOT_RUN`이다.
-원본은 [RC1 절차](<../../02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)와 [Testing](TESTING.md)을 따른다.
+| 환경 | 입력 및 결과 |
+| --- | --- |
+| Windows 11, C5 | 격리한 CLI에서 공개 0.5.0을 RC1으로 갱신했습니다. 사용자 데이터와 SDK가 보존됐고 Blink가 빌드됐습니다. |
+| macOS 26 및 27, C11 | 같은 C11 소스의 시험 버전 `0.6.0-host.1`에서 RC1으로 전환했습니다. 두 OS에서 실제 Arduino IDE 설치와 Blink Verify를 확인했습니다. |
+| macOS 27, C12 | 새 환경에서 C12 설치본을 확인하고 일반 IDE Upload와 LED 동작을 검증했습니다. 같은 버전명으로 표시되는 C11을 사용하는 경우 설치본의 SHA를 대조하세요. |
 
-## 예제와 profile 선택
+호환성 시험의 입력, 소스, 실행 범위는 [검증 근거](TESTING.md)에 있습니다.
 
-보드·profile·선택 옵션은 예제의 README와 `nucode-build.json`을 따른다.
-기본 profile은 `standard`이며 BLE·Secure DFU·Audio 등은 해당 예제에 지정한 feature set을 사용한다.
-`adaptive`는 experimental opt-in이고 모든 조합을 지원한다는 의미가 아니다.
-DAP UART를 끄는 Peripheral Fabric/외장 Audio 구성은 공유 핀과 결선을 먼저 확인한다.
+## 예제 설정
 
-API 호환성은 [Arduino API 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>)와
-[M33 예제 계약](<../../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)을 따른다.
-template·외부 ecosystem은 필요한 credential과 실제 peer를 준비해야 하며 자동 검사 PASS로 생략하지 않는다.
+각 `.ino` 첫 주석과 [예제 메타데이터](../../../libraries/example-metadata.json)에 권장 Feature set, 보드 수, 필요한 설정 파일이 나옵니다. 기본은 `standard`입니다. `nucode-build.json`, `prj.conf`, `app.overlay`가 딸린 예제는 해당 파일을 함께 사용하세요. Peripheral Fabric과 외장 오디오 구성은 DAP UART 핀의 공유 조건을 확인하세요. `adaptive`는 실험적 선택입니다. 외부 서비스 예제는 해당 서비스의 자격 증명과 실제 상대 장치를 준비해야 합니다. [Arduino API 범위](<../../01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>), [예제 실행 계약](<../../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)
 
 ## 작업 공간과 복귀
 
-후보 package·SDK·cache·출력을 stable 사용 환경과 분리한다. Windows SDK와 WSL Linux SDK/cache를
-공유하지 않는다. 실패한 attempt는 남기고 새 입력을 새 attempt에 기록한다.
-kit의 downgrade 거부 검사는 실제 downgrade PASS가 아니다. stable 복귀가 필요하면 기존 환경을 보존하고
-[v0.5.0 설치 문서](../v0.5.0/README.md)에 따라 별도 설치한다. 임의 flash recover나 보안 해제는 사용하지 않는다.
+후보의 설치 데이터, 빌드 캐시와 출력을 별도 경로에 둡니다. Windows와 WSL2는 각각의 SDK와 캐시를 사용합니다. 실패한 실행의 원본을 보관하고 다시 시도할 때 새 작업 폴더를 사용하세요. kit는 다운그레이드 요청을 실행 전에 거부합니다. Windows에서 공개 버전으로 돌아가려면 [v0.5.0 설치 안내](../v0.5.0/README.md)에 따라 독립 환경에 설치하세요.

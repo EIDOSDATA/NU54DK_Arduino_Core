@@ -1,9 +1,6 @@
 # NU54DK Boards Manager 패키징
 
-현행 검증 범위는 다중 Host 계약, 진행과 원본 증거는 [C6~C10 기록](<../../00_Docs/04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>)을 따른다. C5 Windows 기준선과 source별 PASS·FAIL을 보존한다.
-
-현재 stable·지원 대상은 v0.5.0 하나이며 이전 stable·RC·preview는 catalog 공급을 종료합니다.
-정식 상태는 [v0.5.0 TODO](<../../00_Docs/TODO_v0.5.0.md>)에서 관리합니다.
+v0.6.0 개발 후보는 검증용 kit와 로컬 인덱스로 공급합니다. 공개 stable 인덱스는 Windows용 v0.5.0을 제공합니다. [후보별 버전과 설치 안내](<../../00_Docs/05_릴리스/v0.6.0/README.md>), [최종 후보 체크리스트](<../../00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
 
 | 항목 | 내용 |
 | --- | --- |
@@ -12,13 +9,7 @@
 | Stable source·ZIP | [274번 공개 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)의 exact identity |
 | 이전 RC2 | `v0.5.0-rc.2`; 공개 tag·asset 보존, 지원·catalog 공급 종료 |
 
-현재 source version은 `0.5.0`입니다. M28~M31과 RC1/RC2, runtime PM 연속 Upload 교정,
-stable package·승인·tag/Release·root catalog·공개 smoke를 완료했습니다. HOST는 6/8이며
-HOST-W07의 C5 Windows 11 완료를 보존하며 현행 Host 검증은330번 기록과 Host 원장을 따릅니다.
-미공개 [v0.6.0](../../00_Docs/TODO_v0.6.0.md)의 M32는 12/12, M33은 수락 6/8·기술 5/8입니다.
-W06은 실제 PASS 46개와 명시 수락 #29·#40·#44를 구분해 마감했으며 원본 FAIL을 보존합니다.
-새 채팅의 재개 지점은 [M33 인계](../../00_Docs/M33_HANDOFF.md)를 따릅니다.
-개발 source의 기능 추가나 main 통합은 공개 v0.5.0 ZIP을 변경하지 않습니다.
+개발 소스의 기본 버전 문자열은 `0.5.0`, C11과 C12의 검증 패키지 버전은 `0.6.0-rc.1`입니다. 설치본의 소스는 `release-manifest.json`의 `core_revision`으로 확인합니다. 공개용 버전과 자산은 최종 후보에서 확정합니다.
 v0.6.0 동안 NCS v3.4.0 pin을 유지하고, SDK 3.4.1 전환은 별도 [v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)의
 `SDK-W01~W06`에서 수행합니다. Host 재개·OS 지원·제품 version·패키지 공개는 각각의 gate로 판정합니다.
 완료한 공개 절차는 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md), 후속 배포 조건은
@@ -93,8 +84,7 @@ source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물�
 외장 Audio 경로를 M31, Apple/Google 신규 기능을 후속 M33에 배정합니다. 각 담당 제품선의
 채택 기능은 사용 가능한 구현·예제·설정/연결 안내·자동 검사가 필수이며, 실제
 운용·실물 검증은 사용자 후속 NOT RUN·개발/릴리스 비차단으로 분리합니다. 이 미검증을 실제
-상호운용 PASS로 표시하지 않습니다. Ubuntu/macOS 실제 설치·USB upload·serial·debug·수명주기는
-사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 검증하며 최종 Host 지원 gate를 유지합니다.
+상호운용 PASS로 표시하지 않습니다. v0.6.0 후보의 실제 OS별 결과와 남은 범위는 [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)를 따릅니다.
 이 후속 gate는 M31 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. M31 후속 실물 항목은
 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)의 `follow_up_cases`에서 검증 책임·단계·
 차단 여부를 분리합니다. M33의 잔여 미완료 범위까지 완료한 것으로 간주하지 않습니다.

@@ -1,67 +1,9 @@
-이하는 2026-11-16 Windows→Mac 전달 당시의 재현 지시문이다. 현재 macOS26·27 배정 검증은 완료됐다. 새 작업은 MAC_HANDOFF.md와 HANDOFF.md에서 현재 범위와 writer를 먼저 확인한다.
+NU54DK Arduino Core v0.6.0의 최종 후보 준비를 이어간다.
 
-NU54DK Arduino Core의 Mac 실기 검증을 이 Mac에서 이어서 진행하라.
-
-먼저 실제 저장소와 Dev-0.6.0-M33 브랜치, HEAD, 미커밋 변경, board submodule을 확인하라.
-다음 문서를 순서대로 읽고 최신 사용자 지시와 상태를 확인하라.
-1. AGENTS.md
-2. 00_Docs/MAC_HANDOFF.md 및 00_Docs/mac-handoff.json
-3. 00_Docs/HANDOFF.md, 00_Docs/M33_HANDOFF.md
-4. 00_Docs/TODO_M33.md의 W07·W08, 00_Docs/TODO_v0.6.0.md
-5. 00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md
-6. 00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md
-7. 00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md
-8. 00_Docs/04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md
-9. 00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md
-10. 00_Docs/04_검증 기록/333_Mac_재개_문서와_전달_자료.md
-11. variants/nu54dk/host-readiness.json 및 00_Docs/05_릴리스/v0.6.0/의 README·SUPPORT_MATRIX·TESTING·RELEASE_CHECKLIST.
-
-현재 M33-W07이다. HOST-W08 문서 준비는 완료했으나 최종 gate는 미완료다.
-Host6/8, 지원 목표 검증3/5, M33 수락6/8·기술5/8을 기준으로 시작하라.
-C5 Windows11과 C10 Ubuntu24.04·26.04 WSL2 완료를 보존한다.
-C11 macOS26·27 software CI는 PASS이며 실제 Mac USB·serial·debug·재연결·IDE는 NOT_RUN이다.
-W06은 실제 PASS46 + 명시 수락3(#29·40·44)이며 기술49PASS가 아니다. #29 원인 분석은 유예한다.
-
-제품 C11 source는 d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa다.
-최신 문서 checkout SHA와 제품 kit SHA를 구분하고 kit 안에 최신 파일을 덮어쓰지 마라.
-board submodule은 fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3,
-NCS3.4.0·macOS bundle ccc010f809·SDK root /opt/nordic/ncs를 유지하라.
-원본 kit NU54DK-C11-d304f369-macOS-kit.tar.gz는201857017bytes이며 SHA-256은
-c1792818979453ce3150d7b19abf960f3d14a31f970c4578f5f41afcf5cf8208이다.
-
-NU54DK-Mac-handoff-20261116.zip의 SHA256SUMS·transfer-manifest.json과
-windows-writer-release.json을 확인하라. 이전 Windows 실행·writer 해제와 최종 문서 CI를
-실제 receipt로 확인한 뒤 Mac의 새 control/continuation.json과 단일 writer claim을 기록하라.
-receipt의 최종 문서 SHA와 checkout HEAD·원격 branch를 대조하라. 다르면 변경 범위와 더 새 writer의
-존재를 확인하기 전 옛 receipt로 현행 writer가 해제됐다고 간주하지 마라.
-Windows의 D:/w06은 역사 보존 위치이며 Mac 재개에 그 드라이브를 요구하지 마라.
-전달 자료가 없으면 MAC_HANDOFF의 원본 복구 절차를 따르되 artifact 보관 기한을 확인하고,
-자료·소유권 확인에 의존하지 않는 읽기 전용 준비는 계속하라. 옛 Windows/WSL state.json·runtime·
-절대경로 build manifest를 Mac 현재 실행 상태로 복사하지 마라.
-
-실제 Mac의 sw_vers·uname -m과 OS major26 또는27, native Apple Silicon ARM64를 확인하라.
-연결된 보드는 NU54DK이며 CMSIS-DAP USB와 실제 probe/serial/path hash를 새 inventory로 확인하라.
-과거 COM 번호·UID/path hash를 재사용하지 마라. 단일 writer·단일 heavy job·기존 lock 정책을 지켜라.
-작업/TMP/cache는 Mac의 쓰기 가능한 새 로컬 root를 사용하고 실제 여유 공간과 권한을 확인하라.
-자동점검 w06은 PAUSED로 유지하고 새 예약작업이나 자동 재개 작업을 만들지 마라.
-
-MAC_HANDOFF의 단계별 명령에 따라 kit hash→plan→필요한 SDK 설치/verify→lifecycle→대표 build→inventory를 진행하라.
-새 Mac 실기에 필요한 로컬 설치본·manifest를 확보하되 --all-examples로 전체204를 반복하지 마라.
-그다음 명시 probe로 Blink upload/runtime→debug→SerialEcho upload/nonce→물리 USB 재연결→Mac Arduino IDE 검증을 진행하라.
-재연결 관찰 시작을 먼저 알리고 사용자가 케이블을 빼고10초 뒤 다시 연결하도록 안내하라.
-첫 UART 응답을 기록하기 전에 재flash/reset하지 마라. open/close 성공을 물리 재연결 PASS로 세지 마라.
-BLE 두 보드 검증은 배정 범위와 실제 준비 상태를 확인해 별도로 진행하고 한 보드 결과로 대신하지 마라.
-Mac26/27 중 하나만 실제 실행하면 다른 행은 NOT_RUN으로 유지하라.
-화면 제어가 불가능하거나 사용자 OS 승인이 필요하면 직접 해야 할 조작을 명확히 안내하면서 독립 작업을 계속하라.
-
-정상 sector program·software reset·halt/resume·읽기 진단 범위로 진행하고
-DAP/J-Link firmware 변경·자동 J-Link fallback·mass erase·unlock·recover·보안 보호 우회는 하지 마라.
-새 FAIL은 원형을 보존해 원인을 구분하라. 제품 코드 수정은 새 source/kit/fresh attempt로 검증하고,
-권한·경로 등 환경 준비만 보완하면 원본 kit를 유지한 fresh attempt에서 확인하라.
-source별 PASS·FAIL·수락을 섞지 말고 SDK·firmware·compile 영향이 확인된 범위만 재검증하라.
-STOP/cleanup·장치 소유권·raw log·exit code·hash·실제 OS/version을 남겨라.
-
-진행 상황은 한국어로 보고하며 현재 단계, 완료 범위, 새 실패 유무, 다음 작업을 설명하라.
-문서·지원표·원장을 실제 결과로 갱신하고 승인된 개발 branch의 commit/push와 exact CI를 확인하라.
-Mac 검증 이후 HOST-W07/W08·최종 후보·M33-W07 마감을 진행하되,
-정식 tag·Release·asset·stable index 게시와 main 통합은 별도 공개 승인 전 실행하지 마라.
+1. AGENTS.md, 00_Docs/HANDOFF.md, 00_Docs/M33_HANDOFF.md, 00_Docs/TODO_M33.md의 W07 및 W08, 00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md를 읽는다.
+2. 실제 checkout이 Dev-0.6.0-M33인지 확인하고 HEAD, 원격 브랜치, 미커밋 변경, board submodule을 기록한다. 최신 writer 해제 기록의 SHA와 이후 변경을 대조한 뒤 새 로컬 작업 경로에 단일 writer를 기록한다. 2026-11-16 Windows 전달 기록은 과거 인계용이다.
+3. HOST-W07의 다섯 목표 행은 배정 검증을 완료했다. Host는 7/8, M33은 수락 6/8, 기술 완료 5/8이다. W06은 실제 PASS 46건과 사용자 수락 3건(#29, #40, #44)으로 마감했고 #29 분석은 유예한다.
+4. C11의 macOS 26 및 27 실기는 336번과 337번을 확인한다. macOS 27의 일반 IDE Upload와 Blink 수정 검증은 C12의 338번에 있다. 소스 SHA와 kit 해시는 릴리스 문서의 README와 TESTING.md에서 확인한다. 원본 kit와 과거 실패 기록을 보존한다.
+5. 정식 후보의 소스, 버전 식별자, OS별 자산, 라이선스와 출처, 재현성 및 변경 영향을 검토한다. NCS 3.4.0 및 고정된 보드/툴체인을 사용한다. macOS 26과 Ubuntu 24.04는 완료 결과를 보존한다. 해당 계열의 후속 변경은 macOS 27과 Ubuntu 26.04 WSL2에서 필요한 범위로 검증한다.
+6. 단일 heavy job과 기존 lock을 지키고 w06 자동점검은 PAUSED로 유지한다. 새 장치 실기가 배정되면 현재 inventory와 해당 시점의 장치 소유권을 확인한다. 자료 복구 및 안전한 실기 절차는 00_Docs/MAC_HANDOFF.md에 있다.
+7. 정확한 소스 및 문서 커밋별 CI와 실기 결과를 대조한 뒤 HOST-W08과 M33-W07 마감을 판단한다. 공개 tag, Release, asset, stable index, main 통합은 별도 사용자 승인 사항이다.

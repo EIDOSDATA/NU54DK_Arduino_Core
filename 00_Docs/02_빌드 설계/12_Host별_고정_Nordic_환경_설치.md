@@ -93,8 +93,7 @@ macOS의 quarantine·Gatekeeper 상태와 `/opt/nordic/ncs` 쓰기 권한도 진
 [native CI](../../.github/workflows/host-native-prerequisites.yml)는 세 OS에서 같은 backend를 실행하고
 exact commit·manifest hash·실제 version·SDK/Zephyr revision을 보존한다. 사용자 PC의 USB 동작을 대신하지 않는다.
 최초 세 OS CI의 SDK 설치 실패와 교정 검증은 [312번 기록](<../04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>)에 구분한다.
-Ubuntu/macOS 실제 설치·업로드·시리얼·ELF debug·갱신/재설치/제거는 M33-W07 시험용 RC1 준비 후
-사용자가 검증하며 그 전에는 해당 행을 `NOT_RUN`으로 유지한다.
+C10은 Ubuntu WSL2에서, C11은 실제 macOS 26 및 27에서 설치와 배정 실기를 확인했다. C12는 macOS 27 IDE Upload 경로를 검증했다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 
 Windows 개발용 Host C++ 검사는 컴파일러와 동일한 배포본의 런타임 DLL을 사용해야 한다.
 다른 MinGW 배포본이 PATH 앞에 있으면 빌드 성공 후에도 표준 library의 파일 I/O가 오동작할 수 있다.

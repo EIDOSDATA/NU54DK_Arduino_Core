@@ -1,12 +1,6 @@
 # Nordic prerequisite 설치 계약
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<../../00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
-
-v0.6.0 HOST-W04 설치 범위는 같은 H4 source의 native 세 OS 설치·재검증으로 완료했다.
-HOST-W06까지6/8 완료했다. HOST-W07은 Windows11 기준선·Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료이며 C11 macOS26·27 software는 PASS했고 Mac USB·IDE 실기가 남았다. 이전 source별 실적·FAIL은330번에 보존한다. OS별 고정 자산과 공통 Python backend는
-[Host별 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와
-[`platform-pins.json`](platform-pins.json)을 따른다. 구현·CI 진행, C8 WSL2 부분 실기, 미실행 OS의 `NOT_RUN`은
-[Host 원장](../../variants/nu54dk/host-readiness.json)에서 구분한다. 아래 Windows stable 계약은 보존한다.
+v0.6.0 후보의 SDK는 NCS 3.4.0입니다. OS별 도구와 체크섬은 [고정 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와 [설치 입력](platform-pins.json)에서 확인합니다. Mac은 ARM64 bundle `ccc010f809`와 `/opt/nordic/ncs`를 사용합니다. [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 새 공통 설치기는 SDK archive를 안전하게 추출하고 원형 VERSION을 바꾸지 않은 채 명시 version으로 등록한다.
 읽기 전용 `host-doctor.py`는 시스템 의존 패키지와 비식별 serial·선택적 CMSIS-DAP 열거 결과를 기록한다.
 처음 실패·원인·교정 검증은 [312번](<../../00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>)을 따른다.

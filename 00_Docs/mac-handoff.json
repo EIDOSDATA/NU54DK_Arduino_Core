@@ -15,14 +15,22 @@
   "start_prompt": "00_Docs/MAC_START_PROMPT.txt",
   "latest_validation": {
     "date": "2026-11-24",
-    "record": "00_Docs/04_\uac80\uc99d \uae30\ub85d/337_HOST_W07_C11_macOS_27_\uc2e4\uae30_\uac80\uc99d\uacfc_\ub9c8\uac10.md",
+    "record": "00_Docs/04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md",
     "HOST_W07": "COMPLETE",
     "Host_work_packages": "7/8",
     "support_validation_rows": "5/5",
     "macOS_26_physical": "PASS_PRESERVED",
     "macOS_27_physical": "PASS_ASSIGNED_MACOS27",
-    "next": "FINAL_CANDIDATE_IDENTITY_PACKAGE_AND_SCOPED_IMPACT"
+    "next": "FINAL_CANDIDATE_IDENTITY_PACKAGE_AND_SCOPED_IMPACT",
+    "C12_macOS_27_Arduino_IDE_upload": "PASS",
+    "C12_source": "97c7cd01ff59fb5ae3689e9de62b9c820b83fd5e",
+    "C12_record": "00_Docs/04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md",
+    "C11_scope": "Assigned Mac hardware and Arduino IDE Verify",
+    "M33_accepted": "6/8",
+    "M33_technical": "5/8",
+    "HOST_W08": "FINAL_GATE_PENDING"
   },
+  "historical_fields_note": "status, kit, transfer, writer_takeover, new_mac_preparation and remaining_physical describe the 2026-11-16 C11 transfer. Use latest_validation and the newest actual writer receipt for present work.",
   "status": {
     "M33_stage": "W07",
     "M33_accepted": "6/8",

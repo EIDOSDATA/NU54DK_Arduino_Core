@@ -12,7 +12,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | --- | --- |
 | 문서 ID | COMPETITIVE-PARITY-001 |
 | 문서 개정 | 5.6 |
-| 문서 상태 | 고정 source 비교, M23~M32·M33-W01~W05 완료, M33-W06 수락 마감·HOST-W07 Windows 11 완료·추가 OS 진행은 현행 인계 참조·현재 실행 범위는 [M33 인계](../M33_HANDOFF.md) 참조 |
+| 문서 상태 | M23부터 M32까지 및 M33-W01부터 W05까지 기술 완료. M33-W06은 명시 수락으로 마감했다. 후속 범위는 [M33 인계](../M33_HANDOFF.md)에 있다. |
 | 현재 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
@@ -39,14 +39,14 @@ v0.5.0 개발·공개를 차단하지 않는다. 검증되지 않은 장치 지�
 M32·M33의 목표 버전을 [v0.6.0](../TODO_v0.6.0.md)으로 배정했다. Ubuntu/macOS의 실제 설치·USB upload·serial·debug는
 해당 OS 지원 공개 때 사용자가 검증하며 M33의 세 Host 증거 gate와 HOST-W05 이후 순차 구현과 최종 실물 gate를 유지한다.
 
-M28은 **W01~W08·9개 test ID**, M29와 M30은 각각 **W01~W08·10개 test ID를 완료**했다.
+M28은 **W01-W08·9개 test ID**, M29와 M30은 각각 **W01-W08·10개 test ID를 완료**했다.
 M30-W08은 실제 전원 차단 4지점 × 3회(12/12)를 통과했다. M31도 **W01~W08 8/8 완료**다.
-M32는 W01~W12 12/12 완료이며 M33은 수락 6/8·기술 5/8이며 W06 수락 예외를 보존한다. M28~M31의 기능 지원성·
+M32는 W01-W12 12/12 완료이며 M33은 수락 6/8·기술 5/8이며 W06 수락 예외를 보존한다. M28-M31의 기능 지원성·
 장비·정량 합격 기준은 [M28 착수 계약](15_M28_BLE_GAP_Link_Privacy_착수_계약.md), 전체 제품선
 상태는 [v0.5.0 완료](../TODO_v0.5.0.md)와 [v0.6.0 계획](../TODO_v0.6.0.md)에서 관리한다. 준비 문서나 버전 배정을 구현·실기 PASS로 해석하지
 않으며 v0.4.1의 기존 지원·시험 결과와 현재 사용 중인 보드·환경은 변경하지 않는다.
 
-당시 리팩토링은 M23~M27을 재번호화하지 않고 T11 뒤 R00~R05 정확성, R06~R13 구조·도구
+당시 리팩토링은 M23-M27을 재번호화하지 않고 T11 뒤 R00-R05 정확성, R06-R13 구조·도구
 개선을 최종 physical gate의 선행조건으로 연결했다. 최종 exact source의 T11 회귀·T12~T15와
 R14 RC 고정을 모두 완료했다. 상세 범위와 증거는
 [리팩토링 문서 안내](<14_리팩토링/README.md>)와
@@ -411,7 +411,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
   정확히 남긴다.
 - 완료 gate: 전 인스턴스·DMA release matrix, Boards Manager lifecycle, stable artifact와 공개 검증.
   M24·M25의 검증 깊이는 [42번 범위 합의](<../04_검증 기록/42_v0.4.0_코어_기능_검증_범위_합의.md>)를
-  따른다. R00~R13, current-source T11과 T12~T15 통합 실기를 완료하고 R14에서 RC를 다시 고정한다.
+  따른다. R00-R13, current-source T11과 T12-T15 통합 실기를 완료하고 R14에서 RC를 다시 고정한다.
   장비·외부 부품 품질 보증을 제외해도 필수 기능 HIL이나 frozen RC gate는 생략하지 않는다.
 
 ### M28 — BLE GAP·Link·Privacy 확장
@@ -471,8 +471,7 @@ SPI 201의 2/4/8 MHz·Mode 0~3·MSB/LSB·sync/async·이중 buffer·cancel/recov
 
 M31-W01~W08 **8/8 완료**의 작업별 판정·근거는 [M31 TODO](../TODO_M31.md)에서 관리한다.
 이 문서는 아래 기능 분담과 후속 의존성을 소유하며 완료 경과를 중복 관리하지 않는다.
-HOST는 독립 6/8 완료이며 W06 native package·CI 검증을 마감하고 W07 Windows 11 RC1 검증을 마감하고 추가 OS를 다중 Host 계약의 호환성 범위로 검증한다. Windows v0.5.0의 package·설치·
-RC·공개 gate는 M31-W08, 후속 다중 Host 확대의 최종 수락은 M33-W07~W08이 소유한다.
+Windows v0.5.0의 설치 및 공개 검증은 M31-W08에서 마쳤다. v0.6.0의 OS별 검증과 최종 수락 조건은 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)와 [최종 후보 체크리스트](<../05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)를 따른다.
 메모리 최적화 P0·P1·P2와 W04~W08, 공개 `v0.5.0-rc.1` smoke를 완료했다. 후속
 `v0.5.0-rc.2`는 사용자 경험 교정·자동 검증을 완료하고 사용자 요청에 따라 main 통합과
 GUI 시험용 설치 안내를 제공했다. 후속 실제 IDE GUI Blink 연속 Upload도 통과했으며 Fast/Full CI 시간 목표
@@ -534,7 +533,7 @@ Mesh DFU의 최소 layout·transfer·서명·복구는 M32 범위다. 저장소 
 ### M33 — 전체 Bluetooth 예제·상호운용·후속 릴리스
 
 M31 Windows v0.5.0은 M31-W08에서 마감했다. M33의 추가 기능·전체 catalog·Host 확대·공개는
-v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8·W07 C5 Windows 11 기준선 보존·현행 Host 원장을 따르며 기존 OS별 필수 실물 검증 조건은 유지한다.
+v0.6.0 계획으로 배정한다. 현재 M33은 수락 6/8, 기술 완료 5/8이다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 
 - M28~M32의 API, profile, memory·throughput·power 한계와 interop 결과를 통합한다.
 - [M33 TODO](../TODO_M33.md)의 **8개 작업**으로 전체 NCS sample/test ID를 마감한다.
@@ -563,8 +562,8 @@ v0.6.0 계획으로 배정하며 현재 M33 수락6/8·기술5/8이다. Host6/8�
 세 Host 확대의 정확한 작업 분할·제외 범위·증거 계약은
 [다중 Host 지원 착수 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)을 따른다.
 
-M28은 W01~W08·9개 test ID, M29와 M30은 각각 W01~W08·10개 test ID를 완료했다.
-M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 M33-W07의 HOST-W07에서 Windows 11 RC1 검증을 마감했고 현행 Host 진행은 인계와 다중 Host 계약을 따른다. M28 결과와
+M28은 W01-W08·9개 test ID, M29와 M30은 각각 W01-W08·10개 test ID를 완료했다.
+M30-W08 실제 전원 차단은 12/12를 통과했다. M31은 8/8, M32는 12/12, M33은 수락 6/8·기술 5/8이며 W06 수락 마감 후 HOST-W07의 배정 실기를 마쳤다. M28 결과와
 CMSIS-DAP 실패 진단은
 [140번 기록](<../04_검증 기록/140_M28_W07_3보드_HIL과_W08_완료.md>)에 보존한다.
 [착수 계획](../TODO_v0.5.0.md)의 정책·장비·정량 기준이 미확정이면 해당 gate는 통과하지 않은
@@ -575,7 +574,7 @@ CMSIS-DAP 실패 진단은
 
 M33 다음 [v0.7.0](../TODO_v0.7.0.md)은 **NCS 3.4.0 → 3.4.1 전체 SDK 전환 전용**이다.
 SDK-W01~W06에서 기존 API·예제·동작의 호환성과 회귀·설치·문서 정합화만 검증하며 새 기능이나
-독립 ARF를 추가하지 않는다. 이후 M34~M37 Security/Update는 v0.8.0, M38~M41 Radio/Network는
+독립 ARF를 추가하지 않는다. 이후 M34-M37 Security/Update는 v0.8.0, M38-M41 Radio/Network는
 v0.9.0, M42~M45 Matter는 v0.10.0으로 이동하고 기존 M번호·기능은 유지한다.
 
 ---
@@ -616,7 +615,7 @@ M33의 후속 세 Host 지원 증거에 적용하지 않는다.
 2. nRF54L15 DTS 또는 Product Specification과 instance manifest가 다르면 CI를 실패시킨다.
 3. board submodule route 변경은 board 저장소에서 전기 검토·HIL 후 Core gitlink로 받아온다.
 4. M23 이후 구현이 끝나기 전에는 root README의 현재 지원 상태를 상향하지 않는다.
-5. 완료된 M0~M22, `v0.1.0`~`v0.3.0` 검증·릴리스 문서는 소급 변경하지 않는다.
+5. 완료된 M0-M22, `v0.1.0`~`v0.3.0` 검증·릴리스 문서는 소급 변경하지 않는다.
 6. API·DMA·BLE 지원 상태 변경은 manifest, generated matrix, 예제, 자동 시험과 HIL 기록을 같은
    변경에서 갱신한다.
 

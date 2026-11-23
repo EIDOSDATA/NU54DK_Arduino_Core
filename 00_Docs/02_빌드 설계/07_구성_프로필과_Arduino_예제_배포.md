@@ -13,9 +13,7 @@
 정식 공개 후 설치·Blink cold compile은 서로 다른 검증 실행이다. [stable 설치 안내](../05_릴리스/v0.5.0/README.md),
 [W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) 및
 [274번 공개 smoke](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
-Ubuntu/macOS는 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에
-따라 v0.6.0의 M32·M33 계획과 연계한다. Host는 6/8·W07 Windows 11 완료이며 추가 OS는 다중 Host 계약의 버전별 호환성·변경 영향 범위를 따른다.
-한 Host의 compile 결과를 다른 Host의 PASS로 합산하거나 버전 배정만으로 새 OS 지원을 확정하지 않는다.
+v0.6.0 후보에는 라이브러리 24개와 예제 204개가 있다. [현재 예제 색인](../../libraries/EXAMPLES.md)에서 Feature set과 보드 수를 확인한다. OS별 컴파일과 장치 검증의 범위는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
 
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는

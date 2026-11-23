@@ -1,10 +1,6 @@
 # 저장소 작업 안내
 
-2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<00_Docs/04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
-
-현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다.
-
-**Mac에서 재개:** [Mac 인계](00_Docs/MAC_HANDOFF.md)와 [복사용 작업지시문](00_Docs/MAC_START_PROMPT.txt)을 먼저 확인한다. Windows의 D드라이브 경로는 보존 위치이며 Mac의 필수 경로가 아니다.
+v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인계](00_Docs/HANDOFF.md)와 [릴리스 체크리스트](<00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)에서 남은 범위를 확인합니다.
 
 ## 시작 전에
 
@@ -28,7 +24,7 @@
 - HOST-W07의 배정 검증은 다섯 목표 행에서 완료했다. HOST-W08 최종 gate는 최종 후보의 제품 식별자·version·package·공개 계획과 변경 영향 근거를 확인한 뒤 닫는다. [현행 인계](00_Docs/HANDOFF.md)
 - 개발 브랜치는 `Dev-0.6.0-M33`이다. Windows 보존 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`,
   해당 실행·writer 원장은 `D:\w06\control\continuation.json`의 `active_workflow`다.
-  Mac 재개는 실제 checkout과 [이식 인계](00_Docs/MAC_HANDOFF.md)의 전달 manifest·Windows writer 해제 receipt를 확인한 뒤 새 control 원장을 만든다.
+  Mac에서 작업을 인수할 때는 실제 checkout과 원격 HEAD를 최신 writer 해제 기록과 대조한 뒤 새 control 원장을 만든다. 최초 Windows 전달 기록은 [Mac 인계](00_Docs/MAC_HANDOFF.md)에 보존한다.
 - W06의 개발 단계 수정별 검증과 최종 source 고정 후 전체 검증은 해당 W06 계약 범위다.
   Host 후속 변경은 다중 Host 계약의 기준선·호환성·영향 검증을 따르며 매 변경마다 전체 시험을 반복하지 않는다.
   과거 source의 PASS/FAIL 원본은 보존하며 다른 source의 최종 실적으로 합성하지 않는다.
@@ -54,7 +50,7 @@
 
 ## 현재 완료 상태와 지원 경계
 
-- **v0.4.0의 T01~T25와 R00~R14는 완료됐습니다.** 공개·T24 설치 수명주기·T25 마감은
+- **v0.4.0의 T01-T25와 R00-R14는 완료됐습니다.** 공개·T24 설치 수명주기·T25 마감은
   [125번 기록](<00_Docs/04_검증 기록/125_v0.4.0_정식_릴리스_공개와_T24_T25_마감.md>)을 따릅니다.
   과거의 “U 진행 중”, “다음 T22 승인”을 현재 작업으로 재개하지 않습니다.
 - **현재 stable·지원 대상은 v0.5.0입니다.** 이전 stable·RC·preview는 지원·stable catalog
@@ -95,7 +91,7 @@
   사용자 gate이며 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. ARF-01은 M32-W04가 소유합니다.
 - **제품선:** M32·M33은 v0.6.0, **v0.7.0은 NCS 3.4.0→3.4.1 전체 전환만** 수행합니다.
   SDK-W01~W06은 기존 기능 유지·호환 수정·회귀·배포 전환이며 신규 기능을 추가하지 않습니다.
-  M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0입니다. 기존 M 번호·기능·완료 조건은 유지합니다.
+  M34-M37은 v0.8.0, M38-M41은 v0.9.0, M42-M45는 v0.10.0입니다. 기존 M 번호·기능·완료 조건은 유지합니다.
   현재 결정은 [293번](<00_Docs/04_검증 기록/293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md>), 앞선 276번 배정은 역사입니다.
   별도 ARF 버전을 임의 배정하지 않습니다.
 - **v0.5.0은 Windows 10/11 x64 범위로 공개 완료했습니다.** 기능 완료와 패키지·설치·RC·공개 gate는 별도 판정입니다.

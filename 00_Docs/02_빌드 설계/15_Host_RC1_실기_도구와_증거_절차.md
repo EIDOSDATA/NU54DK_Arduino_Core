@@ -43,17 +43,13 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 
 ## 대상 OS 행
 
-2026-11-15 확정한 v0.6.0 지원 목표와 실기 순서는 아래와 같다. 실행기의 OS 인식 조건과 공개 지원표의 판정은
-별도로 기록한다. C5 자동 검증에 사용한 Ubuntu는 24.04 LTS, macOS는 26이며, 각 OS의 실제 장치 검증을
-기록해야 한다. Windows 10과 Ubuntu 26.10은 v0.6.0 범위에서 제외했다.
+OS별 배정 실기 결과는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)가 관리한다. C5의 Ubuntu 자동 빌드는 24.04 LTS, macOS 자동 빌드는 26에서 수행했다. Windows 10과 Ubuntu 26.10은 v0.6.0 지원 목표 밖이다.
 
-| RC 검증 후보 | arch | 현재 사용자 실물 gate |
-| --- | --- | --- |
-| Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
-| Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS; C5 전체 빌드 기준선+C10 변경 영향 검증 완료 |
-| Ubuntu 26.04 LTS | AMD64 | C10 WSL2 버전 호환성 완료. 고정 SDK 설치·대표4cold/4warm·lifecycle·한 보드 USB/serial/debug·IDE PASS. 전체204·BLE·물리 재연결 반복 없음; native 사용자 실기 NOT_RUN |
-| macOS 26 | Apple Silicon | C5 native 전체 빌드와 C11 software PASS 보존. 실제 26.7.3 ARM64 설치·대표 build·USB·ELF debug·기본 UART·명시적 줄 동기화 재연결·IDE PASS. [336번](<../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>) |
-| macOS 27 | Apple Silicon ARM64 | C11 software CI 27.0.1과 실제 Mac 27.2.1. 배정 USB·serial·debug·재연결·IDE PASS, 기존 고정 SDK를 현행 OS에서 검증. [337번](<../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>) |
+| 환경 | 기준 소스와 증거 |
+| --- | --- |
+| Windows 11 x64 | C5, [Windows 실기](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>) |
+| Ubuntu 24.04 및 26.04 LTS AMD64 | C10, [WSL2 실기](<../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>) |
+| macOS 26 및 27 Apple Silicon | C11 실기 및 IDE Verify. macOS 27의 일반 IDE Upload는 C12에서 확인. [소스별 검증 근거](<../05_릴리스/v0.6.0/TESTING.md>) |
 
 macOS 실기는 NU54DK와 CMSIS-DAP이 실제로 연결된 Apple Silicon Mac에서 진행한다. 대여 장비나
 테스터가 같은 kit를 실행한 결과도 OS·kit hash·단계별 로그가 일치하면 검토할 수 있다.

@@ -8,8 +8,11 @@
 profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·제어·복구 경로를
 검증했다. `ExternalPdmMicrophoneSource`와 `ExternalI2sSpeakerSink`는 build 가능한 실제
 연결 예제이지만, 외장 PDM/I2S 장치의 실물 입출력·음질·전기적 호환성은
-사용자 후속 `NOT RUN`이다. Windows 10/11 x64 설치 방법은
-[v0.5.0 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따른다. 세부 판정은
+사용자 후속 `NOT RUN`이다.
+
+v0.6.0 후보에서도 이 예제를 사용할 수 있습니다. 설치본 안에서 보드와 Feature set은 [예제 색인](<../../EXAMPLES.md>)에서 확인하세요. [검증한 후보와 OS](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/7324c43de96bcc7cc8bc49949827e3099d313fa2/00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md)
+
+세부 판정은
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
 RAM 사용량은 선택한 역할·Core revision·buffer 설정에 따라 달라진다. 빌드가 표시하는 정적

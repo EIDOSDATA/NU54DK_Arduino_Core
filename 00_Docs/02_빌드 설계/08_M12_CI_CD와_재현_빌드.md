@@ -22,15 +22,8 @@ CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 �
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)에 보존한다.
 
-현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
-macOS 지원을 뜻하지 않는다. `v0.5.0`은 M31 완료 뒤 Windows 10/11 x64 우선 릴리스이며
-최종 package·설치·예제·RC gate를 [v0.5.0 TODO](../TODO_v0.5.0.md)에서 판정한다.
-Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 계획과 연계한다.
-버전 배정은 OS 지원 확정이 아니며 기존 Host 계획·OS별 최종 gate를 완화하지 않는다.
-[다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
-릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
-Host는 사용자 지시로 재개해 W01~W06 완료(6/8)와 W07 Windows 11 비공개 RC1 검증을 마쳤다.
-C5 Windows와 C10 Ubuntu24.04·26.04/WSL2 완료를 보존하며, C11 macOS 진행과 남은 실기는 현행 Host 계약과331번 기록을 따른다. C6~C10 원형은330번에 보존한다. 문서의 일반 절차와 실제 실행 승인은 구분한다.
+CI의 target 빌드와 사용자 장치 실기는 별도 결과로 기록한다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
+
 
 ---
 

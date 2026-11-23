@@ -3,6 +3,10 @@
 **현재 stable·지원 버전은 v0.5.0입니다.** Windows 10/11 x64 대상이며,
 이전 stable과 RC는 지원·catalog 공급이 끝난 역사 배포로 보존합니다.
 
+## v0.6.0 개발 후보
+
+검증용 패키지는 `0.6.0-rc.1`입니다. C11과 C12는 소스 SHA로 구별합니다. 라이브러리 24개와 예제 204개가 포함됩니다. [후보 설치](v0.6.0/README.md), [OS별 검증 범위](v0.6.0/SUPPORT_MATRIX.md), [릴리스까지 남은 작업](v0.6.0/RELEASE_CHECKLIST.md)
+
 ## 현재 사용자 문서
 
 | 목적 | Stable v0.5.0 |
@@ -34,19 +38,14 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 | 제품선·트랙 | 현재 상태 | 다음 작업 |
 | --- | --- | --- |
 | v0.5.0 | Windows stable 공개·지원 | 공개 tag와 manifest의 source SHA로 패키지 재현 |
-| [v0.6.0](../TODO_v0.6.0.md) | M32 **12/12 완료**, M33 **수락 6/8·기술 5/8**, 미공개 | W06 수락 마감·HOST-W07 Windows 11 비공개 RC1 검증 완료; 현재 범위는 [M33 인계](../M33_HANDOFF.md) |
-| Host | HOST-W01~W06 완료 **6/8**. C5 Windows 기준선+C10 영향 검사 완료 | C11 macOS26·27 software CI 완료. HOST-W08 문서 준비를 선행 완료했고 Mac USB·IDE 실기는 NOT_RUN으로 유지한다. 최종 gate는 미완료다. Ubuntu26.04/WSL2 호환성 완료. 배정 범위는 [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>) 참조 |
+| [v0.6.0](v0.6.0/README.md) | M32 12/12, M33 수락 6/8 및 기술 완료 5/8 | 최종 후보의 버전과 자산 확정 |
+| Host | 작업 7/8, 배정 검증 5/5 | [최종 후보의 변경 영향 심사](v0.6.0/RELEASE_CHECKLIST.md) |
 | [v0.7.0](../TODO_v0.7.0.md) | SDK-W01~W06 **0/6** | NCS v3.4.0 → v3.4.1 전체 전환만 수행 |
 
 M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가
-관리합니다. M34~M37은 v0.8.0, M38~M41은 v0.9.0, M42~M45는 v0.10.0 계획입니다.
+관리합니다. M34-M37은 v0.8.0, M38-M41은 v0.9.0, M42-M45는 v0.10.0 계획입니다.
 현행 소스의 제품 식별자는 `0.5.0`이고 v0.6.0 개발은 NCS v3.4.0을 유지합니다. 개발 소스의
 M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개는 M33의 검증·승인 경계를 따릅니다.
-
-## v0.6.0 비공개 릴리스 준비
-
-[준비 문서](v0.6.0/README.md)에서 설치·지원표·release notes·migration·검증·제한·문제 해결과
-[릴리스 잔여 순서](v0.6.0/RELEASE_CHECKLIST.md)를 확인한다. 공개 stable URL은0.5.0을 유지한다.
 
 ## 이전 버전 — 지원·공급 종료
 
