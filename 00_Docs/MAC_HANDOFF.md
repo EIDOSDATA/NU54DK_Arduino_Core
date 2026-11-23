@@ -1,9 +1,9 @@
 # Mac에서 HOST-W07 실기 재개하기
 
-2026-11-23 실제 macOS26.7.3에서 C11의 파일별 승인 뒤 SDK 설치·검증, 수명주기, 대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. Mac 준비 결과는 [335번](<04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)에 있다.
+2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
 
 기준일: 2026-11-16. 다음 작업은 **사용자가 준비한 Mac에서 수행**한다.
-현재는 M33-W07 안에서 HOST-W08 문서 준비를 마쳤고 실제 Mac26·27 검증은 `NOT_RUN`이다.
+이번 전달 자료는 M33-W07에서 HOST-W08 문서 준비를 마치고 Mac 실기를 시작하기 전의 인계 기준선을 보존한다.
 이 문서는 Windows의 `D:/w06/control/continuation.json`을 Mac에 요구하지 않는 재개 진입점이다.
 
 ## 1. Mac에서 처음 할 일
@@ -37,7 +37,7 @@ Git 인증이나 OS 최초 개발 도구 설치가 필요하면 해당 Mac의 �
 | 2 | [HANDOFF](HANDOFF.md), [M33 인계](M33_HANDOFF.md) | 현재 단계와 보존된 W06/Host 결과 |
 | 3 | [M33 TODO](TODO_M33.md)의 W07·W08, [v0.6.0 계획](TODO_v0.6.0.md) | 최종 마감·공개 경계 |
 | 4 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>), [고정 Nordic 설치](<02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>), [RC1 실기 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>) | Mac 설치·USB·IDE의 배정 범위와 판정 |
-| 5 | [331번 C11 결과](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), [332번 W08 문서 준비](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>), [333번 Mac 인계](<04_검증 기록/333_Mac_재개_문서와_전달_자료.md>) | software PASS와 실제 Mac NOT_RUN 구분 |
+| 5 | [331번 C11 결과](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), [332번 W08 문서 준비](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>), [333번 Mac 인계](<04_검증 기록/333_Mac_재개_문서와_전달_자료.md>) | 인계 시점의 software PASS와 당시 Mac NOT_RUN 근거 |
 | 6 | [Host 원장](../variants/nu54dk/host-readiness.json), [지원표](<05_릴리스/v0.6.0/SUPPORT_MATRIX.md>), [Testing](<05_릴리스/v0.6.0/TESTING.md>), [릴리스 체크리스트](<05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>) | source별 근거·남은 순서 |
 
 완료 TODO6개와 오래된 원형 기록 전체를 다시 읽을 필요는 없다. W06 수락 근거가 필요하면
@@ -49,7 +49,7 @@ Windows/WSL 원인이 필요하면329·330번의 해당 부분만 확인한다. 
 | 항목 | 값 |
 | --- | --- |
 | 현재 단계 | M33-W07, HOST-W08 문서 준비 완료·최종 gate 미완료 |
-| 완료 수 | M33 수락6/8·기술5/8, Host6/8, 지원 목표 검증3/5 |
+| 완료 수 | M33 수락6/8·기술5/8, Host6/8, 지원 목표 검증4/5 |
 | Windows·Linux | C5 Windows11 기준선, C10 Ubuntu24.04/26.04 WSL2 완료 보존 |
 | 제품 C11 | `d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa` |
 | 문서 인계의 부모 | `09da4d740fb751904e939ca0f1ef944cdf1b720b`; 새 인계 문서 commit은 Git과 전달 receipt로 확인 |

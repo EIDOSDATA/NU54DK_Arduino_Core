@@ -1,8 +1,8 @@
 # v0.6.0 개발 계획 — M32·M33 Bluetooth 확장과 예제 완성
 
-2026-11-23 실제 macOS26.7.3에서 C11의 파일별 승인 뒤 SDK 설치·검증, 수명주기, 대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. Mac 준비 결과는 [335번](<04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)에 있다.
+2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 | 항목 | 현재 상태 |
 | --- | --- |
@@ -92,7 +92,7 @@ Beacon 600광고 HIL을 완료했다. 시험 소유 bond만 제한 정리했으�
 M33-W03은 exact `17182660…`에서 Host 13/13, 공개 예제 2/2, native template 4/4와 두 보드
 scripted-peer HIL 9/9를 PASS했다. W04 DTM/HCI와 W05 전체 설치 예제도 완료했으며 W05 exact
 `5f9b2257…`에서 catalog·발견·compile 204/204와 negative 9/9를 PASS했다. M33-W06은 사용자 수락으로 마감했고
-#29 원인 분석은 유예했다. W07의 C5 RC1 준비와 Windows 11 검증은 완료했고 C8·C9 부분 실적과 FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했고 Ubuntu26.04/WSL2 호환성도 완료했으며 C11 macOS26·27 software도 PASS했다. Mac USB·IDE 실기는 NOT_RUN이다. 사용자 지시로 HOST-W08 문서·지원표 준비를 먼저 완료했다.
+#29 원인 분석은 유예했다. W07의 C5 RC1 준비와 Windows 11 검증은 완료했고 C8·C9 부분 실적과 FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했고 Ubuntu26.04/WSL2 호환성도 완료했으며 C11 macOS26·27 software도 PASS했다. Mac27 실기가 남았다. 사용자 지시로 HOST-W08 문서·지원표 준비를 먼저 완료했다.
 남은 Mac 지원 gate·최종 후보 정합화·HOST-W07/W08 최종 마감 후 M33-W07을 완료하고 별도 공개 승인 단계인 M33-W08로 진행한다.
 W06의 개발 수정순회·최종 source 고정·전체 검증·마감 순서는
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
@@ -119,6 +119,6 @@ HOST-W05 경로·cache·lock은 H5의 [315번](<04_검증 기록/315_HOST_W05_na
 각 source의 native 세 OS·공통 CI 성공으로 완료했다. HOST-W06 package·전체 예제와 HOST-W07의 C5 RC1 준비·Windows 11 실기를 마감했다.
 C10 Ubuntu24.04/WSL2 실기·재연결·IDE는 PASS다. 지원 행별 잔여와 공개 순서는 Host 계약과 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다.
 
-HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8, 지원표는3/5다. C5 Windows11 기준선과 C10 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료를 구분하며 macOS26·27 실기는 NOT_RUN이다. 이전 source별 실적·FAIL은330번에 보존한다.
+HOST-W06은 H12의 세 OS 전체 native 검증으로 [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)에서 마감했다. Host는6/8, 지원표는4/5다. C5 Windows11 기준선과 C10 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료를 구분하며 macOS26 실기는 완료했고 macOS27은 NOT_RUN이다. 이전 source별 실적·FAIL은330번에 보존한다.
 
-HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. 현재 C10 직접 완료2행과 별도 C5 Windows11 기준선을 합쳐 지원3/5로 관리한다. 기준선 연결을 서로 다른 source의 단일 시험 PASS로 합산하지 않으며, 변경 영향만 제한 회귀한다.
+HOST-W07 통합 작업본과 RC1 검증 착수는 [323번](<04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>), 모든 대상 OS의 명령·증거 행은 [RC1 절차](<02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따른다. C5 Windows11 한 행, C10 Ubuntu24.04·26.04/WSL2 두 행, C11 macOS26 한 행으로 지원 목표 검증4/5다. 기준선 연결을 서로 다른 source의 단일 시험 PASS로 합산하지 않으며, 변경 영향만 제한 회귀한다.

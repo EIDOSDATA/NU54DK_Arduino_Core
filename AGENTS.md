@@ -1,8 +1,8 @@
 # 저장소 작업 안내
 
-2026-11-23 실제 macOS26.7.3에서 C11의 파일별 승인 뒤 SDK 설치·검증, 수명주기, 대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. Mac 준비 결과는 [335번](<00_Docs/04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)에 있다.
+2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<00_Docs/04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 **Mac에서 재개:** [Mac 인계](00_Docs/MAC_HANDOFF.md)와 [복사용 작업지시문](00_Docs/MAC_START_PROMPT.txt)을 먼저 확인한다. Windows의 D드라이브 경로는 보존 위치이며 Mac의 필수 경로가 아니다.
 
@@ -25,7 +25,7 @@
 ### 현재 Host 순차 작업과 W06 보존 지시
 
 - W06은 실제 PASS46과 명시 수락 #29·40·44를 구분해 마감했다. #29 원인 분석은 유예한다.
-- 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 완료 뒤 HOST-W08 문서·지원표를 선행 정리한 단계다. Mac이 없으므로 실제 USB·IDE 검증은 NOT_RUN으로 유지하며 최종 Host gate는 열어 둔다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
+- 현재 작업은 HOST-W07의 C5 Windows11·C10 Ubuntu24.04/26.04 WSL2 완료를 보존하는 C11 macOS26·27 software 완료 뒤 HOST-W08 문서·지원표를 선행 정리한 단계다. macOS26의 지정 실기는 완료했고 macOS27 실기와 최종 Host gate가 남았다. [다중 Host 계약](<00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)과 [현행 인계](00_Docs/HANDOFF.md)를 따른다.
 - 개발 브랜치는 `Dev-0.6.0-M33`이다. Windows 보존 저장소는 `D:\w06\a\user\hardware\nucode\zephyr`,
   해당 실행·writer 원장은 `D:\w06\control\continuation.json`의 `active_workflow`다.
   Mac 재개는 실제 checkout과 [이식 인계](00_Docs/MAC_HANDOFF.md)의 전달 manifest·Windows writer 해제 receipt를 확인한 뒤 새 control 원장을 만든다.
@@ -73,7 +73,7 @@
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
   소스의 `coreVersion()` 식별 문자열과 공개 stable은 **0.5.0**, 비공개 C11 검증 후보 패키지는 **0.6.0-rc.1**입니다. M32의 38개 지원 후보는 `not_published`입니다.
-- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software PASS·Mac 실기 대기**입니다. W05 exact `5f9b2257…`에서
+- W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software PASS·Mac26 실기 완료**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속
   `NOT_RUN`입니다. HOST-W01~W06과 W07 도구를 완료했고

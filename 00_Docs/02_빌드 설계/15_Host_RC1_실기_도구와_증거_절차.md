@@ -1,8 +1,8 @@
 # Host RC1 실기 도구와 증거 절차
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<../04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. [macOS26 실기](<../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)를 완료했으며 macOS27 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<../04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
-HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2 마감과26.04/WSL2 호환성 검증을 완료했다. 지원3/5·Host 완료6/8이다.
+HOST-W07은 C5 Windows 11 RC1 완료와 C8 부분 실적·FAIL을 보존하며 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2 마감과26.04/WSL2 호환성 검증을 완료했다. macOS26 배정 실기를 마쳤으며 지원4/5·Host 완료6/8이다.
 마지막으로 완료한 전체 Host 작업 묶음은 [322번 H12의 HOST-W06](<../04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>)이며, 후속 C5의 Windows 11 증거는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에 구분한다.
 현재 도구 통합은 [323번](<../04_검증 기록/323_HOST_W07_도구_통합과_RC1_검증_착수.md>)을 따른다.
 C1 Windows 진입점 FAIL·원형 보존과 C2 교정은 [324번](<../04_검증 기록/324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md>)을 따른다.
@@ -52,7 +52,7 @@ C5 RC1으로 갱신해 RC post-install, 예제 204개 발견, Blink 빌드, 사�
 | Windows 11 | x64 | 조건부 J-Link·격리 CLI 갱신·USB 재연결·잘못된 probe UID 거부 통과. COM17·18 기본 CMSIS-DAP 업로드·Blink PASS. COM5·6 초기화 FAIL 보존. COM18 재연결 후 UART PASS. IDE 2.3.11 비공개 RC1 설치·단독 Verify PASS |
 | Ubuntu 24.04 LTS | AMD64 | C5 native CI 보존. C8 WSL2 설치·대표8·Blink·UART·debug·재연결·UID 거부 PASS. IDE PASS·BLE 원형 FAIL 보존. C9 설치·대표8·실기·BLE·IDE PASS 및 재연결 UART FAIL·전체204 중단13개 보존. C10 실기·재연결·IDE PASS; C5 전체 빌드 기준선+C10 변경 영향 검증 완료 |
 | Ubuntu 26.04 LTS | AMD64 | C10 WSL2 버전 호환성 완료. 고정 SDK 설치·대표4cold/4warm·lifecycle·한 보드 USB/serial/debug·IDE PASS. 전체204·BLE·물리 재연결 반복 없음; native 사용자 실기 NOT_RUN |
-| macOS 26 | Apple Silicon | C5 native 전체 빌드 PASS 보존. C11 실행기 교정·고정 SDK 새 설치·설치/lifecycle·대표4cold/4warm CI PASS. USB·IDE 실기 NOT_RUN; Mac 확보 필요 |
+| macOS 26 | Apple Silicon | C5 native 전체 빌드와 C11 software PASS 보존. 실제 26.7.3 ARM64 설치·대표 build·USB·ELF debug·기본 UART·명시적 줄 동기화 재연결·IDE PASS. [336번](<../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>) |
 | macOS 27 | Apple Silicon | C11 macOS27 ARM64 고정 SDK 새 설치·설치/lifecycle·대표4cold/4warm CI PASS. USB·IDE 실기 NOT_RUN; Mac 확보 필요. 전체204 반복 없음 |
 
 macOS 실기는 NU54DK와 CMSIS-DAP이 실제로 연결된 Apple Silicon Mac에서 진행한다. 대여 장비나

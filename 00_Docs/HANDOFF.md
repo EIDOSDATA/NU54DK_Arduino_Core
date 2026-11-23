@@ -1,8 +1,8 @@
 # 개발 인계
 
-2026-11-23 실제 macOS26.7.3에서 C11의 파일별 승인 뒤 SDK 설치·검증, 수명주기, 대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. Mac 준비 결과는 [335번](<04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)에 있다.
+2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 수락 마감했다.
 원형 strict 기술 완료는 미충족이며 #29 원인 분석은 유예했다.
@@ -11,7 +11,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·종료 증거와 과거 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾는다.
 
-**다음 실행 환경은 Mac이다.** [Mac 재개 문서](MAC_HANDOFF.md)·[작업지시문](MAC_START_PROMPT.txt)·[기계 판독 인계](mac-handoff.json)를 사용한다. Mac 실기는 아직 NOT_RUN이며 기존 Windows continuation을 Mac 필수 입력으로 요구하지 않는다.
+**다음 실행 환경은 Mac이다.** [Mac 재개 문서](MAC_HANDOFF.md)·[작업지시문](MAC_START_PROMPT.txt)·[기계 판독 인계](mac-handoff.json)를 사용한다. Mac27 실기와 최종 후보 준비를 이어서 검증한다. 실제 재개 원장은 Mac의 기존 control을 사용한다.
 
 ## 현재 상태
 
@@ -19,7 +19,7 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 | --- | --- |
 | 현재 제품 | Windows 10/11 x64용 [stable v0.5.0](<05_릴리스/v0.5.0/README.md>) |
 | v0.6.0 개발 | M32 12/12, M33 **수락 6/8·기술 5/8**, W06 strict 예외 보존 — [계획](TODO_v0.6.0.md) |
-| Host | **6/8**, 현재 **M33-W07의 HOST-W08 문서 선행 정리 완료**. Windows11·Ubuntu24/26 WSL2 검증3/5. Mac26/27 실기 NOT_RUN, W07·W08 최종 gate 미완료 |
+| Host | **6/8**, 현재 **M33-W07의 HOST-W08 문서 선행 정리 완료**. Windows11·Ubuntu24/26 WSL2·Mac26 검증4/5. Mac27 실기 NOT_RUN, W07·W08 최종 gate 미완료 |
 | HOST-W06 마감 검증 | H12 `6364a1d9955f79fef0ac1f3219883a9d77e24f32`: 세 OS 각204예제·거부9개, 204개 실제 image 비교 PASS. native30/30·software9/9·prerequisite3/3·build-only6/6 — [322번](<04_검증 기록/322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md>). 실제 OS USB gate는 NOT_RUN |
 | HOST-W07 현재 | C5 Windows 기준선과 C10 Ubuntu24.04·26.04/WSL2 완료를 보존한다. C11 교정·macOS26/27 CI 결과는 [331번](<04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>), C6~C10 원형 PASS·FAIL은 [330번](<04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>), 검증 배정은 [Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>). 공개 URL 검증은 별도 공개 승인 뒤 수행한다. |
 | 저장소·브랜치 | Windows 보존본 `D:/w06/a/user/hardware/nucode/zephyr`; Mac은 실제 checkout · `Dev-0.6.0-M33` |

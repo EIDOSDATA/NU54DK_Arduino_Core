@@ -1,6 +1,6 @@
 # NU54DK Arduino Core
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. [macOS26 실기](<00_Docs/04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)를 완료했으며 macOS27 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 NU54DK의 **nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Core**입니다.
 `setup()`/`loop()`와 Arduino API로 시작하고, BLE·LE Audio·Channel Sounding과
@@ -17,7 +17,7 @@ firmware로 빌드하고 온보드 CMSIS-DAP으로 업로드합니다.
 | --- | --- | --- | --- |
 | NU54DK · nRF54L15 CPUAPP | Windows 10/11 x64 · Arduino IDE 2.x / CLI | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
 
-개발 작업을 Mac에서 이어가려면 [Mac 재개 문서](00_Docs/MAC_HANDOFF.md)와 [작업지시문](00_Docs/MAC_START_PROMPT.txt)을 사용합니다. 실제 Mac 검증은 아직 NOT_RUN입니다.
+개발 작업을 Mac에서 이어가려면 [Mac 재개 문서](00_Docs/MAC_HANDOFF.md)와 [작업지시문](00_Docs/MAC_START_PROMPT.txt)을 사용합니다. macOS26 실기를 완료했고 macOS27 실기가 남았습니다.
 
 ## 버전 선택
 

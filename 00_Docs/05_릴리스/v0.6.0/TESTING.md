@@ -1,6 +1,6 @@
 # v0.6.0 검증 근거와 재실행 범위
 
-2026-11-23 실제 macOS26.7.3에서 원본 C11 kit의 SDK·수명주기·대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. [335번](<../../04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)
+2026-11-23 실제 macOS26.7.3에서 원본 C11 kit의 SDK·수명주기·대표 4cold/4warm과 장치 inventory를 통과했다. Blink·ELF debug·기본 SerialEcho가 PASS했고 재연결 직후 첫 UART 실패를 보존했다. 명시적 줄 동기화 재연결·IDE Verify PASS. macOS27 실기 `NOT_RUN`. [335번](<../../04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>) · [336번](<../../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
 
 | 증거 단위 | exact source | 범위·색인 |
 | --- | --- | --- |

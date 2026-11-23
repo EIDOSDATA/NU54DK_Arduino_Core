@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
   "updated_date": "2026-11-23",
-  "status": "HOST_W08_DOCUMENTATION_PREPARED_MAC26_LOCAL_PREPARATION_PASS",
+  "status": "HOST_W08_DOCUMENTATION_PREPARED_MAC26_PASS_MAC27_PENDING",
   "current_work_package": "HOST-W08",
   "implementation_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
   "completed_work_packages": 6,
@@ -50,10 +50,11 @@
     },
     {
       "id": "HOST-W07",
-      "status": "physical_validation_pending_mac_hardware",
+      "status": "physical_validation_pending_macos27",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "HOST_W07_WINDOWS11_BASELINE_UBUNTU24_26_WSL2_COMPLETE_MACOS2_PENDING",
-      "macOS_26_latest_preflight": "FAIL_GATEKEEPER_BOOTSTRAP_PYTHON"
+      "physical_OS_gate": "HOST_W07_WINDOWS11_UBUNTU24_26_WSL2_MACOS26_COMPLETE_MACOS27_PENDING",
+      "macOS_26_latest_preflight": "PASS_LOCAL_PREPARATION",
+      "macOS_26_physical": "PASS_C11_ASSIGNED_MACOS26"
     },
     {
       "id": "HOST-W08",
@@ -159,7 +160,7 @@
     "current_W06_worktree_validation": "EXACT_H12_COMMIT_PASS"
   },
   "user_physical_OS_gate": {
-    "status": "WINDOWS11_COMPLETE_OTHER4_NOT_RUN",
+    "status": "WINDOWS11_UBUNTU24_26_WSL2_MACOS26_COMPLETE_MACOS27_NOT_RUN",
     "owner": "user",
     "execution_stage": "M33-W07_RC1_FINAL_HOST_VALIDATION",
     "fields": [
@@ -167,10 +168,16 @@
       "upload",
       "serial",
       "debug",
-      "upgrade_reinstall_uninstall"
+      "upgrade_reinstall_uninstall",
+      "assigned_USB_replug",
+      "Arduino_IDE_Verify"
     ],
     "release_target_count": 5,
-    "completed_OS_rows": 1
+    "completed_OS_rows": 4,
+    "initial_Windows_gate_snapshot": {
+      "status": "WINDOWS11_COMPLETE_OTHER4_NOT_RUN",
+      "completed_OS_rows": 1
+    }
   },
   "W06_preservation": {
     "status": "USER_ACCEPTED_CLOSED",
@@ -1525,14 +1532,17 @@
       "OS": "macOS 26",
       "baseline_source": "5ee7c10368b554ca23d68f8f82e39308b91df6de",
       "validation_scope": "COMPATIBILITY_AND_COMMON_TOOL_IMPACT",
-      "status": "C11_SOFTWARE_COMPATIBILITY_PASS_PHYSICAL_NOT_RUN",
+      "status": "C11_SOFTWARE_AND_ASSIGNED_PHYSICAL_PASS",
       "pre_C11_status": "NATIVE_CI_BASELINE_PRESERVED_PHYSICAL_NOT_RUN",
       "validation_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
       "CI_run": 43760678488,
-      "physical_gate": "NOT_RUN",
+      "physical_gate": "PASS",
       "OS_version": "26.7.2",
       "artifact": 14180863023,
-      "closure_record": "D:\\w06\\h7c11\\closure-a001.json"
+      "closure_record": "D:\\w06\\h7c11\\closure-a001.json",
+      "physical_OS_version": "26.7.3",
+      "physical_OS_build": "25G342",
+      "physical_record": "00_Docs/04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md"
     },
     {
       "OS": "macOS 27",
@@ -1560,21 +1570,21 @@
     }
   },
   "release_support_summary": {
-    "completed_rows": 3,
+    "completed_rows": 4,
     "total_rows": 5,
     "preserved_baseline_rows": [
       "Windows 11"
     ],
     "current_validation_rows": [
       "Ubuntu 24.04 LTS / WSL2",
-      "Ubuntu 26.04 LTS / WSL2"
+      "Ubuntu 26.04 LTS / WSL2",
+      "macOS 26 ARM64"
     ],
     "incomplete_rows": [
-      "macOS 26",
       "macOS 27"
     ],
     "HOST_W07_complete": false,
-    "current_validation_rows_scope": "Completed release evidence remains C10 WSL2; active C11 Mac software is separate and physical rows remain incomplete."
+    "current_validation_rows_scope": "C5 Windows 11 baseline, C10 Ubuntu 24.04 and 26.04 WSL2, and C11 macOS 26 assigned validation are complete. macOS 27 physical remains NOT_RUN."
   },
   "macOS_cleanup_diagnostic": {
     "run": 43745916309,
@@ -1716,6 +1726,55 @@
       "CI_artifact_comparison": "b73204219c6b0ffb52c512d190fe96711744b0a2b236f97cbb908d82bc16b398",
       "IDE_mirror": "7fb68f936696934e371857c5df374a66b6d7269d52f96a372cc3cc3f672e0ddf"
     }
+  },
+  "macOS_26_local_physical": {
+    "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+    "doc_checkout_at_test": "870b69b90c1288e20f5aa93eca18d6b81230e8a1",
+    "OS_version": "26.7.3",
+    "OS_build": "25G342",
+    "architecture": "arm64",
+    "native": true,
+    "attempt": "mac26-a002",
+    "record": "00_Docs/04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md",
+    "scope": "OWNER_APPROVED_USB_HUB",
+    "status": "PASS_ASSIGNED_MACOS26",
+    "Blink_upload_runtime": "PASS",
+    "GPIO_transitions": 9,
+    "ELF_debug_halt_resume": "PASS",
+    "SerialEcho_upload_nonce": "PASS_6_OF_6",
+    "USB_same_port_reenumeration": "OBSERVED",
+    "disconnect_seconds": 11.588,
+    "first_replug_UART": "FAIL_E_HOST_SERIAL_TIMEOUT",
+    "reflash_or_reset_before_first_UART": false,
+    "post_fail_line_sync_diagnostic": "PASS_6_OF_6",
+    "sync_replug_observation": "TIMEOUT_NO_REMOVAL",
+    "sync_replug_first_UART": "PASS_LF_SETUP_AND_6_OF_6_NONCES",
+    "IDE_GUI": "PASS_2_3_11_960_FILES_BLINK_VERIFY",
+    "BLE_pair": "NOT_RUN_NOT_ASSIGNED",
+    "macOS27_physical": "NOT_RUN",
+    "evidence_sha256": {
+      "blink_worker": "3f3373f2c0a0b9f583e59d5409b20a158fabc6fc156fb8fccf776c6e7c308cb3",
+      "debug_worker": "870d1521cd671206217ad0f166490ff1d80b8244db989aa7f2ef36a2dd70e91a",
+      "serial_worker": "499bf579b31c5d86515f4486ed1a5881db6b762f28843e4e66392c3686aabedb",
+      "replug_first_UART_failure": "3cae3bf48ef8e5eb588dbfd9f4dc63e62bb2b999b74145d1e07fb82237747a60",
+      "replug_events": "3e89c4ab9451b60b0128b544e5e0c8ab4c10fce1891c33dce75acb1b3f21a01c",
+      "line_sync_diagnostic": "172eb459394e729a914a953fef6fde7cbca2623e613647fb15c5a816e955292c",
+      "second_observation_events": "5a86b7d86fc80db63be101f8e6c046e1403b24fa70e148295e812beb0e38faf3",
+      "IDE_startup": "8d2011d6550990722f2a0a4d15318806ea27212baa0238df35ea78d5b25b8fa1",
+      "sync_replug_events": "bd0fe8578ff1d84049982907c0e9ba9219dfc7cb80e5601dabab2b2c02226da6",
+      "sync_replug_UART": "f85f1b34ec3a216336389086713a23926b8797b31b7deeb88fc992d20ea3b137",
+      "sync_replug_physical_cleanup": "9609d677742b79c21cd313e51dcab7a721c514eceb039518f246995832d54215",
+      "IDE_GUI_receipt": "b662269e2af5d11802f07f362547e5e8a44979521cfe3f156a8674a0589610cd",
+      "IDE_GUI_stdout": "25ba6ccae249019fe5a5ddf2cf93aa0da453803b6351fe869f0aff99c85898f6",
+      "IDE_Blink_manifest": "360de965004c21f0ae968bca4a3ed26115767f92f96d4bc7abc19186192c9e22"
+    },
+    "sync_replug_disconnect_seconds": 11.587,
+    "sync_replug_first_response_bytes": 17,
+    "sync_replug_first_response_sha256": "ac5d48c5ed20cdb76b82a63f20f04944f6835fc6d867531a48184b39c96cc83e",
+    "sync_replug_discarded_setup_payload_bytes": 0,
+    "IDE_account_scope": "EXPLICIT_CURRENT_ACCOUNT_PACKAGE_DATA_AND_CACHE_ISOLATED",
+    "IDE_initial_attempt": "STOPPED_DEFAULT_PROFILE_BEFORE_CANDIDATE_INSTALL",
+    "IDE_default_CLI_configuration_hash_unchanged": true
   },
   "Mac_resume_handoff": {
     "status": "WAITING_FOR_MAC_PHYSICAL_NOT_RUN",
