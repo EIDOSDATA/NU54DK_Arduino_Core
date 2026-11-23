@@ -1,6 +1,6 @@
 # v0.6.0 검증 근거와 재실행 범위
 
-2026-11-23 macOS26.7.3에서 원본 C11 kit와 인계 증거를 검증했다. 관리형 Python 실행을 Gatekeeper가 차단해 장치 시험은 대기 중이다. Mac 실기 두 행은 `NOT_RUN`이다. [334번](<../../04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>)
+2026-11-23 실제 macOS26.7.3에서 원본 C11 kit의 SDK·수명주기·대표 4cold/4warm과 장치 inventory를 통과했다. Mac 실기 두 행은 `NOT_RUN`이다. [335번](<../../04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)
 
 | 증거 단위 | exact source | 범위·색인 |
 | --- | --- | --- |

@@ -7,7 +7,7 @@ Host6/8·지원 목표 검증3/5·M33 수락6/8/기술5/8을 유지한다.
 | 순서 | 작업 | 현재 상태·종료 조건 |
 | --- | --- | --- |
 | 1 | HOST-W08 문서·지원표 선행 정리 | **완료**: 설치·migration·검증·제한·문제 해결·source 색인 작성. 문서 commit의 CI는 실제 결과로 별도 기록 |
-| 2 | Mac 지원 gate 처리 | **대기**: macOS26.7.3은 원본 C11 kit의 Python 실행 차단을 처리한 뒤 장치·IDE 시험 재개. macOS27은 실기 환경 준비 필요. 두 실기 행 `NOT_RUN`. [334번](<../../04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>) |
+| 2 | Mac 지원 gate 처리 | **대기**: macOS26.7.3의 SDK·대표 빌드·inventory 완료. 실기 연결 확인 뒤 USB·재연결·IDE 진행. macOS27 실기 환경 준비 필요. 두 실기 행 `NOT_RUN`. [335번](<../../04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>) |
 | 3 | 최종 배포 후보 고정 | **미완료**: 공개할 source·제품 식별자·version·세 Host 자산·index plan·license/provenance·hash 정합화, 독립 package 재현과 실제 변경 영향 검증. 기존 C5/C10/C11 원본 보존 |
 | 4 | HOST-W07·HOST-W08 및 M33-W07 최종 마감 | **미완료**: 공개 필수 행과 package/install case를 exact 증거에 연결하고 지원표·release notes·생성 readiness를 최종 정합화. 전체204는 실제 영향 없으면 반복하지 않음 |
 | 5 | M33-W08 공개 승인 | **미승인**: 검토 가능한 exact source·지원 범위·배포 plan·자산 hash를 준비한 뒤 소유자가 승인 |
@@ -17,7 +17,7 @@ Host6/8·지원 목표 검증3/5·M33 수락6/8/기술5/8을 유지한다.
 
 2번의 Mac 실기가 없다고 문서·최종 후보 준비 전체를 중단할 필요는 없다. 다만 미충족 필수 행을
 PASS 또는 수락으로 바꾸지 않고, 다섯 OS 정식 지원과 공개 완료를 선언하지 않는다.
-macOS26에서 관리형 Python 실행에 대한 정상 OS 승인 경로를 먼저 확인한다. USB 분리·재연결은 관찰을 시작한 뒤 수행한다.
+macOS26의 실기 연결 구성을 먼저 확인한다. SerialEcho 검증 후 관찰을 시작하고 물리 USB 분리·재연결을 수행한다.
 
 이 체크리스트는 공개 승인이 아니다. 검증/수락/PASS의 구분은 [Testing](TESTING.md)과
 [Known issues](KNOWN_ISSUES.md), 현행 판정은 [Host 원장](../../../variants/nu54dk/host-readiness.json)을 따른다.
