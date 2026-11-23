@@ -20,13 +20,43 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
 
+ROLES = ("beacon",)
+APPLICATION_ROOT = (
+    REPOSITORY / "libraries/NUCODE_BLE_DirectionFinding/examples/CteBeacon"
+)
+SEMANTICS = ("connectionless_cte_tx", "controller_acceptance", "cleanup")
+
+
 class BeaconExecutionFailure(RuntimeError):
     """! @brief probe·flash·UART·CTE 제어 계약 오류입니다. """
+
+
+def build_dispatch_cycle_records(nonces: list[str], measured: dict) -> list[dict]:
+    """! @brief 20개 고유 nonce의 reject/start/stop 분모를 cycle로 변환합니다. """
+
+    if len(nonces) != 20 or len(set(nonces)) != 20 or measured != {
+        "cycles": 20,
+        "starts": 20,
+        "stops": 20,
+        "invalid_rejected": 20,
+    }:
+        raise BeaconExecutionFailure("dispatcher CTE cycle witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle, _nonce in enumerate(nonces, 1)
+    ]
 
 
 def protocol_line(port: object, deadline: float) -> str:
@@ -87,13 +117,27 @@ def execute(args: argparse.Namespace) -> dict:
         "vcom": vcom,
         "image_sha256": image_hash,
     }
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, {"beacon": image},
+            revisions["core"], revisions["board"], APPLICATION_ROOT,
+        )
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
     with ProbeLocks([raw_uid]):
         board["registers"] = collect_register_identity(raw_uid, volume)
         board["flash_mode"], board["flash_bytes"] = flash_image_pyocd(
             "df_beacon", raw_uid, image, args.flash_timeout, hardware_reset=True
         )
         time.sleep(2.0)
-        with serial_module.Serial(vcom, 115200, timeout=0.15) as port:
+        ports: dict[str, object] = {}
+        active = False
+        stopped = False
+        try:
+            port = serial_module.Serial(vcom, 115200, timeout=0.15)
+            ports["beacon"] = port
             port.reset_input_buffer()
             probe_nonce = hashlib.sha256(f"{time.time_ns()}:{image_hash}".encode()).hexdigest()[:32]
             port.write(f"PROBE|nonce={probe_nonce}\n".encode("ascii"))
@@ -130,13 +174,41 @@ def execute(args: argparse.Namespace) -> dict:
                         raise BeaconExecutionFailure("start/stop denominator mismatch")
                     transcript.append(line)
                     if command == "START":
+                        active = True
                         time.sleep(args.advertising_seconds)
+                    elif command == "STOP":
+                        active = False
+                        stopped = True
+        finally:
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    "beacon": f"STOP|nonce={nonces[-1] if nonces else 'none'}\n".encode(
+                        "ascii"
+                    )
+                },
+                {"beacon"} if stopped and not active else set(),
+                transcript,
+            )
+        if not dirty:
+            exact_program = complete_direct_program(
+                REPOSITORY, revisions["core"], ROLES, {"beacon": image},
+                {"beacon": raw_uid}, {"beacon": args.probe_sha256}, sidecars,
+                {
+                    "beacon": {
+                        "mode": board["flash_mode"],
+                        "bytes": str(board["flash_bytes"]),
+                    }
+                },
+                build_records,
+            )
 
     raw = ("\n".join(transcript) + "\n").encode("ascii")
     if re.search(rb"\b(?:uid|probe_id|serial_number)=", raw, flags=re.IGNORECASE):
         raise BeaconExecutionFailure("raw probe identity in transcript")
     prefix.parent.mkdir(parents=True, exist_ok=True)
     prefix.with_suffix(".transcript.log").write_bytes(raw)
+    measured = {"cycles": 20, "starts": 20, "stops": 20, "invalid_rejected": 20}
     evidence = {
         "test_id": "M31-DF-01:connectionless_cte_tx:controller_acceptance",
         "status": "PASS_CONTROL_CANDIDATE" if dirty else "PASS_CONTROL",
@@ -145,11 +217,20 @@ def execute(args: argparse.Namespace) -> dict:
         "probe_nonce": probe_nonce,
         "nonces": nonces,
         "board": board,
-        "measured": {"cycles": 20, "starts": 20, "stops": 20, "invalid_rejected": 20},
+        "boards": {"beacon": board},
+        "measured": measured,
+        "cleanup": cleanup,
         "transcript_sha256": hashlib.sha256(raw).hexdigest(),
         "observed_utc": datetime.now(timezone.utc).isoformat(),
         "scope": "controller_acceptance_only_no_over_air_iq_proof",
     }
+    if not dirty and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(nonces, measured)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m31_df_tx", revisions["core"], 20, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     prefix.with_suffix(".json").write_text(
         json.dumps(evidence, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

@@ -1,6 +1,7 @@
 """! @brief 패키저의 Boards Manager index 생성·검증 책임입니다. """
 from __future__ import annotations
 from . import model
+from . import native
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 import re
@@ -42,9 +43,19 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
         raise PackageError("서로 다른 배포 채널은 하나의 index에 혼합할 수 없습니다.")
     normalized_versions = sorted(set(versions), key=version_sort_key, reverse=True)
     platforms: list[dict[str, Any]] = []
+    tools = {}
     for version in normalized_versions:
         archive_path = output_dir / archive_filename(version)
         validate_index_archive(archive_path, version)
+        dependencies = []
+        if native.is_native_version(version):
+            bootstrap = native.bootstrap_from_archive(archive_path, version)
+            dependencies = native.tool_dependency(bootstrap)
+            definition = native.tool_definition(bootstrap)
+            identity = (definition['name'], definition['version'])
+            if identity in tools and tools[identity] != definition:
+                raise PackageError('같은 초기 Python version에 서로 다른 archive pin을 합칠 수 없습니다.')
+            tools[identity] = definition
         platforms.append(
             {
                 "name": "NUCODE NU54DK Zephyr Boards",
@@ -57,7 +68,7 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
                 "size": str(archive_path.stat().st_size),
                 "boards": [{"name": "NU54DK (nRF54L15, Zephyr)"}],
                 "help": {"online": f"{REPOSITORY_URL}/tree/{release_tag(version)}"},
-                "toolsDependencies": [],
+                "toolsDependencies": dependencies,
             }
         )
     document = {
@@ -69,7 +80,7 @@ def generate_index(output_dir: Path, versions: list[str], destination: Path | No
                 "email": CONTACT_EMAIL,
                 "help": {"online": f"{REPOSITORY_URL}/issues"},
                 "platforms": platforms,
-                "tools": [],
+                "tools": [value for _, value in sorted(tools.items())],
             }
         ]
     }
@@ -104,8 +115,7 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
     for field, expected in expected_identity.items():
         if package.get(field) != expected:
             raise PackageError(f"package index identity {field}가 고정값과 다릅니다.")
-    if package.get("tools") != []:
-        raise PackageError("package index는 NCS/toolchain을 재배포하는 tools 항목을 포함하지 않습니다.")
+    expected_tools = {}
     platforms = package.get("platforms")
     if not isinstance(platforms, list) or not platforms:
         raise PackageError("package index platforms가 비어 있습니다.")
@@ -128,8 +138,21 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
         for field, expected in fixed.items():
             if platform.get(field) != expected:
                 raise PackageError(f"package index platform {field}가 고정값과 다릅니다.")
-        if platform.get("toolsDependencies") != []:
-            raise PackageError("toolsDependencies에는 공개 재배포하지 않는 NCS/toolchain을 넣을 수 없습니다.")
+        dependencies = []
+        if native.is_native_version(version):
+            if artifact_dir is None:
+                raise PackageError('native index 검증에는 exact archive directory가 필요합니다.')
+            archive_path = artifact_dir.resolve() / filename
+            validate_index_archive(archive_path, version)
+            bootstrap = native.bootstrap_from_archive(archive_path, version)
+            dependencies = native.tool_dependency(bootstrap)
+            definition = native.tool_definition(bootstrap)
+            identity = (definition['name'], definition['version'])
+            if identity in expected_tools and expected_tools[identity] != definition:
+                raise PackageError('같은 초기 Python version의 archive pin이 충돌합니다.')
+            expected_tools[identity] = definition
+        if platform.get("toolsDependencies") != dependencies:
+            raise PackageError('toolsDependencies는 해당 exact package의 고정 초기 Python 계약과 같아야 합니다.')
         checksum = platform.get("checksum")
         size = platform.get("size")
         if not isinstance(checksum, str) or not re.fullmatch(r"SHA-256:[0-9a-f]{64}", checksum):
@@ -144,6 +167,8 @@ def validate_index(index_path: Path, *, artifact_dir: Path | None = None) -> dic
             if size != str(archive_path.stat().st_size):
                 raise PackageError(f"package index와 archive size가 다릅니다: {version}")
     channels = {release_channel(version) for version in versions}
+    if package.get('tools') != [value for _, value in sorted(expected_tools.items())]:
+        raise PackageError('package tools는 exact 초기 Python 세 Host 자산만 포함할 수 있습니다.')
     if len(channels) != 1:
         raise PackageError("서로 다른 배포 채널이 하나의 index에 혼합되었습니다.")
     expected_order = sorted(versions, key=version_sort_key, reverse=True)

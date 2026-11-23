@@ -55,7 +55,8 @@ namespace nucode::mesh
         constexpr std::uint32_t scheduler_get_opcode = BT_MESH_MODEL_OP_2(0x82, 0x49);
 
 #if !defined(CONFIG_BT_MESH_PROXY_SOLICITATION) || \
-    !defined(CONFIG_BT_MESH_OD_PRIV_PROXY_SRV)
+    !defined(CONFIG_BT_MESH_OD_PRIV_PROXY_SRV) || \
+    !defined(CONFIG_BT_MESH_BRG_CFG_SRV)
         /** @brief 비활성 선택 기능이 남긴 settings 값을 안전하게 소비합니다. */
         int loadDisabledOptionalSetting(const char *, std::size_t,
                                         settings_read_cb, void *) noexcept
@@ -73,6 +74,15 @@ namespace nucode::mesh
 #if !defined(CONFIG_BT_MESH_OD_PRIV_PROXY_SRV)
         SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_srpl_compat,
                                        "bt/mesh/SRPL", NULL,
+                                       loadDisabledOptionalSetting, NULL, NULL);
+#endif
+
+#if !defined(CONFIG_BT_MESH_BRG_CFG_SRV)
+        SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_brg_en_compat,
+                                       "bt/mesh/brg_en", NULL,
+                                       loadDisabledOptionalSetting, NULL, NULL);
+        SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_brg_tbl_compat,
+                                       "bt/mesh/brg_tbl", NULL,
                                        loadDisabledOptionalSetting, NULL, NULL);
 #endif
 

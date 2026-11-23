@@ -1,14 +1,19 @@
 # M31 실행 TODO — NCS ISO·LE Audio·Direction Finding·Channel Sounding 예제의 Arduino 실행
 
+> **완료·동결 기록 — 2026-10-05:** 완료 결과와 증거를 보존하며 후속 진행 상태를 동기화하거나
+> 매 작업마다 전체를 다시 읽지 않는다. 관련 과거 근거가 필요할 때만 참조한다.
+> 현행 진행은 [M33 TODO](TODO_M33.md)·[제품 계획](TODO_v0.6.0.md), 재개는
+> [M33 인계](M33_HANDOFF.md), Host 요구·진행은 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다.
+
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | `v0.5.0` |
 | 현재 상태 | **W01~W08 완료 / 8/8 작업 묶음, M31 완료** |
 | 선행 완료 | M30 W01~W08 8/8, test ID 10/10, 실제 전원 차단 4지점 × 3회 = 12/12 |
-| 병행 Host 상태 | HOST-W01~HOST-W03 완료 3/8, HOST-W04~HOST-W08 사용자 지시로 보류; M31과 독립 집계 |
+| 후속 Host 인계 | [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)에서 요구·진행을 관리; M31과 독립 집계 |
 | 기준 SDK | NCS `v3.4.0`, Zephyr `4.4.0`, 고정 lock revision |
 | W08 종료 당시 장비 | exact RC 대표 upload/UART/debug PASS 뒤 W07 CS reflector image·advertising·무연결·CS 비활성 확인. 현재 보드 상태는 새 작업 전에 확인 |
-| 최종 갱신일 | 2026-10-03 |
+| 최종 갱신일 | 2026-10-05 |
 
 2026-09-21 결정에 따른 **M31 완료 후 v0.5.0 Windows 릴리스**를 완료했다. main 이력 정리 이후의
 재개 상태는 [HANDOFF](HANDOFF.md)를 따른다. 과거의 설명 통합 요청은 문서만 수정한
@@ -18,7 +23,7 @@ PASS했다. 정식 `v0.5.0` stable 승격도 후속 별도 승인으로 완료�
 M31 완료 기준은 RC 완료 구현·문서를 통합한 당시 `main`이며,
 [270번 기록](<04_검증 기록/270_main_RC_통합_Squash와_문서_동기화.md>)에 통합 근거를 보존한다.
 후속 개발 branch·중단점은 [HANDOFF](HANDOFF.md)가 소유한다.
-Host W04~W08은 계속 보류하며 M32/M33의 목표 버전은 [v0.6.0](TODO_v0.6.0.md)이다.
+후속 Host 진행은 다중 Host 계약이 소유하며 M32/M33의 제품선은 [v0.6.0 계획](TODO_v0.6.0.md)을 따른다.
 2026-09-28의 버전 배정은 완료한 M31의 재개나 후속 구현·공개 승인이 아니다.
 
 M31의 목표는 **고정 NCS에서 nRF54L15DK에 적용되는 ISO·LE Audio·DF·connected Channel Sounding
@@ -60,7 +65,7 @@ Host는 [다중 Host 지원 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지�
 7. 고정 stack에서 적용 가능하다고 판정한 필수 board-only 기능은 실제 HIL이 있어야 닫는다. 메모리
    부족·build 실패·SDK 제약은 원인과 해결 또는 profile 분리 TODO를 남긴다. 계획을 적었다는 이유로
    지원 판정이나 작업 묶음을 완료 처리하지 않는다.
-8. HOST-W04~HOST-W06은 별도 재개 지시 후 진행한다. Ubuntu/macOS의 실제 설치·USB upload·
+8. HOST-W04~HOST-W06의 요구·진행은 [다중 Host 계약](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이 소유한다. Ubuntu/macOS의 실제 설치·USB upload·
    serial/debug·수명주기는 **해당 OS를 지원하는 후속 릴리스에서 사용자 검증**을 수행하고 HOST
    원장과 M33에 인계한다. v0.5.0은 Windows-only이며 이 후속 gate를 기다리지 않는다.
 9. **Apple/Google 기능과 mic/speaker/codec 등 외장 장치 경로는 담당 마일스톤에서 사용 가능한 구현·
@@ -139,8 +144,9 @@ SDC 내부 사용 최고치는 노출되지 않으므로 정적 symbol 크기를
 2. RC2 시간 목표 미달 수용·시험 배포는 [272번](<04_검증 기록/272_RC2_사용자_수용과_main_통합_및_시험배포.md>),
    후속 GUI 연속 Upload 교정 PASS는 [273번](<04_검증 기록/273_RC2_GUI_연속_Upload_Runtime_PM_교정.md>),
    별도 승인에 따른 `v0.5.0` tag/Release/root catalog 공개는 [274번](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에 완료 기록을 보존한다.
-3. 후속 v0.6.0의 M32는 별도 사용자 지시로 **12/12 완료**했고 M33은 **0/8 미착수**다.
-   [v0.6.0 계획](TODO_v0.6.0.md)에서 진행을 관리하며 Host W04~W08 보류는 유지한다.
+3. 후속 M32의 완료 근거는 [M32 TODO](TODO_M32.md), M33의 진행은 [M33 TODO](TODO_M33.md),
+   새 채팅의 재개 지점은 [M33 인계](M33_HANDOFF.md)가 소유한다. 제품선은 [v0.6.0 계획](TODO_v0.6.0.md),
+   Host 요구·실행 순서는 다중 Host 계약에서 관리하며 이 M31 완료 기록에 동기화하지 않는다.
    GUI에서 확인하지 않은 예제·화면 항목을 Blink 연속 Upload 성공으로 일괄 PASS 처리하지 않는다.
 
 ## 3. W03 세부 완료 상태 — 11/11
@@ -228,7 +234,7 @@ W01~W08, 공개 RC와 별도 승인에 따른 정식 stable 공개를 완료했�
    RC 준비와 공개 `v0.5.0-rc.1` smoke까지 완료했다. 이후 RC2와 별도 승인에 따른 stable 공개도 완료했다.
    앞선 RX 후보 조사·HIL 계획은 [259번](<04_검증 기록/259_M31_P2_DF_고정_SDK_지원_경계.md>)의
    고정 SDK 지원 판정으로 대체됐다. 제품 SDC IQ RX는 `UNSUPPORTED`로 명시하고, 과거 LL
-   진단을 자동 재개하거나 SDK/controller를 변경하지 않는다. HOST-W04 이후는 계속 보류한다.
+   진단을 자동 재개하거나 SDK/controller를 변경하지 않는다. 후속 Host 진행은 다중 Host 계약을 따른다.
 
 ## 5. 예제 품질과 설치 계약
 
@@ -245,18 +251,15 @@ M31-W07은 v0.5.0에 채택한 M31 예제의 독립 설치·발견·compile·3�
 전체 원장·지원표와 Windows 배포 준비를 닫았다. M33은 후속 버전의 추가 GATT/profile·template와 전체 NCS catalog, 세 Host 확장 검증을
 맡는다. M31 예제 패키징을 M33으로 미뤄 v0.5.0 배포 gate를 생략하지 않는다.
 
-## 6. HOST-W04~HOST-W06 TODO — 사용자 지시로 보류
+## 6. HOST-W04~HOST-W06 TODO — 후속 계약 참조
 
-아래는 재개 후 수행할 계획이다. **HOST-W04~HOST-W08**의 구현 상태는 미착수이며 현재 실행하지 않는다.
+HOST-W04 prerequisite·HOST-W05 portable path/cache·HOST-W06 package/CI와 W07~W08의
+요구사항·실행 순서·진행 상태는 [다중 Host 계약 §4~6](<02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)이
+소유한다. 그 정본에 OS별 URL/hash/revision·resolver/launcher·udev·권한·경로/cache/lock·
+symlink·package mode·전체 예제 compile·artifact 비교·실물 증거 분리 요구가 보존돼 있다.
+이 완료한 M31 문서에는 후속 체크리스트나 미착수/완료 숫자를 중복 관리하지 않는다.
 
-| Host 작업 | 구현 상태 | 재개 후 할 일 | 증거 경계 |
-| --- | --- | --- | --- |
-| HOST-W04 prerequisite | **미착수** | Ubuntu 24.04+ AMD64부터 OS/arch별 nRF Util·sdk-manager·NCS·Zephyr·toolchain·Arduino CLI URL/hash/revision manifest; Linux resolver·launcher·실행 권한·serial/USB path·udev 조건과 negative | 정적/Ubuntu CI/unit와 실제 PC clean 설치·USB upload·serial/debug를 별도 칸으로 기록 |
-| HOST-W05 portable path/cache | **미착수** | 경로 구분자·executable 탐색·XDG cache, lock·case sensitivity·symlink·execute bit·공백·한글·긴 경로·atomic replace·권한 실패 | 해당 OS native CI/build 증거와 실제 사용자 Host 설치·권한 증거 분리 |
-| HOST-W06 package·CI | **미착수** | 세 Host metadata·launcher·archive mode, clean package와 전체 예제 compile matrix·artifact 비교 | native runner의 실제 실행 범위만 PASS, mock/cross-build 결과를 실물 Host PASS로 승격 금지 |
-
-HOST 전체는 **W01~W08의 독립 분모**를 유지한다. 현재 3/8 완료이며 “W04~W08 잔여”는
-HOST-W04~HOST-W08을 뜻한다. 실제 Ubuntu/macOS 설치·USB upload·serial/debug·lifecycle는
+HOST 전체는 **W01~W08의 독립 분모**를 유지한다. 실제 Ubuntu/macOS 설치·USB upload·serial/debug·lifecycle는
 사용자가 해당 OS를 포함하는 후속 릴리스 단계에서 수행한다. 그 전에는 해당 실물 행을 `NOT RUN`으로 남기며 M31의
 필수 firmware gate에 합산하지 않는다. HOST-W07의 사용자 결과와 HOST-W08의 전체 Host 마감은
 후속 M33 공개 조건으로 이어진다. Windows-only v0.5.0 공개에는 적용하지 않는다.
@@ -347,7 +350,7 @@ M31은 다음을 모두 만족해야 완료다.
 
 M31 기능 8/8과 공개 RC1/RC2 검증, 정식 `v0.5.0` stable 승격·공개 설치 smoke는 완료됐다.
 결과는 [v0.5.0 TODO §6](TODO_v0.5.0.md#6-결과공개-규칙)과
-[274번 공개 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에서 관리한다. 현재 stable 지원은
+[274번 공개 기록](<04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에서 관리한다. 동결 당시 stable 지원은
 `v0.5.0`이고 설치 경로는 [v0.5.0 안내](<05_릴리스/v0.5.0/README.md>)를 따른다. 위 RC1 W08 결과는
 역사 기준선이며 RC2 검증/수용도 별도 이력으로 보존한다. 세 Host 확대·전체 NCS 예제·
 M32/M33은 v0.6.0 계획이며 Bluetooth qualification이나 외부 실물 상호운용은 별도 판정한다.

@@ -432,6 +432,12 @@ namespace nucode::ble::internal::gap
             }
 
             lockGapLifecycle();
+            /** @brief 비활성 GAP의 전역 콜백은 다른 facade가 소유한 연결을 변경하지 않습니다. */
+            if (atomic_get(&gapState().device_initialized) == 0)
+            {
+                unlockGapLifecycle();
+                return;
+            }
             const std::uint32_t current_device_generation = static_cast<std::uint32_t>(
                 atomic_get(&gapState().device_session_generation));
             k_spinlock_key_t key = k_spin_lock(&gapState().connection_lock);

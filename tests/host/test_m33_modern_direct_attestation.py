@@ -1,0 +1,443 @@
+#!/usr/bin/env python3
+"""! @brief modern direct-HIL의 원시 분모→dispatcher cycle 변환을 검증합니다. """
+
+from __future__ import annotations
+
+from pathlib import Path
+from types import SimpleNamespace
+import sys
+import unittest
+from unittest.mock import Mock, patch
+
+
+HIL = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
+if str(HIL) not in sys.path:
+    sys.path.insert(0, str(HIL))
+
+import m31_df_beacon_run as df  # noqa: E402
+import m31_iso_cis_run as cis  # noqa: E402
+import m31_iso_combined_run as combined  # noqa: E402
+import m32_advertising_run as advertising  # noqa: E402
+import m32_ead_run as ead  # noqa: E402
+import m32_mesh_management_run as mesh_management  # noqa: E402
+import m32_mesh_update_run as mesh_update  # noqa: E402
+import m32_nordic_extension_run as nordic  # noqa: E402
+import m32_power_path_run as power  # noqa: E402
+import m32_privacy_run as privacy  # noqa: E402
+import m33_beacon_run as beacon  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    ExactProgrammingFailure,
+    cleanup_direct_ports,
+    dispatch_attestation,
+)
+
+
+class FakePort:
+    """! @brief STOP·close 호출과 예외를 관찰하는 최소 serial 대역입니다. """
+
+    def __init__(self, fail_write: bool = False):
+        self.fail_write = fail_write
+        self.writes: list[bytes] = []
+        self.closed = False
+
+    def write(self, payload: bytes) -> None:
+        """! @brief 선택적으로 write 오류를 발생시킵니다. """
+
+        if self.fail_write:
+            raise OSError("write")
+        self.writes.append(payload)
+
+    def flush(self) -> None:
+        """! @brief 실제 serial flush를 대체합니다. """
+
+    def close(self) -> None:
+        """! @brief close 실행 여부를 기록합니다. """
+
+        self.closed = True
+
+
+def assert_cycles(test: unittest.TestCase, records: list[dict], count: int,
+                  semantics: tuple[str, ...]) -> None:
+    """! @brief cycle 번호와 semantic PASS map을 공통 검증합니다. """
+
+    test.assertEqual([row["cycle"] for row in records], list(range(1, count + 1)))
+    test.assertTrue(all(row["status"] == "PASS" for row in records))
+    test.assertTrue(all(
+        row["semantics"] == {token: "PASS" for token in semantics}
+        for row in records
+    ))
+
+
+class ModernDirectAttestationTest(unittest.TestCase):
+    """! @brief 각 campaign 고유 분모가 20 cycle을 실제로 지지하는지 확인합니다. """
+
+    def test_iso_and_df_cycles(self) -> None:
+        """! @brief ISO/DF strict 측정치와 고유 nonce를 검증합니다. """
+
+        nonces = [f"n{index}" for index in range(20)]
+        cis_records = cis.build_dispatch_cycle_records(
+            nonces,
+            SimpleNamespace(cycles=20, total_sent=2000, total_received=1980,
+                            minimum_received=99, invalid_or_lost=20),
+        )
+        assert_cycles(self, cis_records, 20, cis.SEMANTICS)
+        combined_records = combined.build_dispatch_cycle_records(
+            nonces,
+            SimpleNamespace(cycles=20, peer_sent=2000, cis_received=1980,
+                            bis_forwarded=1980, bis_received=1980,
+                            minimum_cis_received=99, minimum_bis_received=99,
+                            cis_empty_slots=20, bis_empty_slots=20),
+        )
+        assert_cycles(self, combined_records, 20, combined.SEMANTICS)
+        df_records = df.build_dispatch_cycle_records(
+            nonces,
+            {"cycles": 20, "starts": 20, "stops": 20, "invalid_rejected": 20},
+        )
+        assert_cycles(self, df_records, 20, df.SEMANTICS)
+        cis_runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
+        self.assertIn("INTER_CYCLE_SETTLE_SECONDS = 1.0", cis_runner)
+        self.assertIn("time.sleep(INTER_CYCLE_SETTLE_SECONDS)", cis_runner)
+        self.assertIn("flash_image_pyocd_sha256(", cis_runner)
+        self.assertIn("expected_sha256=board[\"image_sha256\"]", cis_runner)
+        self.assertIn("reset_and_halt_before_program=True", cis_runner)
+        self.assertNotIn("flash_image_pyocd(", cis_runner)
+
+    def test_cis_empty_slot_counter_is_not_sdu_loss_denominator(self) -> None:
+        """! @brief 유효 SDU 수와 16-bit empty slot 관찰 누적값을 분리합니다. """
+
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            total_sent=2000,
+            total_received=2000,
+            minimum_received=100,
+            invalid_or_lost=80,
+        )
+        assert_cycles(
+            self,
+            cis.build_dispatch_cycle_records(nonces, measured),
+            20,
+            cis.SEMANTICS,
+        )
+        measured.invalid_or_lost = 20 * 65535 + 1
+        with self.assertRaises(cis.IsoExecutionFailure):
+            cis.build_dispatch_cycle_records(nonces, measured)
+
+    def test_combined_empty_slot_counters_are_not_sdu_loss_denominators(self) -> None:
+        """! @brief 결합 CIS/BIS의 유효 SDU와 16-bit empty slot 누적값을 분리합니다. """
+
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            peer_sent=2000,
+            cis_received=2000,
+            bis_forwarded=2000,
+            bis_received=2000,
+            minimum_cis_received=100,
+            minimum_bis_received=100,
+            cis_empty_slots=80,
+            bis_empty_slots=40,
+        )
+        assert_cycles(
+            self,
+            combined.build_dispatch_cycle_records(nonces, measured),
+            20,
+            combined.SEMANTICS,
+        )
+        measured.cis_empty_slots = 20 * 65535 + 1
+        with self.assertRaises(combined.CombinedFailure):
+            combined.build_dispatch_cycle_records(nonces, measured)
+        measured.cis_empty_slots = 80
+        measured.bis_empty_slots = 20 * 65535 + 1
+        with self.assertRaises(combined.CombinedFailure):
+            combined.build_dispatch_cycle_records(nonces, measured)
+
+    def test_combined_keeps_image_paths_separate_from_hashes(self) -> None:
+        """! @brief exact readback 경로 맵을 envelope SHA 맵으로 덮어쓰지 않습니다. """
+
+        runner = (HIL / "m31_iso_combined_run.py").read_text(encoding="utf-8")
+        self.assertIn(
+            'image_paths = {role: boards[role]["image"] for role in ROLES}',
+            runner,
+        )
+        self.assertIn(
+            'image_hashes = {role: boards[role]["image_sha256"] for role in ROLES}',
+            runner,
+        )
+        self.assertIn(
+            'prefix.with_suffix(".json"), ROLES, image_paths, identity.core,',
+            runner,
+        )
+        self.assertIn("}, image_hashes, identity)", runner)
+        self.assertIn("CORE, identity.core, ROLES, image_paths,", runner)
+        self.assertNotIn(
+            'images = {role: board["image_sha256"] for role, board in boards.items()}',
+            runner,
+        )
+
+    def test_cis_dispatch_failure_remains_failed_and_preserves_save_path(self) -> None:
+        """! @brief attestation 실패를 예외 탈출 대신 redacted FAIL로 보존합니다. """
+
+        evidence = {"status": "PASS", "reason": None}
+        nonces = [f"n{index}" for index in range(20)]
+        measured = SimpleNamespace(
+            cycles=20,
+            total_sent=2000,
+            total_received=2000,
+            minimum_received=100,
+            invalid_or_lost=80,
+        )
+        with patch.object(
+            cis,
+            "dispatch_attestation",
+            side_effect=RuntimeError("uid=secret-uid " + "a" * 40),
+        ):
+            cis.attach_dispatch_attestation(
+                evidence, nonces, measured, "b" * 40, {"exact": True}
+            )
+        self.assertEqual(evidence["status"], "FAIL")
+        self.assertEqual(evidence["first_error"]["stage"], "dispatch_attestation")
+        self.assertNotIn("secret-uid", str(evidence))
+        self.assertNotIn("a" * 40, str(evidence))
+        self.assertNotIn("dispatch_cycle_records", evidence)
+        self.assertNotIn("m33_dispatch_attestation", evidence)
+        runner = (HIL / "m31_iso_cis_run.py").read_text(encoding="utf-8")
+        self.assertLess(
+            runner.index("attach_dispatch_attestation(\n            evidence"),
+            runner.index("    _save(prefix, evidence, transcript)"),
+        )
+
+    def test_power_advertising_privacy_and_ead_cycles(self) -> None:
+        """! @brief W04 aggregate가 내부 20 sequence를 정확히 닫는지 확인합니다. """
+
+        idle = SimpleNamespace(in_waiting=0, read=Mock(side_effect=AssertionError("idle read")))
+        buffered = bytearray()
+        expected = [f"{power.PROTOCOL}|PATH|role=central|index={index}\n".encode("ascii")
+                    for index in range(1, 61)]
+        incoming = bytearray(b"".join(expected))
+        observed = []
+        while incoming or buffered:
+            self.assertEqual(power._available_line(idle, bytearray()), b"")
+            fragment = bytes(incoming[:37])
+            del incoming[:37]
+            port = SimpleNamespace(in_waiting=len(fragment), read=Mock(return_value=fragment))
+            line = power._available_line(port, buffered)
+            if line:
+                observed.append(line)
+            if not port.read.called:
+                incoming[:0] = fragment
+        self.assertEqual(observed, expected)
+        idle.read.assert_not_called()
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._available_line(idle, bytearray(b"x" * 513))
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._available_line(idle, bytearray(b"x" * 512 + b"\n"))
+        with self.assertRaises(power.PowerPathExecutionFailure):
+            power._fields(f"{power.PROTOCOL}|PATH|role=central|role=central")
+        stop = f"{power.PROTOCOL}|STOPPED|role=central\n".encode("ascii")
+        self.assertEqual(power._line(idle, power.time.monotonic() + 1.0, bytearray(stop)),
+                         stop.decode("ascii").strip())
+        for path_count in (55, 59, 61):
+            with self.subTest(path_count=path_count), self.assertRaises(power.PowerPathExecutionFailure):
+                power.build_dispatch_cycle_records(
+                    {"central": 20, "peripheral": 20}, path_count,
+                    {"power_central": 1.0, "power_peripheral": 2.0, "path": 3.0},
+                )
+        assert_cycles(
+            self,
+            power.build_dispatch_cycle_records(
+                {"central": 20, "peripheral": 20}, 60,
+                {"power_central": 1.0, "power_peripheral": 2.0, "path": 3.0},
+            ),
+            20,
+            power.SEMANTICS,
+        )
+        advertiser = {
+            "updates": "20", "sets": "3", "over_capacity_rejected": "1",
+            "stale_set_rejected": "1",
+        }
+        scanner = {
+            "raw": "600", "unique": "120", "corrupt": "0", "dropped": "0",
+            "scan_initiate_conflict_rejected": "1",
+        }
+        assert_cycles(
+            self,
+            advertising.build_dispatch_cycle_records({
+                "advertiser_a": dict(advertiser),
+                "advertiser_b": dict(advertiser),
+                "scanner": scanner,
+            }),
+            20,
+            advertising.SEMANTICS,
+        )
+        identity = {
+            "connections": "20", "disconnections": "20",
+            "wrong_identity_rejected": "1", "active_list_change_rejected": "1",
+        }
+        peer = {
+            "connections_a": "20", "connections_b": "20",
+            "disconnections_a": "20", "disconnections_b": "20",
+            "packets": "200", "max_latency_ms": "1000",
+        }
+        assert_cycles(
+            self,
+            privacy.build_dispatch_cycle_records(
+                {"identity_a": dict(identity), "identity_b": dict(identity),
+                 "peer": peer},
+                {"identity_a": ("00:00:00:00:00:01", 1),
+                 "identity_b": ("00:00:00:00:00:02", 1),
+                 "peer": ("00:00:00:00:00:03", 1)},
+            ),
+            20,
+            privacy.SEMANTICS,
+        )
+        ead_scanner = {
+            "raw": "400", "authenticated": "20", "dropped": "0",
+            "replay_rejected": "20", "tamper_rejected": "20",
+            "wrong_key_rejected": "20", "wrong_iv_rejected": "20",
+        }
+        assert_cycles(
+            self,
+            ead.build_dispatch_cycle_records(
+                {"advertiser": {"updates": "20"}, "scanner": ead_scanner},
+                set(range(20)),
+            ),
+            20,
+            ead.SEMANTICS,
+        )
+
+    def test_nordic_mesh_and_beacon_cycles(self) -> None:
+        """! @brief Nordic/Mesh/Beacon의 event·target·session 분모를 검증합니다. """
+
+        nordic_base = {
+            "qos": "200", "survey": "20", "anchors": "1000", "events": "200",
+            "prepares": "200", "iterations": "20", "llpm_interval_us": "1000",
+            "max_anchor_gap_us": "5000", "max_event_gap_ms": "5",
+            "overflow_observed": "1", "invalid_survey_rejected": "1",
+            "invalid_event_task_rejected": "1", "duplicate_reservation_bounded": "1",
+            "disabled_callback_quiet": "1", "projection_wrap_pass": "1",
+            "acl_controller_experimental": "1", "acl_host_transmit_path": "0",
+            "acl_usable": "0", "callback_context": "pass",
+        }
+        central = dict(nordic_base)
+        central["invalid_llpm_rejected"] = "1"
+        assert_cycles(
+            self,
+            nordic.build_dispatch_cycle_records({
+                "central": central, "peripheral": dict(nordic_base)
+            }),
+            20,
+            nordic.SEMANTICS,
+        )
+        management_server = {
+            "recovery": "pass", "provisioned": "1", "management_server": "pass"
+        }
+        management_client = {
+            "recovery": "pass", "remote_provisioned": "1", "feature_groups": "7",
+            "iterations": "10", "operations": "350", "malformed_rejected": "1",
+            "out_of_range_rejected": "1", "replay_rejected": "1",
+            "wrong_subnet_rejected": "1", "remote_reports": "1",
+        }
+        capacities = {role: {"cdb_remote_capacity": 2} for role in mesh_management.ROLES}
+        assert_cycles(
+            self,
+            mesh_management.build_dispatch_cycle_records(
+                {"client": management_client, "server": dict(management_server),
+                 "target": dict(management_server)}, capacities,
+            ),
+            20,
+            mesh_management.SEMANTICS,
+        )
+        update_client = {
+            "iterations": "10", "chunk_size": "128", "object_digest": "pass",
+            "targets": "2", "chunks": "5120", "suspend_resume": "pass",
+            "wrong_key_rejected": "1", "object_size": "32768",
+        }
+        update_target = {
+            "iterations": "10", "chunk_size": "128", "object_digest": "pass",
+            "chunks": "2560", "bad_digest_rejected": "1",
+        }
+        update_capacities = {
+            role: {"cdb_remote_capacity": 2} for role in mesh_update.ROLES
+        }
+        assert_cycles(
+            self,
+            mesh_update.build_dispatch_cycle_records(
+                {"blob_client": update_client, "target_a": dict(update_target),
+                 "target_b": dict(update_target)}, update_capacities,
+            ),
+            20,
+            mesh_update.SEMANTICS,
+        )
+        advertiser = {
+            "switches": "90", "ibeacon_sequences": "30",
+            "eddystone_sequences": "30", "bthome_sequences": "30",
+            "codec_negative": "pass",
+        }
+        observer = {
+            "raw": "600", "ibeacon_raw": "150", "eddystone_raw": "150",
+            "bthome_raw": "150", "ibeacon_unique": "10",
+            "eddystone_unique": "10", "bthome_unique": "10",
+            "semantic_errors": "0", "callback_context": "pass",
+            "codec_negative": "pass",
+        }
+        sessions = [
+            {"advertiser": dict(advertiser), "observer": dict(observer)}
+            for _ in range(2)
+        ]
+        assert_cycles(
+            self, beacon.build_dispatch_cycle_records(sessions), 20, beacon.SEMANTICS
+        )
+
+    def test_cleanup_closes_partial_ports_and_attestation_rejects_forgery(self) -> None:
+        """! @brief 부분 open 정리와 임의 cycle 자기신고 거부를 검증합니다. """
+
+        good = FakePort()
+        bad = FakePort(fail_write=True)
+        transcript: list[str] = []
+        records = cleanup_direct_ports(
+            {"good": good, "bad": bad},
+            {"good": b"STOP\n", "bad": b"STOP\n"},
+            set(),
+            transcript,
+        )
+        self.assertEqual(records["good"]["stop"], "SENT_NOT_CONFIRMED")
+        self.assertTrue(good.closed and bad.closed)
+        with self.assertRaises(ExactProgrammingFailure):
+            dispatch_attestation(
+                "x", "a" * 40, 1, ("semantic",), (), {},
+                cycle_records=[{
+                    "cycle": 1,
+                    "status": "PASS",
+                    "semantics": {"semantic": "NOT_RUN"},
+                }],
+            )
+
+    def test_all_direct_runners_bind_exact_program_readback_and_cleanup(self) -> None:
+        """! @brief 11개 runner가 공용 exact/cleanup 경계를 우회하지 않는지 검사합니다. """
+
+        names = (
+            "m31_iso_cis_run.py",
+            "m31_iso_combined_run.py",
+            "m31_df_beacon_run.py",
+            "m32_power_path_run.py",
+            "m32_advertising_run.py",
+            "m32_privacy_run.py",
+            "m32_ead_run.py",
+            "m32_nordic_extension_run.py",
+            "m32_mesh_management_run.py",
+            "m32_mesh_update_run.py",
+            "m33_beacon_run.py",
+        )
+        for name in names:
+            with self.subTest(name=name):
+                source = (HIL / name).read_text(encoding="utf-8")
+                self.assertIn("prepare_direct_program(", source)
+                self.assertIn("complete_direct_program(", source)
+                self.assertIn("cleanup_direct_ports(", source)
+                self.assertIn("build_dispatch_cycle_records(", source)
+                self.assertIn("dispatch_attestation(", source)
+
+
+if __name__ == "__main__":
+    unittest.main()

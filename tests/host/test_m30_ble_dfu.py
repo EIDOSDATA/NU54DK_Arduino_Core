@@ -3,12 +3,15 @@
 
 from __future__ import annotations
 
+import hashlib
+import ctypes
 import importlib.util
 import json
 from pathlib import Path
 import struct
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -28,6 +31,43 @@ HIL_SPEC.loader.exec_module(HIL_RUNNER)
 
 class M30SecureBleDfuTests(unittest.TestCase):
     """! @brief 인증 transport·명시적 confirm·profile 격리를 검사합니다. """
+
+    def test_discovery_recovers_from_missing_msd_with_bound_target_uart(self) -> None:
+        """! @brief MSD가 사라져도 명시 UART의 USB serial과 SHA를 결합합니다. """
+
+        raw_uid = "5415360300052840fcd47678fd7d106d"
+        digest = hashlib.sha256(raw_uid.encode("ascii")).hexdigest()
+        port = SimpleNamespace(
+            device="COM5",
+            serial_number=raw_uid.upper(),
+            location="1-1.2:x.3",
+            hwid=(
+                "USB VID:PID=0D28:0204 "
+                f"SER={raw_uid.upper()} LOCATION=1-1.2:x.3"
+            ),
+        )
+        ports = SimpleNamespace(comports=lambda: [port])
+        with mock.patch("ble_pair_hil_common.read_details", return_value=None):
+            endpoint = HIL_RUNNER.discover_endpoint_sha256(
+                digest,
+                "G:/",
+                "COM5",
+                ports,
+            )
+        self.assertEqual(endpoint.board_id, raw_uid)
+        self.assertEqual(endpoint.port_name, "COM5")
+        self.assertEqual(endpoint.volume.root, Path("G:/"))
+
+        with (
+            mock.patch("ble_pair_hil_common.read_details", return_value=None),
+            self.assertRaises(HIL_RUNNER.BlePairHilFailure),
+        ):
+            HIL_RUNNER.discover_endpoint_sha256(
+                "0" * 64,
+                "G:/",
+                "COM5",
+                ports,
+            )
 
     def test_profile_requires_authenticated_reassembled_smp(self) -> None:
         """! @brief secure profile이 인증 BLE SMP와 bounded buffer를 고정합니다. """
@@ -101,8 +141,112 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertEqual(HIL_RUNNER.PRIMARY_FLASH_AREA_ID, 1)
         self.assertNotIn("power_cut", source.casefold())
 
+    def test_hil_transport_preserves_negative_denominator_with_bounded_idle(self) -> None:
+        """! @brief 20회 독립 거부가 phase 상한 안에서 유한 watchdog을 유지하는지 검사합니다. """
+
+        source = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        overlay = (HIL_TARGET / "app.overlay").read_text(encoding="utf-8")
+        boot_overlay = (HIL_TARGET / "sysbuild/mcuboot.overlay").read_text(
+            encoding="utf-8"
+        )
+        central_configuration = (HIL_TARGET / "central.conf").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(HIL_RUNNER.DFU_BAUD_RATE, 460800)
+        self.assertIn("serial_baud_rate = 460800UL", source)
+        self.assertIn("&uart20", overlay)
+        self.assertIn("current-speed = <460800>;", overlay)
+        self.assertIn("&uart20", boot_overlay)
+        self.assertIn("current-speed = <460800>;", boot_overlay)
+        self.assertIn(
+            "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024",
+            central_configuration,
+        )
+        self.assertIn("protocol_idle_timeout_ms = 180000", source)
+        self.assertIn("Serial.begin(serial_baud_rate)", source)
+        self.assertIn("refreshProtocolDeadline();", source)
+        self.assertIn('Serial.print("|TX_REJECT|role=central|reason=")', source)
+        self.assertNotIn('fail("tx-header-length")', source)
+        self.assertNotIn("protocol_timeout_ms = 2400000", source)
+
+    def test_hil_build_rejects_console_baud_drift(self) -> None:
+        """! @brief 생성 DTS가 relay baud와 다르면 build 입력을 거부합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-dfu-dts-") as directory:
+            app = Path(directory)
+            zephyr = app / "zephyr"
+            zephyr.mkdir()
+            devicetree = zephyr / "zephyr.dts"
+            devicetree.write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x70800 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            HIL_RUNNER.validate_console_transport(app)
+            devicetree.write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x1c200 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                    HIL_RUNNER.M30DfuFailure, "460800 baud"):
+                HIL_RUNNER.validate_console_transport(app)
+
     def test_hil_runner_waits_for_disconnect_before_restarting_peripheral(self) -> None:
-        """! @brief reset 응답 직후 이전 application에 START를 보내는 경쟁을 방지합니다. """
+        """! @brief reset 뒤 실제 application 준비 통지 전 UART 명령을 보내지 않습니다. """
+
+        session = object.__new__(HIL_RUNNER.DfuSession)
+        session.core_revision = "a" * 40
+        session.pending = {"peripheral": bytearray(), "central": bytearray()}
+        session.send_line = mock.Mock()
+        session.transaction = mock.Mock(return_value=object())
+        session.require_success = mock.Mock()
+        session.wait_unlink = mock.Mock()
+        observed = []
+        ready = (
+            b"M30DFU|1|BOOT_READY|role=peripheral|core="
+            + session.core_revision.encode("ascii")
+        )
+        incoming = iter((b"*** Booting MCUboot ***", ready))
+
+        def read_boot_line(role: str, deadline: float) -> bytes:
+            """! @brief 부팅 중 송신이 없고 원래 phase deadline을 쓰는지 확인합니다. """
+
+            self.assertEqual((role, deadline), ("peripheral", 10.0))
+            session.send_line.assert_not_called()
+            session.reconnect.assert_not_called()
+            line = next(incoming)
+            observed.append(line)
+            return line
+
+        session.read_line = mock.Mock(side_effect=read_boot_line)
+        session.reconnect = mock.Mock(return_value="connected")
+        with mock.patch.object(
+            HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0, 2.0)
+        ), mock.patch.object(HIL_RUNNER.time, "sleep"):
+            self.assertEqual(session.reset_and_reconnect(10.0), "connected")
+        self.assertEqual(observed, [b"*** Booting MCUboot ***", ready])
+        session.wait_unlink.assert_called_once_with(10.0)
+        session.reconnect.assert_called_once_with(10.0)
+        session.send_line.assert_not_called()
+
+        for line, error in (
+            (ready.replace(b"peripheral", b"central"), "BOOT_READY identity"),
+            (ready.replace(b"a" * 40, b"b" * 40), "BOOT_READY identity"),
+            (b"M30DFU|1|FAIL|reason=command-state", "target 실패"),
+        ):
+            with self.subTest(line=line):
+                session.read_line = mock.Mock(return_value=line)
+                with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, error):
+                    session.wait_boot_ready(10.0)
+        session.read_line = mock.Mock(side_effect=TimeoutError("deadline"))
+        with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "BOOT_READY timeout"):
+            session.wait_boot_ready(10.0)
+        session.send_line.assert_not_called()
 
         source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
         reset_body = source.split("def reset_and_reconnect", 1)[1].split(
@@ -110,8 +254,17 @@ class M30SecureBleDfuTests(unittest.TestCase):
         )[0]
         self.assertLess(
             reset_body.index("self.wait_unlink(deadline)"),
+            reset_body.index("guard_deadline = time.monotonic()"),
+        )
+        self.assertLess(
+            reset_body.index("guard_deadline = time.monotonic()"),
+            reset_body.index("self.wait_boot_ready(deadline)"),
+        )
+        self.assertLess(
+            reset_body.index("self.wait_boot_ready(deadline)"),
             reset_body.index("self.reconnect(deadline)"),
         )
+        self.assertGreaterEqual(HIL_RUNNER.POST_RESET_COMMAND_GUARD_SECONDS, 2.0)
         reconnect_body = source.split("def reconnect", 1)[1].split(
             "def wait_rx", 1
         )[0]
@@ -123,6 +276,10 @@ class M30SecureBleDfuTests(unittest.TestCase):
             reconnect_body.index("self.restart_central_scan(deadline)"),
             reconnect_body.index('self.wait_link("central", deadline)'),
         )
+        target = (HIL_TARGET / "src/main.cpp").read_text(encoding="utf-8")
+        setup = target.split("void setup()", 1)[1].split("void loop()", 1)[0]
+        self.assertLess(setup.index("BLEDevice.begin("), setup.index("reportBootReady();"))
+        self.assertLess(setup.index("BLESecureDfu.confirm()"), setup.index("reportBootReady();"))
 
     def test_hil_runner_cbor_round_trip_is_strict(self) -> None:
         """! @brief SMP map·array·byte·bool을 보존하고 trailing byte를 거부합니다. """
@@ -138,6 +295,369 @@ class M30SecureBleDfuTests(unittest.TestCase):
         self.assertEqual(HIL_RUNNER.cbor_decode(encoded), value)
         with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "trailing"):
             HIL_RUNNER.cbor_decode(encoded + b"\x00")
+
+    def test_hil_runner_retries_only_explicit_pre_write_reject(self) -> None:
+        """! @brief BLE write 전 exact TX_REJECT만 같은 SMP packet으로 재전송합니다. """
+
+        session = object.__new__(HIL_RUNNER.DfuSession)
+        session.sequence = 0
+        session.tx_retries = 0
+        session.send_line = mock.Mock()
+        response = struct.pack(">BBHHBB", 0x0B, 0, 1, 1, 0, 1) + b"\xa0"
+        session.wait_rx = mock.Mock(side_effect=(None, response))
+
+        result = session.transaction(2, 1, 1, {}, 1.0)
+
+        self.assertEqual(result.payload, {})
+        self.assertEqual(session.tx_retries, 1)
+        self.assertEqual(session.send_line.call_count, 2)
+        self.assertEqual(
+            session.send_line.call_args_list[0], session.send_line.call_args_list[1]
+        )
+
+        def make_session():
+            """! @brief 실제 framing 경로와 재송신 횟수를 검사할 최소 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.nonce = "a" * 32
+            value.core_revision = "b" * 40
+            value.sequence = 0
+            value.tx_retries = 0
+            value.pending = {"peripheral": bytearray(), "central": bytearray()}
+            value.capture = {"peripheral": bytearray(), "central": bytearray()}
+            value.send_line = mock.Mock()
+            return value
+
+        suffix = b"|nonce=" + b"a" * 32 + b"|core=" + b"b" * 40
+        valid_rx = b"M30DFU|1|RX|role=central|data=" + response.hex().encode("ascii") + suffix
+        truncated_rx = valid_rx[:-21]
+        target_failure = b"M30DFU|1|FAIL|role=central|reason=protocol-timeout" + suffix
+        for line, message in (
+            (truncated_rx, "malformed SMP RX"),
+            (valid_rx.replace(b"|RX|", b"|RX:", 1), "malformed SMP RX"),
+            (b"M30DFU|1|TX_REJECT|role=central|reason=tx-busy", "malformed SMP TX_REJECT"),
+            (truncated_rx + target_failure, "target 실패"),
+            (valid_rx.replace(b"b" * 40, b"c" * 40), "SMP RX identity"),
+        ):
+            with self.subTest(line=line):
+                value = make_session()
+                value.read_line = mock.Mock(side_effect=(line, TimeoutError("exhausted")))
+                with self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, message):
+                    value.transaction(2, 1, 1, {}, 1.0)
+                value.send_line.assert_called_once()
+                value.read_line.assert_called_once_with("central", 1.0)
+                self.assertEqual(value.tx_retries, 0)
+
+        for pending, expected, message in (
+            (truncated_rx + target_failure, HIL_RUNNER.M30DfuFailure, "target 실패"),
+            (truncated_rx, TimeoutError, "original deadline"),
+        ):
+            with self.subTest(pending=pending):
+                value = make_session()
+                value.pending["central"].extend(pending)
+                value.capture["central"].extend(pending)
+                value.read_line = mock.Mock(side_effect=TimeoutError("original deadline"))
+                with self.assertRaisesRegex(expected, message):
+                    value.transaction(2, 1, 1, {}, 1.0)
+                value.send_line.assert_called_once()
+                self.assertEqual(value.tx_retries, 0)
+                self.assertEqual(bytes(value.pending["central"]), pending)
+                self.assertEqual(bytes(value.capture["central"]), pending)
+
+        value = make_session()
+        value.read_line = mock.Mock(side_effect=(b"*** Booting MCUboot ***", valid_rx))
+        self.assertEqual(value.transaction(2, 1, 1, {}, 1.0).payload, {})
+        value.send_line.assert_called_once()
+        self.assertEqual(value.tx_retries, 0)
+        self._check_windows_uart_error_observation()
+        self._check_uart_response_credit()
+        self._check_bounded_uart_burst_reads()
+
+    def _check_uart_response_credit(self) -> None:
+        """! @brief 수신한 RX 조각만 credit하고 누락·짧은 write·deadline을 우회하지 않습니다. """
+
+        prefix = b"M30DFU|1|RX|role=central|data="
+
+        class CreditPort:
+            """! @brief credit 없이는 다음 64byte를 내보내지 않는 실제 송신 제한 대역입니다. """
+
+            def __init__(self, wire, *, fragment=7, short_credit=False, lost_byte=False):
+                self.wire = wire
+                self.offset = 0
+                self.limit = min(64, len(wire))
+                self.fragment = fragment
+                self.short_credit = short_credit
+                self.lost_byte = lost_byte
+                self.credits = []
+                self.flushes = 0
+
+            def read(self, size):
+                stop = min(self.offset + min(size, self.fragment), self.limit)
+                result = self.wire[self.offset:stop]
+                self.offset = stop
+                if self.lost_byte and self.offset == 64 and result:
+                    self.lost_byte = False
+                    return result[:-1]
+                return result
+
+            def write(self, data):
+                self.credits.append(data)
+                if self.short_credit:
+                    return 0
+                if data != b"\x06" or self.offset != self.limit:
+                    raise AssertionError("수신 경계 이전 또는 잘못된 credit")
+                self.limit = min(self.limit + 64, len(self.wire))
+                return 1
+
+            def flush(self):
+                self.flushes += 1
+
+        def session_for(port):
+            """! @brief 원형 framing과 raw capture를 사용하는 최소 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.pending = {"central": bytearray()}
+            value.capture = {"central": bytearray()}
+            value.ports = {"central": port}
+            return value
+
+        for length in (64, 65, 128, 155, 593):
+            for fragment in (7, 4096):
+                with self.subTest(length=length, fragment=fragment):
+                    wire = prefix + b"a" * (length - len(prefix) - 2) + b"\r\n"
+                    port = CreditPort(wire, fragment=fragment)
+                    value = session_for(port)
+                    ticks = iter(index / 1000 for index in range(1100))
+                    with (
+                        mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+                        mock.patch.object(HIL_RUNNER.time, "sleep"),
+                    ):
+                        self.assertEqual(value.read_line("central", 1.0), wire[:-2])
+                    self.assertEqual(port.credits, [b"\x06"] * ((length - 1) // 64))
+                    self.assertEqual(port.flushes, len(port.credits))
+                    self.assertEqual(bytes(value.capture["central"]), wire)
+                    self.assertEqual(bytes(value.pending["central"]), b"")
+
+        wire = prefix + b"a" * (155 - len(prefix) - 2) + b"\r\n"
+        port = CreditPort(wire, fragment=4096, short_credit=True)
+        value = session_for(port)
+        ticks = iter(index / 1000 for index in range(1100))
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+            mock.patch.object(HIL_RUNNER.time, "sleep"),
+            self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "credit"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(port.credits, [b"\x06"])
+        self.assertEqual(port.flushes, 0)
+        self.assertEqual(bytes(value.capture["central"]), wire[:64])
+
+        for damaged in (wire, wire.replace(b"M30DFU", b"X30DFU", 1)):
+            with self.subTest(damaged=damaged[:6]):
+                port = CreditPort(damaged, fragment=4096, lost_byte=True)
+                value = session_for(port)
+                ticks = iter(index / 1000 for index in range(1100))
+                with (
+                    mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=lambda: next(ticks)),
+                    mock.patch.object(HIL_RUNNER.time, "sleep"),
+                    self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+                ):
+                    value.read_line("central", 1.0)
+                self.assertEqual(port.credits, [])
+                self.assertEqual(bytes(value.capture["central"]), damaged[:63])
+
+        port = CreditPort(b"", fragment=4096)
+        value = session_for(port)
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 0.9995, 1.0001)),
+            mock.patch.object(HIL_RUNNER.time, "sleep") as sleep,
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(sleep.call_count, 1)
+        self.assertAlmostEqual(sleep.call_args.args[0], 0.0005)
+
+    def _check_bounded_uart_burst_reads(self) -> None:
+        """! @brief burst·분할 행을 손실 없이 받고 원형 deadline과 capture 제한을 유지합니다. """
+
+        class BurstPort:
+            """! @brief 호출 크기까지 수신 burst를 반환하는 bounded serial 대역입니다. """
+
+            def __init__(self, chunks):
+                self.chunks = list(chunks)
+                self.calls = 0
+
+            @property
+            def in_waiting(self):
+                """! @brief 첫 대기 중 도착한 burst의 남은 byte는 다음 조회에 노출합니다. """
+
+                return len(self.chunks[0]) if self.calls and self.chunks else 0
+
+            def read(self, size):
+                self.calls += 1
+                if not self.chunks:
+                    return b""
+                data = self.chunks.pop(0)
+                if len(data) > size:
+                    self.chunks.insert(0, data[size:])
+                return data[:size]
+
+        def session_for(chunks):
+            """! @brief 원형 read_line의 capture와 pending 경계를 검사할 세션을 만듭니다. """
+
+            value = object.__new__(HIL_RUNNER.DfuSession)
+            value.pending = {"central": bytearray()}
+            value.capture = {"central": bytearray()}
+            value.ports = {"central": BurstPort(chunks)}
+            return value
+
+        first, second = b"x" * 153, b"second response"
+        wire = first + b"\r\n" + second + b"\r\n"
+        value = session_for([wire])
+        with mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0):
+            self.assertEqual(value.read_line("central", 1.0), first)
+            self.assertEqual(value.read_line("central", 1.0), second)
+        self.assertEqual(value.ports["central"].calls, 1)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(bytes(value.pending["central"]), b"")
+
+        value = session_for([wire[:132], wire[132:154], wire[154:]])
+        with mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0):
+            self.assertEqual(value.read_line("central", 1.0), first)
+            self.assertEqual(value.read_line("central", 1.0), second)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(value.ports["central"].calls, 3)
+
+        value = session_for([wire[:132]])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0)),
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.pending["central"]), wire[:132])
+        self.assertEqual(bytes(value.capture["central"]), wire[:132])
+        self.assertEqual(value.ports["central"].calls, 1)
+
+        value = session_for([wire])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", side_effect=(0.0, 1.0)),
+            self.assertRaisesRegex(TimeoutError, "central UART line timeout"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.pending["central"]), wire)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+        self.assertEqual(value.ports["central"].calls, 1)
+
+        value = session_for([wire])
+        with (
+            mock.patch.object(HIL_RUNNER.time, "monotonic", return_value=0.0),
+            mock.patch.object(HIL_RUNNER, "MAX_TRANSCRIPT_BYTES", len(wire) - 1),
+            self.assertRaisesRegex(HIL_RUNNER.M30DfuFailure, "transcript"),
+        ):
+            value.read_line("central", 1.0)
+        self.assertEqual(bytes(value.capture["central"]), wire)
+
+        factory = mock.MagicMock()
+        port = factory.return_value.__enter__.return_value
+        port.is_open = False
+        serial_module = SimpleNamespace(Serial=factory, EIGHTBITS=8, PARITY_NONE="N", STOPBITS_ONE=1)
+        endpoint = SimpleNamespace(port_name="test-only")
+        with HIL_RUNNER.DfuSession(serial_module, endpoint, endpoint, 460800, "a" * 32, "b" * 40):
+            for call in factory.call_args_list:
+                self.assertEqual(call.kwargs["timeout"], 0.0)
+                self.assertEqual(call.kwargs["write_timeout"], 2.0)
+                self.assertEqual(call.kwargs["inter_byte_timeout"], 0.001)
+
+    def _check_windows_uart_error_observation(self) -> None:
+        """! @brief 오류 관찰이 원형 호출·반환·오류 상태·scope 복원을 보존하는지 검사합니다. """
+
+        class CommStatus(ctypes.Structure):
+            """! @brief 실제 통신 없이 queue 값의 포인터 복사를 검증합니다. """
+
+            _fields_ = [("cbInQue", ctypes.c_uint32), ("cbOutQue", ctypes.c_uint32)]
+
+        flags = ctypes.c_uint32(2)
+        status = CommStatus(13, 7)
+        flags_pointer, status_pointer = ctypes.byref(flags), ctypes.byref(status)
+        state = {"os": 123, "private": 456}
+        original = mock.Mock(side_effect=(1, 0, RuntimeError("original API failure")))
+        win32 = SimpleNamespace(
+            ClearCommError=original, GetLastError=lambda: state["os"],
+            LPDWORD=ctypes.POINTER(ctypes.c_uint32), LPCOMSTAT=ctypes.POINTER(CommStatus),
+        )
+        value = object.__new__(HIL_RUNNER.DfuSession)
+        value.serial_module = SimpleNamespace(Serial=SimpleNamespace(__module__="serial.serialwin32"))
+        value.ports = {"central": SimpleNamespace(_port_handle=42)}
+        setter = mock.Mock(side_effect=lambda code: state.__setitem__("os", code))
+
+        def changed_clock():
+            """! @brief 관찰 중 오류 상태가 변해도 원래 값이 복원되는지 확인합니다. """
+
+            state.update(os=999, private=888)
+            return 17
+
+        with (
+            mock.patch.object(HIL_RUNNER.os, "name", "nt"),
+            mock.patch.dict(sys.modules, {"serial.serialwin32": SimpleNamespace(win32=win32)}),
+            mock.patch.object(ctypes, "WinDLL", return_value=SimpleNamespace(SetLastError=setter), create=True),
+            mock.patch.object(ctypes, "get_last_error", side_effect=lambda: state["private"], create=True),
+            mock.patch.object(ctypes, "set_last_error", side_effect=lambda code: state.__setitem__("private", code), create=True),
+            mock.patch.object(HIL_RUNNER.time, "monotonic_ns", side_effect=changed_clock),
+            mock.patch("builtins.print") as output,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "original API failure"):
+                with value.observe_uart_errors():
+                    self.assertEqual(win32.ClearCommError(42, flags_pointer, status_pointer), 1)
+                    self.assertEqual(state, {"os": 123, "private": 456})
+                    self.assertEqual(win32.ClearCommError(42, flags_pointer, status_pointer), 0)
+                    self.assertEqual(state, {"os": 123, "private": 456})
+                    win32.ClearCommError(42, flags_pointer, status_pointer)
+            self.assertIs(win32.ClearCommError, original)
+            self.assertEqual(original.call_args_list, [mock.call(42, flags_pointer, status_pointer)] * 3)
+            self.assertEqual((flags.value, status.cbInQue, status.cbOutQue), (2, 13, 7))
+            observation = json.loads(output.call_args.args[0].split("=", 1)[1])
+            self.assertEqual((observation["calls"], observation["nonzero"], observation["api_failures"]), (2, 1, 1))
+            self.assertEqual(observation["observer_errors"], 0)
+            self.assertEqual(observation["events"][0]["role"], "central")
+            self.assertEqual(observation["events"][0]["flags"], 2)
+            self.assertEqual(observation["events"][0]["input_queued"], 13)
+            self.assertIsNone(observation["events"][1]["flags"])
+
+    def test_hil_runner_retries_only_transient_sector_flash_failure(self) -> None:
+        """! @brief 간헐 sector session 실패만 reset-halt로 1회 재시도합니다. """
+
+        transient = HIL_RUNNER.BlePairHilFailure(
+            "peripheral-primary pyOCD sector flash 실패"
+        )
+        with mock.patch.object(
+            HIL_RUNNER,
+            "flash_image_pyocd_sha256",
+            side_effect=(transient, ("pyocd-sector-sw-reset", "42")),
+        ) as flash, mock.patch.object(HIL_RUNNER.time, "sleep") as delay:
+            result = HIL_RUNNER.flash_image_with_retry(
+                "peripheral-primary", "a" * 64, Path("image.hex"), 120.0
+            )
+
+        self.assertEqual(result, ("pyocd-sector-sw-reset", "42"))
+        self.assertEqual(flash.call_count, 2)
+        self.assertTrue(
+            all(
+                call.kwargs["reset_and_halt_before_program"]
+                for call in flash.call_args_list
+            )
+        )
+        delay.assert_called_once_with(0.5)
+
+        deterministic = HIL_RUNNER.BlePairHilFailure(
+            "peripheral-primary exact HEX snapshot 불일치"
+        )
+        with mock.patch.object(
+            HIL_RUNNER, "flash_image_pyocd_sha256", side_effect=deterministic
+        ) as flash, self.assertRaises(HIL_RUNNER.BlePairHilFailure):
+            HIL_RUNNER.flash_image_with_retry(
+                "peripheral-primary", "a" * 64, Path("image.hex"), 120.0
+            )
+        flash.assert_called_once()
 
     def test_hil_runner_parses_exact_mcuboot_hash_tlv(self) -> None:
         """! @brief version과 SHA-256 TLV를 header 경계에서 읽습니다. """
@@ -160,6 +680,9 @@ class M30SecureBleDfuTests(unittest.TestCase):
         source = HIL_RUNNER_PATH.read_text(encoding="utf-8")
         self.assertEqual(HIL_RUNNER.POSITIVE_UPDATES, 10)
         self.assertEqual(HIL_RUNNER.NEGATIVE_ATTEMPTS, 20)
+        self.assertGreaterEqual(
+            HIL_RUNNER.MAX_TRANSCRIPT_BYTES, 32 * 1024 * 1024
+        )
         for name in ("unsigned", "wrong_key", "corrupt", "truncated", "downgrade"):
             self.assertIn(f'"{name}"', source)
         self.assertIn('"power_cut_injected": False', source)
@@ -176,6 +699,20 @@ class M30SecureBleDfuTests(unittest.TestCase):
             boot = root / HIL_RUNNER.BOOT_DOMAIN
             (app / "zephyr").mkdir(parents=True)
             (boot / "zephyr").mkdir(parents=True)
+            (app / "zephyr/zephyr.dts").write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x70800 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
+            (boot / "zephyr/zephyr.dts").write_text(
+                "/ { chosen { zephyr,console = &uart20; }; };\n"
+                "uart20: uart@c6000 {\n"
+                "    current-speed = < 0x70800 >;\n"
+                "};\n",
+                encoding="utf-8",
+            )
             core_revision = "a" * 40
             trust_key = root / "trust.pem"
             trust_key.write_text("test-key\n", encoding="ascii")
@@ -196,7 +733,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 "CONFIG_BOOTLOADER_MCUBOOT=y\n"
                 "CONFIG_BT_SMP_SC_PAIR_ONLY=y\n"
                 "CONFIG_BT_SMP_MIN_ENC_KEY_SIZE=16\n"
-                "CONFIG_BT_L2CAP_TX_MTU=247\n",
+                "CONFIG_BT_L2CAP_TX_MTU=247\n"
+                "CONFIG_NUCODE_ARDUINO_SERIAL_RX_BUFFER_SIZE=1024\n",
                 encoding="utf-8",
             )
             (boot / "zephyr/.config").write_text(
@@ -217,6 +755,8 @@ class M30SecureBleDfuTests(unittest.TestCase):
             signed_hex.write_text(":00000001FF\n", encoding="ascii")
             with mock.patch.object(
                 HIL_RUNNER, "validate_build_record", return_value={}
+            ), mock.patch.object(
+                HIL_RUNNER, "validate_mcuboot_public_key", return_value="1" * 64
             ), mock.patch.object(HIL_RUNNER, "git_revision", return_value="b" * 40):
                 build = HIL_RUNNER.collect_central_build(
                     str(root), core_revision, trust_key.resolve()
@@ -224,7 +764,44 @@ class M30SecureBleDfuTests(unittest.TestCase):
             self.assertEqual(build.boot_hex.resolve(), boot_hex.resolve())
             self.assertEqual(build.signed_hex.resolve(), signed_hex.resolve())
             self.assertIn("bootloader_config_sha256", build.record)
+            self.assertEqual("1" * 64,
+                             build.record["bootloader_public_key_sha256"])
             self.assertIn("domains_sha256", build.record)
+
+    def test_relocated_mcuboot_key_path_binds_generated_public_key(self) -> None:
+        """! @brief 과거 절대 경로 대신 생성 public key byte를 현재 trust key와 결합합니다. """
+
+        with tempfile.TemporaryDirectory(prefix="n54-m30-key-relocation-") as directory:
+            root = Path(directory) / "ncs"
+            trust_key = (
+                root / "v3.4.0/bootloader/mcuboot/root-ec-p256.pem"
+            )
+            imgtool = trust_key.parent / "scripts/imgtool.py"
+            python = (
+                root / "toolchains" / HIL_RUNNER.TOOLCHAIN_BUNDLE_ID /
+                "opt/bin/python.exe"
+            )
+            boot = Path(directory) / "relocated-build" / "mcuboot"
+            public_key = boot / "zephyr/autogen-pubkey.c"
+            for path in (trust_key, imgtool, python, public_key):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"fixture")
+            expected = b"const unsigned char ecdsa_pub_key[] = { 1 };\n"
+            public_key.write_bytes(expected)
+            completed = mock.Mock(returncode=0, stdout=expected, stderr=b"")
+            with mock.patch.object(
+                    HIL_RUNNER, "imgtool_environment", return_value={}), \
+                    mock.patch.object(
+                        HIL_RUNNER.subprocess, "run", return_value=completed
+                    ) as run:
+                digest = HIL_RUNNER.validate_mcuboot_public_key(
+                    boot,
+                    "D:/ncs/v3.4.0/bootloader/mcuboot/root-ec-p256.pem",
+                    trust_key,
+                )
+            self.assertEqual(HIL_RUNNER.file_sha256(public_key), digest)
+            self.assertEqual("getpub", run.call_args.args[0][2])
+            self.assertEqual(str(trust_key.resolve()), run.call_args.args[0][-1])
 
     def test_build_record_pins_the_bundled_gnu_compiler_identity(self) -> None:
         """! @brief build record의 compiler ID·version과 Toolchain bundle을 함께 고정합니다. """
@@ -245,6 +822,7 @@ class M30SecureBleDfuTests(unittest.TestCase):
                 f"  board_source_sha256: '{digest}'\n"
                 "  ncs_revision: '99553055607b'\n"
                 "  zephyr_revision: 'bf801e4e3d19'\n"
+                "  zephyr_patchset_sha256: '0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf'\n"
                 "  board: 'nrf54l15dk'\n"
                 "  board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n"
                 "  toolchain_variant: 'zephyr'\n"

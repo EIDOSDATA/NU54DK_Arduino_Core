@@ -1,0 +1,32 @@
+/** @file @brief NU54DK Fast Pair 독립 template의 loaderless RRAM 배치입니다.
+ * SPDX-License-Identifier: MIT
+ * @warning Arduino 기본 image/storage 배치와 다르며 자동 flash하지 않습니다.
+ */
+&cpuapp_rram
+{
+    /delete-node/ partitions;
+    partitions
+    {
+        ranges;
+        #address-cells = <1>;
+        #size-cells = <1>;
+        slot0_partition: partition@0
+        {
+            compatible = "zephyr,mapped-partition";
+            label = "image-0";
+            reg = <0x0 0x174000>;
+        };
+        bt_fast_pair_partition: partition@174000
+        {
+            compatible = "zephyr,mapped-partition";
+            reg = <0x174000 0x1000>;
+        };
+        storage_partition: partition@175000
+        {
+            compatible = "zephyr,mapped-partition";
+            label = "storage";
+            reg = <0x175000 0x8000>;
+        };
+    };
+};
+/ { chosen { zephyr,code-partition = &slot0_partition; }; };

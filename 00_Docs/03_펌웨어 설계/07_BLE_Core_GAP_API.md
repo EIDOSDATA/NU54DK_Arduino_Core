@@ -203,3 +203,41 @@ LLPM 1,000 us를 확인했다. 최대 anchor gap 3,999 us·event gap 1 ms, overf
 disable 뒤 callback 0·STOP을 PASS해 W05를 완료했다. Flushable ACL만 고정 Host TX 경로 부재로
 unsupported/HOLD이며 지원 기능 수에 넣지 않는다. [280번 기록](<../04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md>)과
 exact JSON이 판정을 소유한다. 이 v0.6.0 개발 결과를 현재 v0.5.0 stable 지원으로 소급하지 않는다.
+
+## v0.6.0 공통 ACL 흐름 제어 변경 후보 — 2026-10-29
+
+이 절은 공통 BLE 설정의 변경 후보를 설명한다. 후보 펌웨어의 전체 빌드와 보드 실기는 아직
+실행하지 않았으며, 기존 source의 검증 결과를 이 변경의 PASS로 사용하지 않는다.
+
+이 절의 미실행·후보 표기는 **2026-10-29 작성 시점의 상태**다. 이후의 적용 source와 시험·최종 판정은
+[현행 M33 인계](../M33_HANDOFF.md), [M33 TODO](../TODO_M33.md),
+[번호별 검증 기록](<../04_검증 기록/README.md>)이 소유한다.
+
+Nordic의 [NCSDK-30959 알려진 문제](https://github.com/nrfconnect/sdk-nrf/blob/bc4fe62c3a30b541691e5752b659d5e86d16b4c9/doc/nrf/releases_and_maturity/known_issues.rst#L479-L484)는
+controller-to-host ACL 흐름 제어가 꺼진 상태에서 Bluetooth Host callback이 대기하면
+교착할 수 있다고 설명하며, 흐름 제어 활성화를 우회책으로 제시한다. 현재 프로젝트의 고정 SDK는
+NCS `v3.4.0`이다. 이 정적 위험 조건의 확인만으로 #29의 HCI `0x3E`/62 원인을 확정하지 않는다.
+#29 근본원인은 아직 미확정이며, 이 변경의 실제 해결 효과도 검증 전이다.
+
+후보는 `NUCODE_ARDUINO_CORE`와 `NUCODE_ARDUINO_API`를 사용하는 앱에서 `BT`, `BT_CONN`,
+`BT_HCI_HOST`, `HAS_BT_CTLR`, `BT_LL_SOFTDEVICE`가 활성이고 `BT_HCI_RAW`가 비활성일 때
+공통 정책으로 `CONFIG_BT_HCI_ACL_FLOW_CONTROL=y`를 선택한다. 특정 보안 기능이나 #29 profile만의
+설정이 아니다. 순수 SDK 예제, Host-only, raw/controller-only, 비연결 observer·ISO broadcaster 및
+다른 controller 구성에는 이 Arduino 정책을 적용하지 않는다. 정책 범위 밖이라는 것은 해당
+SDK 위험이 없다는 판정이 아니다.
+
+고정 SDK는 ACL RX 버퍼 수를 `1 + CONFIG_BT_BUF_ACL_RX_COUNT_EXTRA`로 계산하며,
+`CONFIG_BT_BUF_CMD_TX_COUNT`는 그보다 커야 한다. 따라서 공통 기본값은 **RX EXTRA + 2**다.
+EXTRA `2`이면 CMD `4`, EXTRA `7`이면 CMD `9`, EXTRA `62`이면 CMD `64`가 필요하다.
+SDK의 CMD 상한이 `64`이므로 이 정책의 연결형 EXTRA 지원 범위는 `1..62`이며 `63` 이상은
+거부한다. 비연결 구성의 EXTRA `0`은 정책 적용 대상이 아니다.
+
+전문가 `prj.conf`의 명시 CMD 값이 필요한 최소값보다 크고 SDK 상한 이내이면 그대로 유지한다.
+부족한 명시값은 자동으로 보정하거나 RX 수를 줄이지 않고 최종 CMake 구성 검사에서 실패시킨다.
+Mesh EXTRA `7`에 CMD `3` 같은 과거 override는 제거해 공통 기본값을 쓰거나 최소 `9` 이상으로
+설정해야 한다. 최종 검사는 실제 적용 범위를 다시 계산하므로 정책 심볼만 꺼서 우회할 수 없고,
+SDK 원형 `BUILD_ASSERT`도 유지한다.
+
+추가 명령 버퍼는 RAM을 사용하며 흐름 제어는 Host/controller 동작에 영향을 준다. 변경한
+source의 새 전체 빌드, 최종 `.config`, RAM 사용량·headroom 및 역할별 실제 무선 검증이 필요하다.
+이 후보에는 새 source의 실기 PASS나 W06 완료 판정이 부여되지 않았다.

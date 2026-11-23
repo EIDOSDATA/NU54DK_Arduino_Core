@@ -1,0 +1,53 @@
+{
+  "schema": "nucode-m33-profile-native-pair-v1",
+  "status": "PASS",
+  "revisions": {
+    "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "build_identity": {
+    "server": {
+      "manifest_sha256": "d4ccb1989a1d0fbfea83867dc4b34d8798277a8d8bb9f7323cbfc09373076cfc",
+      "image_sha256": "c657d3fa0b654b6216da036a81fd3268477dd854e9e46f0dcf65ce5cfeb8a366",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    },
+    "client": {
+      "manifest_sha256": "b8c478b94c7953afcf6ca665ec664bce61ba2d1ee874cbbee0323f9746bea755",
+      "image_sha256": "d2d8f8e361272cf4136aff3160c6bfc3b46e67397eb0524e07675d36e76832e3",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    },
+    "watcher": {
+      "manifest_sha256": "10c316cf5417265ff72e9e82b8ac0535f821d15af47c1c0847297968e19a4232",
+      "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200",
+      "source_sha256": "00473c208a2736a44a756435322520886e723143ebff1ebfa9e111a725b76d58"
+    }
+  },
+  "boards": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "c657d3fa0b654b6216da036a81fd3268477dd854e9e46f0dcf65ce5cfeb8a366"
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "d2d8f8e361272cf4136aff3160c6bfc3b46e67397eb0524e07675d36e76832e3"
+    },
+    "watcher": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "ec8bbb972d09f5fdc4fdb42b9218b02ceb94c694ed1872a73bbbd3533dcb9200"
+    }
+  },
+  "fresh": {
+    "path": "C:\\n54w02e-evidence\\native-fresh-exact-001.json",
+    "sha256": "7fc218294d81817d762d0cc44739e6c197ee3e99355ca01bd9d39d1c7f711e93",
+    "nonce": "dc640e00ac9db2750cb0b472c84f0d25",
+    "observed_utc": "2026-10-03T17:59:34.442506+00:00"
+  },
+  "restored": {
+    "path": "C:\\n54w02e-evidence\\native-restored-exact-001.json",
+    "sha256": "95f3d6838c3678b16a66614963cb092bb150ec8febb4b2eb0898ce90e468b20f",
+    "nonce": "b899377a1d6ad241dd2e57150eec8fb3",
+    "observed_utc": "2026-10-03T18:03:13.889456+00:00"
+  }
+}

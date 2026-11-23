@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -16,6 +17,15 @@ from typing import Any, Sequence
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 LOCK_PATH = Path(__file__).with_name("ncs-3.4.0.lock.json")
+SDK_PATCH_MODULE_PATH = (
+    REPOSITORY / "tools/nu54-builder/src/nu54_builder_impl/sdk_patches.py"
+)
+SDK_PATCH_SPEC = importlib.util.spec_from_file_location(
+    "nucode_sdk_patches", SDK_PATCH_MODULE_PATH
+)
+assert SDK_PATCH_SPEC and SDK_PATCH_SPEC.loader
+SDK_PATCH_MODULE = importlib.util.module_from_spec(SDK_PATCH_SPEC)
+SDK_PATCH_SPEC.loader.exec_module(SDK_PATCH_MODULE)
 PINS_PATH = REPOSITORY / "tools" / "nu54-prerequisites" / "pins.json"
 PACKAGE_MODEL = REPOSITORY / "packaging" / "boards-manager" / "nu54_package_impl" / "model.py"
 
@@ -122,6 +132,12 @@ def validate_lock(lock: dict[str, Any]) -> None:
         raise LockFailure("NCS manifest repository license 표기가 고정 계약과 다릅니다.")
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", str(arduino_cli.get("version", ""))):
         raise LockFailure("Arduino CLI version이 exact SemVer가 아닙니다.")
+    try:
+        SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+    except SDK_PATCH_MODULE.PatchFailure as error:
+        raise LockFailure(f"Zephyr patch lock이 잘못됐습니다: {error}") from error
+    if zephyr != SDK_PATCH_MODULE.RUNTIME_ZEPHYR_LOCK:
+        raise LockFailure("CI lock과 배포 builder의 Zephyr patch 계약이 다릅니다.")
 
     pins = strict_json_object(PINS_PATH)
     expected_pairs = (
@@ -178,12 +194,16 @@ def cache_keys(lock: dict[str, Any]) -> dict[str, str]:
     linux = lock["linux_toolchain_container"]
     windows = lock["windows_toolchain"]
     digest = linux["digest"].removeprefix("sha256:")
+    patches = SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+    patchset = SDK_PATCH_MODULE.patchset_sha256(patches)
     return {
         "linux_cache_key": (
-            f"ncs-linux-amd64-{ncs}-{zephyr}-tc-{linux['toolchain_id']}-img-{digest}"
+            f"ncs-linux-amd64-{ncs}-{zephyr}-patch-{patchset}-"
+            f"tc-{linux['toolchain_id']}-img-{digest}"
         ),
         "windows_cache_key": (
-            f"ncs-windows-x64-{ncs}-{zephyr}-tc-{windows['bundle_id']}"
+            f"ncs-windows-x64-{ncs}-{zephyr}-patch-{patchset}-"
+            f"tc-{windows['bundle_id']}"
         ),
     }
 
@@ -228,6 +248,9 @@ def main(arguments: Sequence[str] | None = None) -> int:
         "lock_sha256": hashlib.sha256(args.lock.resolve().read_bytes()).hexdigest(),
         "ncs_revision": lock["ncs"]["revision"],
         "zephyr_revision": lock["zephyr"]["revision"],
+        "zephyr_patches": list(
+            SDK_PATCH_MODULE.approved_zephyr_patches(lock)
+        ),
         "container": (
             f"{lock['linux_toolchain_container']['image']}@"
             f"{lock['linux_toolchain_container']['digest']}"

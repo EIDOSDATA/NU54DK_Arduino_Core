@@ -127,7 +127,8 @@ class M28BlePawrTests(unittest.TestCase):
         scanner = (
             REPOSITORY / "libraries/NUCODE_BLE/examples/PawrScanner/PawrScanner.ino"
         ).read_text(encoding="utf-8")
-        self.assertIn("report.subevent, report.subevent, 0U", scanner)
+        self.assertIn("(report.subevent + 1U) % 4U", scanner)
+        self.assertIn("report.subevent, responseSubevent, 0U", scanner)
 
 
 if __name__ == "__main__":

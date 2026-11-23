@@ -3,8 +3,8 @@
 from __future__ import annotations
 from .models import ToolEnvironment
 
-from pathlib import Path
-from typing import Any
+from pathlib import Path, PureWindowsPath
+from typing import Any, Mapping
 import json
 import os
 import subprocess
@@ -22,16 +22,21 @@ from .common import (
     canonical_path,
     exact_git_revision,
     file_sha256,
+    is_within,
     load_json_object,
     path_key,
     release_manifest,
+    strict_json_object,
 )
-from .paths import build_cache_root
+from .paths import build_cache_root, ensure_writable_cache_root
 from .host import (
     application_data_root,
+    absolute_host_path,
     canonical_host_os,
+    describe_host,
     resolve_toolchain_executable,
 )
+from . import prerequisites
 
 
 ## @brief 요청 platform root가 exact Git checkout인지 확인합니다.
@@ -57,25 +62,27 @@ def discover_ncs_root(*, prefer_user_profile: bool = False) -> Path:
     if configured is not None:
         if not configured.strip():
             raise AdapterError("명시한 NUCODE_NCS_ROOT 값이 비어 있습니다.")
-        candidate = canonical_path(configured)
+        candidate = absolute_host_path(configured)
         if (candidate / "zephyr" / "CMakeLists.txt").is_file() and (
             candidate / "nrf" / "west.yml"
         ).is_file():
-            return candidate.resolve()
+            return canonical_path(candidate)
         raise AdapterError(
             "명시한 NUCODE_NCS_ROOT에 nRF Connect SDK v3.4.0이 없습니다: "
             f"{candidate}"
         )
-    default_candidates = (
-        Path("C:/ncs/v3.4.0"),
-        Path.home() / "ncs" / "v3.4.0",
-        Path("/opt/nordic/ncs/v3.4.0"),
-    )
-    if prefer_user_profile:
-        default_candidates = tuple(reversed(default_candidates))
+    host_os = describe_host()['os']
+    if host_os == 'windows':
+        default_candidates = (Path('C:/ncs/v3.4.0'), Path.home() / 'ncs/v3.4.0')
+        if prefer_user_profile:
+            default_candidates = tuple(reversed(default_candidates))
+    elif host_os == 'linux':
+        default_candidates = (Path.home() / 'ncs/v3.4.0',)
+    else:
+        default_candidates = (Path('/opt/nordic/ncs/v3.4.0'),)
     for candidate in default_candidates:
         if (candidate / "zephyr" / "CMakeLists.txt").is_file() and (candidate / "nrf" / "west.yml").is_file():
-            return candidate.resolve()
+            return canonical_path(candidate)
     raise AdapterError(
         "nRF Connect SDK v3.4.0을 찾을 수 없습니다. NUCODE_NCS_ROOT를 설정하십시오."
     )
@@ -103,8 +110,13 @@ def configured_bundle_id(ncs_root: Path) -> str | None:
 ## @brief 개발 환경 discovery 또는 배포 package의 exact Toolchain bundle을 찾습니다.
 def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> Path:
     toolchains_root = ncs_root.parent / "toolchains"
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    bundle_id = TOOLCHAIN_BUNDLE_ID
+    if host_os != "windows":
+        _key, platform_pin = prerequisites.select_platform(prerequisites.load_manifest())
+        bundle_id = platform_pin["toolchain"]["bundle_id"]
     if exact_required:
-        pinned = toolchains_root / TOOLCHAIN_BUNDLE_ID
+        pinned = toolchains_root / bundle_id
         if (
             (pinned / "environment.json").is_file()
             and resolve_toolchain_executable(pinned, "python", required=False) is not None
@@ -117,12 +129,12 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
 
     configured = os.environ.get("NUCODE_TOOLCHAIN_ROOT")
     candidates: list[Path] = []
-    if configured:
-        candidates.append(canonical_path(configured))
+    if configured is not None:
+        candidates.append(absolute_host_path(configured))
     bundle = configured_bundle_id(ncs_root)
     if bundle:
         candidates.append(ncs_root.parent / "toolchains" / bundle)
-    candidates.append(toolchains_root / TOOLCHAIN_BUNDLE_ID)
+    candidates.append(toolchains_root / bundle_id)
     if toolchains_root.is_dir():
         candidates.extend(sorted(path for path in toolchains_root.iterdir() if path.is_dir()))
     visited: set[str] = set()
@@ -142,38 +154,60 @@ def discover_toolchain_root(ncs_root: Path, *, exact_required: bool = False) -> 
 
 
 ## @brief Toolchain Manager environment.json을 현재 child process 환경에 적용합니다.
-def apply_toolchain_environment(toolchain_root: Path) -> dict[str, str]:
-    environment = os.environ.copy()
+def apply_toolchain_environment(
+    toolchain_root: Path, *, base_environment: Mapping[str, str] | None = None
+) -> dict[str, str]:
+    environment = dict(os.environ if base_environment is None else base_environment)
     # 사용자의 shell flag가 canonical cache key 밖에서 build를 바꾸지 못하게 합니다.
     for key in BUILD_ENVIRONMENT_OVERRIDE_KEYS:
         environment.pop(key, None)
     document_path = toolchain_root / "environment.json"
     try:
-        document = json.loads(document_path.read_text(encoding="utf-8-sig"))
-    except (OSError, json.JSONDecodeError) as error:
-        raise AdapterError(f"toolchain environment.json을 읽지 못했습니다: {error}") from error
+        document = json.loads(document_path.read_text(encoding="utf-8-sig"), object_pairs_hook=strict_json_object)
+    except (OSError, ValueError) as error:
+        raise AdapterError(f"[NU54:E_TOOL_ENVIRONMENT] toolchain environment.json을 읽지 못했습니다: {error}") from error
 
-    for entry in document.get("env_vars", []):
+    entries = document.get('env_vars', []) if isinstance(document, dict) else None
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] env_vars는 환경 변수 object 목록이어야 합니다.')
+    root = canonical_path(toolchain_root)
+    for entry in entries:
         key = entry.get("key")
-        if not isinstance(key, str):
-            continue
+        if not isinstance(key, str) or not key:
+            raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 환경 변수 이름이 필요합니다.')
         entry_type = entry.get("type")
         if entry_type == "relative_paths":
-            values = [str((toolchain_root / value).resolve()) for value in entry.get("values", [])]
+            declared = entry.get('values')
+            if not isinstance(declared, list):
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 상대 경로 목록이 필요합니다.')
+            values = []
+            for value in declared:
+                if not isinstance(value, str) or not value or Path(value).is_absolute() or PureWindowsPath(value).drive or '..' in Path(value).parts:
+                    raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle 내부 상대 경로만 허용합니다.')
+                path = canonical_path(root / value)
+                if not is_within(path, root):
+                    raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 환경 경로가 bundle 밖을 가리킵니다.')
+                values.append(str(path))
             treatment = entry.get("existing_value_treatment", "overwrite")
+            if treatment not in ('overwrite', 'prepend_to'):
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 알 수 없는 환경 변수 결합 방식입니다.')
             if treatment == "prepend_to" and environment.get(key):
                 values.append(environment[key])
             environment[key] = os.pathsep.join(values)
         elif entry_type == "string":
-            environment[key] = str(entry.get("value", ""))
+            if not isinstance(entry.get('value'), str):
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 환경 변수 값은 문자열이어야 합니다.')
+            environment[key] = entry['value']
+        else:
+            raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] 알 수 없는 환경 변수 선언 형식입니다.')
     return environment
 
 
 ## @brief M10 사용자별 prerequisite state directory를 계산합니다.
 def prerequisite_state_root() -> Path:
     configured = os.environ.get("NUCODE_PREREQUISITE_STATE_ROOT")
-    if configured:
-        return canonical_path(configured)
+    if configured is not None:
+        return absolute_host_path(configured)
     return canonical_path(
         application_data_root() / "NUCODE" / "NU54DK_Arduino_Core" / "prerequisites"
     )
@@ -188,6 +222,17 @@ def validate_packaged_prerequisites(
     pins = load_json_object(pins_path, "E_PREREQUISITE_PINS")
     ready_path = prerequisite_state_root() / "ready.json"
     ready = load_json_object(ready_path, "E_PREREQUISITE_READY")
+    host_os = canonical_host_os("windows" if os.name == "nt" else os.uname().sysname)
+    if ready.get("schema_version") == 2 or host_os != "windows":
+        platform_pins_path = platform_root / "tools/nu54-prerequisites/platform-pins.json"
+        document = prerequisites.load_manifest(platform_pins_path)
+        key, pin = prerequisites.select_platform(document)
+        if package_manifest.get("platform_prerequisites_sha256") != file_sha256(platform_pins_path):
+            raise AdapterError("[NU54:E_PACKAGE_MANIFEST] OS별 prerequisite pin hash가 다릅니다.")
+        verified = prerequisites.verify_ready(document, key, prerequisite_state_root(), ncs_root.parent, platform_pins_path)
+        if path_key(verified["toolchain_root"]) != path_key(toolchain_root):
+            raise AdapterError("[NU54:E_PREREQUISITE_TOOLCHAIN] 발견한 OS별 toolchain 경로가 marker와 다릅니다.")
+        return
     pins_hash = file_sha256(pins_path)
 
     if pins.get("schema_version") != 1:
@@ -313,8 +358,10 @@ def tool_environment(platform_root: Path | None = None) -> ToolEnvironment:
     assert git is not None
     assert compiler is not None
     assert size_tool is not None
+    environment['NUCODE_SDK_GIT'] = str(git)
     ccache_root = build_cache_root() / "compiler-cache"
     if ccache is not None:
+        ensure_writable_cache_root(build_cache_root())
         ccache_root.mkdir(parents=True, exist_ok=True)
         environment["CCACHE_DIR"] = str(ccache_root)
         environment["CCACHE_MAXSIZE"] = os.environ.get(

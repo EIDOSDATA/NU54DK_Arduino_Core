@@ -114,13 +114,16 @@ class M9CacheContractTests(unittest.TestCase):
             else:
                 os.environ["NUCODE_BUILD_CACHE_ROOT"] = previous
 
-    def test_default_cache_root_keeps_windows_object_path_short(self) -> None:
-        """! @brief 기본 cache root가 긴 nRF Security object 경로를 위한 짧은 suffix를 씁니다. """
+    def test_default_cache_root_keeps_native_object_path_short(self) -> None:
+        """! @brief 각 native Host의 기본 cache root가 짧은 suffix를 씁니다. """
 
         local_data = self.root / "local-data"
-        expected = local_data / "NU54" / "c"
+        host_os = MODULE.describe_host()['os']
+        base = self.root / 'Library/Caches' if host_os == 'macos' else local_data
+        expected = base / "NU54" / "c"
         expected.mkdir(parents=True)
-        with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data)}):
+        with mock.patch.dict(os.environ, {"LOCALAPPDATA": str(local_data), 'XDG_CACHE_HOME': str(local_data)}), \
+             mock.patch.object(Path, 'home', return_value=self.root):
             os.environ.pop("NUCODE_BUILD_CACHE_ROOT", None)
             self.assert_same_path(MODULE.build_cache_root(), expected)
 
@@ -143,7 +146,11 @@ class M9CacheContractTests(unittest.TestCase):
             "schema_version": 1,
             "target": {"fqbn": "nucode:zephyr:nu54dk", "board": "nu54dk"},
             "board_package": {"revision": "board-a", "content": "sha256:board-a"},
-            "ncs": {"nrf_revision": "nrf-a", "zephyr_revision": "zephyr-a"},
+            "ncs": {
+                "nrf_revision": "nrf-a",
+                "zephyr_revision": "zephyr-a",
+                "zephyr_patchset_sha256": "patch-a",
+            },
             "toolchain": {"bundle_id": "bundle-a", "compiler": "gcc-a"},
         }
         baseline_key = MODULE.cache_key_for_manifest(baseline)
@@ -152,6 +159,7 @@ class M9CacheContractTests(unittest.TestCase):
             ("board_package", "content", "sha256:board-b"),
             ("ncs", "nrf_revision", "nrf-b"),
             ("ncs", "zephyr_revision", "zephyr-b"),
+            ("ncs", "zephyr_patchset_sha256", "patch-b"),
             ("toolchain", "bundle_id", "bundle-b"),
             ("toolchain", "compiler", "gcc-b"),
         )
@@ -198,12 +206,16 @@ class M9CacheContractTests(unittest.TestCase):
             "environment": {},
         }
         revisions = {
+            MODULE.path_key(platform): "f" * 40,
             MODULE.path_key(board): "a" * 40,
             MODULE.path_key(ncs / "nrf"): "b" * 40,
             MODULE.path_key(ncs / "zephyr"): "c" * 40,
         }
 
-        def collect(*, compiler_identity: str = "gcc-a") -> dict[str, object]:
+        def collect(
+            *, compiler_identity: str = "gcc-a",
+            selected_libraries: tuple[str, ...] = (),
+        ) -> dict[str, object]:
             with (
                 mock.patch.object(
                     MODULE.implementation.common, "exact_git_revision",
@@ -217,14 +229,44 @@ class M9CacheContractTests(unittest.TestCase):
                 mock.patch.object(
                     MODULE.implementation.cache, "compiler_version", return_value=compiler_identity
                 ),
+                mock.patch.object(
+                    MODULE.implementation.cache,
+                    "patchset_sha256",
+                    return_value="0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf",
+                ),
             ):
-                return MODULE.cache_input_manifest(paths, args, tools)
+                return MODULE.cache_input_manifest(
+                    paths, args, tools, selected_libraries
+                )
 
         baseline = collect()
         baseline_key = MODULE.cache_key_for_manifest(baseline)
+        for host in (
+            {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu', 'version': '24.04', 'native': True, 'execution_environment': 'native'},
+            {'os': 'macos', 'architecture': 'arm64', 'distribution': 'macos', 'version': '26', 'native': True, 'execution_environment': 'native'},
+        ):
+            if host != baseline['host']:
+                with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=host):
+                    self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+        native_linux = {'os': 'linux', 'architecture': 'x86_64', 'distribution': 'ubuntu',
+            'version': '24.04', 'native': True, 'execution_environment': 'native'}
+        wsl2 = dict(native_linux, native=False, execution_environment='wsl2')
+        with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=native_linux):
+            native_key = MODULE.cache_key_for_manifest(collect())
+        with mock.patch.object(MODULE.implementation.cache, 'describe_host', return_value=wsl2):
+            wsl_manifest = collect()
+            self.assertEqual(wsl_manifest['host']['execution_environment'], 'wsl2')
+            self.assertNotEqual(MODULE.cache_key_for_manifest(wsl_manifest), native_key)
+        self.assertEqual(
+            baseline["adapter"]["embedded_core_revision"], "f" * 40
+        )
         self.assertEqual(baseline["board_package"]["revision"], "a" * 40)
         self.assertEqual(baseline["ncs"]["nrf_revision"], "b" * 40)
         self.assertEqual(baseline["ncs"]["zephyr_revision"], "c" * 40)
+        self.assertEqual(
+            baseline["ncs"]["zephyr_patchset_sha256"],
+            "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf",
+        )
         self.assertEqual(baseline["toolchain"]["compiler"], "gcc-a")
 
         board_file.write_text("board=b\n", encoding="utf-8")
@@ -239,11 +281,77 @@ class M9CacheContractTests(unittest.TestCase):
         self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
         revisions[MODULE.path_key(ncs / "zephyr")] = "c" * 40
 
+        revisions[MODULE.path_key(platform)] = "9" * 40
+        self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+        revisions[MODULE.path_key(platform)] = "f" * 40
+
         self.assertNotEqual(
             MODULE.cache_key_for_manifest(collect(compiler_identity="gcc-b")), baseline_key
         )
         (toolchain / "environment.json").write_text('{"changed":true}\n', encoding="utf-8")
         self.assertNotEqual(MODULE.cache_key_for_manifest(collect()), baseline_key)
+
+        identity_manifest = collect(
+            selected_libraries=("NUCODE_BLE_ChannelSounding",)
+        )
+        identity_key = MODULE.cache_key_for_manifest(identity_manifest)
+        self.assertEqual(
+            identity_manifest["adapter"]["embedded_core_revision"], "f" * 40
+        )
+        revisions[MODULE.path_key(platform)] = "9" * 40
+        self.assertNotEqual(
+            MODULE.cache_key_for_manifest(
+                collect(selected_libraries=("NUCODE_BLE_ChannelSounding",))
+            ),
+            identity_key,
+        )
+
+    def test_channel_sounding_source_manifest_embeds_exact_revision(self) -> None:
+        """! @brief Channel Sounding image와 cache가 같은 exact revision을 공유합니다. """
+
+        build = self.root / "build"
+        sketch = self.root / "sketch"
+        platform = self.root / "platform"
+        app = self.root / "app"
+        source = platform / "libraries/NUCODE_BLE_ChannelSounding/src/Fixture.cpp"
+        source.parent.mkdir(parents=True)
+        source.write_text("int channel_sounding_fixture = 1;\n", encoding="utf-8")
+        sketch.mkdir()
+        app.mkdir()
+        revisions = {
+            "NUCODE_CORE_REVISION": "1" * 40,
+            "NUCODE_BOARD_REVISION": "2" * 40,
+            "NUCODE_NCS_REVISION": "3" * 40,
+            "NUCODE_ZEPHYR_REVISION": "4" * 40,
+        }
+        input_manifest = {
+            "board_package": {"revision": revisions["NUCODE_BOARD_REVISION"]},
+            "ncs": {
+                "nrf_revision": revisions["NUCODE_NCS_REVISION"],
+                "zephyr_revision": revisions["NUCODE_ZEPHYR_REVISION"],
+            },
+        }
+        with mock.patch.object(
+            MODULE.implementation.source_graph,
+            "git_or_release_revision",
+            return_value=revisions["NUCODE_CORE_REVISION"],
+        ):
+            _, provenance, _ = MODULE.write_source_manifest(
+                {
+                    "build_path": build,
+                    "sketch_root": sketch,
+                    "platform_root": platform,
+                    "app": app,
+                },
+                [{"source": source.as_posix(), "include_dirs": []}],
+                ("NUCODE_BLE_ChannelSounding",),
+                input_manifest,
+            )
+        self.assertEqual(provenance["m31_cs_revisions"], revisions)
+        self.assertIn(
+            f'NUCODE_CORE_REVISION=\\"{revisions["NUCODE_CORE_REVISION"]}\\"',
+            (app / "sources.cmake").read_text(encoding="utf-8"),
+        )
 
     def test_generated_source_identity_is_build_path_independent(self) -> None:
         """! @brief 다른 Arduino 임시 build path가 같은 Sketch mirror 이름을 사용합니다. """

@@ -10,6 +10,7 @@
 #if !defined(ARDUINO_LIBRARY_DISCOVERY_PHASE)
 
 #include <esb.h>
+#include <hal/nrf_radio.h>
 #include <zephyr/irq.h>
 #include <zephyr/kernel.h>
 
@@ -385,6 +386,11 @@ namespace nucode::esb
             return false;
         }
         esb_disable();
+        /** @brief SDK의 이미-idle 종료 경로에 남는 SHORTS는 단독 RADIO 소유자만 정리합니다. */
+        if (!IS_ENABLED(CONFIG_ESB_MPSL_TIMESLOT))
+        {
+            nrf_radio_shorts_set(NRF_RADIO, 0U);
+        }
         state.started = false;
         state.tx_busy = false;
         k_msgq_purge(&rx_queue);

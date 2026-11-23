@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -37,6 +43,8 @@ PREPARE_TARGET = 200
 ANCHOR_GAP_LIMIT_US = 5000
 EVENT_GAP_LIMIT_MS = 5
 LLPM_INTERVAL_LIMIT_US = 1000
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_ble_nordic_hil"
+SEMANTICS = ("nordic_extensions", "event_counter", "cleanup")
 
 
 class NordicExtensionFailure(RuntimeError):
@@ -135,6 +143,20 @@ def _validate_result(role: str, fields: dict[str, str]) -> None:
         raise NordicExtensionFailure(f"{role} callback context")
 
 
+def build_dispatch_cycle_records(results: dict[str, dict[str, str]]) -> list[dict]:
+    """! @brief strict Nordic 결과의 20 iteration·event 분모를 cycle로 변환합니다. """
+
+    if set(results) != set(ROLES):
+        raise NordicExtensionFailure("dispatcher Nordic role mismatch")
+    for role in ROLES:
+        _validate_result(role, results[role])
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle in range(1, ITERATION_TARGET + 1)
+    ]
+
+
 def _read_session(ports: dict[str, object], nonce: str, core: str,
                   transcript: list[str]) -> dict[str, dict[str, str]]:
     """! @brief 두 UART를 함께 읽어 BEGIN·RESULT·END를 엄격히 수집합니다. """
@@ -185,12 +207,13 @@ def _read_session(ports: dict[str, object], nonce: str, core: str,
 
 
 def _stop_both(ports: dict[str, object], nonce: str, core: str,
-               transcript: list[str]) -> None:
+               transcript: list[str]) -> set[str]:
     """! @brief 두 STOP을 먼저 전송한 뒤 각 cleanup 완료를 검증합니다. """
     command = f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
     for port in ports.values():
         port.write(command)
         port.flush()
+    stopped_roles: set[str] = set()
     for role, port in ports.items():
         deadline = time.monotonic() + 30.0
         while True:
@@ -206,7 +229,9 @@ def _stop_both(ports: dict[str, object], nonce: str, core: str,
                     or fields.get("core") != core
                 ):
                     raise NordicExtensionFailure(f"{role} STOP mismatch")
+                stopped_roles.add(role)
                 break
+    return stopped_roles
 
 
 def execute(args: argparse.Namespace) -> dict:
@@ -255,6 +280,14 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if boards["central"]["uid"] == boards["peripheral"]["uid"]:
         raise NordicExtensionFailure("양 역할이 동일 probe에 매핑됨")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
 
     nonce = hashlib.sha256(
         f"{time.time_ns()}:{identity.core}".encode("ascii")
@@ -263,7 +296,11 @@ def execute(args: argparse.Namespace) -> dict:
     results: dict[str, dict[str, str]] = {}
     status = "FAIL"
     reason: str | None = None
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
     with ProbeLocks([board["uid"] for board in boards.values()]):
+        ports: dict[str, object] = {}
+        stopped_roles: set[str] = set()
         try:
             for role in ("peripheral", "central"):
                 board = boards[role]
@@ -279,11 +316,11 @@ def execute(args: argparse.Namespace) -> dict:
                     preserve_nrf54l_access=True,
                 )
             time.sleep(2.0)
-            ports = {
-                role: serial_module.Serial(board["vcom"], 115200, timeout=0.05)
-                for role, board in boards.items()
-            }
             try:
+                for role, board in boards.items():
+                    ports[role] = serial_module.Serial(
+                        board["vcom"], 115200, timeout=0.05
+                    )
                 for port in ports.values():
                     port.reset_input_buffer()
                 for role, port in ports.items():
@@ -308,12 +345,37 @@ def execute(args: argparse.Namespace) -> dict:
                 ports["central"].write(start)
                 ports["central"].flush()
                 results = _read_session(ports, nonce, identity.core, transcript)
-                _stop_both(ports, nonce, identity.core, transcript)
+                stopped_roles = _stop_both(
+                    ports, nonce, identity.core, transcript
+                )
                 status = "PASS_CANDIDATE" if dirty else "PASS"
             finally:
-                for port in ports.values():
-                    port.close()
+                cleanup = cleanup_direct_ports(
+                    ports,
+                    {
+                        role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                        for role in ports
+                    },
+                    stopped_roles,
+                    transcript,
+                )
+            if status == "PASS":
+                exact_program = complete_direct_program(
+                    REPOSITORY, identity.core, ROLES, images,
+                    {role: boards[role]["uid"] for role in ROLES},
+                    {role: boards[role]["probe_sha256"] for role in ROLES},
+                    sidecars,
+                    {
+                        role: {
+                            "mode": boards[role]["flash_mode"],
+                            "bytes": str(boards[role]["flash_bytes"]),
+                        }
+                        for role in ROLES
+                    },
+                    build_records,
+                )
         except Exception as error:
+            status = "FAIL"
             reason = f"{type(error).__name__}: {error}"
             reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
             reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
@@ -355,7 +417,15 @@ def execute(args: argparse.Namespace) -> dict:
             "classification": "unsupported_host_transmit_path",
         },
         "reason": reason,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(results)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_nordic", identity.core, ITERATION_TARGET, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

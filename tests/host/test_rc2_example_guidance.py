@@ -33,12 +33,12 @@ class Rc2ExampleGuidanceTest(unittest.TestCase):
     """! @brief 현행 예제 설정 안내의 단일 원본과 drift 거부를 검사합니다. """
 
     def test_all_public_examples_have_valid_metadata_and_generated_guidance(self) -> None:
-        """! @brief 공개 예제 187개가 metadata와 byte 일치하는 안내를 갖습니다. """
+        """! @brief 공개 예제 204개가 metadata와 byte 일치하는 안내를 갖습니다. """
 
         examples = GUIDANCE.public_examples(ROOT)
         metadata = GUIDANCE.load_metadata(ROOT / "libraries" / "example-metadata.json")
-        self.assertEqual(len(examples), 187)
-        self.assertEqual(metadata["example_count"], 187)
+        self.assertEqual(len(examples), 204)
+        self.assertEqual(metadata["example_count"], 204)
         self.assertEqual(GUIDANCE.validate_metadata(metadata, examples, ROOT), [])
         self.assertEqual(GUIDANCE.synchronize(write=False, root=ROOT), [])
 
@@ -69,6 +69,37 @@ class Rc2ExampleGuidanceTest(unittest.TestCase):
         self.assertNotEqual(
             GUIDANCE.render_guidance(identity, original),
             GUIDANCE.render_guidance(identity, changed),
+        )
+
+    def test_all_examples_have_seven_fields_and_traceability(self) -> None:
+        """! @brief 204개 모두가 W05 사용자 안내·원본·수명주기 판정을 가집니다. """
+
+        metadata = GUIDANCE.load_metadata(ROOT / "libraries" / "example-metadata.json")
+        records = metadata["examples"]
+        self.assertEqual(len(records), 204)
+        for identity, record in records.items():
+            for field in GUIDANCE.GUIDANCE_FIELDS:
+                self.assertIn(field, record, f"{identity}: {field}")
+            for field in GUIDANCE.TRACEABILITY_FIELDS:
+                self.assertIn(field, record, f"{identity}: {field}")
+            self.assertEqual(
+                record["runtime_classification"],
+                "procedure_documented_not_physical_pass",
+            )
+            self.assertIsNone(record["source_traceability"]["upstream_path"])
+
+    def test_three_tier_guide_has_exact_denominators(self) -> None:
+        """! @brief 사용자 안내가 12개 입구·29개 Recipe·204개 Reference를 보존합니다. """
+
+        metadata = GUIDANCE.load_metadata(ROOT / "libraries" / "example-metadata.json")
+        guide = GUIDANCE.render_example_guide(metadata, ROOT)
+        self.assertEqual(guide.count("\n### "), 12 + 29)
+        self.assertIn("## Start Here — 12개 사용 시나리오", guide)
+        self.assertIn("## Functional Recipe — 29개 기능군", guide)
+        self.assertIn("## Reference — 전체 204개", guide)
+        self.assertEqual(
+            (ROOT / "libraries" / "EXAMPLES.md").read_text(encoding="utf-8"),
+            guide,
         )
 
 

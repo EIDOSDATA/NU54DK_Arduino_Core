@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """! @brief M28 세 보드 fixed protocol parser와 runner 경계를 검증합니다. """
 
+from contextlib import ExitStack
 from pathlib import Path
 import sys
+import tempfile
+import threading
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 
 HIL_DIRECTORY = Path(__file__).resolve().parents[1] / "hil" / "nu54dk"
@@ -13,9 +18,16 @@ APPLICATION_ROOT = (
 if str(HIL_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(HIL_DIRECTORY))
 
-from ble_pair_hil_common import BlePairHilFailure  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BlePairHilFailure,
+    discover_endpoint_sha256,
+    probe_sha256,
+    public_endpoint,
+    redact_probe_output,
+)
 from m28_ble_3board import (  # noqa: E402
     TEST_NAMES,
+    collect_until_final,
     collect_debug_identities,
     daplink_debug_identity,
     parse_arguments,
@@ -24,6 +36,7 @@ from m28_ble_3board import (  # noqa: E402
 )
 from m6_serial_echo import DaplinkVolume  # noqa: E402
 from ble_pair_hil_common import RoleEndpoint  # noqa: E402
+import m28_ble_3board as runner  # noqa: E402
 
 
 NONCE = "0123456789abcdef0123456789abcdef"
@@ -140,15 +153,43 @@ def role_lines(test_id: str, role: str, nonce: str = NONCE) -> tuple[str, ...]:
 class M28ThreeBoardHilParserTests(unittest.TestCase):
     """! @brief 완전한 세 role PASS만 허용하고 protocol 오판을 거부합니다. """
 
+    def test_final_collector_accepts_bound_identity_suffix(self) -> None:
+        """! @brief M32 compile-time identity가 READY뿐 아니라 FINAL에도 결합됩니다. """
+        identity = b":source_manifest_sha256=" + b"a" * 64
+        line = (
+            b"NUCODE_M28B3_central:FINAL:PASS:test=SOAK"
+            + identity
+            + b":nonce="
+            + NONCE.encode("ascii")
+        )
+        with mock.patch("m28_ble_3board.common.read_line", side_effect=[line]):
+            collect_until_final(
+                object(),
+                "central",
+                "SOAK",
+                NONCE,
+                bytearray(),
+                bytearray(),
+                1.0,
+                threading.Event(),
+                identity,
+            )
+
     def test_all_four_tests_and_three_roles_pass(self) -> None:
+        """! @brief 시작 전 동일 READY 재전송은 기존 정량 결과를 바꾸지 않습니다. """
         for test_id in TEST_NAMES:
             for role in ("peripheral", "mixed", "central"):
-                with self.subTest(test_id=test_id, role=role):
-                    result = parse_role_transcript(
-                        transcript(role_lines(test_id, role)), NONCE, test_id, role
-                    )
-                    self.assertEqual(test_id, result.test_id)
-                    self.assertEqual(role, result.role)
+                lines = role_lines(test_id, role)
+                expected = parse_role_transcript(transcript(lines), NONCE, test_id, role)
+                for replays in (0, 1, 2):
+                    with self.subTest(test_id=test_id, role=role, replays=replays):
+                        result = parse_role_transcript(
+                            transcript((lines[0],) * replays + lines),
+                            NONCE, test_id, role,
+                        )
+                        self.assertEqual(expected, result)
+                        self.assertEqual(test_id, result.test_id)
+                        self.assertEqual(role, result.role)
 
     def test_missing_line_is_rejected(self) -> None:
         lines = role_lines("M28-LINK-01", "mixed")
@@ -158,12 +199,22 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             )
 
     def test_duplicate_line_is_rejected(self) -> None:
+        """! @brief 선두 READY 이후의 재등장과 결과 중복은 계속 거부합니다. """
         lines = list(role_lines("M28-SOAK-01", "peripheral"))
         lines.insert(3, lines[2])
         with self.assertRaises(BlePairHilFailure):
             parse_role_transcript(
                 transcript(tuple(lines)), NONCE, "M28-SOAK-01", "peripheral"
             )
+        for role in ("peripheral", "mixed", "central"):
+            valid = role_lines("M28-LINK-01", role)
+            for position in range(2, len(valid) + 1):
+                with self.subTest(role=role, late_ready_position=position):
+                    invalid = valid[:position] + (valid[0],) + valid[position:]
+                    with self.assertRaises(BlePairHilFailure):
+                        parse_role_transcript(
+                            transcript(invalid), NONCE, "M28-LINK-01", role
+                        )
 
     def test_reordered_line_is_rejected(self) -> None:
         lines = list(role_lines("M28-PER-01", "central"))
@@ -193,12 +244,92 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             )
 
     def test_unexpected_protocol_noise_is_rejected(self) -> None:
-        lines = list(role_lines("M28-CTRL-01", "central"))
-        lines.insert(1, "NUCODE_M28B3_central:DEBUG:PASS:nonce=" + NONCE)
-        with self.assertRaises(BlePairHilFailure):
-            parse_role_transcript(
-                transcript(tuple(lines)), NONCE, "M28-CTRL-01", "central"
-            )
+        """! @brief 다른 역할·시험·추가 필드의 READY를 재전송으로 인정하지 않습니다. """
+        valid = role_lines("M28-CTRL-01", "central")
+        unexpected = (
+            "NUCODE_M28B3_central:DEBUG:PASS:nonce=" + NONCE,
+            "NUCODE_M28B3_READY:role=peripheral:test=CTRL",
+            "NUCODE_M28B3_READY:role=central:test=LINK",
+            valid[0] + ":unexpected=1",
+        )
+        for token in unexpected:
+            with self.subTest(token=token):
+                lines = valid[:1] + (token,) + valid[1:]
+                with self.assertRaises(BlePairHilFailure):
+                    parse_role_transcript(
+                        transcript(lines), NONCE, "M28-CTRL-01", "central"
+                    )
+
+    def test_completed_capture_survives_validation_failure(self) -> None:
+        """! @brief 완료 후 이미지·파서 검사가 실패해도 세 UART 원본과 최초 예외를 보존합니다. """
+        for stage in ("parser", "image_validation"):
+            with self.subTest(stage=stage), tempfile.TemporaryDirectory() as directory:
+                base = Path(directory)
+                evidence = base / "result.json"
+                images = {role: base / (role + ".hex") for role in runner.ROLES}
+                for role, path in images.items():
+                    path.write_bytes((role + " image").encode("ascii"))
+                captures = {
+                    role: transcript(role_lines("M28-LINK-01", role))
+                    for role in runner.ROLES
+                }
+                if stage == "parser":
+                    captures["peripheral"] = captures["peripheral"].replace(
+                        b":reconnects=20:", b":reconnects=19:"
+                    )
+                completed = SimpleNamespace(**{
+                    role: SimpleNamespace(transcript=data)
+                    for role, data in captures.items()
+                })
+                args = SimpleNamespace(
+                    test_id="M28-LINK-01", evidence=evidence, overwrite_evidence=False,
+                    discover_only=False, expected_core_revision="a" * 40,
+                    flash_backend="pyocd-sector", result_timeout=None,
+                    baud=115200, flash_timeout=120,
+                )
+                for index, role in enumerate(runner.ROLES):
+                    setattr(args, "probe_" + role + "_sha256", str(index + 1) * 64)
+                    setattr(args, role + "_volume", None)
+                    setattr(args, role + "_port", "COM" + str(index + 1))
+                    setattr(args, role + "_hex", images[role])
+
+                def execute(**_kwargs):
+                    """! @brief 장비 경계를 대체하고 필요할 때 실제 파일 변조를 주입합니다. """
+                    if stage == "image_validation":
+                        images["peripheral"].write_bytes(b"changed after capture")
+                    return completed
+
+                with ExitStack() as stack:
+                    patches = {
+                        "parse_arguments": {"return_value": args},
+                        "import_pyserial": {"return_value": (object(), object())},
+                        "discover_role_endpoint": {"return_value": SimpleNamespace(port_name="COM1")},
+                        "validate_three_board_identity": {},
+                        "collect_debug_identities": {"return_value": {}},
+                        "public_endpoint": {"return_value": {"probe_sha256": "1" * 64}},
+                        "validate_hex_image": {"side_effect": lambda path: path},
+                        "git_revision": {"return_value": "a" * 40},
+                        "validate_board_revision": {},
+                        "validate_source_clean": {},
+                        "validate_build_record": {"return_value": {}},
+                        "build_nonce": {"return_value": NONCE},
+                    }
+                    for name, options in patches.items():
+                        stack.enter_context(mock.patch.object(runner, name, **options))
+                    run = stack.enter_context(mock.patch.object(runner, "execute_three_board", side_effect=execute))
+                    save = stack.enter_context(mock.patch.object(
+                        runner, "save_failure_transcripts", wraps=runner.save_failure_transcripts
+                    ))
+                    with self.assertRaises(BlePairHilFailure) as failure:
+                        runner.main([])
+                    self.assertIs(failure.exception, save.call_args.args[1])
+                    run.assert_called_once()
+                self.assertFalse(evidence.exists())
+                for role in runner.ROLES:
+                    self.assertEqual(
+                        captures[role],
+                        evidence.with_name(evidence.stem + "." + role + ".transcript.log").read_bytes(),
+                    )
 
     def test_target_fail_is_rejected(self) -> None:
         lines = role_lines("M28-SOAK-01", "mixed")[:-1] + (
@@ -248,15 +379,40 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
             [
                 "--test-id",
                 "M28-LINK-01",
-                "--peripheral-board-id",
-                "a" * 32,
-                "--mixed-board-id",
-                "b" * 32,
-                "--central-board-id",
-                "c" * 32,
+                "--probe-peripheral-sha256",
+                "a" * 64,
+                "--probe-mixed-sha256",
+                "b" * 64,
+                "--probe-central-sha256",
+                "c" * 64,
             ]
         )
         self.assertEqual("pyocd-sector", args.flash_backend)
+
+    def test_public_board_identity_and_debug_output_never_expose_raw_uid(self) -> None:
+        """! @brief native evidence와 pyOCD 오류에서 raw UID를 제거합니다. """
+
+        raw_uid = "0123456789abcdef0123456789abcdef"
+        endpoint = RoleEndpoint(raw_uid, DaplinkVolume(Path("E:/"), ""), "COM7")
+        public = public_endpoint(endpoint)
+        self.assertNotIn(raw_uid, repr(public))
+        self.assertEqual(len(public["probe_sha256"]), 64)
+        redacted = redact_probe_output(
+            f"probe={raw_uid.upper()} failed".encode("ascii"), raw_uid
+        )
+        self.assertNotIn(raw_uid, redacted.casefold())
+        details = "Target Detect: nRF54L15\nUnique ID: " + raw_uid
+        with mock.patch(
+                "ble_pair_hil_common.read_details", return_value=details), \
+                mock.patch(
+                    "ble_pair_hil_common.find_serial_port",
+                    side_effect=RuntimeError("uid=" + raw_uid),
+                ):
+            with self.assertRaises(BlePairHilFailure) as context:
+                discover_endpoint_sha256(
+                    probe_sha256(raw_uid), "E:/", "auto", object()
+                )
+        self.assertNotIn(raw_uid, str(context.exception))
 
     def test_pyocd_identity_requires_nrf54l_aps_and_unlocked_device(self) -> None:
         output = "\n".join(
@@ -341,13 +497,14 @@ class M28ThreeBoardHilParserTests(unittest.TestCase):
         )
         runner = (HIL_DIRECTORY / "m28_ble_3board.py").read_text(encoding="utf-8")
         for value in (
-            '"readdp 0x24"',
-            '"readap 0 0xfc"',
-            '"readap 2 0x14"',
-            '"-I"',
+            "collect_register_identity_sha256",
+            "flash_image_pyocd_sha256",
+            "probe_sha256(endpoint.board_id)",
+            "ready_replay_settle_seconds=0.75",
             'target not in ("nRF54L15", "unsupported target")',
         ):
             self.assertIn(value, runner)
+        self.assertNotIn('"--uid"', runner)
         for value in (
             "CONFIG_BT_MAX_CONN=2",
             "CONFIG_BT_CTLR_SDC_PERIPHERAL_COUNT=1",

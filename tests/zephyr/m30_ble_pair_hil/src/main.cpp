@@ -39,6 +39,7 @@ namespace
     bool protocol_started = false;
     bool protocol_failed = false;
     bool clearing = false;
+    bool clear_ack_pending = false;
     bool connection_attempted = false;
     bool security_request_pending = false;
     bool pairing_requested_seen = false;
@@ -109,6 +110,29 @@ namespace
         Serial.print(current_round);
         Serial.print("|io=");
         Serial.print(NUCODE_M30_PAIR_IO);
+        Serial.print("|bond_count=");
+        Serial.print(BLESecurity.bondCount());
+        Serial.print("|nonce=");
+        Serial.println(nonce);
+    }
+
+    /** @brief 실제 link 종료 뒤 bond 삭제와 CLEAR ACK를 한 번만 완료합니다. */
+    void completeClearRound()
+    {
+        clear_ack_pending = false;
+        if (!BLESecurity.eraseAllBonds())
+        {
+            clearing = false;
+            fail("clear-bonds");
+            return;
+        }
+        clearing = false;
+        Serial.print("M30PAIR|1|CLEARED|role=");
+        Serial.print(roleName());
+        Serial.print("|case=");
+        Serial.print(NUCODE_M30_PAIR_CASE_NAME);
+        Serial.print("|round=");
+        Serial.print(current_round);
         Serial.print("|bond_count=");
         Serial.print(BLESecurity.bondCount());
         Serial.print("|nonce=");
@@ -357,11 +381,14 @@ namespace
         {
             connection_handle = {};
             security_request_pending = false;
-            if (protocol_started && !clearing && !pass_reported)
+            if (clearing && clear_ack_pending)
+            {
+                completeClearRound();
+            }
+            else if (protocol_started && !clearing && !pass_reported)
             {
                 fail("disconnected");
             }
-            clearing = false;
         }
         else if (information.event == nucode::ble::BLEEvent::error && protocol_started &&
                  !clearing)
@@ -438,6 +465,7 @@ namespace
     {
         protocol_started = false;
         clearing = true;
+        clear_ack_pending = false;
 #if defined(NUCODE_M30_PAIR_CENTRAL)
         if (BLEScan.running())
         {
@@ -451,28 +479,26 @@ namespace
 #endif
         if (connection_handle.valid())
         {
-            static_cast<void>(BLEConnection.disconnect(connection_handle));
-        }
-        if (!BLESecurity.eraseAllBonds())
-        {
-            fail("clear-bonds");
+            clear_ack_pending = true;
+            if (!BLEConnection.disconnect(connection_handle))
+            {
+                clear_ack_pending = false;
+                clearing = false;
+                fail("clear-disconnect");
+            }
             return;
         }
-        Serial.print("M30PAIR|1|CLEARED|role=");
-        Serial.print(roleName());
-        Serial.print("|case=");
-        Serial.print(NUCODE_M30_PAIR_CASE_NAME);
-        Serial.print("|round=");
-        Serial.print(current_round);
-        Serial.print("|bond_count=");
-        Serial.print(BLESecurity.bondCount());
-        Serial.print("|nonce=");
-        Serial.println(nonce);
+        completeClearRound();
     }
 
     /** @brief 현재 case의 광고 또는 scan을 시작합니다. */
     void startRound()
     {
+        if (clearing || clear_ack_pending)
+        {
+            fail("clear-pending");
+            return;
+        }
         resetRoundState();
         protocol_started = true;
         clearing = false;

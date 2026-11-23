@@ -1,0 +1,44 @@
+{
+  "schema": "nucode-m33-profile-owned-bond-cleanup-v1",
+  "status": "PASS",
+  "reason": null,
+  "attempt_sha256": "05764efe29bb947d7ca0b41024d8fab528f7a6609caafe86d4ae9fd772ececdf",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "observed_utc": "2026-10-03T15:09:28.125465+00:00",
+  "results": {
+    "server": {
+      "removed": 1,
+      "existing_unchanged": true,
+      "stopped": true
+    },
+    "client": {
+      "removed": 1,
+      "existing_unchanged": true,
+      "stopped": true
+    }
+  },
+  "transcript_sha256": "4211a9b26d95b17718060c0eabf702061f54e63cbb479a3efdd08925ef5f8808",
+  "boards": {
+    "server": {
+      "nonce": "b543e5d7138da01b339523c27cbdac88",
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "df2162b10cf96d838c92c518530f9e245d205007c175f32910c38c0ca953ff9e",
+      "proof_sha256": "6e1c25ab8db511344f87e1cd48ae962900e1b1f003060333ed6bf79d454b5ee8",
+      "before_sha256": "03ddfb362ba3c1819f4c67888822a4d389613f30d0821e140fd5cc41e7fa75ff",
+      "peer_sha256": "b0a35cdb1d80cb96d5e06885b005054d39d2f7e93c261603154588ed60e78ccb"
+    },
+    "client": {
+      "nonce": "b543e5d7138da01b339523c27cbdac88",
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "f7e8479ef7cb2c617d571eb32e1df2499a5c6f9b96c2e529e7cc8786008637a1",
+      "proof_sha256": "4f8d1532c1aee7b8da211675b085f42499f23af9b18af2c5d3544373952acf48",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "peer_sha256": "e5c95962ea718793a3baff63189368ed06fb67a1fb06280524cf30d52777467a"
+    }
+  }
+}

@@ -1,0 +1,186 @@
+/** @nucode_example_setup_begin
+ * @brief 이 블록은 `libraries/example-metadata.json`에서 생성한 Arduino IDE 설정 안내입니다.
+ * @par 목적
+ * 같은 serial block의 충돌 거부와 해제 후 재획득을 확인합니다.
+ * @par Board
+ * NU54DK (nRF54L15, Zephyr)
+ * @par Feature set
+ * 기본 권장: Peripheral Fabric (DAP UART disconnected) (`fabric`)
+ * 호환 대안: 없음
+ * @par 보드와 역할
+ * 1대 — 1) Serial block 충돌·재획득 실행 보드
+ * @par Serial Monitor
+ * 사용하지 않음
+ * @par 필수 sidecar
+ * 없음
+ * @par Upload probe
+ * probe 1대는 CMSIS-DAP 자동 선택, 여러 대는 Arduino CLI 실행 전에 `NUCODE_PROBE_UID`로 명시 선택합니다.
+ * @par 추가 조건
+ * P2.00/01/02/04의 외부 driver를 분리하고 UARTE20과 SPIM20의 소유권 전환만 확인합니다.
+ * @par 준비물
+ * - NU54DK 보드 1대 — 1) Serial block 충돌·재획득 실행 보드
+ * - P2.00/01/02/04의 외부 driver를 분리하고 UARTE20과 SPIM20의 소유권 전환만 확인합니다.
+ * @par 설정
+ * - Tools → Feature set에서 `fabric` profile을 선택합니다.
+ * - 이 예제는 Serial Monitor 출력을 필수 결과로 사용하지 않습니다.
+ * @par 실행 순서
+ * - 권장 profile로 현재 Sketch와 metadata에 적힌 각 peer 역할 Sketch를 빌드합니다.
+ * - probe가 여러 대이면 `NUCODE_PROBE_UID`를 지정하고 Arduino Upload로 역할별 보드를 구분합니다.
+ * - peer·외장 조건을 먼저 준비한 뒤 reset 또는 예제에 명시된 입력으로 실행합니다.
+ * @par 성공 출력
+ * - 목적에 적힌 LED·pin·peer 동작을 직접 확인합니다. Compile PASS만으로 runtime PASS로 처리하지 않습니다.
+ * @par 흔한 오류
+ * - 권장 profile과 sidecar가 다르면 기능·Kconfig가 빠질 수 있으므로 먼저 설정을 다시 확인합니다.
+ * - 여러 probe가 연결된 상태에서 UID를 생략하면 다른 보드에 upload될 수 있습니다.
+ * @par 다음 예제
+ * - `NUCODE_Peripheral_Fabric/SpiAsyncLoopback`
+ * - `NUCODE_Peripheral_Fabric/TwisTargetDoubleBuffer`
+ * @par 종료와 재시작
+ * - 예제의 stop/end/disconnect 또는 유한 완료 흐름 뒤 오류와 자원 반환을 확인합니다.
+ * - 실패 문구와 driver 상태를 확인한 뒤 명시적 reset 또는 예제의 재시작 흐름을 사용합니다.
+ * @par 보안
+ * - no_security_property_claimed
+ * - 이 예제는 별도의 보안 속성을 주장하지 않습니다.
+ * @par 제한
+ * - Compile·Host 검사는 실제 보드 runtime 또는 외부 제품 상호운용 PASS를 대신하지 않습니다.
+ * - 목적과 metadata 조건 밖의 성능·동시성·정밀도는 이 예제의 보증 범위가 아닙니다.
+ * @par Negative
+ * - wrong_profile_or_missing_sidecar
+ * - missing_or_wrong_role_peer
+ * - startup_or_runtime_error_reported
+ * @par Traceability
+ * Recipe `peripheral_fabric`; 내부 증거 ID는 metadata에서 관리합니다.
+ * 직접 upstream 복사 아님; NCS `99553055607b2e9885fbc80ccd11fa9da81c2df0`, Zephyr `bf801e4e3d19e1ffa76164346480cb7734dd2800`
+ * build `clean_installed_compile_required`, runtime `procedure_documented_not_physical_pass`
+ * @par Metadata
+ * identity `NUCODE_Peripheral_Fabric/ResourceConflictDemo`, sha256 `9ee8b898edd0aa035159dfcb24aa4be04ae7fcce19aa00438ecfa2ba2e83531f`
+ * @nucode_example_setup_end */
+
+/**
+ * @file ResourceConflictDemo.ino
+ * @brief 같은 serial block의 충돌 거부와 해제 후 재획득을 확인합니다.
+ * @details 외부 peer는 필요 없지만 출력 핀에 다른 driver가 없어야 합니다.
+ *          반복 personality stress 시험이 아닌 버튼당 한 번의 명시적 handover입니다.
+ * SPDX-License-Identifier: MIT
+ */
+#include <NUCODE_Peripheral_Fabric.h>
+
+namespace
+{
+    using namespace nucode::arduino;
+    const SerialSignalPin uart_pins[] = {{SerialSignal::txd, PIN_P2_02},
+                                         {SerialSignal::rxd, PIN_P2_00}};
+    const SerialSignalPin spi_pins[] = {{SerialSignal::sck, PIN_P2_01},
+                                        {SerialSignal::mosi, PIN_P2_02},
+                                        {SerialSignal::miso, PIN_P2_04}};
+    UarteHandle *uart = nullptr;
+    SpimHandle *spi = nullptr;
+    bool failed = false;
+    bool previous_button = false;
+    volatile bool completed = false;
+    volatile bool owner_preserved = false;
+    volatile SerialFabricResult conflict_result = SerialFabricResult::success;
+    volatile SerialFabricResult last_result = SerialFabricResult::success;
+    volatile SerialFabricResult stop_result = SerialFabricResult::success;
+
+    /** @brief 예기치 않은 실패에서도 활성화된 각 handle을 유한하게 해제합니다. */
+    void finish(bool success)
+    {
+        if (spi != nullptr && spi->state() == SerialFabricState::active)
+        {
+            stop_result = spi->deactivate(100000U);
+        }
+        if (uart != nullptr && uart->state() == SerialFabricState::active)
+        {
+            const auto result = uart->deactivate(100000U);
+            if (result != SerialFabricResult::success)
+            {
+                stop_result = result;
+            }
+        }
+        failed = !success || stop_result != SerialFabricResult::success;
+        completed = !failed;
+        digitalWrite(LED_BUILTIN, completed ? HIGH : LOW);
+    }
+
+    /** @brief 충돌 시 기존 owner를 보존하며 release 성공 뒤에만 다음 owner를 활성화합니다. */
+    void demonstrateConflict()
+    {
+        completed = false;
+        owner_preserved = false;
+        digitalWrite(LED_BUILTIN, LOW);
+        const SerialFabricConfiguration uart_route{SerialRouteClass::p2_dedicated20,
+                                                   SerialElectricalProfile::connector_fixture,
+                                                   uart_pins,
+                                                   2U,
+                                                   nullptr,
+                                                   0U};
+        const SerialFabricConfiguration spi_route{SerialRouteClass::p2_dedicated20,
+                                                  SerialElectricalProfile::connector_fixture,
+                                                  spi_pins,
+                                                  3U,
+                                                  nullptr,
+                                                  0U};
+        last_result = uart->configure({});
+        if (last_result == SerialFabricResult::success)
+        {
+            last_result = spi->configure({});
+        }
+        if (last_result == SerialFabricResult::success)
+        {
+            last_result = uart->stage(uart_route);
+        }
+        if (last_result == SerialFabricResult::success)
+        {
+            last_result = spi->stage(spi_route);
+        }
+        if (last_result == SerialFabricResult::success)
+        {
+            last_result = uart->activate();
+        }
+        if (last_result != SerialFabricResult::success)
+        {
+            finish(false);
+            return;
+        }
+        conflict_result = spi->activate();
+        owner_preserved = uart->state() == SerialFabricState::active;
+        if (conflict_result != SerialFabricResult::ownership_conflict || !owner_preserved)
+        {
+            finish(false);
+            return;
+        }
+        stop_result = uart->deactivate(100000U);
+        if (stop_result != SerialFabricResult::success)
+        {
+            finish(false);
+            return;
+        }
+        last_result = spi->activate();
+        finish(last_result == SerialFabricResult::success);
+    }
+} // namespace
+
+/** @brief 두 personality handle은 조회만으로 hardware를 켜지 않습니다. */
+void setup()
+{
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+    pinMode(PIN_BUTTON0, INPUT_PULLUP);
+    uart = serialFabric().uarte(20U);
+    spi = serialFabric().spim(20U);
+    failed = uart == nullptr || spi == nullptr;
+    previous_button = digitalRead(PIN_BUTTON0) == LOW;
+}
+
+/** @brief 성공 후에만 버튼 release/press로 동일한 사용자 경로를 다시 실행합니다. */
+void loop()
+{
+    const bool pressed = digitalRead(PIN_BUTTON0) == LOW;
+    if (pressed && !previous_button && !failed)
+    {
+        demonstrateConflict();
+    }
+    previous_button = pressed;
+    delay(1U);
+}

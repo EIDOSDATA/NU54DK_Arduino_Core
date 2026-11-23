@@ -468,7 +468,12 @@ namespace
         }
     }
 
-    /** @brief PAwR event마다 30 ms delay 뒤 현재 subevent의 한 slot response를 예약합니다. */
+    /**
+     * @brief PAwR event마다 다음 subevent의 한 slot response를 예약합니다.
+     *
+     * @details 수신 callback은 BLEDevice.poll() 문맥에서 실행되므로 이미 진행 중인
+     * 현재 subevent 대신 다음 subevent를 사용해 controller 전송 준비 시간을 확보합니다.
+     */
     void onPeriodicReport(const nucode::ble::BLEPeriodicReport &report, void *)
     {
         if (phase != Phase::pawr_active || protocol_failed)
@@ -495,7 +500,8 @@ namespace
         {
             return;
         }
-        const std::uint8_t response_subevent = report.subevent;
+        const std::uint8_t response_subevent =
+            static_cast<std::uint8_t>((report.subevent + 1U) % 4U);
         std::uint8_t response[23] = {};
         buildPawrResponse(response, response_subevent, selected,
                           report.periodic_event_counter);
@@ -509,7 +515,7 @@ namespace
         last_pawr_event = report.periodic_event_counter;
         last_pawr_event_valid = true;
         ++pawr_response_count;
-        pawr_subevent_mask |= static_cast<std::uint8_t>(1U << selected);
+        pawr_subevent_mask |= static_cast<std::uint8_t>(1U << response_subevent);
         pawr_slot_mask |= static_cast<std::uint8_t>(1U << selected);
         if (pawr_response_count == required_pawr_responses)
         {

@@ -152,6 +152,10 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             "22cb1bd03fc29016670c1fc8408a78bd213286ecc1156c70712485d77b097c75",
         )
         self.assertTrue(pins["nrfutil"]["url"].startswith("https://files.nordicsemi.com/"))
+        self.assertRegex(
+            pins["nrfutil"]["url"],
+            r"/nrfutil-x86_64-pc-windows-msvc-\d+\.\d+\.\d+-[0-9a-f]{7}\.exe$",
+        )
         self.assertEqual(pins["sdk_manager"]["version"], "1.16.1")
         self.assertEqual(pins["ncs"]["revision"], MODULE.NCS_REVISION)
         self.assertEqual(pins["zephyr"]["revision"], MODULE.ZEPHYR_REVISION)
@@ -382,6 +386,13 @@ class M10PrerequisiteContractTests(unittest.TestCase):
             mock.patch.object(MODULE.implementation.environment, "compiler_version", return_value="fixture-gcc"),
             mock.patch.object(MODULE.implementation.cache, "exact_git_revision", side_effect=revision),
             mock.patch.object(MODULE.implementation.cache, "compiler_version", return_value="fixture-gcc"),
+            mock.patch.object(
+                MODULE.implementation.cache,
+                "patchset_sha256",
+                return_value=(
+                    "0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf"
+                ),
+            ),
         ):
             MODULE.validate_packaged_prerequisites(
                 self.platform, self.ncs_root, self.toolchain

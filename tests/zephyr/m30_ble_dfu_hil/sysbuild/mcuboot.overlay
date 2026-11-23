@@ -10,3 +10,8 @@
 		zephyr,code-partition = &boot_partition;
 	};
 };
+
+/** @brief 앱 전환 중에도 DAPLink VCOM 속도를 DFU relay와 일치시킵니다. */
+&uart20 {
+	current-speed = <460800>;
+};

@@ -3,7 +3,10 @@
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import sys
+import time
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -118,6 +121,104 @@ class M30BleProfileHilTests(unittest.TestCase):
             with self.assertRaises(PROFILE.M30ProfileFailure):
                 PROFILE.parse_result(line.replace(b"errors=0", b"errors=1"),
                                      role, nonce, revision)
+
+    def test_begin_wait_accepts_only_exact_repeated_boot(self) -> None:
+        """! @brief START 전 같은 role·Core의 중복 BOOT만 소진합니다. """
+
+        revision = "a" * 40
+        boot = (
+            "M30PROFILE|1|BOOT|role=central|catalog=7|core=" + revision
+        ).encode("ascii")
+        begin = (
+            b"M30PROFILE|1|BEGIN|role=central"
+            + PROFILE.suffix("01" * 16, revision)
+        )
+        serial_port = SimpleNamespace(in_waiting=0, read=lambda _size: b"")
+        capture = bytearray()
+        PROFILE.wait_exact(
+            serial_port,
+            bytearray(boot + b"\n" + begin + b"\n"),
+            capture,
+            begin,
+            time.monotonic() + 1.0,
+            allowed_repeated_records=(boot,),
+        )
+        self.assertEqual(capture, boot + b"\n" + begin + b"\n")
+
+        wrong_role = boot.replace(b"role=central", b"role=peripheral")
+        with self.assertRaisesRegex(
+            PROFILE.M30ProfileFailure, "예상 밖 protocol record"
+        ):
+            PROFILE.wait_exact(
+                serial_port,
+                bytearray(wrong_role + b"\n"),
+                bytearray(),
+                begin,
+                time.monotonic() + 1.0,
+                allowed_repeated_records=(boot,),
+            )
+
+    def test_profile_flash_is_sequential_and_exact(self) -> None:
+        """! @brief 두 role flash 순서와 exact image hash 전달을 고정합니다. """
+
+        endpoints = {
+            "peripheral": SimpleNamespace(board_id="peripheral-board"),
+            "central": SimpleNamespace(board_id="central-board"),
+        }
+        images = {
+            "peripheral": SimpleNamespace(
+                path=Path("peripheral.hex"), sha256="1" * 64
+            ),
+            "central": SimpleNamespace(path=Path("central.hex"), sha256="2" * 64),
+        }
+        calls = []
+
+        def record_flash(*args, **kwargs):
+            calls.append((args, kwargs))
+            return "pyocd-sector-sw-reset", "1"
+
+        with mock.patch.object(
+            PROFILE, "flash_image_pyocd_sha256", side_effect=record_flash
+        ):
+            results = PROFILE.flash_roles_sequential(
+                endpoints, images, 37.0, "cleanup"
+            )
+
+        self.assertEqual(list(results), ["peripheral", "central"])
+        self.assertEqual(
+            [call[0][0] for call in calls],
+            ["peripheral-cleanup", "central-cleanup"],
+        )
+        self.assertEqual(
+            [call[0][2] for call in calls],
+            [Path("peripheral.hex"), Path("central.hex")],
+        )
+        self.assertEqual([call[0][3] for call in calls], [37.0, 37.0])
+        self.assertEqual(
+            [call[1]["expected_sha256"] for call in calls],
+            ["1" * 64, "2" * 64],
+        )
+
+    def test_profile_flash_stops_on_first_failure(self) -> None:
+        """! @brief 첫 role flash 오류를 보존하고 다음 role 실행을 금지합니다. """
+
+        endpoints = {
+            "peripheral": SimpleNamespace(board_id="peripheral-board"),
+            "central": SimpleNamespace(board_id="central-board"),
+        }
+        images = {
+            role: SimpleNamespace(path=Path(f"{role}.hex"), sha256="a" * 64)
+            for role in PROFILE.ROLES
+        }
+        failure = RuntimeError("first flash failed")
+        with mock.patch.object(
+            PROFILE, "flash_image_pyocd_sha256", side_effect=failure
+        ) as flash:
+            with self.assertRaisesRegex(RuntimeError, "first flash failed") as raised:
+                PROFILE.flash_roles_sequential(endpoints, images, 37.0)
+
+        self.assertIs(raised.exception, failure)
+        flash.assert_called_once()
 
 
 if __name__ == "__main__":

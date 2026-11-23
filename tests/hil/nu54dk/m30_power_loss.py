@@ -27,7 +27,6 @@ if str(HIL_DIRECTORY) not in sys.path:
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
     BlePairHilFailure,
-    DEFAULT_BAUD_RATE,
     REPOSITORY,
     RoleEndpoint,
     discover_endpoint,
@@ -44,6 +43,7 @@ from m30_ble_dfu import (  # noqa: E402
     APPLICATION_ROOT,
     BASE_VERSION,
     CentralBuild,
+    DFU_BAUD_RATE,
     DfuSession,
     ImageArtifact,
     MAX_SMP_PACKET,
@@ -192,7 +192,7 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
     parser.add_argument("--central-port", default="auto")
-    parser.add_argument("--baud", type=int, default=DEFAULT_BAUD_RATE)
+    parser.add_argument("--baud", type=int, default=DFU_BAUD_RATE)
     parser.add_argument("--flash-timeout", type=float, default=120.0)
     parser.add_argument("--phase-timeout", type=float, default=1800.0)
     parser.add_argument("--power-cycle-timeout", type=float, default=120.0)
@@ -1090,8 +1090,15 @@ def arm_point(
         f"{point} test request",
     )
     if point == "mcuboot_test_swap":
+        sequence = session.sequence
         send_raw_transaction(session, 2, 0, 5, {})
-        wait_window(session, point, min(deadline, time.monotonic() + 45.0))
+        window_deadline = min(deadline, time.monotonic() + 45.0)
+        response = session.wait_rx(window_deadline)
+        session.require_success(
+            session.decode_response(response, 2, 0, 5, sequence),
+            "power swap reset",
+        )
+        wait_window(session, point, window_deadline)
         print(
             "M30_POWER_ARMED=mcuboot_test_swap;ACTION=DISCONNECT_DUT_TARGET_USB",
             flush=True,

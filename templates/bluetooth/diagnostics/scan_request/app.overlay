@@ -1,0 +1,8 @@
+/** @brief text 결과는 DAPLink VCOM으로 출력하고 외부 LFXO를 사용한다. */
+&uart20 { current-speed = <115200>; };
+&wdt31 { status = "okay"; };
+&lfxo
+{
+    load-capacitors = "external";
+    /delete-property/ load-capacitance-femtofarad;
+};

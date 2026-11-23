@@ -4,16 +4,19 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 from pathlib import Path
 import re
 import shutil
 import subprocess
+import struct
 from types import SimpleNamespace
 from unittest import mock
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -572,6 +575,116 @@ class M30PowerLossTests(unittest.TestCase):
         self.assertIn("CONFIG_MCUBOOT_ACTION_HOOKS=y", power_conf)
         boot_conf = (TARGET / "sysbuild/mcuboot.conf").read_text(encoding="utf-8")
         self.assertIn("CONFIG_FLASH=y", boot_conf)
+        self.check_swap_reset_response_before_window()
+
+    def check_swap_reset_response_before_window(self) -> None:
+        """! @brief credit 응답을 끝낸 뒤에만 전원 창을 인정하며 단회 reset 계약을 검사합니다. """
+
+        dfu = sys.modules["m30_ble_dfu"]
+        sequence = 255
+        suffix = b"|nonce=" + b"a" * 32 + b"|core=" + b"b" * 40
+
+        def frame(payload: dict, **changes: int) -> bytes:
+            """! @brief 실제 SMP header와 CBOR payload의 중앙 응답을 구성합니다. """
+
+            body = dfu.cbor_encode(payload)
+            fields = dict(first=11, flags=0, length=len(body), group=0, sequence=sequence, command=5)
+            fields.update(changes)
+            packet = struct.pack(">BBHHBB", *fields.values()) + body
+            return b"M30DFU|1|RX|role=central|data=" + packet.hex().encode("ascii") + suffix + b"\r\n"
+
+        class CreditPort:
+            """! @brief 실제 UART read 경로에 64byte 수신 credit 경계를 제공합니다. """
+
+            def __init__(self, data: bytes, credit: bool = True) -> None:
+                self.data = data
+                self.offset = 0
+                self.limit = 64 if credit else len(data)
+                self.writes: list[bytes] = []
+
+            def read(self, size: int) -> bytes:
+                """! @brief 허용된 창 안에서만 원본 byte를 반환합니다. """
+
+                end = min(self.offset + size, self.limit, len(self.data))
+                chunk = self.data[self.offset:end]
+                self.offset = end
+                return chunk
+
+            def write(self, data: bytes) -> int:
+                """! @brief 단회 TX와 credit을 기록하고 ACK 뒤 다음 창을 엽니다. """
+
+                self.writes.append(data)
+                if data == b"\x06":
+                    self.limit += 64
+                return len(data)
+
+            def flush(self) -> None:
+                """! @brief 가상 포트에는 송신 대기가 없습니다. """
+
+                pass
+
+        cases = [("empty_map", frame({}), False), ("rc0", frame({"rc": 0}), False)]
+        for field, value in (("first", 10), ("first", 43), ("flags", 1), ("length", 99),
+                             ("group", 1), ("sequence", 0), ("command", 4)):
+            cases.append((f"bad_{field}_{value}", frame({}, **{field: value}), True))
+        cases.extend([
+            ("error_rc", frame({"rc": 1}), True),
+            ("error_group", frame({"err": {"group": 0, "rc": 1}}), True),
+            ("bad_identity", frame({}).replace(b"|nonce=a", b"|nonce=c", 1), True),
+            ("reject", b"M30DFU|1|TX_REJECT|role=central|reason=tx-length" + suffix + b"\r\n", True),
+            ("timeout", b"", True),
+        ])
+        for label, response, fails in cases:
+            with self.subTest(reset_response=label):
+                endpoint = SimpleNamespace(port_name="fake")
+                session = RUNNER.DfuSession(None, endpoint, endpoint, 460800, "a" * 32, "b" * 40)
+                session.sequence = sequence
+                central = CreditPort(response, label != "reject")
+                peripheral = CreditPort(
+                    b"M30POWER|1|WINDOW|point=image_validation_write\r\n"
+                    b"M30POWER|1|WINDOW|point=mcuboot_test_swap\r\n", False
+                )
+                session.ports = {"central": central, "peripheral": peripheral}
+                session.upload = mock.Mock()
+                session.request_test = mock.Mock(return_value=dfu.SmpResult({}, None, 0))
+                candidate = SimpleNamespace(image_hash=b"h" * 32)
+                window_deadlines: list[float] = []
+                original_window = RUNNER.wait_window
+
+                def observed_window(value, point, deadline):
+                    """! @brief swap 창에 진입할 때 미소비 RX가 없음을 확인합니다. """
+
+                    if point == "mcuboot_test_swap":
+                        self.assertEqual(central.offset, len(response))
+                        self.assertTrue(any(data == b"\x06" for data in central.writes))
+                        window_deadlines.append(deadline)
+                    return original_window(value, point, deadline)
+
+                deadline = RUNNER.time.monotonic() + (0.02 if label == "timeout" else 2.0)
+                captured = io.StringIO()
+                with mock.patch.object(RUNNER, "wait_window", side_effect=observed_window), \
+                        mock.patch.object(session, "wait_rx", wraps=session.wait_rx) as receive, \
+                        redirect_stdout(captured):
+                    if fails:
+                        with self.assertRaises((RUNNER.M30DfuFailure, TimeoutError)):
+                            RUNNER.arm_point(session, "mcuboot_test_swap", candidate, candidate, deadline)
+                        self.assertNotIn("M30_POWER_ARMED", captured.getvalue())
+                        self.assertEqual(window_deadlines, [])
+                    else:
+                        RUNNER.arm_point(session, "mcuboot_test_swap", candidate, candidate, deadline)
+                        self.assertEqual(window_deadlines, [receive.call_args.args[0]])
+                        self.assertLessEqual(window_deadlines[0], deadline)
+                    receive.assert_called_once()
+                self.assertEqual(len([data for data in central.writes if data.startswith(b"M30DFU|1|TX|")]), 1)
+                self.assertEqual(session.sequence, 0)
+                self.assertEqual(session.tx_retries, 0)
+
+        session = mock.Mock(sequence=0)
+        with mock.patch.object(RUNNER, "upload_until", return_value=(10, {"off": 10})), \
+                mock.patch.object(RUNNER, "wait_window"), redirect_stdout(io.StringIO()):
+            RUNNER.arm_point(session, "image_validation_write", candidate, candidate, deadline)
+        session.send_line.assert_called_once()
+        session.wait_rx.assert_not_called()
 
     def test_power_build_scenarios_are_separate_from_normal_dfu(self) -> None:
         """! @brief confirmed·unconfirmed 전원 image만 power hook define을 받습니다. """

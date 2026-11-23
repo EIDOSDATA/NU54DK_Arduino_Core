@@ -299,6 +299,19 @@ bool nucode_mesh_onoff_server_get(void)
     return on_off_state;
 }
 
+/** @brief Generic OnOff Server에 유효한 AppKey가 하나 이상 bind됐는지 반환합니다. */
+bool nucode_mesh_onoff_server_bound(void)
+{
+    for (size_t index = 0U; index < CONFIG_BT_MESH_MODEL_KEY_COUNT; ++index)
+    {
+        if (root_models[11].keys[index] != BT_MESH_KEY_UNUSED)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 /** @brief C++ backend에 Health Client instance를 반환합니다. */
 struct bt_mesh_health_cli *nucode_mesh_health_client(void)
 {

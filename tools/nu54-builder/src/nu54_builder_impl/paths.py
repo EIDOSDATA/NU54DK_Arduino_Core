@@ -8,22 +8,44 @@ import argparse
 import hashlib
 import os
 import re
+import tempfile
 from .common import AdapterError, CACHE_SCHEMA_VERSION, CONTEXT_DIRECTORY, canonical_path, path_key
-from .host import user_cache_root
+from .host import absolute_host_path, user_cache_root
 
 
 ## @brief cache root가 단일 host의 local filesystem인지 검증합니다.
 def local_cache_root(value: str | Path) -> Path:
-    root = canonical_path(value)
+    root = absolute_host_path(value)
     if os.name == "nt" and str(root).startswith(("\\\\", "//")):
         raise AdapterError("M9 build cache는 UNC/network 경로를 지원하지 않습니다.")
+    if root == Path(root.anchor):
+        raise AdapterError('[NU54:E_CACHE_ROOT] 파일시스템 root를 build cache로 사용할 수 없습니다.')
+    return root
+
+
+def ensure_writable_cache_root(value: str | Path) -> Path:
+    """! @brief 실제 cache 쓰기 전에 사용자 소유권·권한과 임시 파일 생성을 검사합니다. """
+    root = local_cache_root(value)
+    try:
+        root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        info = root.stat()
+        if os.name != 'nt':
+            if info.st_uid != os.geteuid() or info.st_mode & 0o022:
+                raise AdapterError('[NU54:E_CACHE_PERMISSION] cache는 현재 사용자 소유이며 다른 사용자가 쓸 수 없어야 합니다.')
+            if not os.access(root, os.W_OK | os.X_OK):
+                raise AdapterError('[NU54:E_CACHE_PERMISSION] cache directory에 쓰기·탐색 권한이 없습니다.')
+        with tempfile.TemporaryFile(dir=root, prefix='.nu54-cache-write-') as stream:
+            stream.write(b'NU54')
+            stream.flush()
+    except OSError as error:
+        raise AdapterError(f'[NU54:E_CACHE_PERMISSION] cache 쓰기 권한을 확인하지 못했습니다: {root}: {error}') from error
     return root
 
 
 ## @brief M9 영구 build cache root를 환경 또는 짧은 사용자 local data 경로에서 계산합니다.
 def build_cache_root() -> Path:
     configured = os.environ.get("NUCODE_BUILD_CACHE_ROOT")
-    if configured:
+    if configured is not None:
         return local_cache_root(configured)
     base = user_cache_root()
     ## @note nRF Security의 긴 object 이름이 Windows MAX_PATH를 넘지 않도록 build 전용

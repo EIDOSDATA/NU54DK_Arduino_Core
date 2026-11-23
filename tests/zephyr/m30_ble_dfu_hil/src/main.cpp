@@ -42,7 +42,8 @@ namespace
     constexpr std::int64_t security_delay_ms = 300;
     constexpr std::int64_t scan_retry_ms = 100;
     constexpr std::int64_t scan_retry_timeout_ms = 30000;
-    constexpr std::int64_t protocol_timeout_ms = 2400000;
+    constexpr unsigned long serial_baud_rate = 460800UL;
+    constexpr std::int64_t protocol_idle_timeout_ms = 180000;
 
     char nonce[nonce_characters + 1U] = {};
     std::uint8_t nonce_binary[nonce_bytes] = {};
@@ -56,6 +57,12 @@ namespace
     std::int64_t security_due_ms = 0;
     std::int64_t deadline_ms = 0;
 
+    /** @brief 유효 명령 사이의 유한 idle watchdog을 갱신합니다. */
+    void refreshProtocolDeadline()
+    {
+        deadline_ms = k_uptime_get() + protocol_idle_timeout_ms;
+    }
+
     /** @brief compile-time image 역할을 반환합니다. */
     const char *roleName()
     {
@@ -67,12 +74,12 @@ namespace
     }
 
     /** @brief nonce와 exact Core revision을 protocol 뒤에 붙입니다. */
-    void printSuffix()
+    void printSuffix(arduino::Print &output = Serial)
     {
-        Serial.print("|nonce=");
-        Serial.print(nonce);
-        Serial.print("|core=");
-        Serial.print(M30_DFU_CORE_REVISION);
+        output.print("|nonce=");
+        output.print(nonce);
+        output.print("|core=");
+        output.print(M30_DFU_CORE_REVISION);
     }
 
     /** @brief 첫 protocol 실패만 민감 정보 없이 보고합니다. */
@@ -512,6 +519,16 @@ namespace
         return -1;
     }
 
+    /** @brief BLE write 전에 손상된 VCOM TX를 Host의 bounded 재전송 대상으로 보고합니다. */
+    void rejectSmp(const char *reason)
+    {
+        Serial.print(protocol);
+        Serial.print("|TX_REJECT|role=central|reason=");
+        Serial.print(reason);
+        printSuffix();
+        Serial.println();
+    }
+
     /** @brief hex SMP request를 실제 authenticated GATT write로 전송합니다. */
     void sendSmp(const char *hex)
     {
@@ -526,7 +543,7 @@ namespace
         if (characters < 16U || characters > sizeof(packet) * 2U ||
             (characters % 2U) != 0U)
         {
-            fail("tx-length");
+            rejectSmp("tx-length");
             return;
         }
         const std::size_t packet_length = characters / 2U;
@@ -536,14 +553,14 @@ namespace
             const int low = hexNibble(hex[index * 2U + 1U]);
             if (high < 0 || low < 0)
             {
-                fail("tx-hex");
+                rejectSmp("tx-hex");
                 return;
             }
             packet[index] = static_cast<std::uint8_t>((high << 4U) | low);
         }
         if (8U + sys_get_be16(&packet[2]) != packet_length)
         {
-            fail("tx-header-length");
+            rejectSmp("tx-header-length");
             return;
         }
         struct bt_conn *connection =
@@ -569,7 +586,63 @@ namespace
         }
     }
 
-    /** @brief 완성된 SMP response를 ASCII hex로 Host에 전달합니다. */
+    /** @brief 다음 RX 조각은 Host가 앞선 64byte를 수신한 뒤에만 송신합니다. */
+    class RxSerialWriter final : public arduino::Print
+    {
+      public:
+        using arduino::Print::write;
+
+        /** @brief 원형 idle deadline 안에서 credit을 받고 byte를 한 번만 송신합니다. */
+        std::size_t write(std::uint8_t value) override
+        {
+            if (failure_reason_ != nullptr)
+            {
+                return 0U;
+            }
+            if (written_ != 0U && written_ % credit_window == 0U)
+            {
+                while (true)
+                {
+                    if (k_uptime_get() > deadline_ms)
+                    {
+                        failure_reason_ = "protocol-timeout";
+                        return 0U;
+                    }
+                    if (Serial.available() > 0)
+                    {
+                        if (Serial.read() != credit_byte)
+                        {
+                            failure_reason_ = "uart-rx-credit";
+                            return 0U;
+                        }
+                        break;
+                    }
+                    k_msleep(1);
+                }
+            }
+            if (Serial.write(value) != 1U)
+            {
+                failure_reason_ = "uart-rx-write";
+                return 0U;
+            }
+            ++written_;
+            return 1U;
+        }
+
+        /** @brief credit·송신 실패를 원형 FAIL 출력에 전달합니다. */
+        const char *failureReason() const
+        {
+            return failure_reason_;
+        }
+
+      private:
+        static constexpr std::size_t credit_window = 64U;
+        static constexpr int credit_byte = 0x06;
+        std::size_t written_ = 0U;
+        const char *failure_reason_ = nullptr;
+    };
+
+    /** @brief 원형 RX 행 전체를 수신 credit에 따라 재전송 없이 Host에 전달합니다. */
     void reportResponse()
     {
         if (atomic_get(&response_error) != 0)
@@ -577,22 +650,34 @@ namespace
             fail("rx-frame");
             return;
         }
-        if (atomic_cas(&response_ready, 1, 0) == 0)
+        if (atomic_get(&response_ready) == 0)
         {
             return;
         }
         constexpr char digits[] = "0123456789abcdef";
-        Serial.print(protocol);
-        Serial.print("|RX|role=central|data=");
+        RxSerialWriter output;
+        output.print(protocol);
+        output.print("|RX|role=central|data=");
         for (std::size_t index = 0U; index < response_length; ++index)
         {
-            Serial.print(digits[response[index] >> 4U]);
-            Serial.print(digits[response[index] & 0x0fU]);
+            output.print(digits[response[index] >> 4U]);
+            output.print(digits[response[index] & 0x0fU]);
         }
-        printSuffix();
-        Serial.println();
+        printSuffix(output);
+        output.println();
+        if (output.failureReason() != nullptr)
+        {
+            fail(output.failureReason());
+            return;
+        }
+        if (atomic_get(&response_error) != 0)
+        {
+            fail("rx-frame");
+            return;
+        }
         response_length = 0U;
         response_expected = 0U;
+        atomic_set(&response_ready, 0);
     }
 
     /** @brief security·discovery·CCC 상태 기계를 진행합니다. */
@@ -792,6 +877,17 @@ namespace
         }
     }
 
+    /** @brief 초기화가 끝난 새 application의 UART 명령 수신 준비를 알립니다. */
+    void reportBootReady()
+    {
+        Serial.print(protocol);
+        Serial.print("|BOOT_READY|role=");
+        Serial.print(roleName());
+        Serial.print("|core=");
+        Serial.print(M30_DFU_CORE_REVISION);
+        Serial.println();
+    }
+
     /** @brief Host UART 명령을 현재 role 상태에 적용합니다. */
     void executeCommand(char *line)
     {
@@ -859,7 +955,7 @@ namespace
                 return;
             }
             started = true;
-            deadline_ms = k_uptime_get() + protocol_timeout_ms;
+            refreshProtocolDeadline();
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
             if (!startAdvertising())
             {
@@ -914,6 +1010,10 @@ namespace
                 command[command_length] = '\0';
                 executeCommand(command);
                 command_length = 0U;
+                if (started && !failed)
+                {
+                    refreshProtocolDeadline();
+                }
                 return;
             }
             if (command_length + 1U >= sizeof(command))
@@ -931,7 +1031,7 @@ namespace
 /** @brief DFU image·보안·BLE role을 초기화합니다. */
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(serial_baud_rate);
 #if defined(NUCODE_M30_DFU_PERIPHERAL)
 #if defined(NUCODE_M30_DFU_POWER_HIL)
     image_management_callback.callback = onImageManagementEvent;
@@ -977,6 +1077,7 @@ void setup()
 #if !defined(NUCODE_M30_DFU_PERIPHERAL)
     BLEScan.onResult(onScanResult);
 #endif
+    reportBootReady();
 }
 
 /** @brief UART·BLE·security·SMP relay 상태 기계를 진행합니다. */

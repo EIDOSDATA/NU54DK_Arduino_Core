@@ -154,10 +154,14 @@
         const std::uint32_t expected_connections = 1U;
         const std::uint32_t expected_packets = 1000U;
 #endif
-        if (statistics.connected != expected_connections || statistics.sent != expected_packets ||
-            statistics.received != expected_packets || statistics.disconnected != 0U ||
-            statistics.backpressure != 0U || statistics.rejected != 0U ||
-            statistics.dropped_events != 0U || cross_link_events != 0U ||
+        if (statistics.connected - session_statistics_base.connected != expected_connections ||
+            statistics.sent - session_statistics_base.sent != expected_packets ||
+            statistics.received - session_statistics_base.received != expected_packets ||
+            statistics.disconnected != session_statistics_base.disconnected ||
+            statistics.backpressure != session_statistics_base.backpressure ||
+            statistics.rejected != session_statistics_base.rejected ||
+            statistics.dropped_events != session_statistics_base.dropped_events ||
+            cross_link_events != 0U ||
             payload_errors != 0U || !callback_context_valid)
         {
             fail("final_statistics");
@@ -214,6 +218,11 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (session_finished || !session_started || !scan_started || peer_found ||
             !result.connectable || result.scan_response || !validRfPeer(result))
         {
@@ -228,6 +237,11 @@
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -276,6 +290,11 @@
         static_cast<void>(characteristic);
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            markCleanupActivity();
+            return;
+        }
         if (!session_started || session_finished ||
             information.event != nucode::ble::BLECharacteristicEvent::written)
         {

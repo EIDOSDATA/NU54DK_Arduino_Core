@@ -1,0 +1,6 @@
+NU54DK Arduino Core v0.6.0은 공개됐고 macOS 27 공개 설치를 확인했다.
+
+1. AGENTS.md, 00_Docs/HANDOFF.md와 해당 작업의 TODO를 읽는다. v0.6.0의 게시 및 설치 결과는 00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md에서 확인한다.
+2. 실제 checkout, HEAD, 원격 브랜치, 미커밋 변경, board submodule을 확인한다. v0.6.0 유지보수 브랜치는 Release-0.6.0이다. 제품 재현의 기준은 v0.6.0 태그다.
+3. 과거 C11 macOS 26 및 27 실기, C12의 일반 IDE Upload, 정식 v0.6.0 설치의 근거는 각각 336·337번, 338번, 340번 기록에 있다. macOS 26과 Ubuntu 24.04의 실적을 보존하고 후속 회귀는 필요한 범위에서 최신 OS로 진행한다.
+4. 새 실기를 배정받으면 최신 writer 해제 원장을 실제 checkout과 대조하고 쓰기 가능한 로컬 경로에서 단일 writer와 heavy job을 관리한다. 장치 inventory는 현재 장치로 새로 작성한다. w06은 PAUSED로 유지한다. C11 원본 복구에만 MAC_HANDOFF.md의 당시 전달 자료를 사용한다.

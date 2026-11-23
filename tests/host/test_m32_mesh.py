@@ -43,6 +43,8 @@ class M32MeshContractTests(unittest.TestCase):
             "bt_mesh_init", "settings_load", "nucode_ble_note_settings_loaded",
             "SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_sseq_compat",
             "SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_srpl_compat",
+            "SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_brg_en_compat",
+            "SETTINGS_STATIC_HANDLER_DEFINE(nucode_mesh_brg_tbl_compat",
             "bt_mesh_provision_adv",
             "bt_mesh_provision_gatt", "bt_mesh_prov_disable", "bt_mesh_reset",
             "bt_mesh_cdb_clear", "initializeProvisioner(mesh_context.configuration)",

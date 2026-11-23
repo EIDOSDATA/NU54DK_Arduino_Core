@@ -1,0 +1,146 @@
+{
+  "schema": "nucode-m33-profile-hil-v1",
+  "family": "native",
+  "status": "FAIL",
+  "reason": "server: deadline",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "development": true,
+  "diagnostic_only": false,
+  "failure_details": {
+    "role": "server",
+    "reason": "deadline",
+    "ble_driver": "0",
+    "profile_index": "0",
+    "phase": "0",
+    "count": "0",
+    "measurements": "0",
+    "rejected": "0",
+    "quiet_since": "0",
+    "last_gatt": "255",
+    "last_gatt_at": "0",
+    "last_gatt_status": "0",
+    "last_att_error": "0",
+    "level": "1",
+    "peer_valid": "0",
+    "connected": "0",
+    "gap_event": "8",
+    "link_role": "2",
+    "hci_reason": "8",
+    "same_peer": "0",
+    "event_handle_valid": "1",
+    "security_event": "14"
+  },
+  "late_failures": [],
+  "cleanup": {
+    "server": {
+      "role": "server",
+      "nonce": "52665fa4a2f14aab27747ef770aee2c1",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "client": {
+      "role": "client",
+      "nonce": "52665fa4a2f14aab27747ef770aee2c1",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "watcher": {
+      "role": "watcher",
+      "nonce": "52665fa4a2f14aab27747ef770aee2c1",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    }
+  },
+  "observed_utc": "2026-10-03T16:19:55.982386+00:00",
+  "transcript_sha256": "60b6e5814af68ff71561eb5e3fa7b82d2ab3cef21ea283bdb3387988bd065c08",
+  "results": {},
+  "server": {
+    "role": "server",
+    "nonce": "52665fa4a2f14aab27747ef770aee2c1",
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "max_links": "1",
+    "email_deliveries": "0",
+    "alert_denied": "0",
+    "bond_deletions": "0",
+    "bms_positive": "0",
+    "bms_skipped": "0",
+    "object_writes": "2",
+    "single_link": "1",
+    "cgms_session": "1",
+    "native_links": "2",
+    "native_disconnects": "2",
+    "authenticated_links": "2",
+    "passkey_events": "1"
+  },
+  "bms_evidence": {},
+  "not_run": [],
+  "excluded": [
+    "BMS reboot persistence",
+    "native second-peer rejection",
+    "Apple/Google interoperability"
+  ],
+  "boards": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "2444500e3aefdf2abe86d5fa9142d510b4e3c7285096b21e4aeb79ef4191a8cf",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "294912"
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "7815d3bf3b5d56cf5e9dc3ab9b8c4d8fd5eaf62f47abf7101d37bd673813419b",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "258048"
+    },
+    "watcher": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "7d3291adba143fa416383445e590c61aac66fffbd1cecf60aea99bbb0f62256d",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "286720"
+    }
+  }
+}

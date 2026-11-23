@@ -138,6 +138,30 @@ class M19BleGapContractTests(unittest.TestCase):
         ]
         self.assertNotIn("event_callback(", connection_callback)
 
+    def test_error_events_preserve_their_diagnostics(self) -> None:
+        """! @brief 지연 전달되는 error event가 enqueue 시점 진단을 보존하는지 검사합니다. """
+
+        header = HEADER.read_text(encoding="utf-8")
+        source = SOURCE.read_text(encoding="utf-8")
+        internal = (
+            LIBRARY / "src" / "internal" / "gap" / "GapInternal.h"
+        ).read_text(encoding="utf-8")
+        for token in ("BLEError error = BLEError::none;", "int driver_error = 0;"):
+            self.assertIn(token, header, token)
+        self.assertIn("BLEError error = BLEError::none,", internal)
+        self.assertIn("int driver_error = 0) noexcept;", internal)
+        self.assertIn(".error = error", source)
+        self.assertIn(".driver_error = driver_error", source)
+        self.assertIn(
+            "queueEvent(BLEEvent::error, {}, BLELinkRole::none, 0U, {}, {}, 0U, {}, {}, error,",
+            source,
+        )
+        poll = source[source.index("void Device::poll() noexcept") : source.index(
+            "void Device::end() noexcept"
+        )]
+        self.assertEqual(poll.count("record.information.event == BLEEvent::error"), 2)
+        self.assertEqual(poll.count("record.information.driver_error"), 2)
+
     def test_nus_callbacks_ignore_generic_gap_links_and_targets_link_bundle(self) -> None:
         """! @brief GAP/GATT link가 미사용 NUS 상태를 오염하지 않도록 bundle parity를 고정합니다. """
 

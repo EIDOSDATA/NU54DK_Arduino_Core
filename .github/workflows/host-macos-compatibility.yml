@@ -1,0 +1,139 @@
+name: HOST Owned Executor and macOS Compatibility
+
+on:
+  push:
+    branches: [Dev-0.6.0-M33]
+    paths:
+      - '.github/workflows/host-macos-compatibility.yml'
+      - 'tools/ci/host_macos_compatibility.py'
+      - 'tools/nu54-builder/src/nu54_builder_impl/owned_process.py'
+      - 'tests/host/test_host_owned_process.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-macos-compatibility-${{ github.sha }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  kit:
+    name: Exact private compatibility kit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Check fixed contracts and scoped classification
+        run: |
+          python -I -B tools/ci/verify_ci_lock.py
+          python -I -B tests/host/test_rc2_change_classifier.py
+      - name: Prepare two version fixtures from the same exact source
+        run: |
+          python -I -B tools/ci/host_native_package.py --source '${{ github.sha }}' --version 0.6.0-host.1 --output '${{ runner.temp }}/compatibility/previous'
+          python -I -B tools/ci/host_native_package.py --source '${{ github.sha }}' --version 0.6.0-rc.1 --output '${{ runner.temp }}/compatibility/current'
+          python -I -B tools/ci/host_macos_compatibility.py kit --source '${{ github.sha }}' --root '${{ runner.temp }}/compatibility'
+      - name: Preserve exact kit including executable file modes
+        run: tar -czf '${{ runner.temp }}/compatibility/kit.tar.gz' -C '${{ runner.temp }}/compatibility' kit
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: host-macos-kit-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/compatibility/kit.tar.gz
+            ${{ runner.temp }}/compatibility/current/producer.json
+            ${{ runner.temp }}/compatibility/current/package/**
+            ${{ runner.temp }}/compatibility/current/repeated/**
+            ${{ runner.temp }}/compatibility/previous/producer.json
+            ${{ runner.temp }}/compatibility/previous/package/**
+            ${{ runner.temp }}/compatibility/previous/repeated/**
+          if-no-files-found: error
+          retention-days: 14
+
+  compatibility:
+    name: Owned executor and compatibility (${{ matrix.evidence_id }})
+    needs: kit
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            evidence_id: windows-x86_64
+            major: ''
+          - runner: ubuntu-24.04
+            evidence_id: linux-x86_64
+            major: ''
+          - runner: macos-26
+            evidence_id: macos26-arm64
+            major: '26'
+          - runner: xcode-27
+            evidence_id: macos27-arm64
+            major: '27'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: 3.12.10
+      - name: Test actual child cleanup and affected Host callers
+        shell: bash
+        run: |
+          mkdir -p '${{ runner.temp }}/compatibility-evidence'
+          python -B -m unittest -v tests.host.test_host_owned_process tests.host.test_host_upload_process tests.host.test_host_validation tests.host.test_host_probe_guard tests.host.test_host_rc_entry tests.host.test_host_rc_kit 2>&1 | tee '${{ runner.temp }}/compatibility-evidence/host-tests.log'
+      - name: Verify actual macOS version and architecture
+        if: runner.os == 'macOS'
+        run: python -I -B tools/ci/host_macos_compatibility.py identity --source '${{ github.sha }}' --root '${{ runner.temp }}/compatibility-evidence' --major '${{ matrix.major }}'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        if: runner.os == 'macOS'
+        with:
+          name: host-macos-kit-${{ github.sha }}
+          path: ${{ runner.temp }}/compatibility-input
+      - name: Extract verified exact kit and prepare fixed SDK directory
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p '${{ runner.temp }}/compatibility-input/extracted'
+          tar -xzf '${{ runner.temp }}/compatibility-input/kit.tar.gz' -C '${{ runner.temp }}/compatibility-input/extracted'
+          sudo install -d -o "$(id -un)" -g "$(id -gn)" /opt/nordic/ncs
+      - name: Fresh fixed SDK installation
+        if: runner.os == 'macOS'
+        run: sh '${{ runner.temp }}/compatibility-input/extracted/kit/START.sh' --work-root '${{ runner.temp }}/compatibility-work' install-sdk
+      - name: Install upgrade reinstall removal and SDK preservation
+        if: runner.os == 'macOS'
+        run: sh '${{ runner.temp }}/compatibility-input/extracted/kit/START.sh' --work-root '${{ runner.temp }}/compatibility-work' lifecycle
+      - name: Four representative cold and warm builds without full204
+        if: runner.os == 'macOS'
+        run: sh '${{ runner.temp }}/compatibility-input/extracted/kit/START.sh' --work-root '${{ runner.temp }}/compatibility-work' build
+      - name: Preserve version-specific original results and logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: host-macos-compatibility-${{ matrix.evidence_id }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/compatibility-evidence/**
+            ${{ runner.temp }}/compatibility-work/state.json
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.json
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.log
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.elf
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.hex
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.bin
+            ${{ runner.temp }}/compatibility-work/attempts/**/*.map
+            ${{ runner.temp }}/compatibility-work/prerequisites/ready.json
+            ${{ runner.temp }}/compatibility-work/prerequisites/incomplete.json
+            ${{ runner.temp }}/compatibility-work/prerequisites/bootstrap.json
+            ${{ runner.temp }}/compatibility-work/prerequisites/bootstrap/*/home/logs/**
+          if-no-files-found: error
+          retention-days: 14

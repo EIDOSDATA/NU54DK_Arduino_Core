@@ -908,12 +908,6 @@ namespace nucode::ble
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::notification);
-        if (context == nullptr)
-        {
-            internal::recordError(BLEError::busy, -EBUSY, true);
-            return false;
-        }
         const struct bt_gatt_attr *attribute =
             &slot->attributes[slot->value_attribute_index[index]];
         struct bt_conn *connection = internal::referenceConnection(connection_handle);
@@ -924,8 +918,14 @@ namespace nucode::ble
             {
                 bt_conn_unref(connection);
             }
-            releaseServerTxContext(*context);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::notification);
+        if (context == nullptr)
+        {
+            bt_conn_unref(connection);
+            internal::recordError(BLEError::busy, -EBUSY, false);
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
@@ -959,7 +959,9 @@ namespace nucode::ble
         if (result < 0)
         {
             releaseServerTxContext(*context);
-            internal::recordError(BLEError::driver_error, result, true);
+            const bool transient = result == -EBUSY || result == -EAGAIN || result == -ENOMEM;
+            internal::recordError(transient ? BLEError::busy : BLEError::driver_error,
+                                  result, !transient);
             return false;
         }
         return true;
@@ -1015,12 +1017,6 @@ namespace nucode::ble
             internal::recordError(BLEError::wrong_state, -EPERM, true);
             return false;
         }
-        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::indication);
-        if (context == nullptr)
-        {
-            internal::recordError(BLEError::busy, -EBUSY, true);
-            return false;
-        }
         const struct bt_gatt_attr *attribute =
             &slot->attributes[slot->value_attribute_index[index]];
         struct bt_conn *connection = internal::referenceConnection(connection_handle);
@@ -1031,8 +1027,14 @@ namespace nucode::ble
             {
                 bt_conn_unref(connection);
             }
-            releaseServerTxContext(*context);
             internal::recordError(BLEError::not_connected, -ENOTCONN, true);
+            return false;
+        }
+        ServerTxContext *context = acquireServerTxContext(*this, ServerTxKind::indication);
+        if (context == nullptr)
+        {
+            bt_conn_unref(connection);
+            internal::recordError(BLEError::busy, -EBUSY, false);
             return false;
         }
         const std::size_t mtu = bt_gatt_get_mtu(connection);
@@ -1065,7 +1067,9 @@ namespace nucode::ble
         if (result < 0)
         {
             releaseServerTxContext(*context);
-            internal::recordError(BLEError::driver_error, result, true);
+            const bool transient = result == -EBUSY || result == -EAGAIN || result == -ENOMEM;
+            internal::recordError(transient ? BLEError::busy : BLEError::driver_error,
+                                  result, !transient);
             return false;
         }
         return true;

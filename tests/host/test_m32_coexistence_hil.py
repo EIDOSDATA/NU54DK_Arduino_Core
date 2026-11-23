@@ -90,6 +90,7 @@ class M32CoexistenceHilTests(unittest.TestCase):
             "mesh_acknowledgment_retry_limit = 3U",
             "mesh_acknowledgment_timeout_ms = 300",
             "mesh_ble_payload_delay_ms = 30000",
+            "ble_reconnect_discovery_miss_limit = 2U",
             "retryMeshConfiguration",
             "configuration_retries=",
             "acknowledgment_retries=",
@@ -97,6 +98,7 @@ class M32CoexistenceHilTests(unittest.TestCase):
             "NUCODEEsb.send",
             "NUCODEMesh.sendOnOff",
             "BLESerial.disconnect",
+            "disconnect_requested && !reconnect_seen && error == -ENOENT",
             "recordRestart",
             "invalid_configuration_rejected=1",
             "invalid_length_rejected=1",
@@ -169,8 +171,10 @@ class M32CoexistenceHilTests(unittest.TestCase):
         """! @brief runner가 V2 exact 안전장치와 내부 radio 범위만 기록합니다. """
         source = (HIL / "m32_coexistence_run.py").read_text(encoding="utf-8")
         self.assertIn("collect_register_identity", source)
-        self.assertIn("cmsis_dap_v1=False", source)
-        self.assertNotIn("cmsis_dap_v1=True", source)
+        self.assertIn("flash_image_pyocd_sha256", source)
+        self.assertIn("reset_and_halt_before_program=True", source)
+        self.assertIn("READY_TIMEOUT_SECONDS = 30.0", source)
+        self.assertNotIn("cmsis_dap_v1=", source)
         self.assertNotIn("prefer_v1=true", source)
         for test_id in (
             '"M32-COEX-01:ble_154"',

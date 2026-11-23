@@ -83,6 +83,19 @@ class M31CombinedTests(unittest.TestCase):
         with self.assertRaises(M31CombinedFailure):
             validate_combined_envelope(envelope, images, SOURCE)
 
+    def test_runner_halts_before_exact_image_programming(self) -> None:
+        """! @brief 실행 중인 앱 interrupt를 막고 검증된 HEX만 기록합니다. """
+
+        source = (ROOT / "tests/hil/nu54dk/m31_iso_combined_run.py").read_text(
+            encoding="utf-8"
+        )
+        flash_call = source.split(
+            "flash_image_pyocd_sha256(", 1
+        )[1].split(")", 1)[0]
+        self.assertIn('board["probe_sha256"]', flash_call)
+        self.assertIn('expected_sha256=board["image_sha256"]', flash_call)
+        self.assertIn("reset_and_halt_before_program=True", flash_call)
+
 
 if __name__ == "__main__":
     unittest.main()

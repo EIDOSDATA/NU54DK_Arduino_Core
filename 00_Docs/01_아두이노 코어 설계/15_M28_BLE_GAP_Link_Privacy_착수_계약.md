@@ -29,7 +29,7 @@ PASS가 아니다. M28 완료 판정은 아래 9개 test ID의 실제 PASS를 �
 
 | 대상 | 고정 값 | 현재 의미 |
 | --- | --- | --- |
-| 착수 당시 stable 설치·지원 release | `v0.4.1` | 역사 기준선; 현재 stable은 v0.5.0 |
+| 착수 당시 stable 설치·지원 release | `v0.4.1` | M28 착수 당시 기준선 |
 | 착수 당시 개발 source version | `0.4.1-dev` | 역사 source 식별자; 현재는 `0.5.0` |
 | NCS | `v3.4.0` / `99553055607b2e9885fbc80ccd11fa9da81c2df0` | lock과 설치 source 일치 확인 |
 | Zephyr | `bf801e4e3d19e1ffa76164346480cb7734dd2800` | lock과 설치 source 일치 확인 |

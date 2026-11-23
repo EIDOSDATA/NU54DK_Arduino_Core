@@ -31,6 +31,7 @@ namespace
     constexpr char ready_query[] = "M30W07|1|READY?";
     constexpr char start_prefix[] = "M30W07|1|START|test=M30-MULTI-01|nonce=";
     constexpr char run_prefix[] = "M30W07|1|RUN|nonce=";
+    constexpr char stop_prefix[] = "M30W07|1|STOP|nonce=";
     constexpr char core_suffix[] = "|core=" M30_MULTI_CORE_REVISION;
     constexpr std::size_t nonce_text_length = 32U;
     constexpr std::size_t nonce_binary_length = 16U;
@@ -40,6 +41,8 @@ namespace
     constexpr std::uint32_t required_operations = 100U;
     constexpr std::int64_t security_request_delay_ms = 500;
     constexpr std::int64_t session_timeout_ms = 1200000;
+    constexpr std::int64_t cleanup_timeout_ms = 30000;
+    constexpr std::int64_t cleanup_quiet_ms = 1000;
 
     char command[160] = {};
     std::size_t command_length = 0U;
@@ -48,6 +51,8 @@ namespace
     bool session_started = false;
     bool operations_started = false;
     bool session_finished = false;
+    bool cleanup_requested = false;
+    bool cleanup_started = false;
     bool callback_context_valid = true;
     bool scan_started = false;
     bool peer_found = false;
@@ -59,7 +64,9 @@ namespace
     bool advertising_started = false;
     bool link_reported = false;
     std::int64_t security_request_due_ms = 0;
+    std::int64_t cleanup_quiet_since = 0;
     std::int64_t session_deadline = 0;
+    std::int64_t cleanup_deadline = 0;
     std::uint32_t client_operations = 0U;
     std::uint32_t server_operations = 0U;
     std::uint32_t progress_reported = 0U;
@@ -219,6 +226,49 @@ namespace
         return ::strcmp(candidate, nonce) == 0;
     }
 
+    /** @brief 같은 nonce의 중복 START를 새 session이나 RUN으로 해석하지 않습니다. */
+    bool isRepeatedStart()
+    {
+        return session_started && !operations_started &&
+               acceptIdentity(command, start_prefix);
+    }
+
+    /** @brief cleanup 완료 뒤 다음 독립 session을 위해 모든 local 상태를 초기화합니다. */
+    void resetSessionState()
+    {
+        ::memset(command, 0, sizeof(command));
+        command_length = 0U;
+        ::memset(nonce, 0, sizeof(nonce));
+        ::memset(nonce_binary, 0, sizeof(nonce_binary));
+        session_started = false;
+        operations_started = false;
+        session_finished = false;
+        cleanup_requested = false;
+        cleanup_started = false;
+        callback_context_valid = true;
+        scan_started = false;
+        peer_found = false;
+        connection_attempted = false;
+        client_security_pending = false;
+        client_secure = false;
+        server_secure = false;
+        upstream_reported = false;
+        advertising_started = false;
+        link_reported = false;
+        security_request_due_ms = 0;
+        cleanup_quiet_since = 0;
+        session_deadline = 0;
+        cleanup_deadline = 0;
+        client_operations = 0U;
+        server_operations = 0U;
+        progress_reported = 0U;
+        cross_link_events = 0U;
+        security_errors = 0U;
+        key_size_errors = 0U;
+        client_connection = nucode::ble::BLEConnectionHandle{};
+        server_connection = nucode::ble::BLEConnectionHandle{};
+    }
+
     /** @brief connection의 실제 암호화 key 길이를 읽습니다. */
     std::uint8_t encryptionKeySize(nucode::ble::BLEConnectionHandle handle)
     {
@@ -369,6 +419,11 @@ namespace
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+            return;
+        }
         if (!session_started || session_finished || !scan_started || peer_found ||
             connection_attempted || !result.connectable || result.scan_response ||
             !validRfPeer(result))
@@ -384,6 +439,22 @@ namespace
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+            if (information.event == nucode::ble::BLEEvent::disconnected)
+            {
+                if (information.connection == client_connection)
+                {
+                    client_connection = nucode::ble::BLEConnectionHandle{};
+                }
+                if (information.connection == server_connection)
+                {
+                    server_connection = nucode::ble::BLEConnectionHandle{};
+                }
+            }
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -439,6 +510,11 @@ namespace
     {
         static_cast<void>(context);
         checkCallbackContext();
+        if (cleanup_requested)
+        {
+            cleanup_quiet_since = k_uptime_get();
+            return;
+        }
         if (!session_started || session_finished)
         {
             return;
@@ -653,10 +729,86 @@ namespace
         Serial.println();
     }
 
+    /** @brief exact STOP을 수락하고 radio·link 정리를 bounded 상태로 시작합니다. */
+    void startCleanup()
+    {
+        if (!acceptIdentity(command, stop_prefix))
+        {
+            return;
+        }
+        cleanup_requested = true;
+        cleanup_quiet_since = 0;
+        cleanup_deadline = k_uptime_get() + cleanup_timeout_ms;
+    }
+
+    /** @brief active link와 pending 연산이 0인 뒤 CLEANUP ACK를 출력하고 재무장합니다. */
+    void driveCleanup()
+    {
+        if (!cleanup_requested)
+        {
+            return;
+        }
+        if (!cleanup_started)
+        {
+            cleanup_started = true;
+            if (scan_started)
+            {
+                static_cast<void>(BLEScan.stop());
+                scan_started = false;
+            }
+            if (advertising_started)
+            {
+                static_cast<void>(BLEAdvertising.stop());
+                advertising_started = false;
+            }
+            client_security_pending = false;
+            if (client_connection.valid())
+            {
+                static_cast<void>(BLEConnection.disconnect(client_connection));
+            }
+            if (server_connection.valid())
+            {
+                static_cast<void>(BLEConnection.disconnect(server_connection));
+            }
+        }
+        const bool links_zero = !client_connection.valid() && !server_connection.valid();
+        const bool pending_zero = !client_security_pending;
+        const std::int64_t now = k_uptime_get();
+        if (!links_zero || !pending_zero)
+        {
+            cleanup_quiet_since = 0;
+        }
+        else if (cleanup_quiet_since == 0)
+        {
+            cleanup_quiet_since = now;
+        }
+        else if (now - cleanup_quiet_since >= cleanup_quiet_ms)
+        {
+            Serial.print(protocol);
+            Serial.print("|CLEANUP|role=");
+            Serial.print(roleName());
+            Serial.print("|active_links=0|pending_operations=0|buffers=0|status=pass");
+            printSuffix();
+            Serial.println();
+            resetSessionState();
+            return;
+        }
+        if (now >= cleanup_deadline)
+        {
+            Serial.print(protocol);
+            Serial.print("|FAIL|role=");
+            Serial.print(roleName());
+            Serial.print("|stage=cleanup_timeout|code=0");
+            printSuffix();
+            Serial.println();
+            cleanup_requested = false;
+        }
+    }
+
     /** @brief Host의 bounded READY·START·RUN 명령을 수집합니다. */
     void pollHostCommand()
     {
-        while (Serial.available() > 0 && !session_finished)
+        while (Serial.available() > 0 && !cleanup_requested)
         {
             const int incoming = Serial.read();
             if (incoming < 0)
@@ -683,6 +835,14 @@ namespace
                 else if (!session_started)
                 {
                     startProtocol();
+                }
+                else if (isRepeatedStart())
+                {
+                    return;
+                }
+                else if (session_finished)
+                {
+                    startCleanup();
                 }
                 else if (!operations_started)
                 {
@@ -742,6 +902,7 @@ void loop()
     pollHostCommand();
     BLEDevice.poll();
     BLESecurity.poll();
+    driveCleanup();
     if (!session_started || session_finished)
     {
         delay(1);

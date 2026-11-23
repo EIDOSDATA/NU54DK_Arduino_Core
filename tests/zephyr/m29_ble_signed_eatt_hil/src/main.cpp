@@ -31,6 +31,7 @@ extern "C"
 #include <cstddef>
 #include <cstdint>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -60,6 +61,7 @@ namespace
     constexpr char start_prefix[] = "M29W07|1|START|mode=";
     constexpr char clear_prefix[] = "M29W07|1|CLEAR|nonce=";
     constexpr char reboot_prefix[] = "M29W07|1|REBOOT|nonce=";
+    constexpr char signed_close_prefix[] = "M29W07|1|CLOSE|mode=sign|iteration=";
     constexpr char core_suffix[] = "|core=" M29_ADVANCED_CORE_REVISION;
     constexpr char service_text[] = "90bf2a30-14f5-4d3d-92c7-299334932a20";
     constexpr char characteristic_text[] = "90bf2a31-14f5-4d3d-92c7-299334932a20";
@@ -107,6 +109,7 @@ namespace
         eatt_traffic,
         replay_observation,
         retry_waiting_for_recycle,
+        signed_waiting_for_close,
         disconnect_delay,
         disconnecting,
         complete,
@@ -313,6 +316,13 @@ namespace
         {
             return;
         }
+#if defined(NUCODE_M29_ADVANCED_CENTRAL)
+        if (mode == Mode::sign)
+        {
+            phase = Phase::signed_waiting_for_close;
+            return;
+        }
+#endif
         phase = Phase::disconnect_delay;
         disconnect_at = k_uptime_get() + disconnect_settle_ms;
     }
@@ -1187,6 +1197,42 @@ namespace
         sys_reboot(SYS_REBOOT_WARM);
     }
 
+    /** @brief 양측 SIGN을 확인한 Host의 exact CLOSE만 중앙 연결 종료로 전환합니다. */
+    void closeSignedSession()
+    {
+#if defined(NUCODE_M29_ADVANCED_CENTRAL)
+        if (!session_active || session_finished || mode != Mode::sign ||
+            phase != Phase::signed_waiting_for_close || !connection_handle.valid())
+        {
+            fail("signed_close_state");
+            return;
+        }
+        char expected[sizeof(command)] = {};
+        const int length = ::snprintf(
+            expected, sizeof(expected), "%s%lu|nonce=%s|core=%s", signed_close_prefix,
+            static_cast<unsigned long>(iteration), nonce, M29_ADVANCED_CORE_REVISION);
+        if (length <= 0 || static_cast<std::size_t>(length) >= sizeof(expected) ||
+            ::strcmp(command, expected) != 0)
+        {
+            fail("signed_close_record");
+            return;
+        }
+        if (k_uptime_get() >= session_deadline)
+        {
+            fail("timeout");
+            return;
+        }
+        Serial.print(protocol);
+        Serial.print("|CLOSE_ACCEPTED|role=central|mode=sign");
+        printSuffix();
+        Serial.println();
+        phase = Phase::disconnect_delay;
+        disconnect_at = k_uptime_get();
+#else
+        fail("signed_close_role");
+#endif
+    }
+
     /** @brief 완전한 UART command 한 줄만 고정 dispatcher에 전달합니다. */
     void executeCommand()
     {
@@ -1202,6 +1248,10 @@ namespace
         {
             rebootTarget();
         }
+        else if (::strncmp(command, signed_close_prefix, ::strlen(signed_close_prefix)) == 0)
+        {
+            closeSignedSession();
+        }
         else if (!session_active)
         {
             startSession();
@@ -1210,6 +1260,29 @@ namespace
         {
             fail("unexpected_command");
         }
+    }
+
+    /** @brief 최초 READY 전에만 제한된 잔여 UART 입력을 비우고 명령 경계를 엽니다. */
+    bool prepareHostCommandBoundary()
+    {
+        std::size_t discarded = 0U;
+        while (Serial.available() > 0)
+        {
+            if (discarded >= sizeof(command))
+            {
+                fail("startup_rx_overflow");
+                return false;
+            }
+            if (Serial.read() < 0)
+            {
+                fail("startup_rx_read");
+                return false;
+            }
+            ++discarded;
+        }
+        command_length = 0U;
+        command[0] = '\0';
+        return true;
     }
 
     /** @brief UART의 newline command를 fixed buffer로 조립합니다. */
@@ -1475,6 +1548,10 @@ void setup()
     if (!BLEDevice.begin(roleName()))
     {
         fail("device_begin", BLEDevice.lastDriverError());
+        return;
+    }
+    if (!prepareHostCommandBoundary())
+    {
         return;
     }
     printReady();

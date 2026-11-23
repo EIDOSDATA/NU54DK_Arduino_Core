@@ -1,5 +1,6 @@
 """! @brief 패키저의 license 수집·판정과 외부 prerequisite 책임입니다. """
 from __future__ import annotations
+from . import native
 from typing import Any, Iterable
 import re
 from .channels import (
@@ -50,6 +51,8 @@ def declared_spdx_identifiers(files: Iterable[SourceFile]) -> dict[str, list[str
 def build_external_prerequisites(
     files: list[SourceFile], version: str
 ) -> list[dict[str, Any]]:
+    if native.is_native_version(version):
+        return build_native_external_prerequisites(list(files), version)
     pins_file = next(
         (item for item in files if item.path == "tools/nu54-prerequisites/pins.json"), None
     )
@@ -163,6 +166,46 @@ def build_external_prerequisites(
     ]
 
 
+def build_native_external_prerequisites(files: list[SourceFile], version: str) -> list[dict[str, Any]]:
+    """! @brief native 세 OS별 외부 archive와 bootstrap의 provenance를 서로 구분합니다. """
+    payload = {item.path: item.data for item in files}
+    bootstrap = native.bootstrap_from_files(files)
+    pins = native.load_platform_pins(payload.get(native.PLATFORM_PINS_PATH, b''))
+    common = {'distribution': 'external-not-redistributed', 'license_expression': 'NOASSERTION',
+        'legal_review_status': legal_review_status(version), 'required': True,
+        'installer': 'post_install.bat/post_install.sh -> tools/nu54-prerequisites/nordic.py'}
+    result = []
+    for key, platform in sorted(pins['platforms'].items()):
+        declarations = (
+            ('nRF Util launcher', platform['nrfutil']['launcher_version'], platform['nrfutil']['executable']),
+            ('nRF Util core', platform['nrfutil']['version'], platform['nrfutil']['core']),
+            ('nRF Util sdk-manager', platform['sdk_manager']['version'], platform['sdk_manager']['archive']),
+            ('NCS toolchain bundle', platform['toolchain']['bundle_id'], platform['toolchain']['archive']),
+            ('Bootstrap Python', bootstrap['runtime']['python_version'], bootstrap['platforms'][key]['arduino_archive']),
+        )
+        for name, item_version, asset in declarations:
+            row = {**common, 'name': name + ' (' + key + ')', 'version': item_version,
+                'platform': key, 'source': asset['url'], 'sha256': asset['sha256'],
+                'installer': 'Arduino Boards Manager toolsDependencies' if name == 'Bootstrap Python' else common['installer']}
+            if name == 'Bootstrap Python':
+                row.update(distribution='separate-Arduino-tool-unpublished-private-CI',
+                    upstream_archive=bootstrap['platforms'][key]['archive'],
+                    archive_layout=bootstrap['runtime']['arduino_archive_layout'], executable_bytes_modified=False,
+                    notice_inventory='tools/nu54-prerequisites/bootstrap-license-inventory.json')
+            result.append(row)
+    result.extend([
+        {**common, 'name': 'nRF Connect SDK', 'version': pins['ncs']['version'],
+            'revision': pins['ncs']['revision'], 'source': pins['ncs']['archive']['url'], 'sha256': pins['ncs']['archive']['sha256']},
+        {**common, 'name': 'Zephyr', 'version': ZEPHYR_VERSION, 'revision': pins['zephyr']['revision'],
+            'source': 'https://github.com/nrfconnect/sdk-zephyr', 'installer': 'pinned nRF Connect SDK manifest'},
+        {**common, 'name': 'pyOCD', 'version': '0.45.1', 'source': 'https://github.com/pyocd/pyOCD',
+            'installer': 'selected native NCS toolchain bundle'},
+        {**common, 'name': 'SEGGER J-Link Software', 'version': 'user-supplied', 'required': False,
+            'source': 'https://www.segger.com/downloads/jlink/', 'installer': 'optional-user-installation'},
+    ])
+    return result
+
+
 ## @brief 패키지에 포함된 라이선스 원문과 구성요소 범위를 기록합니다.
 def build_license_inventory(
     files: list[SourceFile], version: str, board_revision: str
@@ -251,7 +294,7 @@ def build_license_inventory(
 
 
 ## @brief 배포물에 동봉할 third-party 고지를 만듭니다.
-def build_third_party_notices(board_revision: str) -> bytes:
+def build_third_party_notices(board_revision: str, version: str | None = None) -> bytes:
     text = f"""# Third-party notices
 
 이 파일은 Boards Manager 패키지에 포함된 외부 구성요소를 식별합니다. 저장소 최상위
@@ -291,6 +334,19 @@ def build_third_party_notices(board_revision: str) -> bytes:
 상세 checksum과 파일별 SPDX 선언은 `license-inventory.json` 및 `sbom.spdx.json`에
 기록합니다. 이 목록은 법률 자문 또는 최종 공개 배포 승인을 대신하지 않습니다.
 """
+    if version is not None and native.is_native_version(version):
+        text += '''
+## 별도 Arduino 초기 Python tool
+
+CPython 3.12.16의 원본은 https://github.com/astral-sh/python-build-standalone/releases/tag/20261026 입니다.
+`nu54-python`은 원형 실행 파일 byte·mode·symlink 의미를 보존하고 부모 directory·고지·provenance만
+추가한 별도 Arduino tool입니다. SDK·Nordic 바이너리는 이 tool에 포함하지 않습니다.
+원본/파생 archive의 URL·size·SHA-256과 미게시 상태는 `tools/nu54-prerequisites/bootstrap-pins.json`,
+전체 고지·원문 hash는 `tools/nu54-prerequisites/bootstrap-license-inventory.json`과
+`tools/nu54-prerequisites/bootstrap-licenses/`를 따릅니다. Tool 자체에도 원문 고지와 provenance를
+동봉합니다. 개별 upstream 라이선스가 적용되며 Core MIT로 대체하지 않습니다.
+이 private CI package는 공개·재배포 법무 검토를 자동 승인하지 않습니다.
+'''
     return text.encode("utf-8")
 
 

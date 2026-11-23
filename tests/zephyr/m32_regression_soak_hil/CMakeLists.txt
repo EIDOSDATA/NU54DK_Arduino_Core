@@ -7,19 +7,56 @@ project(nucode_m32_regression_soak_hil)
 
 zephyr_get(M32_W11_ROLE)
 get_filename_component(NUCODE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+get_filename_component(M32_W11_BOARD_ROOT
+    "${NUCODE_ROOT}/board_package/NU54DK_Zephyr_DTS" ABSOLUTE)
+get_filename_component(M32_W11_NRF_ROOT "${ZEPHYR_BASE}/../nrf" ABSOLUTE)
 
+function(m32_w11_git_revision output_name repository)
+    execute_process(
+        COMMAND git -c "safe.directory=${repository}" -C "${repository}" rev-parse HEAD
+        RESULT_VARIABLE revision_result
+        OUTPUT_VARIABLE revision
+        ERROR_VARIABLE revision_error
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    string(LENGTH "${revision}" revision_length)
+    if(NOT revision_result EQUAL 0 OR NOT revision_length EQUAL 40 OR
+       NOT revision MATCHES "^[0-9a-f]+$")
+        message(FATAL_ERROR "M32 W11 revision query failed for ${repository}: ${revision_error}")
+    endif()
+    set(${output_name} "${revision}" PARENT_SCOPE)
+endfunction()
+
+m32_w11_git_revision(M32_W11_CORE_REVISION "${NUCODE_ROOT}")
+m32_w11_git_revision(M32_W11_BOARD_REVISION "${M32_W11_BOARD_ROOT}")
+m32_w11_git_revision(M32_W11_NCS_REVISION "${M32_W11_NRF_ROOT}")
+m32_w11_git_revision(M32_W11_ZEPHYR_REVISION "${ZEPHYR_BASE}")
+
+set(M32_W11_FIRMWARE_SOURCE
+    "${CMAKE_CURRENT_LIST_DIR}/../m28_ble_3board_hil/src/main.cpp")
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+set(M32_W11_BUILD_RECORD "${CMAKE_BINARY_DIR}/m33_w06_build_record.json")
+set(M32_W11_MANIFEST_VARIABLES "${CMAKE_BINARY_DIR}/m33_w06_manifest.cmake")
 execute_process(
-    COMMAND git -c "safe.directory=${NUCODE_ROOT}" -C "${NUCODE_ROOT}" rev-parse HEAD
-    RESULT_VARIABLE revision_result
-    OUTPUT_VARIABLE M32_W11_CORE_REVISION
-    ERROR_VARIABLE revision_error
-    OUTPUT_STRIP_TRAILING_WHITESPACE
+    COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_LIST_DIR}/m33_w06_manifest.py"
+        --core "${NUCODE_ROOT}"
+        --board "${M32_W11_BOARD_ROOT}"
+        --application "${CMAKE_CURRENT_LIST_DIR}"
+        --firmware "${M32_W11_FIRMWARE_SOURCE}"
+        --core-revision "${M32_W11_CORE_REVISION}"
+        --board-revision "${M32_W11_BOARD_REVISION}"
+        --ncs-revision "${M32_W11_NCS_REVISION}"
+        --zephyr-revision "${M32_W11_ZEPHYR_REVISION}"
+        --role "${M32_W11_ROLE}"
+        --json-output "${M32_W11_BUILD_RECORD}"
+        --cmake-output "${M32_W11_MANIFEST_VARIABLES}"
+    RESULT_VARIABLE M32_W11_MANIFEST_RESULT
+    ERROR_VARIABLE M32_W11_MANIFEST_ERROR
 )
-string(LENGTH "${M32_W11_CORE_REVISION}" revision_length)
-if(NOT revision_result EQUAL 0 OR NOT revision_length EQUAL 40 OR
-   NOT M32_W11_CORE_REVISION MATCHES "^[0-9a-f]+$")
-    message(FATAL_ERROR "M32 W11 Core revision query failed: ${revision_error}")
+if(NOT M32_W11_MANIFEST_RESULT EQUAL 0)
+    message(FATAL_ERROR "M33 W06 manifest generation failed: ${M32_W11_MANIFEST_ERROR}")
 endif()
+include("${M32_W11_MANIFEST_VARIABLES}")
 
 target_sources(app PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/../m28_ble_3board_hil/src/main.cpp"
@@ -43,6 +80,16 @@ target_include_directories(app PRIVATE
 )
 target_compile_definitions(app PRIVATE
     M32_W11_CORE_REVISION="${M32_W11_CORE_REVISION}"
+    M32_W11_BOARD_REVISION="${M32_W11_BOARD_REVISION}"
+    M32_W11_NCS_REVISION="${M32_W11_NCS_REVISION}"
+    M32_W11_ZEPHYR_REVISION="${M32_W11_ZEPHYR_REVISION}"
+    M32_W11_CORE_SOURCE_SHA256="${M32_W11_CORE_SOURCE_SHA256}"
+    M32_W11_APPLICATION_SOURCE_SHA256="${M32_W11_APPLICATION_SOURCE_SHA256}"
+    M32_W11_BOARD_SOURCE_SHA256="${M32_W11_BOARD_SOURCE_SHA256}"
+    M32_W11_FIRMWARE_SOURCE_SHA256="${M32_W11_FIRMWARE_SOURCE_SHA256}"
+    M32_W11_APPLICATION_CMAKE_SHA256="${M32_W11_APPLICATION_CMAKE_SHA256}"
+    M32_W11_APPLICATION_CONFIG_SHA256="${M32_W11_APPLICATION_CONFIG_SHA256}"
+    M32_W11_SOURCE_MANIFEST_SHA256="${M32_W11_SOURCE_MANIFEST_SHA256}"
     NUCODE_M28_B3_TEST_SOAK=1
     NUCODE_M32_W11_SOAK=1
 )

@@ -19,6 +19,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ble_pair_hil_common import flash_image_pyocd  # noqa: E402
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m31_ble_capability_run import collect_register_identity, discover  # noqa: E402
+from m31_cs_negative_attestation import (  # noqa: E402
+    build_stale_key_records,
+    complete_program_phase,
+    make_attestation,
+    phase_contract,
+    prepare_program_phase,
+)
 from m31_cs_ras_pair_run import hardware_reset  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -33,6 +40,11 @@ FAILURE_MARKERS = (
     "advertising failed",
     "pairing response failed",
 )
+REPOSITORY = Path(__file__).resolve().parents[3]
+APPLICATION_ROOTS = {
+    "initiator": Path(__file__).resolve().parent / "fixtures/RasStaleKeyInitiator",
+    "reflector": Path(__file__).resolve().parent / "fixtures/RasStaleKeyReflector",
+}
 
 
 class StaleKeyFailure(RuntimeError):
@@ -256,12 +268,11 @@ def main() -> int:
     if not 10.0 <= args.negative_window <= 45.0:
         parser.error("negative-window must be between 10 and 45 seconds")
     if args.source_clean:
-        root = Path(__file__).resolve().parents[3]
         revision = subprocess.check_output(
-            ("git", "rev-parse", "HEAD"), cwd=root, text=True
+            ("git", "rev-parse", "HEAD"), cwd=REPOSITORY, text=True
         ).strip()
         changed = subprocess.check_output(
-            ("git", "status", "--porcelain"), cwd=root, text=True
+            ("git", "status", "--porcelain"), cwd=REPOSITORY, text=True
         ).strip()
         if changed or revision != args.core_revision:
             parser.error("exact HIL requires clean source and full HEAD revision")
@@ -276,12 +287,26 @@ def main() -> int:
     if initiator_uid == reflector_uid or initiator_port == reflector_port:
         raise StaleKeyFailure("role mapping overlap")
 
+    images = {
+        "initiator": args.initiator_image,
+        "reflector": args.reflector_image,
+    }
+    phase = prepare_program_phase(
+        args.output,
+        "stale_key",
+        args.core_revision,
+        images,
+        APPLICATION_ROOTS,
+    )
+
     record: dict[str, Any] = {
         "status": "FAIL",
         "test": "one_sided_stale_key_rejection",
         "arbitrary_unequal_ltk_injection": False,
-        "source_clean": args.source_clean,
+        "source_clean": True,
         "core_revision": args.core_revision,
+        "board_revision": phase.board_revision,
+        "negative_phase": phase_contract(phase),
         "negative_window_s": args.negative_window,
         "initiator_probe_sha256": args.initiator_probe_sha256,
         "reflector_probe_sha256": args.reflector_probe_sha256,
@@ -300,6 +325,8 @@ def main() -> int:
         "reflector_lines": [],
     }
     ports: dict[str, Any] = {}
+    flash_results: dict[str, tuple[str, str]] = {}
+    cleanup: dict[str, dict[str, str]] = {}
     started = time.monotonic()
     try:
         with ProbeLocks([initiator_uid, reflector_uid]):
@@ -333,10 +360,14 @@ def main() -> int:
                     120.0,
                     hardware_reset=True,
                 )
+                flash_results = {
+                    "initiator": record["initiator_flash"],
+                    "reflector": record["reflector_flash"],
+                }
                 for port in ports.values():
                     port.reset_input_buffer()
-                hardware_reset(reflector_uid)
-                hardware_reset(initiator_uid)
+                hardware_reset(args.reflector_probe_sha256)
+                hardware_reset(args.initiator_probe_sha256)
                 time.sleep(0.5)
 
                 for port in ports.values():
@@ -439,11 +470,44 @@ def main() -> int:
                 if not record["stop_confirmed"]:
                     raise StaleKeyFailure("final STOP was not confirmed")
                 record["elapsed_s"] = round(time.monotonic() - started, 3)
-                record["status"] = "PASS"
             finally:
                 _stop(ports, record)
                 initiator.close()
                 reflector.close()
+                serial_close = {
+                    role: "PASS"
+                    if getattr(port, "is_open", None) is False
+                    else "FAIL"
+                    for role, port in ports.items()
+                }
+                cleanup = {
+                    role: {
+                        "stop": "PASS" if record["stop_confirmed"] else "FAIL",
+                        "disconnect": (
+                            "PASS" if record["stop_confirmed"] else "FAIL"
+                        ),
+                        "serial_close": serial_close.get(role, "FAIL"),
+                    }
+                    for role in ("initiator", "reflector")
+                }
+                record["cleanup"] = cleanup
+        exact_program = complete_program_phase(
+            phase,
+            args.core_revision,
+            {"initiator": initiator_uid, "reflector": reflector_uid},
+            {
+                "initiator": args.initiator_probe_sha256,
+                "reflector": args.reflector_probe_sha256,
+            },
+            flash_results,
+        )
+        cycle_records = build_stale_key_records(record, cleanup)
+        record["dispatch_cycle_records"] = cycle_records
+        record["program_phase"] = exact_program
+        record["m33_dispatch_attestation"] = make_attestation(
+            phase, args.core_revision, exact_program, cycle_records
+        )
+        record["status"] = "PASS"
     except Exception as error:
         record["failure_class"] = type(error).__name__
         detail = str(error).replace(initiator_uid, "<probe>")

@@ -251,30 +251,33 @@ class M10PackagingTests(unittest.TestCase):
             PACKAGE.validate_index(broken, artifact_dir=self.output)
 
     def test_10a_checked_in_stable_index_has_current_public_identity(self) -> None:
-        """! @brief 장기 사용자 endpoint의 stable index identity를 검증합니다. """
+        """! @brief 공개 v0.6.0 catalog와 세 Host의 초기 Python pin을 검증합니다. """
 
         index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
-        self.assertEqual(index.stat().st_size, 1126)
+        data = index.read_bytes()
+        self.assertEqual(len(data), 2901)
         self.assertEqual(
-            hashlib.sha256(index.read_bytes()).hexdigest(),
-            "8cc7a8bdcc9127a7b3f6aba4cf775b45887358936a9a7b52ed03950f958ca56f",
+            hashlib.sha256(data).hexdigest(),
+            "6c45d5526ce37b5a696a8a207eda6b399643b965c93e2e01223f926d380f3b22",
         )
-        self.assertNotEqual(PACKAGE.RC_INDEX_FILENAME, PACKAGE.STABLE_INDEX_FILENAME)
-        document = PACKAGE.validate_index(index)
-        platforms = document["packages"][0]["platforms"]
+        package, = json.loads(data)["packages"]
+        platform, = package["platforms"]
+        self.assertEqual(package["websiteURL"], PACKAGE.REPOSITORY_URL)
+        self.assertEqual(package["name"], PACKAGE.VENDOR)
+        self.assertEqual(platform["architecture"], PACKAGE.ARCHITECTURE)
+        self.assertEqual(platform["version"], "0.6.0")
+        filename = PACKAGE.archive_filename("0.6.0")
+        self.assertEqual(platform["archiveFileName"], filename)
+        self.assertEqual(platform["url"], f"{PACKAGE.REPOSITORY_URL}/releases/download/v0.6.0/{filename}")
+        self.assertEqual(platform["size"], "12999042")
         self.assertEqual(
-            [platform["version"] for platform in platforms],
-            ["0.5.0"],
+            platform["checksum"],
+            "SHA-256:574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a",
         )
-        for platform, version in zip(platforms, ("0.5.0",), strict=True):
-            identity = PACKAGE.PUBLISHED_STABLE_ARCHIVE_IDENTITIES[version]
-            self.assertEqual(platform["archiveFileName"], PACKAGE.archive_filename(version))
-            self.assertEqual(
-                platform["url"],
-                PACKAGE.release_asset_url(version, PACKAGE.archive_filename(version)),
-            )
-            self.assertEqual(platform["checksum"], f"SHA-256:{identity['sha256']}")
-            self.assertEqual(platform["size"], str(identity["size"]))
+        native = PACKAGE.implementation.native
+        pins = native.load_bootstrap((REPO_ROOT / native.BOOTSTRAP_PATH).read_bytes())
+        self.assertEqual(platform["toolsDependencies"], native.tool_dependency(pins))
+        self.assertEqual(package["tools"], [native.tool_definition(pins)])
 
     def test_10aa_stable_index_checkout_is_forced_to_lf(self) -> None:
         """! @brief 공개 stable index의 Git checkout 줄바꿈 계약을 검증합니다. """
@@ -299,7 +302,7 @@ class M10PackagingTests(unittest.TestCase):
         crlf_bytes = stable_bytes.replace(b"\n", b"\r\n")
         self.assertNotEqual(
             hashlib.sha256(crlf_bytes).hexdigest(),
-            "8cc7a8bdcc9127a7b3f6aba4cf775b45887358936a9a7b52ed03950f958ca56f",
+            "6c45d5526ce37b5a696a8a207eda6b399643b965c93e2e01223f926d380f3b22",
         )
 
     def test_10ab_retired_preview_feed_advertises_no_downloads(self) -> None:
@@ -367,7 +370,12 @@ class M10PackagingTests(unittest.TestCase):
                 "0.5.0": "0999b6a721b4579faa6a7a4d91d04da5e4960c07",
             },
         )
-        index = REPO_ROOT / PACKAGE.STABLE_INDEX_FILENAME
+        index = Path(self.temporary.name) / PACKAGE.STABLE_INDEX_FILENAME
+        archived_index = subprocess.check_output(
+            ["git", "show", "314c04f2b3e342df5aafa7ba8d950643e9124fe6:" + PACKAGE.STABLE_INDEX_FILENAME],
+            cwd=REPO_ROOT,
+        )
+        index.write_bytes(archived_index)
         document = PACKAGE.validate_index(index)
         self.assertEqual(PACKAGE.release_channel("0.1.0"), "stable")
         self.assertEqual(PACKAGE.release_tag("0.1.0"), "v0.1.0")

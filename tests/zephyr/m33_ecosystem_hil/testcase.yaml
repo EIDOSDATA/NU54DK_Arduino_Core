@@ -1,0 +1,21 @@
+tests:
+  nucode.m33.ecosystem.client:
+    build_only: true
+    extra_args:
+      - COMPANION_ROLE=client
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - bluetooth
+      - m33
+      - hil
+  nucode.m33.ecosystem.peer:
+    build_only: true
+    extra_args:
+      - COMPANION_ROLE=peer
+    platform_allow:
+      - nrf54l15dk/nrf54l15/cpuapp/nu54dk
+    tags:
+      - bluetooth
+      - m33
+      - hil

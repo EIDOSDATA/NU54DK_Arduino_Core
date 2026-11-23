@@ -18,10 +18,23 @@ REPOSITORY = HIL.parents[2]
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
-from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from ble_pair_hil_common import (  # noqa: E402
+    BOARD_ROOT,
+    flash_image_pyocd_sha256,
+    git_revision,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
-from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
+from m32_ble_capability_run import (  # noqa: E402
+    collect_register_identity,
+    discover_live,
+)
 from m32_mesh_run import _fields, _integer, _save  # noqa: E402
 from v04_protocol import ProbeLocks  # noqa: E402
 
@@ -37,6 +50,11 @@ ITERATION_TARGET = 20
 PACKET_TARGET = 4000
 ALLOWED_LOSS = 80
 SERVICE_GAP_LIMIT_MS = 500
+READY_TIMEOUT_SECONDS = 30.0
+SEMANTICS = (
+    "ble_mesh", "ble_ieee802154", "ble_esb", "packet_counters", "cleanup"
+)
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_coexistence_hil"
 
 
 class CoexistenceFailure(RuntimeError):
@@ -108,6 +126,30 @@ def _validate_result(scenario: str, role: str, fields: dict[str, str]) -> None:
         or _integer(fields, "acknowledgment_retries") > ALLOWED_LOSS
     ):
         raise CoexistenceFailure(f"{scenario}/mesh_peer boundary")
+
+
+def build_dispatch_cycle_records(scenario_phases: dict[str, dict]) -> list[dict]:
+    """! @brief 세 공존 scenario의 실제 20 iteration 분모를 cycle로 변환합니다. """
+
+    if set(scenario_phases) != set(SCENARIOS):
+        raise CoexistenceFailure("dispatcher coexistence scenario mismatch")
+    for scenario, roles in SCENARIOS.items():
+        phase = scenario_phases[scenario]
+        results = phase.get("results", {})
+        if set(results) != set(roles):
+            raise CoexistenceFailure("dispatcher coexistence role mismatch")
+        for role in roles:
+            _validate_result(scenario, role, results[role])
+        cleanup = phase.get("cleanup", {})
+        if set(cleanup) != set(roles) or any(
+                row.get("stop") != "PASS" or row.get("serial_close") != "PASS"
+                for row in cleanup.values()):
+            raise CoexistenceFailure("dispatcher coexistence cleanup mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": cycle, "status": "PASS", "semantics": dict(statuses)}
+        for cycle in range(1, ITERATION_TARGET + 1)
+    ]
 
 
 def _expect_record(
@@ -224,7 +266,9 @@ def _run_scenario(
     nonce: str,
     core: str,
     transcript: list[str],
-) -> dict[str, dict[str, str]]:
+    exact_inputs: dict | None,
+    cleanup_records: dict[str, dict],
+) -> dict:
     """! @brief 한 조합의 세 image를 V2 sector flash 후 실행합니다. """
     logical_to_board = {
         "dut": "dut",
@@ -233,30 +277,29 @@ def _run_scenario(
     }
     for role in roles:
         board = boards[logical_to_board[role]]
-        mode, written = flash_image_pyocd(
+        mode, written = flash_image_pyocd_sha256(
             f"{scenario}-{role}",
-            board["uid"],
+            board["probe_sha256"],
             images[role],
             120.0,
-            hardware_reset=True,
-            cmsis_dap_v1=False,
-            preserve_nrf54l_access=True,
+            reset_and_halt_before_program=True,
         )
         board["flashes"][scenario] = {"mode": mode, "bytes": written}
     time.sleep(2.0)
-    ports = {
-        role: serial_module.Serial(
-            boards[logical_to_board[role]]["vcom"], 115200, timeout=0.05
-        )
-        for role in roles
-    }
+    ports: dict[str, object] = {}
+    stopped_roles: set[str] = set()
+    output: dict | None = None
     try:
+        for role in roles:
+            ports[role] = serial_module.Serial(
+                boards[logical_to_board[role]]["vcom"], 115200, timeout=0.05
+            )
         for port in ports.values():
             port.reset_input_buffer()
         for role in roles:
             ports[role].write(f"{PROTOCOL}|PROBE\n".encode("ascii"))
             ports[role].flush()
-            deadline = time.monotonic() + 10.0
+            deadline = time.monotonic() + READY_TIMEOUT_SECONDS
             while True:
                 payload = ports[role].readline()
                 if time.monotonic() >= deadline:
@@ -307,10 +350,40 @@ def _run_scenario(
             )
             if stopped.get("cleanup") != "pass":
                 raise CoexistenceFailure(f"{scenario}/{role} cleanup mismatch")
-        return results
+            stopped_roles.add(role)
+        output = {"results": results}
     finally:
-        for port in ports.values():
-            port.close()
+        cleanup_records[scenario] = cleanup_direct_ports(
+            ports,
+            {
+                role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                for role in ports
+            },
+            stopped_roles,
+            transcript,
+        )
+    if output is None:
+        raise CoexistenceFailure(f"{scenario} result missing after cleanup")
+    output["cleanup"] = cleanup_records[scenario]
+    if exact_inputs is not None:
+        output["exact_program"] = complete_direct_program(
+            REPOSITORY,
+            core,
+            BOARD_ROLES,
+            exact_inputs["images"],
+            exact_inputs["probe_ids"],
+            exact_inputs["probe_hashes"],
+            exact_inputs["sidecars"],
+            {
+                role: {
+                    "mode": boards[role]["flashes"][scenario]["mode"],
+                    "bytes": str(boards[role]["flashes"][scenario]["bytes"]),
+                }
+                for role in BOARD_ROLES
+            },
+            exact_inputs["build_records"],
+        )
+    return output
 
 
 def execute(args: argparse.Namespace) -> dict:
@@ -345,7 +418,7 @@ def execute(args: argparse.Namespace) -> dict:
     boards: dict[str, dict] = {}
     for board_role in BOARD_ROLES:
         digest = getattr(args, f"probe_{board_role}_sha256")
-        uid, volume, vcom = discover(digest, list_ports)
+        uid, volume, vcom = discover_live(digest, list_ports)
         boards[board_role] = {
             "uid": uid,
             "probe_sha256": digest,
@@ -373,6 +446,35 @@ def execute(args: argparse.Namespace) -> dict:
     ).hexdigest()
     transcript: list[str] = []
     results: dict[str, dict[str, dict[str, str]]] = {}
+    scenario_phases: dict[str, dict] = {}
+    cleanup_records: dict[str, dict] = {}
+    exact_inputs: dict[str, dict] = {}
+    if not dirty:
+        for scenario, roles in SCENARIOS.items():
+            images = {
+                "dut": scenario_images[scenario]["dut"],
+                "radio": scenario_images[scenario][roles[1]],
+                "ble": scenario_images[scenario]["ble_peer"],
+            }
+            sidecars, build_records = prepare_direct_program(
+                prefix.with_name(f"{prefix.name}-{scenario}.native.json"),
+                BOARD_ROLES,
+                images,
+                identity.core,
+                identity.board,
+                APPLICATION_ROOT,
+            )
+            exact_inputs[scenario] = {
+                "images": images,
+                "probe_ids": {
+                    role: boards[role]["uid"] for role in BOARD_ROLES
+                },
+                "probe_hashes": {
+                    role: boards[role]["probe_sha256"] for role in BOARD_ROLES
+                },
+                "sidecars": sidecars,
+                "build_records": build_records,
+            }
     status = "FAIL"
     reason: str | None = None
     with ProbeLocks([board["uid"] for board in boards.values()]):
@@ -385,7 +487,7 @@ def execute(args: argparse.Namespace) -> dict:
                 nonce = hashlib.sha256(
                     f"{nonce_seed}:{index}:{scenario}".encode("ascii")
                 ).hexdigest()[:32]
-                results[scenario] = _run_scenario(
+                scenario_phases[scenario] = _run_scenario(
                     scenario,
                     roles,
                     boards,
@@ -394,7 +496,10 @@ def execute(args: argparse.Namespace) -> dict:
                     nonce,
                     identity.core,
                     transcript,
+                    exact_inputs.get(scenario),
+                    cleanup_records,
                 )
+                results[scenario] = scenario_phases[scenario]["results"]
             status = "PASS_CANDIDATE" if dirty else "PASS"
         except Exception as error:
             reason = f"{type(error).__name__}: {error}"
@@ -424,8 +529,22 @@ def execute(args: argparse.Namespace) -> dict:
         "allowed_loss": ALLOWED_LOSS,
         "service_gap_limit_ms": SERVICE_GAP_LIMIT_MS,
         "results": results,
+        "scenario_phases": scenario_phases,
+        "cleanup": cleanup_records,
         "reason": reason,
     }
+    if status == "PASS":
+        cycle_records = build_dispatch_cycle_records(scenario_phases)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["program_phases"] = {
+            scenario: scenario_phases[scenario]["exact_program"]
+            for scenario in SCENARIOS
+        }
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_coexistence", identity.core, ITERATION_TARGET, SEMANTICS,
+            BOARD_ROLES, scenario_phases["ble_mesh"]["exact_program"],
+            cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

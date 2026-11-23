@@ -12,8 +12,11 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from m29_ble_multi_protocol import (  # noqa: E402
+    CYCLE_COUNT,
     MultiProtocolFailure,
+    expected_campaign_lines,
     expected_lines,
+    parse_role_campaign,
     parse_role_transcript,
     validate_three_role_session,
 )
@@ -21,6 +24,7 @@ from m29_ble_multi_protocol import (  # noqa: E402
 
 NONCE = "00112233445566778899aabbccddeeff"
 REVISION = "1" * 40
+NONCES = tuple(f"{index:032x}" for index in range(CYCLE_COUNT))
 
 
 def transcript(role: str) -> bytes:
@@ -46,6 +50,28 @@ class M29BleMultiParserTests(unittest.TestCase):
         validate_three_role_session(results)
         self.assertEqual(results["mixed"].connections, 2)
         self.assertEqual(results["mixed"].coc_tx, 2000)
+
+    def test_accepts_exact_twenty_session_campaign(self) -> None:
+        """! @brief 20개 독립 nonce와 각 cleanup ACK를 모두 typed 결과로 만듭니다. """
+
+        raw = (
+            "\r\n".join(expected_campaign_lines("mixed", NONCES, REVISION))
+            + "\r\n"
+        ).encode("ascii")
+        results = parse_role_campaign(raw, "mixed", NONCES, REVISION)
+        self.assertEqual(len(results), CYCLE_COUNT)
+        self.assertTrue(all(result.cleanup_status == "pass" for result in results))
+
+    def test_rejects_reused_nonce_or_missing_cleanup(self) -> None:
+        """! @brief nonce 재사용과 cycle cleanup 누락을 모두 거부합니다. """
+
+        with self.assertRaises(MultiProtocolFailure):
+            expected_campaign_lines("mixed", (NONCES[0],) * CYCLE_COUNT, REVISION)
+        lines = expected_campaign_lines("mixed", NONCES, REVISION)
+        cleanup = next(index for index, line in enumerate(lines) if "|CLEANUP|" in line)
+        raw = ("\n".join(lines[:cleanup] + lines[cleanup + 1 :]) + "\n").encode("ascii")
+        with self.assertRaises(MultiProtocolFailure):
+            parse_role_campaign(raw, "mixed", NONCES, REVISION)
 
     def test_link_precedes_progress_and_result(self) -> None:
         lines = expected_lines("peripheral", NONCE, REVISION)

@@ -8,12 +8,14 @@ from typing import Sequence
 import argparse
 import datetime as dt
 import hashlib
+import json
 import locale
 import os
 import re
 import shlex
 import shutil
 import subprocess
+import sys
 from .artifacts import validate_flash_manifest
 from .build import load_context
 from .common import AdapterError, CONTEXT_DIRECTORY, ChildCommandError, canonical_path, path_key
@@ -21,6 +23,7 @@ from .environment import tool_environment
 from .host import canonical_host_os, resolve_toolchain_executable
 from .locking import build_lock, probe_lock
 from .paths import adapter_paths, paths_from_context
+from .owned_process import finite_timeout, OwnedExecutionError, OwnedInterrupted, OwnedTimeout, run_owned
 
 
 PROBE_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{3,127}$")
@@ -171,6 +174,56 @@ def discover_pyocd_probe_ids() -> list[str]:
     )
 
 
+## @brief Boards Manager의 초기 runtime 대신 고정 SDK에서 upload 의존성을 사용합니다.
+def inspect_packaged_flash(
+    tools: dict[str, Any], runner_builds: Sequence[Path], runner: str, environment: dict[str, str]
+) -> list[str]:
+    sdk_python = resolve_toolchain_executable(tools["toolchain_root"], "python")
+    assert sdk_python is not None
+    entry = Path(__file__).resolve().parents[1] / "nu54_builder.py"
+    program = """\
+import contextlib, json, runpy, sys
+from pathlib import Path
+
+with contextlib.redirect_stdout(sys.stderr):
+    builder = runpy.run_path(sys.argv[1])
+    runner = sys.argv[2]
+    try:
+        for build in sys.argv[3:]:
+            builder["validate_runner_configuration"](Path(build), runner)
+        probes = builder["discover_pyocd_probe_ids"]() if runner == "pyocd" else []
+        result = {"probes": probes}
+    except builder["AdapterError"] as error:
+        result = {"error": str(error)}
+print(json.dumps(result))
+"""
+    try:
+        result = subprocess.run(
+            [str(sdk_python), "-I", "-B", "-X", "utf8", "-c", program, str(entry), runner,
+             *(str(build) for build in runner_builds)],
+            env=environment, capture_output=True, check=True, timeout=30,
+        )
+        receipt = json.loads(result.stdout)
+    except (OSError, subprocess.SubprocessError, ValueError) as error:
+        raise AdapterError(
+            "[NU54:E_UPLOAD_SDK_RUNTIME] 고정 Nordic SDK에서 runner·probe 사전 검사를 실행하지 못했습니다."
+        ) from error
+    if "error" in receipt:
+        raise AdapterError(receipt["error"])
+    return receipt["probes"]
+
+
+## @brief exact SHA-256과 유일한 실제 CMSIS-DAP UID를 결합합니다.
+def select_pyocd_probe_digest(requested: str, discovered: Sequence[str] | None = None) -> str:
+    if not re.fullmatch(r"[0-9a-f]{64}", requested or ""):
+        raise AdapterError("[NU54:E_PROBE_SHA256] pyOCD probe의 SHA-256이 필요합니다.")
+    values = list(discovered) if discovered is not None else discover_pyocd_probe_ids()
+    matching = [value for value in values if probe_id_sha256(value) == requested]
+    if len(matching) != 1:
+        raise AdapterError("[NU54:E_PROBE_SHA256] exact probe hash의 일치 수가1이 아닙니다.")
+    return matching[0]
+
+
 ## @brief 명시값과 발견 목록에서 잘못된 자동 선택 없이 pyOCD probe 하나를 결정합니다.
 def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None = None) -> str:
     probe_ids = list(discovered) if discovered is not None else discover_pyocd_probe_ids()
@@ -188,7 +241,8 @@ def select_pyocd_probe(requested: str | None, discovered: Sequence[str] | None =
     if not probe_ids:
         raise AdapterError(
             "[NU54:E_PROBE_NONE] No CMSIS-DAP probe detected. 데이터 USB cable, target 전원, "
-            "Windows 장치 관리자의 CMSIS-DAP를 확인하십시오."
+            "CMSIS-DAP 열거와 USB 접근 권한을 확인하십시오. "
+            "WSL2에서는 Windows의 usbipd 연결 상태와 Linux udev 권한을 확인하십시오."
         )
     if len(probe_ids) != 1:
         raise AdapterError(
@@ -265,10 +319,16 @@ def build_flash_command(
         probe_id,
     ]
     if runner == "pyocd":
+        guard_script=Path(__file__).resolve().parents[1]/"nu54_pyocd_guard.py"
+        if not guard_script.is_file():
+            raise AdapterError("[NU54:E_PROBE_BACKEND] 같은 설치본의 pyOCD 보호 진입점이 없습니다.")
         command.extend((
             "--dt-flash=n",
             "--tool-opt=-Osmart_flash=false",
             "--tool-opt=-Oauto_unlock=false",
+            "--tool-opt=-Ojlink.non_interactive=false",
+            "--tool-opt=-Ojlink.power=false",
+            "--tool-opt=-Ouser_script="+str(guard_script),
         ))
         if swd_frequency is not None:
             if swd_frequency < 100_000 or swd_frequency > 4_000_000:
@@ -366,26 +426,37 @@ def classify_flash_failure(output: str, runner: str, return_code: int) -> ChildC
 ## @brief flash child process의 출력과 결과를 console 및 build log에 기록합니다.
 def run_flash_process(
     command: Sequence[str | Path], *, cwd: Path, environment: dict[str, str], log_path: Path,
-    runner: str, probe_id: str, hex_path: Path, hex_sha256: str
+    runner: str, probe_id: str, hex_path: Path, hex_sha256: str, timeout_seconds: float = 180
 ) -> None:
     normalized = [str(value) for value in command]
+    timeout_seconds = finite_timeout(timeout_seconds)
     started = dt.datetime.now(dt.timezone.utc)
+    failure = None
+    outcome = "EXITED"
+    returncode = None
+    cleanup = {}
     try:
-        result = subprocess.run(
+        result = run_owned(
             normalized,
             cwd=cwd,
-            env=environment,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            check=False,
+            environment=environment,
+            capture_directory=log_path.parent,
+            timeout=timeout_seconds,
         )
-    except OSError as error:
-        code = "E_PYOCD_EXEC" if runner == "pyocd" else "E_JLINK_EXEC"
-        raise AdapterError(
-            f"[NU54:{code}] {runner} runner process could not start. 설치 경로와 실행 권한을 "
-            f"확인하십시오: {error}"
-        ) from error
-    output = redact_probe_identity(decode_child_output(result.stdout), probe_id)
+        raw_output = result.stdout
+        returncode = result.returncode
+        cleanup = result.cleanup
+    except (OwnedTimeout, OwnedInterrupted, OwnedExecutionError) as error:
+        failure = error
+        outcome = ("TIMEOUT" if isinstance(error, OwnedTimeout) else
+            "INTERRUPTED" if isinstance(error, OwnedInterrupted) else "START_OR_CLEANUP_FAILURE")
+        raw_output = error.output
+        cleanup = error.cleanup
+    except (OSError, ValueError, RuntimeError) as error:
+        failure = error
+        outcome = "START_OR_CLEANUP_FAILURE"
+        raw_output = redact_probe_identity(str(error), probe_id).encode("utf-8")
+    output = redact_probe_identity(decode_child_output(raw_output), probe_id)
     if output:
         print(output, end="" if output.endswith("\n") else "\n")
     finished = dt.datetime.now(dt.timezone.utc)
@@ -401,7 +472,10 @@ def run_flash_process(
         f"smart_flash={'false' if runner == 'pyocd' else 'runner-default'}",
         "mass_erase_requested=false",
         "recover_requested=false",
-        f"exit_code={result.returncode}",
+        f"process_outcome={outcome}",
+        f"timeout_seconds={timeout_seconds}",
+        "cleanup=" + json.dumps(cleanup, sort_keys=True),
+        f"exit_code={returncode}",
         "command=" + redact_probe_identity(shlex.join(normalized), probe_id),
         "--- child output ---",
         output.rstrip(),
@@ -413,8 +487,18 @@ def run_flash_process(
         stream.write("\n".join(lines))
         stream.flush()
         os.fsync(stream.fileno())
-    if result.returncode != 0:
-        raise classify_flash_failure(output, runner, result.returncode)
+    if isinstance(failure, OwnedInterrupted):
+        raise failure
+    if isinstance(failure, OwnedTimeout):
+        raise AdapterError(
+            f"[NU54:E_FLASH_TIMEOUT] {runner} upload가 {timeout_seconds}초를 초과했습니다. "
+            "소유 process 정리와 부분 출력은 flash.log를 확인하십시오. 자동 재시도하지 않습니다."
+        ) from None
+    if failure is not None:
+        code = "E_PYOCD_EXEC" if runner == "pyocd" else "E_JLINK_EXEC"
+        raise AdapterError(f"[NU54:{code}] runner 시작 또는 자식 정리 실패. flash.log를 확인하십시오.") from None
+    if returncode != 0:
+        raise classify_flash_failure(output, runner, returncode)
 
 
 ## @brief build context와 현재 NCS/toolchain identity가 같은지 확인합니다.
@@ -438,10 +522,19 @@ def validate_flash_tool_identity(context: dict[str, Any], tools: dict[str, Any])
 
 ## @brief 검증된 Full Zephyr image를 선택 runner로 일반 upload합니다.
 def flash(args: argparse.Namespace) -> None:
+    try:
+        timeout_seconds = finite_timeout(getattr(args, "timeout_seconds", 180))
+    except ValueError as error:
+        raise AdapterError(f"[NU54:E_FLASH_TIMEOUT_OPTION] {error}") from None
     if args.runner not in {"pyocd", "jlink"}:
         raise AdapterError(f"[NU54:E_RUNNER_UNAVAILABLE] 지원하지 않는 runner입니다: {args.runner}")
-    tools = tool_environment(canonical_path(args.platform_root))
+    if getattr(args,"allow_jlink_backend",False) and (args.runner!="pyocd" or not (
+            getattr(args,"probe_sha256",None) or getattr(args,"probe_id",None) or os.environ.get("NUCODE_PROBE_UID"))):
+        raise AdapterError("[NU54:E_PROBE_BACKEND] J-Link backend는 pyOCD와 명시적인 probe identity가 필요합니다.")
+    platform_root = canonical_path(args.platform_root)
+    tools = tool_environment(platform_root)
     environment = flash_environment(tools, args.runner)
+    environment["NUCODE_ALLOW_JLINK_BACKEND"] = "1" if getattr(args,"allow_jlink_backend",False) else "0"
     session_paths = adapter_paths(args)
     with build_lock(session_paths["state_root"], operation="flash-session"):
         session_context = load_context(args, create=False)
@@ -453,11 +546,23 @@ def flash(args: argparse.Namespace) -> None:
                 raise AdapterError(
                     "[NU54:E_FLASH_CONTEXT] session context가 artifact manifest와 다릅니다."
                 )
-            for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
-                validate_runner_configuration(runner_build, args.runner)
-            if args.runner == "pyocd":
+            runner_builds = inputs.get("runner_builds", [inputs["zephyr_build"]])
+            discovered_probes = None
+            if (platform_root / "release-manifest.json").is_file():
+                discovered_probes = inspect_packaged_flash(tools, runner_builds, args.runner, environment)
+            else:
+                for runner_build in runner_builds:
+                    validate_runner_configuration(runner_build, args.runner)
+            digest_request = getattr(args, "probe_sha256", None)
+            if digest_request is not None:
+                if args.runner != "pyocd" or not re.fullmatch(r"[0-9a-f]{64}", digest_request):
+                    raise AdapterError("[NU54:E_PROBE_SHA256] pyOCD probe의 SHA-256이 필요합니다.")
+                probe_id = select_pyocd_probe_digest(digest_request, discovered_probes)
+                if os.environ.get("NUCODE_PROBE_UID") not in (None, "", probe_id):
+                    raise AdapterError("[NU54:E_PROBE_SHA256] 환경 UID와 명시한 hash가 다릅니다.")
+            elif args.runner == "pyocd":
                 requested = resolve_probe_request(args.probe_id, runner=args.runner)
-                probe_id = select_pyocd_probe(requested)
+                probe_id = select_pyocd_probe(requested, discovered_probes)
             else:
                 probe_id = validate_probe_id(
                     resolve_probe_request(args.probe_id, runner=args.runner), runner="jlink"
@@ -481,6 +586,7 @@ def flash(args: argparse.Namespace) -> None:
                 f"runner={args.runner} probe={mask_probe_id(probe_id)} board={args.board} "
                 f"hex_sha256={inputs['hex_sha256']}"
             )
+            environment["NUCODE_SELECTED_PROBE_SHA256"] = probe_id_sha256(probe_id)
             with probe_lock(probe_id):
                 run_flash_process(
                     command,
@@ -491,5 +597,6 @@ def flash(args: argparse.Namespace) -> None:
                     probe_id=probe_id,
                     hex_path=inputs["hex"],
                     hex_sha256=inputs["hex_sha256"],
+                    timeout_seconds=timeout_seconds,
                 )
             print(f"NU54_UPLOAD_PASS runner={args.runner} probe={mask_probe_id(probe_id)}")

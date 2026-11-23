@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Mapping
 from typing import TypedDict
 import os
+import json
 import platform
 import re
 
-from .common import AdapterError, canonical_path
+from .common import AdapterError, canonical_path, is_within, strict_json_object
 
 
 class HostDescriptor(TypedDict):
@@ -20,6 +21,7 @@ class HostDescriptor(TypedDict):
     distribution: str
     version: str
     native: bool
+    execution_environment: str
     supported: bool
     reason: str
 
@@ -133,10 +135,26 @@ def describe_host(
     machine: str | None = None,
     distribution: str | None = None,
     version: str | None = None,
-    native: bool = True,
+    native: bool | None = None,
 ) -> HostDescriptor:
     host_os = canonical_host_os(system_name or platform.system())
     architecture = canonical_architecture(machine or platform.machine())
+    execution_environment = "non_native" if native is False else "native"
+    if native is None:
+        native = True
+        if system_name is None and machine is None:
+            if host_os == "linux":
+                kernel = platform.release().casefold()
+                if "microsoft" in kernel or os.environ.get("WSL_DISTRO_NAME"):
+                    native = False
+                    execution_environment = "wsl_unverified"
+                    if "microsoft" in kernel and ("wsl2" in kernel or "microsoft-standard" in kernel):
+                        execution_environment = "wsl2"
+            elif host_os == "windows":
+                underlying = os.environ.get("PROCESSOR_ARCHITEW6432", os.environ.get("PROCESSOR_ARCHITECTURE", ""))
+                native = not (architecture == "x86_64" and underlying.casefold() == "arm64")
+                if not native:
+                    execution_environment = "non_native"
 
     if host_os == "windows":
         host_distribution = (distribution or "windows").casefold()
@@ -152,14 +170,14 @@ def describe_host(
             and host_distribution == "ubuntu"
             and version_tuple(host_version) >= (24, 4)
         )
-        requirement = "Ubuntu 24.04+ AMD64 native"
+        requirement = "Ubuntu 24.04+ AMD64 native 또는 확인된 WSL2 (WSL1·판별 불명 WSL 제외)"
     else:
         host_distribution = (distribution or "macos").casefold()
         host_version = version or platform.mac_ver()[0] or "unknown"
         supported = architecture == "arm64" and version_tuple(host_version) >= (26,)
         requirement = "macOS 26+ Apple Silicon native"
 
-    if not native:
+    if not native and execution_environment != "wsl2":
         supported = False
     reason = "supported" if supported else f"필요 조건: {requirement}"
     return {
@@ -168,6 +186,7 @@ def describe_host(
         "distribution": host_distribution,
         "version": host_version,
         "native": native,
+        "execution_environment": execution_environment,
         "supported": supported,
         "reason": reason,
     }
@@ -181,7 +200,8 @@ def require_supported_host(descriptor: HostDescriptor | None = None) -> HostDesc
             "[NU54:E_HOST_UNSUPPORTED] 지원하지 않는 Host입니다: "
             f"os={current['os']} distribution={current['distribution']} "
             f"version={current['version']} architecture={current['architecture']} "
-            f"native={str(current['native']).lower()}; {current['reason']}"
+            f"native={str(current['native']).lower()} "
+            f"environment={current.get('execution_environment', 'unknown')}; {current['reason']}"
         )
     return current
 
@@ -195,6 +215,35 @@ def executable_candidates(tool: str, host_os: str | None = None) -> tuple[str, .
     return candidates
 
 
+def declared_toolchain_candidates(toolchain_root: Path, tool: str, selected_os: str) -> tuple[Path, ...]:
+    """! @brief 고정 bundle이 선언한 상대 PATH에서만 추가 실행 파일 후보를 만듭니다. """
+    document = toolchain_root / 'environment.json'
+    if not document.is_file():
+        return ()
+    try:
+        environment = json.loads(document.read_text(encoding='utf-8-sig'), object_pairs_hook=strict_json_object)
+        entries = environment['env_vars']
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle의 환경 선언을 읽지 못했습니다.') from error
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle env_vars는 object 목록이어야 합니다.')
+    names = {'python': ('python3', 'python3.12', 'python'), 'west': ('west',), 'git': ('git',),
+        'cxx': ('arm-zephyr-eabi-g++',), 'size': ('arm-zephyr-eabi-size',),
+        'ccache': ('ccache',), 'pyocd': ('pyocd',)}[tool]
+    suffix = '.exe' if selected_os == 'windows' else ''
+    candidates = []
+    for entry in entries:
+        if entry.get('key') != 'PATH' or entry.get('type') != 'relative_paths':
+            continue
+        if not isinstance(entry.get('values'), list):
+            raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle PATH values는 상대 경로 목록이어야 합니다.')
+        for relative in entry.get('values', []):
+            if not isinstance(relative, str) or not relative or Path(relative).is_absolute() or PureWindowsPath(relative).drive or '..' in Path(relative).parts:
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle PATH는 내부 상대 경로여야 합니다.')
+            candidates.extend(toolchain_root / relative / (name + suffix) for name in names)
+    return tuple(candidates)
+
+
 ## @brief Toolchain root 아래의 실제 실행 가능한 파일 하나를 결정합니다.
 def resolve_toolchain_executable(
     toolchain_root: Path,
@@ -204,21 +253,37 @@ def resolve_toolchain_executable(
     required: bool = True,
 ) -> Path | None:
     selected_os = canonical_host_os(host_os or platform.system())
+    root = canonical_path(toolchain_root)
     checked: list[Path] = []
-    for relative in executable_candidates(tool, selected_os):
-        candidate = canonical_path(toolchain_root / relative)
-        checked.append(candidate)
-        if not candidate.is_file():
-            continue
-        if selected_os != "windows" and not os.access(candidate, os.X_OK):
-            continue
-        return candidate
+    fixed = tuple(toolchain_root / relative for relative in executable_candidates(tool, selected_os))
+    for group in (fixed, None):
+        candidates = group if group is not None else declared_toolchain_candidates(toolchain_root, tool, selected_os)
+        for path in candidates:
+            candidate = canonical_path(path)
+            checked.append(candidate)
+            if not is_within(candidate, root):
+                raise AdapterError('[NU54:E_TOOL_ENVIRONMENT] bundle 외부 실행 파일을 사용할 수 없습니다.')
+            if not candidate.is_file():
+                continue
+            if selected_os != "windows" and not os.access(candidate, os.X_OK):
+                continue
+            return candidate
     if not required:
         return None
     paths = ", ".join(path.as_posix() for path in checked)
     raise AdapterError(
         f"[NU54:E_TOOL_EXECUTABLE] {tool} 실행 파일을 찾지 못했습니다: {paths}"
     )
+
+
+def absolute_host_path(value: str | Path, host_os: str | None = None) -> Path:
+    """! @brief 명시 경로를 절대화하기 전에 해당 OS의 절대 경로인지 확인합니다. """
+    selected_os = canonical_host_os(host_os or platform.system())
+    text = value.as_posix() if isinstance(value, Path) else str(value)
+    lexical = PureWindowsPath(text) if selected_os == 'windows' else PurePosixPath(text)
+    if not text.strip() or not lexical.is_absolute() or (selected_os != 'windows' and PureWindowsPath(text).drive):
+        raise AdapterError('[NU54:E_HOST_PATH] 현재 Host의 명시적 절대 경로가 필요합니다.')
+    return canonical_path(value)
 
 
 ## @brief Host별 사용자 application data root를 계산합니다.
@@ -229,15 +294,15 @@ def application_data_root(
 ) -> Path:
     current = descriptor or describe_host()
     variables = environment if environment is not None else os.environ
-    user_home = canonical_path(home or Path.home())
     if current["os"] == "windows":
         value = variables.get("LOCALAPPDATA")
         if not value:
             raise AdapterError("[NU54:E_HOST_DATA_ROOT] LOCALAPPDATA 환경 변수가 없습니다.")
-        return canonical_path(value)
+        return absolute_host_path(value, 'windows')
+    user_home = absolute_host_path(home or Path.home(), current['os'])
     if current["os"] == "linux":
         value = variables.get("XDG_DATA_HOME")
-        return canonical_path(value) if value else user_home / ".local" / "share"
+        return absolute_host_path(value, 'linux') if value else user_home / ".local" / "share"
     return user_home / "Library" / "Application Support"
 
 
@@ -249,13 +314,13 @@ def user_cache_root(
 ) -> Path:
     current = descriptor or describe_host()
     variables = environment if environment is not None else os.environ
-    user_home = canonical_path(home or Path.home())
     if current["os"] == "windows":
         value = variables.get("LOCALAPPDATA")
         if not value:
             raise AdapterError("[NU54:E_HOST_CACHE_ROOT] LOCALAPPDATA 환경 변수가 없습니다.")
-        return canonical_path(value)
+        return absolute_host_path(value, 'windows')
+    user_home = absolute_host_path(home or Path.home(), current['os'])
     if current["os"] == "linux":
         value = variables.get("XDG_CACHE_HOME")
-        return canonical_path(value) if value else user_home / ".cache"
+        return absolute_host_path(value, 'linux') if value else user_home / ".cache"
     return user_home / "Library" / "Caches"

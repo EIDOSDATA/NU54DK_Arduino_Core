@@ -414,6 +414,7 @@ class M15AutoHilTests(unittest.TestCase):
                 f"  board_source_sha256: '{source_digests['board_source_sha256']}'\n"
                 "  ncs_revision: '99553055607b'\n"
                 "  zephyr_revision: 'bf801e4e3d19'\n"
+                "  zephyr_patchset_sha256: '0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf'\n"
                 "  board: 'nrf54l15dk'\n"
                 "  board_qualifiers: 'nrf54l15/cpuapp/nu54dk'\n",
                 encoding="utf-8",

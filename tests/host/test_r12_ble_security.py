@@ -63,6 +63,9 @@ class BleSecurityTests(unittest.TestCase):
                              'oob_codec', 'oob_pairing', 'oob_mismatch',
                              'bond_legacy_migration', 'bond_future_rejected',
                              'bond_truncated_rejected',
+                             'orphan_gatt_success', 'orphan_gatt_invalid',
+                             'orphan_gatt_overflow', 'orphan_gatt_load_error',
+                             'orphan_gatt_unpair_error',
                              'profiles', 'hid']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)

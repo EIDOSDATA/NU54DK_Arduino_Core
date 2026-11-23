@@ -1,5 +1,12 @@
 # CI/CD와 재현 빌드 — v0.5.0 지원과 개발 main 회귀
 
+W06 전용 build/artifact/개발 smoke/최종 검증의 다음 구조는
+[재설계 문서](11_M33_W06_검증_파이프라인_재설계.md)에서 관리한다. 현재 실행 범위는
+[M33 인계](../M33_HANDOFF.md)를 따르며 기존 workflow·stable gate와 구분한다.
+문서 commit/push 뒤에도 해당 exact SHA의 Software gates를 확인한다. 문서 전용 분류에 따른
+대표 target build 생략은 성공한 실행과 구분하며 기존 C5 전체 빌드 실적을 새 커밋의 실적으로 옮기지 않는다.
+문서 수정만으로 CI shard 수나 캐시 계약을 바꾸지 않는다.
+
 2026-09-26 사용자 승인으로 M31-W08 Windows RC 검증은 GitHub Actions에서 8개 설치 예제 shard와
 별도 lifecycle job을 병렬 실행했다. 과거 문서·이력 정리 때의 CI 생략은 당시 이력으로 보존하며
 현재 W08 결과를 미확인 PASS로 기록하지 않는다.
@@ -15,15 +22,8 @@ CI는 지원 범위를 증명하는 gate이지 Release를 자동 승인하는 �
 artifact hash와 당시 판정은 [M12 기준선](<../04_검증 기록/14_M12_CI_CD_기준선.md>)과
 [M17 기준선](<../04_검증 기록/19_M17_NCS_기능과_예제_Coverage_기준선.md>)에 보존한다.
 
-현재 Linux container target build는 Linux Arduino 사용자 Host 지원이 아니며 Windows job 결과도
-macOS 지원을 뜻하지 않는다. `v0.5.0`은 M31 완료 뒤 Windows 10/11 x64 우선 릴리스이며
-최종 package·설치·예제·RC gate를 [v0.5.0 TODO](../TODO_v0.5.0.md)에서 판정한다.
-Ubuntu/macOS package/build matrix와 실물 Host 검증은 v0.6.0의 M32·M33 계획과 연계한다.
-버전 배정은 OS 지원 확정이 아니며 기존 세 Host 계획·OS별 최종 gate를 완화하지 않는다.
-[다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에 따라 사용자가 해당 OS를 추가할
-릴리스의 최종 단계에서 설치·USB upload·serial·debug·수명주기를 검증한다.
-다만 현재 Host 구현은 W01~W03 완료(3/8)에서 사용자 지시로 보류했다. 위 단계는 재개 후의
-검증 계약이며 새 Host 작업·CI 실행·상태 조회를 허가하는 지시가 아니다.
+CI의 target 빌드와 사용자 장치 실기는 별도 결과로 기록한다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
+
 
 ---
 
@@ -48,7 +48,7 @@ Checkout은 submodule을 recursive로 받고 full history를 사용한다. Workf
 `contents: read`이며 같은 ref의 중복 실행은 취소한다.
 
 현재 M12 workflow에는 `main`과 과거 `0.5.0-RC2` push trigger가 남아 있다. RC2 브랜치는 정식
-승격 후 삭제했으므로 일반 개발은 `main`에서 검사한다. 문서 전용 변경은 classifier 근거가 있을 때
+승격 후 삭제했다. `Release-0.6.0`의 문서 커밋은 같은 브랜치의 exact SHA를 고정해 수동 실행한다. 문서 전용 변경은 classifier 근거가 있을 때
 대표 target build를 생략할 수 있지만 문서·Host·계약·package 검사는 유지한다. NCS/toolchain
 설치 cache와 configuration/source compile cache는 서로 다른 key·경로로 관리한다.
 
@@ -62,7 +62,7 @@ EEPROM/LittleFS까지 포함한 library 8개·예제 29개다. `Standard periphe
 BLE 7개를 M22 package lock과 installed-package gate로 모두 compile했다. 해당 29개 기대값을
 과거 `v0.2.0` artifact 기록에 소급 적용하지 않는다.
 v0.4.1 stable은 `NUCODE Peripheral Fabric`을 포함해 9개 library·30개 예제를 제공한 역사 기준선이다.
-현재 v0.5.0 stable은 16개 library·113개 예제를 제공하고 stable index에는 0.5.0 하나만 둔다.
+이전 v0.5.0은 라이브러리 16개와 예제 113개를 제공했다. 현행 stable 인덱스에는 v0.6.0과 초기 Python의 세 Host 자산이 게시되어 있다. [v0.6.0 배포 기록](<../04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 이전 package lock과 identity는 역사 회귀 입력으로만 검사한다.
 
 로컬 진입점은 다음과 같다.
@@ -314,22 +314,49 @@ Exact 실행·허용 범위는 [RC2 검증 기록](<../04_검증 기록/271_v0.5
 
 ### 후속 제품선 다중 Host CI 승격 조건
 
-| CI/HIL 행 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
+| 실제 native CI 실행기 | 자동화할 범위 | CI만으로 증명하지 않는 것 |
 | --- | --- | --- |
-| Windows 10/11 x64 | Host unit, prerequisite, 전체 예제 package build | 모든 Windows adapter·실물 board runtime |
-| Ubuntu 24.04+ AMD64 | 지원 release별 clean install·build·artifact 비교 | container 밖 USB 권한·실물 upload |
-| macOS 26+ Apple Silicon | native ARM64 install·build·artifact 비교 | Intel/Rosetta·실물 upload |
-| Host별 HIL | 명시적 UID upload, Blink·Serial·BLE 대표 runtime, lifecycle | 모든 BLE RF 기능을 OS마다 반복한 결과 |
+| Windows Server2025 x64 | 고정 prerequisite·Host unit·설치 smoke·image 비교 | Windows11 사용자 USB·IDE 실기 |
+| Ubuntu24.04 AMD64 | 고정 prerequisite·Host unit·설치 smoke·image 비교 | WSL2/native 장치 권한·USB 실기 |
+| macOS26 ARM64 | 기존 native 기준선과 C11 집중 Host 회귀·설치·lifecycle·대표 cold/warm | macOS27·Intel/Rosetta·USB·IDE 실기 |
+| macOS27 ARM64 (`xcode-27`) | C11 별도 버전 호환성 CI·실제 major 검사 | macOS26 실적 대체·USB·IDE 실기 |
+
+전체204는 실제 영향이 확인돼 명시 요청한 경우만 실행한다. 기존 전체 native 기준선은 보존한다.
+다섯 지원 버전은 CI 실행기 수와 다른 분모다. Windows11은 C5 실기+C10 제한 영향 검증을 연결하고,
+Ubuntu24.04/WSL2는 C10 새 Host 경로를 확인한다. Ubuntu26.04·macOS26/27은 버전별 설치·대표
+build·장치·IDE·lifecycle 호환성을 확인한다. [현행 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
 
 새 OS 행은 먼저 `candidate`로 추가한다. 정적 job만 통과해 `supported`로 바꾸지 않고 실제 Host의
 clean install·upload 증거와 release 문서 갱신까지 완료한다. Ubuntu/macOS의 해당 실물 증거는
 사용자가 해당 OS를 추가할 후속 릴리스의 최종 단계에서 제공한다. 그 전의 `NOT_RUN`은 해당 OS
 지원 gate 미완료를 뜻하며 M31 v0.5.0 Windows 릴리스를 차단하지 않는다. Windows 최종 후보의
-회귀는 v0.5.0 공개 gate에서, 다중 Host 구현·package 준비는 Host 작업 재개 뒤 진행한다.
+회귀는 v0.5.0 공개 gate에서 완료했다. C5 Windows 기준선은329번에 보존하며 현행 진행은
+[331번](<../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>)을 따른다. C6~C10 원형은330번에 보존한다.
 
 ---
 
-## 7. 관련 구현과 기록
+## 7. M33-W05 설치 예제 Actions — 기존 도구 reference
+
+[`m33-w05-installed-examples.yml`](../../.github/workflows/m33-w05-installed-examples.yml)은 수동 실행으로
+Windows clean 설치 예제 검사를 8개 shard에 나눈다. 자동 push trigger는 없으며 모든 개발 push에서
+204개를 다시 빌드하지 않는다. `target_source_sha`는 40자리 소문자 commit SHA이고 기본값은
+W05 완료 source `5f9b2257e2d9630fc919d9cd6508f918d93207cc`다. W06 재실행 지시가 아니다.
+
+각 shard는 제어 도구, exact target, 독립 exact 설치 checkout을 분리하고 Arduino data에는
+설치 checkout을 가리키는 version별 junction만 만든다. 정렬한 204개 예제 identity와 negative 9개를
+각각 modulo 8로 배정해 전체에서 한 번씩 검사한다. Shard 내부 worker 상한은 2개이며,
+단일 PC에서 shard option을 생략하면 204개와 negative 9개를 전수 검사한다.
+
+Aggregate는 shard 0~7의 완전성·중복·누락, exact revision과 source/install clean 상태,
+설치 tree 불변성, library 24개·profile 204개 합계, build PASS·timeout 없음,
+negative의 nonzero exit·timeout 없음·artifact 0을 재검증한다. 최초 실패를 보존한 최대 1회
+진단 재시험과 절대경로·raw UID·secret 비노출도 검사한다. `installed-examples.json`은
+비분할 전수 evidence schema와 호환되지만 별도 검토 없이 완료 evidence로 복사하지 않는다.
+
+이 절로 기존 `tools/ci/m33_w05_github_actions.md`의 고유 내용을 통합했다.
+실제 W05 결과는 [301번](<../04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>)에 보존한다.
+
+## 8. 관련 구현과 기록
 
 - [`verify_ci_lock.py`](../../tools/ci/verify_ci_lock.py)
 - [`prepare_ncs_workspace.py`](../../tools/ci/prepare_ncs_workspace.py)

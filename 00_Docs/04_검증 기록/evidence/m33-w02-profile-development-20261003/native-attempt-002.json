@@ -1,0 +1,77 @@
+{
+  "schema": "nucode-m33-profile-hil-v1",
+  "family": "native",
+  "status": "FAIL",
+  "reason": "client: object-step",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "development": true,
+  "failure_details": {
+    "role": "client",
+    "reason": "object-step",
+    "object_stage": "3",
+    "event_type": "5",
+    "event_status": "0",
+    "object_id": "256",
+    "object_length": "19",
+    "object_error": "-12",
+    "type_ok": "1",
+    "length_ok": "1",
+    "data_ok": "1",
+    "accepted": "0",
+    "object_busy": "0"
+  },
+  "observed_utc": "2026-10-03T14:12:05.218828+00:00",
+  "transcript_sha256": "8058aa38f9602481924d8c5853f85b90ceae74e812e305ae47063ae28e66af89",
+  "results": {},
+  "server": {
+    "role": "server",
+    "nonce": "05c8ea29a2865cee59c3bc1d18d9f3f0",
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "max_links": "1",
+    "email_deliveries": "0",
+    "bond_deletions": "0",
+    "object_writes": "0",
+    "single_link": "1",
+    "cgms_session": "1"
+  },
+  "excluded": [
+    "BMS positive persistent delete",
+    "native second-peer rejection",
+    "Apple/Google interoperability"
+  ],
+  "boards": {
+    "server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "040d272beea58813b55011f84b68697b5c8c9573f1ef33537654b6ed989ab7ec",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "290816"
+    },
+    "client": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "73f2c9a8f90607ace1aebe2bf77d3ee94f81aaa62737a8d3b58af8fa13ca4745",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "249856"
+    }
+  }
+}

@@ -48,7 +48,7 @@ class BleGapTests(unittest.TestCase):
                              'reentrant', 'pending_end', 'scan_copy', 'driver_failure',
                              'settings_failure', 'settings_preloaded', 'advertising',
                              'multi_link', 'generation',
-                             'end_two_links', 'role_callback_guard', 'power_control',
+                             'end_two_links', 'role_callback_guard', 'inactive_facade_callback', 'power_control',
                              'timing_features']:
                 with self.subTest(scenario=scenario):
                     result = run_executable([str(binary), scenario], capture_output=True, timeout=10)

@@ -17,14 +17,18 @@ import time
 
 HIL = Path(__file__).resolve().parent
 REPOSITORY = HIL.parents[2]
-PYOCD_LAUNCHER = HIL / "pyocd_launcher.py"
 if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import (  # noqa: E402
     BOARD_ROOT,
-    flash_image_pyocd,
+    BlePairHilFailure,
+    collect_register_identity_sha256 as collect_register_identity_backend,
+    flash_image_pyocd_sha256,
     git_revision,
+    probe_sha256,
+    probe_transport,
+    resolve_transport_endpoint,
 )
 from m6_serial_echo import (  # noqa: E402
     DAPLINK_TARGET,
@@ -45,20 +49,20 @@ class ExecutionFailure(RuntimeError):
     """! @brief flash·serial·mapping·증거 단계의 제한된 실패를 나타냅니다. """
 
 
-REGISTER_QUERY_TIMEOUT_SECONDS = 60
-
-
 def sha256_bytes(payload: bytes) -> str:
     """! @brief probe 원문 대신 artifact byte의 SHA-256을 계산합니다. """
     return hashlib.sha256(payload).hexdigest()
 
 
-def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
+def discover(probe_sha256: str, list_ports: object) -> tuple[str, str | None, str]:
     """! @brief SHA-256 identity 하나에 정확히 하나의 MSD와 VCOM을 결합합니다. """
     if len(probe_sha256) != 64 or any(
         character not in "0123456789abcdef" for character in probe_sha256
     ):
         raise ExecutionFailure("--probe-sha256은 소문자 SHA-256이어야 합니다")
+    selected = resolve_transport_endpoint(probe_sha256, None, "auto", list_ports)
+    if selected is not None:
+        return selected.board_id, None, selected.port_name
     candidates = []
     for letter in string.ascii_uppercase:
         volume = Path(f"{letter}:/")
@@ -76,6 +80,36 @@ def discover(probe_sha256: str, list_ports: object) -> tuple[str, str, str]:
     return candidates[0]
 
 
+def discover_live(
+    probe_sha256: str,
+    list_ports: object,
+) -> tuple[str, str | None, str]:
+    """! @brief MSD 부재 시 실제 USB serial과 target UART로 probe를 결합합니다. """
+
+    try:
+        return discover(probe_sha256, list_ports)
+    except ExecutionFailure as error:
+        if str(error) != "probe SHA-256 mapping count=0":
+            raise
+
+    raw_ids = {
+        (port.serial_number or "").lower()
+        for port in list_ports.comports()
+        if port.serial_number
+        and port.vid == 0x0D28
+        and port.pid == 0x0204
+        and sha256_bytes(
+            port.serial_number.lower().encode("ascii")
+        ) == probe_sha256
+    }
+    if len(raw_ids) != 1:
+        raise ExecutionFailure(
+            f"live probe SHA-256 mapping count={len(raw_ids)}"
+        )
+    raw_uid = raw_ids.pop()
+    return raw_uid, None, find_serial_port(raw_uid, "auto", list_ports)
+
+
 def _read_line(port: object, deadline: float) -> bytes:
     """! @brief CRLF까지 bounded UART byte만 반환합니다. """
     captured = bytearray()
@@ -91,52 +125,31 @@ def _read_line(port: object, deadline: float) -> bytes:
     raise ExecutionFailure("UART line timeout")
 
 
-def collect_register_identity(raw_uid: str, volume: str) -> dict[str, str]:
-    """! @brief CMSIS-DAP V2 attach 뒤 비파괴 DP/AP 레지스터만 읽습니다. """
-    details = read_details(Path(volume))
-    if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
-        raise ExecutionFailure("DAPLink target identity 불일치")
-    command = [
-        sys.executable, "-I", str(PYOCD_LAUNCHER), "commander", "--uid", raw_uid,
-        "--target", "nrf54l", "--frequency", "500000", "--connect", "attach",
-        "-O", "cmsis_dap.limit_packets=true", "-O", "cmsis_dap.prefer_v1=false",
-        "-O", "auto_unlock=false",
-    ]
-    read_commands = (
-        "readdp 0x0\nreaddp 0x24\nreadap 0 0xfc\nreadap 0 0x00\n"
-        "readap 2 0xfc\nreadap 2 0x14\nexit\n"
-    )
-    result = subprocess.run(
-        command,
-        input=read_commands,
-        text=True,
-        capture_output=True,
-        timeout=REGISTER_QUERY_TIMEOUT_SECONDS,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise ExecutionFailure("CMSIS-DAP V2 DP/AP register query failure")
-    output = result.stdout + "\n" + result.stderr
-    patterns = {
-        "dp_idcode": r"DP register 0x0 = 0x([0-9a-fA-F]{8})",
-        "dp_targetid_observed": r"DP register 0x24 = 0x([0-9a-fA-F]{8})",
-        "ahb_ap_idr": r"AP register 0xfc = 0x([0-9a-fA-F]{8})",
-        "ahb_ap_csw": r"AP register 0x0 = 0x([0-9a-fA-F]{8})",
-        "ctrl_ap_idr": r"AP register 0x20000fc = 0x([0-9a-fA-F]{8})",
-        "approtect_status": r"AP register 0x2000014 = 0x([0-9a-fA-F]{8})",
-    }
-    values = {}
-    for name, pattern in patterns.items():
-        matched = re.search(pattern, output)
-        if matched is None:
-            raise ExecutionFailure(f"CMSIS-DAP V2 register record missing: {name}")
-        values[name] = int(matched.group(1), 16)
-    if values["dp_idcode"] != 0x6BA02477 or values["ahb_ap_idr"] != 0x84770001 or (
-        values["ctrl_ap_idr"] != 0x32880000 or
-        values["ahb_ap_csw"] & 0x40 == 0 or values["approtect_status"] != 0
-    ):
-        raise ExecutionFailure("Nordic DP/AP identity 또는 보호 상태 불일치")
-    return {name: f"0x{value:08x}" for name, value in values.items()}
+def collect_register_identity_sha256(
+    digest: str,
+    volume: str | None,
+) -> dict[str, str]:
+    """! @brief SHA-256 probe를 pyOCD API로 선택해 DP/AP identity를 읽습니다. """
+
+    if probe_transport().descriptor()["kind"] == "jlink-swd" and volume is not None:
+        raise ExecutionFailure("J-Link identity에 MSD를 결합할 수 없습니다")
+    if volume is not None:
+        details = read_details(Path(volume))
+        if details is None or detail_value(details, "Target Detect") != DAPLINK_TARGET:
+            raise ExecutionFailure("DAPLink target identity 불일치")
+    try:
+        return collect_register_identity_backend(digest, volume)
+    except BlePairHilFailure as error:
+        raise ExecutionFailure(str(error)) from error
+
+
+def collect_register_identity(
+    raw_uid: str,
+    volume: str | None,
+) -> dict[str, str]:
+    """! @brief legacy 내부 UID를 hash한 뒤 argv 없는 API helper로 위임합니다. """
+
+    return collect_register_identity_sha256(probe_sha256(raw_uid), volume)
 
 
 def collect_transcript(port: object, nonce: str, timeout_seconds: float) -> bytes:
@@ -201,14 +214,12 @@ def execute(args: argparse.Namespace) -> dict:
     if output.with_suffix(".json").exists() or output.with_suffix(".transcript.log").exists():
         raise ExecutionFailure("기존 attempt evidence를 덮어쓰지 않습니다")
     with ProbeLocks([raw_uid]):
-        registers = collect_register_identity(raw_uid, volume)
-        flash_mode, flash_bytes = flash_image_pyocd(
+        registers = collect_register_identity_sha256(args.probe_sha256, volume)
+        flash_mode, flash_bytes = flash_image_pyocd_sha256(
             "capability",
-            raw_uid,
+            args.probe_sha256,
             image,
             120.0,
-            hardware_reset=True,
-            preserve_nrf54l_access=True,
         )
         time.sleep(2.0)
         with serial_module.Serial(vcom, 115200, timeout=0.2) as port:

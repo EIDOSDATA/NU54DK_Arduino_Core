@@ -20,6 +20,12 @@ if str(HIL) not in sys.path:
     sys.path.insert(0, str(HIL))
 
 from ble_pair_hil_common import BOARD_ROOT, flash_image_pyocd, git_revision  # noqa: E402
+from m33_sdk_risk_common import (  # noqa: E402
+    cleanup_direct_ports,
+    complete_direct_program,
+    dispatch_attestation,
+    prepare_direct_program,
+)
 from m6_serial_echo import import_pyserial  # noqa: E402
 from m32_ble_capability import ExpectedIdentity  # noqa: E402
 from m32_ble_capability_run import collect_register_identity, discover  # noqa: E402
@@ -31,6 +37,8 @@ PROTOCOL = "M32EAD|1"
 ITERATION_TARGET = 20
 REPORT_TARGET = 400
 ALLOWED_LOSS = 4
+APPLICATION_ROOT = REPOSITORY / "tests/zephyr/m32_ble_ead_hil"
+SEMANTICS = ("encrypted_advertising_data", "wrong_key_rejection", "cleanup")
 
 
 class EadExecutionFailure(RuntimeError):
@@ -68,6 +76,30 @@ def _integer(fields: dict[str, str], key: str) -> int:
     if re.fullmatch(r"[0-9]+", value) is None:
         raise EadExecutionFailure(f"invalid integer field: {key}")
     return int(value)
+
+
+def build_dispatch_cycle_records(results: dict[str, dict[str, str]],
+                                 auth_sequences: set[int]) -> list[dict]:
+    """! @brief 인증된 20개 EAD sequence와 각 negative 분모를 cycle로 변환합니다. """
+
+    if set(results) != set(ROLES) or \
+            auth_sequences != set(range(ITERATION_TARGET)) or \
+            _integer(results["advertiser"], "updates") != ITERATION_TARGET:
+        raise EadExecutionFailure("dispatcher EAD sequence witness mismatch")
+    scanner = results["scanner"]
+    if _integer(scanner, "raw") < REPORT_TARGET or \
+            _integer(scanner, "authenticated") != ITERATION_TARGET or \
+            _integer(scanner, "dropped") > ALLOWED_LOSS or any(
+                _integer(scanner, key) != ITERATION_TARGET
+                for key in ("replay_rejected", "tamper_rejected",
+                            "wrong_key_rejected", "wrong_iv_rejected")
+            ):
+        raise EadExecutionFailure("dispatcher EAD result witness mismatch")
+    statuses = {token: "PASS" for token in SEMANTICS}
+    return [
+        {"cycle": sequence + 1, "status": "PASS", "semantics": dict(statuses)}
+        for sequence in sorted(auth_sequences)
+    ]
 
 
 def _save(prefix: Path, evidence: dict, transcript: list[str]) -> None:
@@ -134,6 +166,14 @@ def execute(args: argparse.Namespace) -> dict:
         }
     if boards["advertiser"]["uid"] == boards["scanner"]["uid"]:
         raise EadExecutionFailure("양 역할이 동일 probe에 매핑됨")
+    images = {role: boards[role]["image"] for role in ROLES}
+    sidecars: dict = {}
+    build_records: dict = {}
+    if not dirty:
+        sidecars, build_records = prepare_direct_program(
+            prefix.with_suffix(".json"), ROLES, images, identity.core,
+            identity.board, APPLICATION_ROOT,
+        )
 
     nonce = hashlib.sha256(
         f"{time.time_ns()}:{identity.core}".encode("ascii")
@@ -143,6 +183,8 @@ def execute(args: argparse.Namespace) -> dict:
     auth_sequences: set[int] = set()
     status = "FAIL"
     reason: str | None = None
+    cleanup: dict[str, dict[str, str]] = {}
+    exact_program = None
 
     with ProbeLocks([board["uid"] for board in boards.values()]):
         for role in ROLES:
@@ -157,11 +199,13 @@ def execute(args: argparse.Namespace) -> dict:
                 preserve_nrf54l_access=True,
             )
         time.sleep(2.0)
-        ports = {
-            role: serial_module.Serial(board["vcom"], 115200, timeout=0.05)
-            for role, board in boards.items()
-        }
+        ports: dict[str, object] = {}
+        stopped_roles: set[str] = set()
         try:
+            for role, board in boards.items():
+                ports[role] = serial_module.Serial(
+                    board["vcom"], 115200, timeout=0.05
+                )
             for port in ports.values():
                 port.reset_input_buffer()
             for role in ROLES:
@@ -268,6 +312,7 @@ def execute(args: argparse.Namespace) -> dict:
                     if fields.get("nonce") != nonce or fields.get("core") != identity.core:
                         raise EadExecutionFailure(f"{role} STOP identity mismatch")
                     if line.startswith(f"{PROTOCOL}|STOPPED|role={role}"):
+                        stopped_roles.add(role)
                         break
             status = "PASS_CANDIDATE" if dirty else "PASS"
         except Exception as error:
@@ -275,8 +320,30 @@ def execute(args: argparse.Namespace) -> dict:
             reason = re.sub(r"(?i)\b[0-9a-f]{16,64}\b", "<redacted-identity>", reason)
             reason = re.sub(r"(?i)(?:uid|probe_id)=[^\s,;]+", "uid=<redacted>", reason)
         finally:
-            for port in ports.values():
-                port.close()
+            cleanup = cleanup_direct_ports(
+                ports,
+                {
+                    role: f"{PROTOCOL}|STOP|nonce={nonce}\n".encode("ascii")
+                    for role in ports
+                },
+                stopped_roles,
+                transcript,
+            )
+        if status == "PASS":
+            exact_program = complete_direct_program(
+                REPOSITORY, identity.core, ROLES, images,
+                {role: boards[role]["uid"] for role in ROLES},
+                {role: boards[role]["probe_sha256"] for role in ROLES},
+                sidecars,
+                {
+                    role: {
+                        "mode": boards[role]["flash_mode"],
+                        "bytes": str(boards[role]["flash_bytes"]),
+                    }
+                    for role in ROLES
+                },
+                build_records,
+            )
 
     public_boards = {
         role: {key: value for key, value in board.items() if key not in {"uid", "image"}}
@@ -311,7 +378,15 @@ def execute(args: argparse.Namespace) -> dict:
             "scan_queue": int(scanner.get("dropped", "0")),
         },
         "reason": reason,
+        "cleanup": cleanup,
     }
+    if status == "PASS" and exact_program is not None:
+        cycle_records = build_dispatch_cycle_records(results, auth_sequences)
+        evidence["dispatch_cycle_records"] = cycle_records
+        evidence["m33_dispatch_attestation"] = dispatch_attestation(
+            "m32_ead", identity.core, ITERATION_TARGET, SEMANTICS, ROLES,
+            exact_program, cycle_records=cycle_records,
+        )
     _save(prefix, evidence, transcript)
     return evidence
 

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "kind": "enocean",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "board": "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+  "source_path": "nrf/samples/bluetooth/enocean",
+  "upstream_files": {
+    "CMakeLists.txt": "10b5ec678ba07644373e8edaa522f1bd51b78cc327db44d0d31b72e6f91c38c2",
+    "Kconfig": "bae754946eace6cc68c91c76e30c0ba04e1dfde90c5d0d6ed6f9d78a70774b7e",
+    "Kconfig.sysbuild": "6c11bbf7b974e5d174c1df260a0992e893f001a3404b264c67c22de8c4cf6f7b",
+    "prj.conf": "1fb540b541935b4d0d8319d482d458b94a943e12073d6da1de074f83994cfa4d",
+    "README.rst": "8a8f568361499a0ab9fafc5ead46bed287e5bc9add2db0f55cc97f2e80910787",
+    "sample.yaml": "a80e26bb4924a710a9516346e56f32dcb5003d0547f86753de0c6a0e3d6bc607",
+    "src/main.c": "07c7fbaf76b753e4ebabce6c3b8633c73c0db63e72e4f4f68af00dfc63ab4d4b"
+  },
+  "command": [
+    "C:\\ncs\\toolchains\\dcbdc366a1\\opt\\bin\\python.exe",
+    "-m",
+    "west",
+    "build",
+    "--sysbuild",
+    "-b",
+    "nrf54l15dk/nrf54l15/cpuapp/nu54dk",
+    "-d",
+    "C:\\n54w03e-template-enocean-010\\build",
+    "C:\\n54w03e-template-enocean-010\\source",
+    "--",
+    "-DBOARD_ROOT=C:/n54w03e/board_package/NU54DK_Zephyr_DTS",
+    "-DUSE_CCACHE=0",
+    "-DSB_EXTRA_CONF_FILE=C:/n54w03e-template-enocean-010/private-sysbuild.conf",
+    "-DEXTRA_CONF_FILE=C:/n54w03e-template-enocean-010/private-app.conf"
+  ],
+  "automatic_flash": false,
+  "external_interoperability": "NOT_RUN",
+  "credential_mode": "none",
+  "generated_source_sha256": {
+    "CMakeLists.txt": "db7aeec61b32d343365db9eebb5086ab71edf23f2c6fcd8409e393980379d76a",
+    "Kconfig": "bae754946eace6cc68c91c76e30c0ba04e1dfde90c5d0d6ed6f9d78a70774b7e",
+    "Kconfig.sysbuild": "6c11bbf7b974e5d174c1df260a0992e893f001a3404b264c67c22de8c4cf6f7b",
+    "prj.conf": "1fb540b541935b4d0d8319d482d458b94a943e12073d6da1de074f83994cfa4d",
+    "README.rst": "8a8f568361499a0ab9fafc5ead46bed287e5bc9add2db0f55cc97f2e80910787",
+    "sample.yaml": "a80e26bb4924a710a9516346e56f32dcb5003d0547f86753de0c6a0e3d6bc607",
+    "src/main.c": "07c7fbaf76b753e4ebabce6c3b8633c73c0db63e72e4f4f68af00dfc63ab4d4b"
+  },
+  "known_boundaries": [
+    "loaderless; no DFU",
+    "no automatic upload or erase",
+    "external peer NOT_RUN"
+  ],
+  "build_exit_code": 0,
+  "artifacts": {
+    "build/source/zephyr/zephyr.elf": "cc8fb1c3bf09f7403c39f46202d790eb373fd8b8d9c45b76dc0a5aa1120b708c",
+    "build/source/zephyr/zephyr.hex": "6bdc0a6ee36cf8a5585a887d94e2a711996171522b6134c6d5c0c7b37a62e3c5"
+  }
+}

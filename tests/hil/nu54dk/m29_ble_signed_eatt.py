@@ -30,13 +30,15 @@ from ble_pair_hil_common import (  # noqa: E402
     RoleEndpoint,
     RoleExecution,
     build_nonce,
-    discover_endpoint,
+    discover_endpoint_sha256,
     file_sha256,
     flash_image,
-    flash_image_pyocd,
+    flash_image_pyocd_sha256,
     git_revision,
     image_record,
+    public_endpoint,
     prepare_output_paths,
+    probe_sha256,
     read_line,
     save_failure_transcripts,
     transcript_record,
@@ -161,6 +163,7 @@ def parse_role_transcript(
         )
     )
     cursor, _ = _take_pattern(lines, cursor, ready_pattern)
+    cursor = _take_exact(lines, cursor, lines[cursor - 1])
     cursor = _take_exact(
         lines,
         cursor,
@@ -277,6 +280,13 @@ def parse_role_transcript(
                 )
         local_counter = current_local
         remote_counter = current_remote
+        if role == "central":
+            cursor = _take_exact(
+                lines,
+                cursor,
+                f"{PROTOCOL}|CLOSE_ACCEPTED|role=central|mode=sign".encode("ascii")
+                + _suffix(iteration, nonce, core_revision),
+            )
         take_end("sign", iteration)
 
     take_reboot_and_ready(1)
@@ -364,8 +374,8 @@ def parse_arguments(arguments: Sequence[str] | None = None) -> argparse.Namespac
     )
     parser.add_argument("--peripheral-hex")
     parser.add_argument("--central-hex")
-    parser.add_argument("--peripheral-board-id", required=True)
-    parser.add_argument("--central-board-id", required=True)
+    parser.add_argument("--probe-peripheral-sha256", required=True)
+    parser.add_argument("--probe-central-sha256", required=True)
     parser.add_argument("--peripheral-volume")
     parser.add_argument("--central-volume")
     parser.add_argument("--peripheral-port", default="auto")
@@ -422,12 +432,10 @@ def _query_ready(
     core_revision: str,
     deadline: float,
 ) -> None:
-    """! @brief flash 뒤 입력을 비우고 현재 image READY만 질의합니다. """
+    """! @brief 두 boot READY를 먼저 검증한 뒤 같은 image의 READY를 한 번씩 질의합니다. """
 
+    boot_ready = {}
     for role in ("peripheral", "central"):
-        ports[role].reset_input_buffer()
-        pending[role].clear()
-        _write_line(ports[role], f"{PROTOCOL}|READY?")
         pattern = re.compile(
             rf"{re.escape(PROTOCOL)}\|READY\|role={role}\|bond_count=[01]\|core={core_revision}".encode(
                 "ascii"
@@ -437,6 +445,13 @@ def _query_ready(
         print(f"[{role}] {line.decode('ascii', errors='backslashreplace')}")
         if pattern.fullmatch(line) is None:
             raise BlePairHilFailure(f"{role} W07 READY 불일치: {line!r}")
+        boot_ready[role] = line
+
+    for role in ("peripheral", "central"):
+        _write_line(ports[role], f"{PROTOCOL}|READY?")
+        _read_expected(
+            ports[role], role, pending[role], captures[role], deadline, boot_ready[role]
+        )
 
 
 def _clear_bonds(
@@ -534,6 +549,123 @@ def _reboot_pair(
             future.result()
 
 
+def _collect_signed_barrier(
+    ports: dict[str, Any],
+    pending: dict[str, bytearray],
+    captures: dict[str, bytearray],
+    nonce: str,
+    core_revision: str,
+    iteration: int,
+    deadline: float,
+    expected_end: dict[str, bytes],
+) -> None:
+    """! @brief 양측 실제 SIGN과 counter를 확인한 뒤 중앙 CLOSE·양측 END를 요구합니다. """
+
+    _validate_identity(nonce, core_revision, "central")
+    if not 1 <= iteration <= SIGN_REBOOTS:
+        raise BlePairHilFailure("W07 SIGN barrier iteration이 1..20 범위를 벗어났습니다.")
+    suffix = _suffix(iteration, nonce, core_revision)
+    stop_event = threading.Event()
+    barrier_lock = threading.Lock()
+    observed_signs: set[str] = set()
+    close_sent = False
+    first_error: list[Exception] = []
+
+    def read_record(role: str) -> bytes:
+        line = read_line(
+            ports[role], pending[role], captures[role], deadline, stop_event=stop_event
+        )
+        print(f"[{role}] {line.decode('ascii', errors='backslashreplace')}")
+        if line.startswith(f"{PROTOCOL}|FAIL|".encode("ascii")):
+            raise BlePairHilFailure(f"{role} target 실패: {line!r}")
+        return line
+
+    def expect(role: str, expected: bytes) -> None:
+        line = read_record(role)
+        if line != expected:
+            raise BlePairHilFailure(
+                f"{role} W07 SIGN barrier record 불일치: 기대={expected!r}, 실제={line!r}"
+            )
+
+    def collect(role: str) -> None:
+        nonlocal close_sent
+        try:
+            if role == "central":
+                expect(
+                    role,
+                    f"{PROTOCOL}|BEGIN|role=central|mode=sign".encode("ascii") + suffix,
+                )
+                expect(
+                    role,
+                    f"{PROTOCOL}|SCAN|role=central|mode=sign|status=pass".encode("ascii") + suffix,
+                )
+            attempt = 0
+            while True:
+                line = read_record(role)
+                if not line.startswith(f"{PROTOCOL}|RETRY|".encode("ascii")):
+                    break
+                attempt += 1
+                expected_retry = (
+                    f"{PROTOCOL}|RETRY|role={role}|reason=62|attempt={attempt}".encode("ascii")
+                    + suffix
+                )
+                if attempt > MAX_CONNECTION_RETRIES or line != expected_retry:
+                    raise BlePairHilFailure(f"{role} W07 SIGN barrier retry 불일치: {line!r}")
+            local_counter = iteration if role == "central" else 0
+            remote_counter = iteration if role == "peripheral" else 0
+            expected_sign = (
+                f"{PROTOCOL}|SIGN|role={role}|writes=1|local_counter={local_counter}"
+                f"|remote_counter={remote_counter}".encode("ascii")
+                + suffix
+            )
+            if line != expected_sign:
+                raise BlePairHilFailure(
+                    f"{role} W07 SIGN barrier counter/identity 불일치: {line!r}"
+                )
+            with barrier_lock:
+                if first_error or stop_event.is_set():
+                    raise BlePairHilFailure("W07 SIGN barrier가 이전 실패로 취소되었습니다.")
+                observed_signs.add(role)
+                if len(observed_signs) == 2:
+                    if time.monotonic() >= deadline:
+                        raise BlePairHilFailure("W07 SIGN barrier CLOSE 전에 timeout입니다.")
+                    _write_line(
+                        ports["central"],
+                        f"{PROTOCOL}|CLOSE|mode=sign|iteration={iteration}|nonce={nonce}|"
+                        f"core={core_revision}",
+                    )
+                    close_sent = True
+            if role == "central":
+                expect(
+                    role,
+                    f"{PROTOCOL}|CLOSE_ACCEPTED|role=central|mode=sign".encode("ascii") + suffix,
+                )
+            line = read_record(role)
+            with barrier_lock:
+                if not close_sent:
+                    raise BlePairHilFailure(f"{role} W07 SIGN barrier CLOSE 이전 END입니다.")
+            if line != expected_end[role]:
+                raise BlePairHilFailure(f"{role} W07 SIGN barrier END 불일치: {line!r}")
+        except Exception as error:
+            with barrier_lock:
+                if not first_error:
+                    first_error.append(error)
+            stop_event.set()
+            raise
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [executor.submit(collect, role) for role in ("peripheral", "central")]
+        for future in futures:
+            try:
+                future.result()
+            except Exception:
+                pass
+    if first_error:
+        raise first_error[0]
+    if not close_sent or observed_signs != {"peripheral", "central"}:
+        raise BlePairHilFailure("W07 SIGN barrier가 양측 SIGN/CLOSE를 완료하지 못했습니다.")
+
+
 def _run_session(
     ports: dict[str, Any],
     pending: dict[str, bytearray],
@@ -581,6 +713,11 @@ def _run_session(
         + suffix
         for role in ("peripheral", "central")
     }
+    if mode == "sign":
+        _collect_signed_barrier(
+            ports, pending, captures, nonce, core_revision, iteration, deadline, expected_end
+        )
+        return
     stop_event = threading.Event()
 
     def collect(role: str) -> None:
@@ -661,8 +798,8 @@ def execute_advanced_pair(
             ):
                 ports[role].reset_input_buffer()
                 if flash_backend == "pyocd-sector":
-                    flashes[role] = flash_image_pyocd(
-                        role, endpoint.board_id, image, flash_timeout
+                    flashes[role] = flash_image_pyocd_sha256(
+                        role, probe_sha256(endpoint.board_id), image, flash_timeout
                     )
                 else:
                     flashes[role] = flash_image(
@@ -766,11 +903,7 @@ def execute_advanced_pair(
 def _board(endpoint: RoleEndpoint) -> dict[str, str]:
     """! @brief evidence용 DAP/UART/MSD identity를 복사합니다. """
 
-    return {
-        "daplink_uid": endpoint.board_id,
-        "msd_root": str(endpoint.volume.root),
-        "uart_port": endpoint.port_name,
-    }
+    return public_endpoint(endpoint)
 
 
 def main(arguments: Sequence[str] | None = None) -> int:
@@ -778,17 +911,17 @@ def main(arguments: Sequence[str] | None = None) -> int:
 
     args = parse_arguments(arguments)
     serial_module, list_ports = import_pyserial()
-    peripheral_endpoint = discover_endpoint(
-        args.peripheral_board_id, args.peripheral_volume, args.peripheral_port, list_ports
+    peripheral_endpoint = discover_endpoint_sha256(
+        args.probe_peripheral_sha256, args.peripheral_volume, args.peripheral_port, list_ports
     )
-    central_endpoint = discover_endpoint(
-        args.central_board_id, args.central_volume, args.central_port, list_ports
+    central_endpoint = discover_endpoint_sha256(
+        args.probe_central_sha256, args.central_volume, args.central_port, list_ports
     )
     validate_pair_identity(peripheral_endpoint, central_endpoint)
     print(
         "NU54DK M29-W07 pair discovery SUCCESS: "
-        f"peripheral={peripheral_endpoint.board_id}/{peripheral_endpoint.port_name}, "
-        f"central={central_endpoint.board_id}/{central_endpoint.port_name}"
+        f"peripheral={_board(peripheral_endpoint)['probe_sha256'][:12]}/{peripheral_endpoint.port_name}, "
+        f"central={_board(central_endpoint)['probe_sha256'][:12]}/{central_endpoint.port_name}"
     )
     if args.discover_only:
         return 0

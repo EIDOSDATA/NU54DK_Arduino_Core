@@ -205,6 +205,7 @@ foreach(variable IN ITEMS
     board_source_sha256
     ncs_revision
     zephyr_revision
+    NUCODE_ZEPHYR_PATCHSET_SHA256
     NUCODE_BOARD
     NUCODE_BOARD_QUALIFIERS
     NUCODE_TOOLCHAIN_VARIANT
@@ -224,6 +225,7 @@ string(CONCAT build_record_content
   "  board_source_sha256: ${board_source_sha256_yaml}\n"
   "  ncs_revision: ${ncs_revision_yaml}\n"
   "  zephyr_revision: ${zephyr_revision_yaml}\n"
+  "  zephyr_patchset_sha256: ${NUCODE_ZEPHYR_PATCHSET_SHA256_yaml}\n"
   "  board: ${NUCODE_BOARD_yaml}\n"
   "  board_qualifiers: ${NUCODE_BOARD_QUALIFIERS_yaml}\n"
   "  toolchain_variant: ${NUCODE_TOOLCHAIN_VARIANT_yaml}\n"

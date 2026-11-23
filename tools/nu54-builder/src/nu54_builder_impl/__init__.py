@@ -210,6 +210,8 @@ from .source_graph import (
     source_logical_identity,
     write_source_manifest,
 )
+from . import sdk_patches
+from . import sdk_patch_support
 from . import upload
 from .upload import (
     mask_probe_id,

@@ -1,5 +1,10 @@
 # Nordic prerequisite 설치 계약
 
+v0.6.0 후보의 SDK는 NCS 3.4.0입니다. OS별 도구와 체크섬은 [고정 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와 [설치 입력](platform-pins.json)에서 확인합니다. Mac은 ARM64 bundle `ccc010f809`와 `/opt/nordic/ncs`를 사용합니다. [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
+새 공통 설치기는 SDK archive를 안전하게 추출하고 원형 VERSION을 바꾸지 않은 채 명시 version으로 등록한다.
+읽기 전용 `host-doctor.py`는 시스템 의존 패키지와 비식별 serial·선택적 CMSIS-DAP 열거 결과를 기록한다.
+처음 실패·원인·교정 검증은 [312번](<../../00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>)을 따른다.
+
 새 Windows PC에서 Git, Python, MinGW-w64, Arduino CLI와 실물 보드까지 준비하는 전체 절차는
 [Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.
 이 문서는 그중 Nordic prerequisite 설치기의 exact-pin 계약만 설명한다.
@@ -24,9 +29,19 @@ NCS v3.4.1이 공개돼도 현재 설치기의 v3.4.0 pin을 자동 갱신하지
 [변경·개발 영향 검토](<../../00_Docs/00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>)와 exact
 재검증이 필요하며, 다른 SDK의 수동 설치나 이 계획 문서만으로 지원 기준선이 변경되지는 않는다.
 
-공식 nRF Util URL은 unversioned다. 내려받은 byte가 `pins.json`의 SHA-256과 다르면
-자동으로 새 byte를 신뢰하지 않고 중단한다. upstream 변경을 검토하고 새 executable을
-별도로 검증한 뒤 pin과 package version을 함께 갱신해야 한다.
+공식 nRF Util 실행 파일은 버전과 빌드 식별자가 포함된 URL로 고정한다.
+후속 Host 구현에서는 `platform-pins.json`의 공식 core8.2.1 archive도 SHA-256 검증 후
+bootstrap 입력으로 지정한다. launcher와 core의 별도 고정을 Windows 설치 경로에도 적용한다.
+현재 executable `1.4.1-f15ff58`의 byte와 SHA-256은 기존 pin을 유지하며,
+별도로 version을 판정하는 core `8.2.1`과 sdk-manager `1.16.1`도 유지한다.
+[Nordic의 특정 버전 설치 안내](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-a-specific-version-of-nrf-util)에 따라
+최신 파일을 가리키는 unversioned URL을 설치 입력으로 사용하지 않는다.
+내려받은 byte가 `pins.json`의 SHA-256과 다르면 자동으로 신뢰하지 않고 중단한다.
+실제 도구 version이나 byte를 바꾸는 경우에는 별도 검토·검증과 명시적인 pin·package version 갱신이 필요하다.
+
+Native 0.6.0 시험 package의 초기 Python·notice와 실제 Boards Manager CI는
+[native package 설계](<../../00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md>)를 따른다.
+시스템 Python/Git fallback을 허용하지 않으며 공개 allowlist는 변경하지 않는다.
 
 ## 설치 출력과 실패 판정
 
@@ -52,3 +67,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -PlatformRoot . `
   -Json
 ```
+
+`host-check.py`는 installed build manifest와 SHA identity에 결합한 Serial·ELF debug·Blink GPIO·NUS pair 검증 진입점입니다. 장치 조작 없는 `inventory`와 실기를 구분하며 [RC1 절차](<../../00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>)를 따릅니다.

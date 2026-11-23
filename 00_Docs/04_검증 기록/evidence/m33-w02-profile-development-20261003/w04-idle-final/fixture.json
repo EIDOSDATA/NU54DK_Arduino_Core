@@ -1,0 +1,183 @@
+{
+  "schema": "nucode-m33-w04-third-idle-v1",
+  "role": "standard-watcher",
+  "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+  "port": "COM5",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "nonce": "d44daa95ccb68fa34e830ce78193b3b2",
+  "files": {
+    "evidence": {
+      "path": "evidence.json",
+      "sha256": "45924c1d9a9700d73c7a85d2605616ee2ece0dc840f27f1cbfb9cef987f203bb"
+    },
+    "transcript": {
+      "path": "transcript.log",
+      "sha256": "18673e57d3bfe1fedec7fb5e55bd23dee81296e0865efb2d2184ce89c206e8c2"
+    },
+    "image": {
+      "path": "image.hex",
+      "sha256": "7d3291adba143fa416383445e590c61aac66fffbd1cecf60aea99bbb0f62256d"
+    },
+    "elf": {
+      "path": "image.elf",
+      "sha256": "a63ee8de4820bb5fff03cb1cc273d024e5cf5112f9918b7077358ea0a318b115"
+    },
+    "config": {
+      "path": "config.txt",
+      "sha256": "ab4c10bf3ad2841f6e81f2177c47c3688d57708bb808982fb44f34d531124c05"
+    },
+    "sysbuild": {
+      "path": "sysbuild.txt",
+      "sha256": "1ee95209374a00c2b8955a0efa098f7a877c24ce85f183469055ee2777954c93"
+    }
+  },
+  "source_files": {
+    "libraries/NUCODE_BLE_Profiles/examples/AlertSensor/AlertSensor.ino": "d81fca3da8576b60819f9ac0c26cc0537d20a1707614b4d5ffb0a29cc3160693",
+    "libraries/NUCODE_BLE_Profiles/examples/BondManagement/BondManagement.ino": "494a9b674b2b2a6b624829ffad1446a43651ef945fa967c9bec909c34be26261",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/GlucoseSensor.ino": "0375193100b8afee5589c76c3cc801d3aab0f678278270edabf68461aba3a9bd",
+    "libraries/NUCODE_BLE_Profiles/examples/GlucoseSensor/prj.conf": "db589414184fcf6c73f75d705037f09fcd48b06b9e8b5bc31fcada14c0968825",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/ObjectClient.ino": "8f4387a462d53564da5f6f05997dbd51ce3d0a8e9ace8c8e912ec113c1d1d4da",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectClient/prj.conf": "3b5ffa3e113c94ca40f4ae90e028b60f3cb4537d783e146fce5d60514baf20d2",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/ObjectServer.ino": "28e827e7c5b92ad8c760dad489b9b8a5c48d00b46a149b5d7ffbfc795b876f20",
+    "libraries/NUCODE_BLE_Profiles/examples/ObjectServer/prj.conf": "305b8dada3fc298593fab563ecdd94fb69f42634ca342900fc3b6b54302fb5cf",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardCollector/StandardCollector.ino": "f3dad7880f5483b332c65bea1a01a932b06888e231c8a9351593413ac1a09a0c",
+    "libraries/NUCODE_BLE_Profiles/examples/StandardSensor/StandardSensor.ino": "23e752127a578bb7574b0496a6176c1a62c77a91b1302944760ce65ceffa89db",
+    "libraries/NUCODE_BLE_Profiles/library.properties": "6e761ec8e0b98b778e3a1e90739c17fc9b9fce9a4368363454a66ba0b4b9865c",
+    "libraries/NUCODE_BLE_Profiles/README.md": "11f1e1cc8183f4017f6917548473ee66af5588d0a6193df227bb980c063d32ab",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.cpp": "06b1eecbc022deaf8cba308156f5226919f699864ef731e5c8b85a1b76ef2920",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Glucose.h": "612167114eab9c95fb14ae400ee0ee687146cc66b13f7773dc36cd1baffa7a11",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.cpp": "0073e84e0180ea99ebfbd81de4d528f0c0d8388ffe770fe7fd3d983601c34d72",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectStore.h": "ae93cb7c40fe3ec78aedc380c5ac1e1af6e8983666933bf20283ce3083af4362",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.cpp": "aae19c9ef6801d060cf844a8a51831e067b3a40516120afb86107f6119df4c5f",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ObjectTransfer.h": "9d9dc696240c8e5a180858a9a0bfaea26960ddef481ef582de088d48b4ebb016",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.cpp": "1be0e8c2c5a0201624dccd4a6fdc7b88e0ec86c16e5092080365e14b0ac0094d",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_ProfileCodec.h": "bffe4c834b006497c8871106629db80ea8355d32b5deb2febe3334ac403fbeb6",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.cpp": "5756ef19276bb6889eb022be2ce4fc49689decb0a0bc807c5170f283cd31b163",
+    "libraries/NUCODE_BLE_Profiles/src/NUCODE_BLE_Profiles.h": "a3d008905375ed221b28f2635f9f6afd38948ebec6c7d3c7bba99cdcaa787773",
+    "tests/zephyr/m33_profile_hil/app.overlay": "df2d864c96ebf4dd45271ec3e31b0172532cb0b3e5f5a22c169a2d82f2639aec",
+    "tests/zephyr/m33_profile_hil/CMakeLists.txt": "574feebe241a260dace18e6682b0ff6a91fc1b755029427d903fc34f03ec96ba",
+    "tests/zephyr/m33_profile_hil/native-client.conf": "04f20e8494308a2add1674cf37d63d47ad9836cf6f8e5887a599cfdd2d7a4b6c",
+    "tests/zephyr/m33_profile_hil/native.conf": "a5706d2bfde9ce1e2ea35791dde38f42797e7b4ad83685b4e244354ceccb5746",
+    "tests/zephyr/m33_profile_hil/prj.conf": "b2960e444a20060658b49882ddf109382c988b09a6b1f8ecf6966ee11d099f86",
+    "tests/zephyr/m33_profile_hil/README.md": "98defd35eb0611c5dfc5d8215ca1e096d4682eb6f2f9ceb1a51cbe82913a938d",
+    "tests/zephyr/m33_profile_hil/src/ExpectedCgms.h": "01ef7c7701d320974419c1dcffef278ffc4ebd851de5cbd4ab5bd05d33b66d3a",
+    "tests/zephyr/m33_profile_hil/src/ExpectedReject.h": "8abfec89bd1f63b9f2ac77038348dda9ada4d1d24e3641044f200cff38ca3426",
+    "tests/zephyr/m33_profile_hil/src/main.cpp": "6a17d01fa5b18b7a90043203f0cae075f6aacda5da9dc059fe94caa99712b77f"
+  },
+  "load_ranges": [
+    {
+      "start": 0,
+      "length": 1148,
+      "sha256": "34804bea7138d897af27e62ee620724bb2cfb5f762c70ea2c373ad6b1fbbc408"
+    },
+    {
+      "start": 1152,
+      "length": 255080,
+      "sha256": "5602effa05ad5550d418e5644484fafa9e3186a92d2bdfda8d0cc9886a351269"
+    },
+    {
+      "start": 256240,
+      "length": 26416,
+      "sha256": "6aaa518e1f3f49aef538654950c9d6f44ade451a01ee052ecaaa63e0b4620acc"
+    }
+  ],
+  "readback": [
+    {
+      "start": 0,
+      "length": 1148,
+      "expected_sha256": "34804bea7138d897af27e62ee620724bb2cfb5f762c70ea2c373ad6b1fbbc408",
+      "observed_sha256": "34804bea7138d897af27e62ee620724bb2cfb5f762c70ea2c373ad6b1fbbc408"
+    },
+    {
+      "start": 1152,
+      "length": 255080,
+      "expected_sha256": "5602effa05ad5550d418e5644484fafa9e3186a92d2bdfda8d0cc9886a351269",
+      "observed_sha256": "5602effa05ad5550d418e5644484fafa9e3186a92d2bdfda8d0cc9886a351269"
+    },
+    {
+      "start": 256240,
+      "length": 26416,
+      "expected_sha256": "6aaa518e1f3f49aef538654950c9d6f44ade451a01ee052ecaaa63e0b4620acc",
+      "observed_sha256": "6aaa518e1f3f49aef538654950c9d6f44ade451a01ee052ecaaa63e0b4620acc"
+    }
+  ],
+  "lifecycle_ram": [
+    {
+      "name": "nonce",
+      "symbol": "_ZN12_GLOBAL__N_15nonceE",
+      "address": 536966127,
+      "size": 33,
+      "sha256": "bfa9c319ea714c8b2e6694a6cd4ff3f9db7e6fe0dd147ae667a7c32f812546c8",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "started",
+      "symbol": "_ZN12_GLOBAL__N_17startedE",
+      "address": 536966110,
+      "size": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "cleanup_complete",
+      "symbol": "_ZN12_GLOBAL__N_116cleanup_completeE",
+      "address": 536966103,
+      "size": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "stop_reported",
+      "symbol": "_ZN12_GLOBAL__N_113stop_reportedE",
+      "address": 536966101,
+      "size": 1,
+      "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "failed",
+      "symbol": "_ZN12_GLOBAL__N_16failedE",
+      "address": 536966109,
+      "size": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "stable_reads": 2,
+      "status": "PASS"
+    },
+    {
+      "name": "watchdog_channel",
+      "symbol": "_ZN12_GLOBAL__N_116watchdog_channelE",
+      "address": 536877992,
+      "size": 4,
+      "sha256": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+      "stable_reads": 2,
+      "status": "PASS"
+    }
+  ],
+  "build_defines": {
+    "M33_PROFILE_FAMILY": "standard",
+    "M33_PROFILE_ROLE": "watcher"
+  },
+  "after_stopped_actions": [
+    "uart_close",
+    "read_only_audit"
+  ],
+  "observed_utc": "2026-10-03T16:59:06.159101+00:00",
+  "action_chain": [
+    "sector_program",
+    "software_reset",
+    "READY",
+    "STOP",
+    "STOPPED",
+    "uart_close",
+    "read_only_audit"
+  ]
+}

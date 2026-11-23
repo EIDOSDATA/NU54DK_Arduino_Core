@@ -275,6 +275,11 @@ namespace nucode::ble
         /**
          * @brief BLE bond 전체 제거 요청을 제출하며 factory reset은 수행하지 않습니다.
          *
+         * @details 기본 identity의 native key와, 설정 전환으로 key 없이 남은 CF/CCC/SC peer를
+         * 함께 제거 요청합니다. 다른 identity와 application settings는 변경하지 않습니다.
+         * 잘못된 저장 key·열거 실패·고정 수용량 초과는 삭제 전에 거부합니다. 요청 도중 실패하면
+         * 이미 제출된 삭제를 되돌리지 않으며 실제 영속 완료는 별도로 확인해야 합니다.
+         *
          * @return stack이 제거 요청을 수락했으면 true입니다. 실제 영속 삭제 완료를 뜻하지 않습니다.
          */
         [[nodiscard]] bool eraseAllBonds() noexcept;

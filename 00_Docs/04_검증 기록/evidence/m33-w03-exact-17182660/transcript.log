@@ -1,0 +1,248 @@
+client> STATUS
+client< M33ECO|2|READY|role=client|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> START 00000000000000000000000000000000 ancs
+client< M33ECO|2|REJECT|role=client|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> START invalid ancs
+client< M33ECO|2|REJECT|role=client|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+client< M33ECO|2|REJECT|role=client|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> STATUS
+peer< M33ECO|2|READY|role=peer|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> START 00000000000000000000000000000000 ancs
+peer< M33ECO|2|REJECT|role=peer|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> START invalid ancs
+peer< M33ECO|2|REJECT|role=peer|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+peer< M33ECO|2|REJECT|role=peer|nonce=|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> START ccc344a09dfab1d0ab6a448736bd5f19 ancs
+client< M33ECO|2|STARTED|role=client|nonce=ccc344a09dfab1d0ab6a448736bd5f19|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> START c9dfed11cb4d2b2c27df741526e53c38 ancs
+peer< M33ECO|2|STARTED|role=peer|nonce=c9dfed11cb4d2b2c27df741526e53c38|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> STATUS
+client< M33ECO|2|READY|role=client|nonce=ccc344a09dfab1d0ab6a448736bd5f19|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> STOP ccc344a09dfab1d0ab6a448736bd5f19
+client< M33ECO|2|STOPPED|role=client|nonce=ccc344a09dfab1d0ab6a448736bd5f19|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> STATUS
+peer< M33ECO|2|READY|role=peer|nonce=c9dfed11cb4d2b2c27df741526e53c38|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> STOP c9dfed11cb4d2b2c27df741526e53c38
+peer< M33ECO|2|STOPPED|role=peer|nonce=c9dfed11cb4d2b2c27df741526e53c38|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client> START 573443f8193c3dd2b9f323921b908bf1 access_denied
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO|2|STARTED|role=client|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> START 573443f8193c3dd2b9f323921b908bf1 access_denied
+peer< M33ECO|2|STARTED|role=peer|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|PASS|role=client|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=1|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=1
+peer< M33ECO_GAP event=6 reason=0 error=0 native=0
+peer< M33ECO_GAP event=7 reason=0 error=0 native=0
+peer< M33ECO|2|PASS|role=peer|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=1|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=1|test_bond=0|links=1
+client> STOP 573443f8193c3dd2b9f323921b908bf1
+peer> STOP 573443f8193c3dd2b9f323921b908bf1
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=19 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=1|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=22 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=573443f8193c3dd2b9f323921b908bf1|case=access_denied|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=1|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=1|test_bond=0|links=0
+client> START 7372791fbf1afe36483ee4deffda41c4 ancs
+client< M33ECO|2|STARTED|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer> START 7372791fbf1afe36483ee4deffda41c4 ancs
+peer< M33ECO|2|STARTED|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+peer> GO 7372791fbf1afe36483ee4deffda41c4
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+client> STOP 7372791fbf1afe36483ee4deffda41c4
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=1
+peer> STOP 7372791fbf1afe36483ee4deffda41c4
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=1|bonded=1|reconnects=0|security_rejects=0|test_bond=1|links=0
+client> START 64d3f50ca991b1ae5a47af3c94084a43 ams
+client< M33ECO|2|STARTED|role=client|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START 64d3f50ca991b1ae5a47af3c94084a43 ams
+peer< M33ECO|2|STARTED|role=peer|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO 64d3f50ca991b1ae5a47af3c94084a43
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP 64d3f50ca991b1ae5a47af3c94084a43
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> STOP 64d3f50ca991b1ae5a47af3c94084a43
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=64d3f50ca991b1ae5a47af3c94084a43|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START cf7d6eaea30feab9ac6e61d595ee8243 ancs_bad
+client< M33ECO|2|STARTED|role=client|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START cf7d6eaea30feab9ac6e61d595ee8243 ancs_bad
+peer< M33ECO|2|STARTED|role=peer|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO cf7d6eaea30feab9ac6e61d595ee8243
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=62 error=5 native=-120
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP cf7d6eaea30feab9ac6e61d595ee8243
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer> STOP cf7d6eaea30feab9ac6e61d595ee8243
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=cf7d6eaea30feab9ac6e61d595ee8243|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START af5c462ba8864f8ce4fbecb57277ac83 ams_bad
+client< M33ECO|2|STARTED|role=client|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START af5c462ba8864f8ce4fbecb57277ac83 ams_bad
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO|2|STARTED|role=peer|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO af5c462ba8864f8ce4fbecb57277ac83
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP af5c462ba8864f8ce4fbecb57277ac83
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer> STOP af5c462ba8864f8ce4fbecb57277ac83
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=af5c462ba8864f8ce4fbecb57277ac83|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START 38fc30c70f113e07ec0e76b6df649445 ancs
+client< M33ECO|2|STARTED|role=client|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START 38fc30c70f113e07ec0e76b6df649445 ancs
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO|2|STARTED|role=peer|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO 38fc30c70f113e07ec0e76b6df649445
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP 38fc30c70f113e07ec0e76b6df649445
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> STOP 38fc30c70f113e07ec0e76b6df649445
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=38fc30c70f113e07ec0e76b6df649445|case=ancs|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START 46d565021966092955857d0845a243dc ams
+client< M33ECO|2|STARTED|role=client|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START 46d565021966092955857d0845a243dc ams
+peer< M33ECO|2|STARTED|role=peer|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO 46d565021966092955857d0845a243dc
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=62 error=5 native=-120
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP 46d565021966092955857d0845a243dc
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> STOP 46d565021966092955857d0845a243dc
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=1|writes=2|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=46d565021966092955857d0845a243dc|case=ams|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=3|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START 4908a02ee6581df6dc96fab549104e33 ancs_bad
+client< M33ECO|2|STARTED|role=client|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START 4908a02ee6581df6dc96fab549104e33 ancs_bad
+peer< M33ECO|2|STARTED|role=peer|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO 4908a02ee6581df6dc96fab549104e33
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP 4908a02ee6581df6dc96fab549104e33
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer> STOP 4908a02ee6581df6dc96fab549104e33
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=4908a02ee6581df6dc96fab549104e33|case=ancs_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=0|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> START d436bbec1f4cb9c146096a6bffc3ce17 ams_bad
+client< M33ECO|2|STARTED|role=client|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+peer> START d436bbec1f4cb9c146096a6bffc3ce17 ams_bad
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO|2|STARTED|role=peer|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=1|links=0
+client< M33ECO_GAP event=7 reason=0 error=0 native=0
+client< M33ECO|2|CLIENT_READY|role=client|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer> GO d436bbec1f4cb9c146096a6bffc3ce17
+peer< M33ECO_GAP event=6 reason=0 error=5 native=-120
+peer< M33ECO_GAP event=7 reason=0 error=5 native=-120
+peer< M33ECO|2|GO_ACK|role=peer|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client< M33ECO|2|PASS|role=client|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+peer< M33ECO|2|PASS|role=peer|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP ffffffffffffffffffffffffffffffff
+client< M33ECO|2|REJECT|role=client|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=1
+client> STOP d436bbec1f4cb9c146096a6bffc3ce17
+peer> STOP ffffffffffffffffffffffffffffffff
+peer< M33ECO|2|REJECT|role=peer|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer> STOP d436bbec1f4cb9c146096a6bffc3ce17
+client< M33ECO_GAP event=38 reason=0 error=5 native=-120
+client< M33ECO_GAP event=8 reason=22 error=5 native=-120
+client< M33ECO|2|STOPPED|role=client|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=1|negative=2|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+peer< M33ECO_GAP event=8 reason=19 error=5 native=-120
+peer< M33ECO|2|STOPPED|role=peer|nonce=d436bbec1f4cb9c146096a6bffc3ce17|case=ams_bad|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=1|attributes=0|writes=1|negative=1|security=1|pairings=0|bonded=1|reconnects=1|security_rejects=0|test_bond=1|links=0
+client> CLEANUP 7372791fbf1afe36483ee4deffda41c4
+peer> CLEANUP 7372791fbf1afe36483ee4deffda41c4
+client< M33ECO|2|CLEANED|role=client|nonce=7372791fbf1afe36483ee4deffda41c4|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0
+peer< M33ECO_GAP event=38 reason=0 error=5 native=-120
+peer< M33ECO|2|CLEANED|role=peer|nonce=7372791fbf1afe36483ee4deffda41c4|case=|revision=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc|identity=17182660f8c1c1f4a9f6773b13fcfa453f65e1fc7986aaa495d32373bf04969c67c9b07c111dc2e01548f5af8d1fd1a0fa41bfdc|packets=0|attributes=0|writes=0|negative=0|security=0|pairings=0|bonded=0|reconnects=0|security_rejects=0|test_bond=0|links=0

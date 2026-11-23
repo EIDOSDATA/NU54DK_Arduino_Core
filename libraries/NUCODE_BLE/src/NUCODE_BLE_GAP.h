@@ -413,6 +413,10 @@ namespace nucode::ble
         BLETransmitPowerReport transmit_power;
         /** @brief path_loss_changed event의 값 복사본입니다. */
         BLEPathLossReport path_loss;
+        /** @brief error event가 예약된 시점의 공개 오류 복사본입니다. */
+        BLEError error = BLEError::none;
+        /** @brief error event가 예약된 시점의 Zephyr/NCS 오류 복사본입니다. */
+        int driver_error = 0;
     };
 
     /** @brief BLEDevice.poll() 문맥에서만 호출되는 link 식별 가능 callback입니다. */

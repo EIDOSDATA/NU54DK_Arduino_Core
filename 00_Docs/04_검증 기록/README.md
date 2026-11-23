@@ -1,5 +1,55 @@
 # 검증 기록
 
+- [340. v0.6.0 게시와 공개 설치 검증](<340_v0.6.0_정식_게시와_공개_설치_검증.md>)
+- [339. v0.6.0 최종 후보와 배포 자산 준비](<339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>)
+- [338. macOS 27 일반 IDE Upload 수정과 Blink 확인](<338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
+- [337. macOS 27 USB, UART 재연결, IDE Verify](<337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
+- [336. macOS 26 USB 재연결과 IDE Verify](<336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
+- [335. macOS 26 SDK 설치와 대표 빌드](<335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>)
+- [334. macOS 26 첫 시도 및 Gatekeeper 차단](<334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>)
+- [333 — Mac 재개 문서·작업지시문·전달 자료](333_Mac_재개_문서와_전달_자료.md)
+
+- [332 — HOST-W08 문서·지원표 선행 정리와 릴리스 잔여](332_HOST_W08_문서_지원표_선행_정리.md)
+
+- [331 — C11 macOS 실행기 교정과26·27 호환성](331_HOST_W07_C11_macOS_26_27_호환성.md)
+
+- [330 — C6~C10 WSL2 검증·C10 재연결/IDE PASS·Ubuntu24 기준/26 호환성](330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md)
+
+- [329 — v0.6.0 OS 지원 범위와 Windows 11 진행](329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md)
+
+- [328 — C5 필수 자동 검증과 사용자 OS gate](328_HOST_W07_C5_필수_자동검증과_사용자_OS_gate.md)
+
+- [327 — C4 실기 통과와 C5 거부 검증 예산 교정](327_HOST_W07_C4_실기_통과와_C5_거부_검증_예산_교정.md)
+
+- [326 — C3 전체 빌드와 C4 NUS 소유권 교정](326_HOST_W07_C3_전체빌드와_C4_NUS_소유권_교정.md)
+
+- [325 — C2 Windows 통과와 C3 probe FW 보호](325_HOST_W07_C2_Windows_통과와_C3_probe_FW_보호.md)
+
+- [324 — HOST-W07 C1 Windows 진입점 FAIL과 C2 교정](324_HOST_W07_C1_Windows_진입점_FAIL과_C2_교정.md)
+
+- [323 — HOST-W07 도구 통합과 RC1 검증 착수](323_HOST_W07_도구_통합과_RC1_검증_착수.md)
+
+- [322 — HOST-W06 H12 native 전체 검증 마감과 W07 준비](322_HOST_W06_H12_native_전체_검증_마감과_W07_준비.md)
+
+- [321 — HOST-W06 H11 Windows·macOS 통과와 Linux source 진단](321_HOST_W06_H11_Windows_macOS_통과와_Linux_source_진단.md)
+
+- [320 — HOST-W06 H10 POSIX Blink 통과와 Windows mode 교정](320_HOST_W06_H10_POSIX_Blink_통과와_Windows_mode_교정.md)
+
+- [319 — HOST-W06 H9 Kconfig 경로 원인과 native 교정](319_HOST_W06_H9_Kconfig_경로_원인과_native_교정.md)
+
+- [318 — HOST-W06 H8 설치 통과와 SDK Git 전달 교정](318_HOST_W06_H8_설치_통과와_SDK_Git_전달_교정.md)
+
+- [317 — HOST-W06 H6 설치 FAIL 원인과 교정](317_HOST_W06_H6_설치_FAIL_원인과_교정.md)
+
+- [316 — HOST-W06 native package 구현과 검증 착수](316_HOST_W06_native_package_구현과_검증_착수.md)
+
+Mac 재개 인계는333번, HOST-W08 문서 준비는332번이며 최근 제품 검증은331번 C11 macOS 실행기 교정·26/27 호환성이다. 330번은 C6~C10 WSL2 교정·Ubuntu24/26 완료와 원본 FAIL 보존 기록이다. 329번은 C5 Windows 11 완료, 328번은 C5 자동 검증,
+322번 H12는 마지막으로 완료한 전체 Host 작업 묶음(HOST-W06)의 근거다. [315번](315_HOST_W05_native_마감과_HOST_W06_package_착수.md)은 W05 마감 당시 기록이다.
+W05 초기 로컬 실패·교정·회귀는 [314번](314_HOST_W05_경로_cache_lock_교정과_native_검증.md)에 보존한다.
+W04 같은-source 설치·전체 CI 완료는 [313번](313_HOST_W04_설치_마감과_HOST_W05_경로_cache_lock_착수.md)을 따른다.
+최초 Host CI 실패 원문과 교정 경과는 [312번](312_HOST_W04_최초_CI_실패와_교정_검증.md)에 보존한다.
+W06 명시 수락 시점 정정은 [311번](311_M33_W06_명시_수락_정정과_HOST_W04_착수.md)에 보존한다.
+
 시험 당시의 source·환경·조건·결과와 원본 증거를 찾는 색인입니다. **정식 지원은 v0.5.0**입니다.
 RC2의 시간 목표 FAIL·초기 GUI HOLD 원본은 보존하고, 후속 실제 GUI 연속 Upload 교정 PASS와 stable
 승인·공개를 별도 기록합니다. 최종 정식 상태는
@@ -11,10 +61,12 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 공개 후 문서 재검토·commit/push 결과는 [275번](275_v0.5.0_공개_후_문서_전수_재검토.md)에서 구분합니다.
 현재 후속 버전 배정은 [293번](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md), M32의 기능별
 최종 근거는 아래 표에서 찾습니다. 예전 장비 blocker·진행률·버전 계획은 당시 상태이며,
-현재 재개 시에는 **CMSIS-DAP v2**와 실제 장치 mapping을 다시 확인합니다.
+현재 재개 시에는 승인된 transport와 실제 장치 mapping을 [M33 인계](../M33_HANDOFF.md)에 따라 확인합니다.
 
 과거 기록의 진행률·HOLD·다음 작업은 작성 당시 상태입니다. 아래 최종 기록부터 읽고,
 필요한 경우 번호별 원본과 [evidence](evidence/)로 내려가세요.
+
+<a id="최근-완료재개-기록"></a>
 
 <a id="최근-완료재개-기록"></a>
 
@@ -22,10 +74,21 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 
 | 확인할 내용 | 최종 근거 |
 | --- | --- |
-| M32 완료 후 문서 정비·main squash 통합 | [295번 기록](295_M32_문서_전수_정비와_main_Squash_통합.md) — 후속 개발 출발점 `main`, `Dev-0.6.0-M32` 원본 이력 보존 |
+| M33-W06 S19 사용자 수락 마감 | [310번](310_M33_W06_사용자_수락_마감_완료.md) · [311번 명시 수락 정정](311_M33_W06_명시_수락_정정과_HOST_W04_착수.md) — 실제 PASS 46 + 승인 #29·40·44, 원형 soak 1,800초·risk7·qualification3, strict 예외 보존 |
+| M33-W06 S16 독립17개·#18 RRAM 초기화 교정 | [309번](309_M33_W06_DFU_RRAM_초기화_교정과_증거_범위.md) — 최초 FAIL 보존, 관련157·교정 실기87.13초, Host654·소스별 증거 경계 |
+| M33-W06 S15 #1 FAIL·READY 판정 교정·독립 마감 | [308번](308_M33_W06_READY_판정_불일치_교정과_독립_마감_재개.md) — 원본 FAIL·안전종료·관련112 PASS, 당시 Host652 계약 |
+| M33-W06 연속검증 판단 정정·J-Link 경로·현행 1~7 | [307번](307_M33_W06_연속검증_판단_정정과_마감_계획.md) — 독립 증거 인정과 source/원본 조건 구분 |
+| M33-W06 개발 49개 완료·최종 빌드 중단 | [306번](306_M33_W06_개발_49개_완료와_최종_빌드_중단_인계.md) — 개발 49/49와 단일 source 최종 gate 구분, `c6fc5764…` 빌드 중단 지점·남은 분모 |
+| M33-W06 실패별 집중 수정 전환·문서 감사 | [305번](305_M33_W06_집중_수정_정책과_문서_전수_정리.md) — 원본 조사·미실행 범위 구분, 문서 정리, W06 미완료 |
+| M33-W06 현행 결과 | [M33 인계](../M33_HANDOFF.md) · [310번](310_M33_W06_사용자_수락_마감_완료.md) · [311번](311_M33_W06_명시_수락_정정과_HOST_W04_착수.md) — 사용자 수락 마감과 승인 시점 정정, 원형 strict 기술 완료와 구분 |
+| M33-W06 10월 7일 실행 정리·문서 감사 | [304번](304_M33_W06_실행_정리와_문서_전수_검토.md) — 당시 중단·설계 준비 기록 보존 |
+| M33-W06 기존 checkpoint 개선·실패 교정 이력 | [303번](303_M33_W06_재실행_최소화와_checkpoint_개선_계획.md) — 전송 계층·append-only attempt·경로·cache·orphan GATT·UART 경계의 당시 근거 |
+| M33-W06 중단 기록·로컬 정리 후 인계 | [302번](302_M33_W06_빌드_통과와_runtime_중단_인계.md) — 6867의 과거 build/Host·halt FAIL 보존, §7에 로컬 자료 유실·94bb halt 수정/Actions·단일 처리 반영; 현재 절차는 [M33 인계](../M33_HANDOFF.md) |
+| M32 완료 후 문서 정비·main squash 통합 | [295번 기록](295_M32_문서_전수_정비와_main_Squash_통합.md) — 이후 M32 브랜치 로컬·원격 삭제, 로컬 bundle 보관·`Dev-0.6.0-M33` 재개는 [M33 인계](../M33_HANDOFF.md) 참조 |
 | v0.7.0 SDK 전환 전용 확정·후속 제품선 재배정 | [293번 기록](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md) · [v0.7.0 TODO](../TODO_v0.7.0.md) |
 | 전체 문서 검토·NCS 3.4.1 조건부 영향 | [292번 기록](292_문서_전수_검토와_NCS_3.4.1_영향.md) — 당시 전환 시점 해석은 293번에서 대체 · [SDK 영향 검토](<../00_사전 리서치/03_NCS_3.4.1_변경과_개발_영향.md>) |
-| M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md). 다음은 M33-W01 |
+| M32 최종 상태 — 12/12 완료 | [287번 W12 마감](287_M32_W12_정합성_감사와_후속_인계.md) · [M32 TODO](../TODO_M32.md) · [HANDOFF](../HANDOFF.md) |
+| M33-W01~W05 기술 완료 | [296번 W01](296_M33_W01_전체_예제_원장과_릴리스_계약.md) · [298번 W02](298_M33_W02_표준_GATT_Beacon_완료.md) · [299번 W03](299_M33_W03_외부_ecosystem과_companion_완료.md) · [300번 W04](300_M33_W04_DTM_HCI_진단_template_완료.md) · [301번 W05](301_M33_W05_전체_예제와_설치_경로_완료.md) · [M33 TODO](../TODO_M33.md). Exact `5f9b2257…` 설치 예제 catalog·발견·compile 204/204와 negative 9/9 PASS |
 | M32-W08 BLOB·signed MDFU exact HIL 완료 | [294번](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md) — BLOB 10/10, MDFU 5회·두 target 10/10, negative·confirm/rollback·STOP PASS. [283번](283_M32_W08_BLOB_Mesh_DFU_software와_HIL_blocker.md)은 과거 FAIL 보존 |
 | M32-W07 Mesh 1.1 exact HIL 완료 | [282번](282_M32_W07_Mesh_1.1_software와_HIL_blocker.md) — 350/350 관리 동작·negative·세 역할 STOP |
 | M32-W06 Mesh 기반 exact HIL 완료 | [281번](281_M32_W06_Mesh_기반_software와_HIL_blocker.md) — 두 node 구성·500/500 ACK·negative·STOP. [291번](291_M32_W06_second_node_provisioning_FAIL과_재부팅_인계.md)은 교정 중 과거 인계 |
@@ -60,7 +123,8 @@ v0.5.0의 완료 범위는 [v0.5.0 TODO](../TODO_v0.5.0.md)에 보존합니다.
 v0.5.0은 Windows 10/11 x64 stable입니다. v0.6.0의 M32는 **W01~W12 12/12 완료**입니다.
 W08 BLOB·signed MDFU, W10 공존 HIL, W11 exact 회귀·soak, W12 최종 증거 정합화와 인계를
 완료했습니다. 각 증거의 source와 시험 분모는 해당 기록 당시 수치입니다.
-M33은 미착수이며 HOST-W04~W08은 사용자 보류 상태입니다. 후속 개발 결과를 v0.5.0
+M33은 W01~W05 기술 완료 5/8이며 W06 사용자 수락 마감으로 수락 집계 6/8입니다. 실제 PASS 46개·승인 3개와 strict 예외는 [310번](310_M33_W06_사용자_수락_마감_완료.md), 명시 수락 시점 정정은 [311번](311_M33_W06_명시_수락_정정과_HOST_W04_착수.md)에 기록합니다.
+HOST-W01~W06은 완료했고 HOST-W07은 C5 Windows 11 완료를 보존하며 C8 실적 보존 후 C9 실적·FAIL을 보존하고 C10 Ubuntu24.04/WSL2의 기준선·변경 영향 검증을 마감했습니다. 후속 개발 결과를 v0.5.0
 지원 기능으로 소급 해석하지 않습니다.
 
 ## 기록 읽는 방법
@@ -97,7 +161,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 | T13 정상·오류 복구·UART00 종료 | [113번](<113_T13_S_범위_종료와_U_준비.md>) · [115번](<115_T13_U_UART00_완료와_T13_종료.md>) · [116번](<116_T14_자원_충돌_판정과_PWM_식별_교정.md>) |
 | 공개 이력·원본 복원 | [106번](<106_Git_이력_정리와_구버전_패키지_공급_종료.md>) · [215번](<215_M31_W03_이력과_문서_정비.md>) · [221번](<221_main_마일스톤별_이력_정리.md>) |
 | 문서 전수 감사 | [문서 관리 원장](../document-review.json) |
-| 최신 재개 지점 | [HANDOFF](../HANDOFF.md) · [v0.6.0 계획](../TODO_v0.6.0.md) · [M32 TODO](../TODO_M32.md) |
+| 최신 재개 지점 | [HANDOFF](../HANDOFF.md) · [M33 인계](../M33_HANDOFF.md) · [v0.6.0 계획](../TODO_v0.6.0.md) · [M33 TODO](../TODO_M33.md) |
 
 ## 전체 기록 목차
 
@@ -105,7 +169,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 기존 번호를 다시 매기지 않습니다.
 
 <details>
-<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·문서 정비 — 238~295</summary>
+<summary>P2 실측·최종 기능 완료·RC/stable 공개·M32 마감·M33 W01-W05 — 238-301</summary>
 
 - [238 — M31 메모리 최적화 P2: GATT 512 B 실기와 adaptive 정정](<238_M31_메모리_최적화_P2_GATT_실기와_Adaptive_정정.md>)
 - [239 — M31 메모리 최적화 P2: CoC PASS, CS 당시 연속성 HOLD 기록](<239_M31_메모리_최적화_P2_CoC_CS_계측.md>)
@@ -165,6 +229,12 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [293 — v0.7.0 SDK 전환 전용과 후속 마일스톤 재배정](293_v0.7.0_SDK_전환_전용과_후속_마일스톤_재배정.md)
 - [294 — M32-W08 BLOB PASS와 signed MDFU timeout 진단·완료](294_M32_W08_BLOB_PASS와_MDFU_timeout_진단.md)
 - [295 — M32 문서 전수 정비와 main Squash 통합](295_M32_문서_전수_정비와_main_Squash_통합.md)
+- [296 — M33-W01 전체 예제 원장과 릴리스 계약](296_M33_W01_전체_예제_원장과_릴리스_계약.md)
+- [297 — M33-W02 Beacon 코덱과 예제 착수](297_M33_W02_Beacon_코덱과_예제_착수.md)
+- [298 — M33-W02 표준 GATT·Beacon 완료](298_M33_W02_표준_GATT_Beacon_완료.md)
+- [299 — M33-W03 외부 ecosystem·companion 완료](299_M33_W03_외부_ecosystem과_companion_완료.md)
+- [300 — M33-W04 DTM·HCI 진단 template 완료](300_M33_W04_DTM_HCI_진단_template_완료.md)
+- [301 — M33-W05 전체 예제와 설치 경로 완료](301_M33_W05_전체_예제와_설치_경로_완료.md)
 
 </details>
 
@@ -392,7 +462,7 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 </details>
 
 <details>
-<summary>초기 기반·v0.1~v0.3 공개·v0.4.0 범위 — 01~42</summary>
+<summary>초기 기반·v0.1-v0.3 공개·v0.4.0 범위 — 01-42</summary>
 
 - [1 — M1 도구 환경과 NU54DK 보드 실기 기준선](<01_M1_도구와_보드_기준선.md>)
 - [2 — M2 Zephyr module과 Arduino runtime 기준선](<02_M2_Zephyr_Module과_Runtime_기준선.md>)
@@ -438,3 +508,5 @@ P2의 세 기술 축은 [262번](<262_M31_메모리_최적화_P2_세_축_완료.
 - [42 — v0.4.0 코어 기능 검증 범위 합의](<42_v0.4.0_코어_기능_검증_범위_합의.md>)
 
 </details>
+
+과거 기록의 당시 OS 수와 전체시험 계획은 현행 검증 배정을 덮어쓰지 않는다. C11 macOS 진행은331번, C6~C10은330번, C5 완료 기준선은328·329번에 보존하며 [Host 계약](<../02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md>)의 기준선·호환성·변경 영향 범위를 따른다.

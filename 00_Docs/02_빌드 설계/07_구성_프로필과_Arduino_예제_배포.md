@@ -13,9 +13,7 @@
 정식 공개 후 설치·Blink cold compile은 서로 다른 검증 실행이다. [stable 설치 안내](../05_릴리스/v0.5.0/README.md),
 [W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) 및
 [274번 공개 smoke](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
-Ubuntu/macOS는 [다중 Host 지원 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)에
-따라 v0.6.0의 M32·M33 계획과 연계하되 Host 보류·OS별 최종 gate를 유지한다.
-한 Host의 compile 결과를 다른 Host의 PASS로 합산하거나 버전 배정만으로 새 OS 지원을 확정하지 않는다.
+v0.6.0 후보에는 라이브러리 24개와 예제 204개가 있다. [현재 예제 색인](../../libraries/EXAMPLES.md)에서 Feature set과 보드 수를 확인한다. OS별 컴파일과 장치 검증의 범위는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
 
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는
@@ -340,13 +338,13 @@ M29의 실제 예제명과 완료·잔여 상태는
 ### M31 v0.5.0과 M32·M33 v0.6.0의 예제 구현·검증 TODO
 
 이전 stable 30개와 v0.5.0 stable 113개는 서로 다른 패키지 목록이다. 다음 표는 단계별 예제 계약이다.
-M31과 M32는 완료했고 M32는 W01~W12 12/12, M33은 미착수다. W08 BLOB·signed MDFU,
+M31과 M32는 완료했고 M32는 W01~W12 12/12, M33은 W06 수락 마감으로 수락 6/8·기술 5/8이다. W08 BLOB·signed MDFU,
 W10 공존, W11 exact 회귀·soak와 W12 정합성 감사·인계를 완료했다. 과거 W08 FAIL은 당시 기록으로 보존한다. 상세 feature·role은
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 M31-W08까지의 예제 정합화와 Windows package·설치·RC 공개 gate는 마감했다.
 M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배정했다. Ubuntu/macOS의
-기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, HOST-W04~W08 재개 승인과 실물 검증 전에는
+기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, Host 순차 구현과 최종 실물 검증을 마치기 전에는
 새 OS 지원을 확정하지 않는다. 이 배정은 기능 구현·검증 완료를 뜻하지 않는다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
@@ -357,8 +355,11 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 | M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
 | M32-W02~W05 — 완료·미공개 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
 | M32-W06~W10 — 완료·미공개 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
-| M33-W02~W04 — 계획 | OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, iBeacon/Eddystone/BTHome, Fast Pair·ANCS/AMS, HCI/DTM profile/template |
-| M33-W05~W08 — v0.6.0 계획 | 추가 role 예제·ARF-04A·후속 기능 회귀·설치·지원표 마감 |
+| M33-W02 — 완료·미공개 | iBeacon/Eddystone UID/BTHome와 OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, 공개 예제 9/9 build와 두/세 보드 exact HIL PASS; 외부 peer는 후속 `NOT_RUN` |
+| M33-W03 — 완료·미공개 | Fast Pair input/locator·ANCS/AMS·EnOcean/MDS template와 scripted-peer HIL PASS; 실제 외부 제품은 후속 `NOT_RUN` |
+| M33-W04 — 완료·미공개 | HCI/DTM profile/template와 two-wire/H4 실제 12/12씩 PASS |
+| M33-W05 — 완료·미공개 | 12개 Start Here·29개 Recipe·204개 Reference, clean 설치 발견·compile 204/204와 negative 9/9 PASS |
+| M33-W06~W08 — v0.6.0 계획 | 후속 기능 회귀·자원·상호운용·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료
 증거와 M32/M33의 현재 진행 상태는 위 TODO에서 각각 관리한다.
@@ -380,7 +381,7 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 - DF는 고정 NCS v3.4.0·nRF54L15 제품 SDC IQ RX의 `UNSUPPORTED`·P2 범위 제외와
   송신 예제의 controller 경계를 명시한다. 과거 LL 내부 수신을 제품 지원이나 각도 검증으로 쓰지 않는다.
 - Ubuntu/macOS 최종 실물 설치·USB·serial·debug는 사용자 담당이므로 역할별 명령·기대 출력·
-  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W04~W08은 보류다.
+  실패 증거 수집 안내를 해당 OS를 추가할 후속 릴리스 단계로 인계한다. HOST-W06과 HOST-W07 Windows 11 검증은 완료했고 추가 OS는 다중 Host 계약에 배정한 호환성·변경 영향 검증을 진행한다.
 
 M31-W01에서 구현한 sample parity 원장은 전체 SDK sample/test의 누락을 검사한다. 하나의 Arduino 예제가 여러
 upstream case를 포괄하면 대응 case 전부를 명시하고, 발견 개수·적용 개수·build/runtime PASS 개수를

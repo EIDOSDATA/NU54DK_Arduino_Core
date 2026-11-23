@@ -1,0 +1,6 @@
+server: M33PROFILE|1|READY|role=server|nonce=|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+server: M33PROFILE|1|CLEANED|role=server|nonce=0544be83831652010eb3d94289ada441|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|removed=1|existing_unchanged=1
+server: M33PROFILE|1|STOPPED|role=server|nonce=0544be83831652010eb3d94289ada441|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|native_links=0|links=0|pending=0|scan=0|advertising=0|watchdog=0
+client: M33PROFILE|1|READY|role=client|nonce=|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+client: M33PROFILE|1|CLEANED|role=client|nonce=0544be83831652010eb3d94289ada441|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|removed=1|existing_unchanged=1
+client: M33PROFILE|1|STOPPED|role=client|nonce=0544be83831652010eb3d94289ada441|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|native_links=0|links=0|pending=0|scan=0|advertising=0|watchdog=0

@@ -10,11 +10,14 @@
 
 #include <zephyr/bluetooth/mesh.h>
 #include <zephyr/kernel.h>
+#include <zephyr/sys/atomic.h>
 
 #include <cstddef>
 #include <cstdint>
 #include <errno.h>
 #include <string.h>
+
+extern "C" bool nucode_mesh_onoff_server_bound(void);
 
 #ifndef M32_MESH_CORE_REVISION
 #error "M32_MESH_CORE_REVISION is required"
@@ -28,6 +31,7 @@ namespace
     constexpr char clear_prefix[] = "M32MESH|1|CLEAR|nonce=";
     constexpr char start_prefix[] = "M32MESH|1|START|nonce=";
     constexpr char stop_prefix[] = "M32MESH|1|STOP|nonce=";
+    constexpr char peer_ack_prefix[] = "M32MESH|1|PEER_ACK|nonce=";
     constexpr std::size_t nonce_length = 32U;
     constexpr std::uint16_t provisioner_address = 0x0001U;
     constexpr std::uint16_t node_a_address = 0x0100U;
@@ -38,11 +42,14 @@ namespace
         base_message_target + secured_message_target;
     constexpr std::uint32_t node_message_target = total_message_target / 2U;
     constexpr std::int64_t message_ack_timeout_ms = 2000;
-    constexpr std::uint32_t message_retry_limit = 3U;
+    constexpr std::uint32_t message_retry_limit = 6U;
     constexpr std::int64_t message_response_drain_ms = 50;
+    constexpr std::int64_t friend_poll_interval_ms = 250;
     constexpr std::uint32_t configuration_retry_limit = 3U;
     constexpr std::int64_t configuration_retry_delay_ms = 500;
+    constexpr std::int64_t friendship_establishment_grace_ms = 12000;
     constexpr std::int64_t session_timeout_ms = 600000;
+    constexpr std::int64_t friend_clear_confirm_timeout_ms = 1090;
 
     static_assert(CONFIG_BT_MESH_CDB_NODE_COUNT >= 3,
                   "local provisioner와 두 remote node의 CDB slot이 필요합니다");
@@ -69,13 +76,22 @@ namespace
     bool started = false;
     bool session_complete = false;
     bool failed = false;
-    bool stop_requested = false;
+    bool mesh_suspended = false;
+    atomic_t stop_requested = ATOMIC_INIT(0);
     bool unprovisioned_rejected = false;
 #if defined(NUCODE_M32_MESH_PROVISIONER)
     bool invalid_destination_rejected = false;
     bool wrong_key_rejected = false;
 #else
     bool feature_enabled = false;
+    atomic_t friendship_established = ATOMIC_INIT(0);
+    atomic_t friendship_terminated = ATOMIC_INIT(0);
+    atomic_t feature_disable_requested = ATOMIC_INIT(0);
+    atomic_t friendship_peer_address = ATOMIC_INIT(0);
+    atomic_t friend_clear_started_ms = ATOMIC_INIT(0);
+    atomic_t friend_clear_latency_ms = ATOMIC_INIT(0);
+    atomic_t friend_clear_peer_acknowledged = ATOMIC_INIT(0);
+    bool friend_clear_callback_reported = false;
 #endif
     bool payload_integrity = true;
     std::int64_t deadline_ms = 0;
@@ -103,6 +119,7 @@ namespace
     bool message_outstanding = false;
     bool expected_state = false;
     std::uint16_t expected_source = 0U;
+    std::uint8_t expected_transaction_id = 0U;
     std::uint32_t message_retry_count = 0U;
     std::uint32_t message_retries = 0U;
     std::uint32_t sent_messages = 0U;
@@ -113,6 +130,11 @@ namespace
 #else
     bool provisioned_event = false;
     std::uint32_t received_messages = 0U;
+    bool received_transaction_id_valid = false;
+    std::uint8_t last_received_transaction_id = 0U;
+#if defined(NUCODE_M32_MESH_NODE_B)
+    std::int64_t next_friend_poll_ms = 0;
+#endif
 #endif
 
     /** @brief 현재 image의 고정 역할을 반환합니다. */
@@ -138,6 +160,87 @@ namespace
         return node_b_address;
 #endif
     }
+
+#if defined(NUCODE_M32_MESH_NODE_A)
+    /** @brief Friend 역할이 node_b LPN과 실제 friendship을 맺었음을 기록합니다. */
+    void friendEstablished(std::uint16_t net_index, std::uint16_t lpn_address,
+                           std::uint8_t receive_delay,
+                           std::uint32_t poll_timeout)
+    {
+        static_cast<void>(net_index);
+        static_cast<void>(receive_delay);
+        static_cast<void>(poll_timeout);
+        if (lpn_address == node_b_address)
+        {
+            atomic_set(&friendship_peer_address, lpn_address);
+            atomic_set(&friendship_established, 1);
+        }
+    }
+
+    /** @brief TTL=0 Friend Clear를 받은 Friend의 종료 시각을 기록합니다. */
+    void friendTerminated(std::uint16_t net_index, std::uint16_t lpn_address)
+    {
+        static_cast<void>(net_index);
+        if (atomic_get(&stop_requested) != 0 &&
+            atomic_get(&friendship_established) != 0 &&
+            lpn_address == static_cast<std::uint16_t>(
+                               atomic_get(&friendship_peer_address)))
+        {
+            const std::uint32_t started = static_cast<std::uint32_t>(
+                atomic_get(&friend_clear_started_ms));
+            atomic_set(&friend_clear_latency_ms,
+                       static_cast<atomic_val_t>(k_uptime_get_32() - started));
+            atomic_set(&friendship_terminated, 1);
+        }
+    }
+
+    BT_MESH_FRIEND_CB_DEFINE(m32_friend_callbacks) = {
+        .established = friendEstablished,
+        .terminated = friendTerminated,
+    };
+#elif defined(NUCODE_M32_MESH_NODE_B)
+    /** @brief LPN 역할이 node_a Friend와 실제 friendship을 맺었음을 기록합니다. */
+    void lpnEstablished(std::uint16_t net_index, std::uint16_t friend_address,
+                        std::uint8_t queue_size, std::uint8_t receive_window)
+    {
+        static_cast<void>(net_index);
+        static_cast<void>(queue_size);
+        static_cast<void>(receive_window);
+        if (friend_address == node_a_address)
+        {
+            atomic_set(&friendship_peer_address, friend_address);
+            atomic_set(&friendship_established, 1);
+            next_friend_poll_ms = k_uptime_get();
+        }
+    }
+
+    /** @brief Friend Clear Confirm 뒤 LPN 종료 callback의 시각을 기록합니다. */
+    void lpnTerminated(std::uint16_t net_index, std::uint16_t friend_address)
+    {
+        static_cast<void>(net_index);
+        if (friend_address != static_cast<std::uint16_t>(
+                                  atomic_get(&friendship_peer_address)))
+        {
+            return;
+        }
+        if (atomic_get(&stop_requested) != 0 &&
+            atomic_get(&friendship_established) != 0)
+        {
+            const std::uint32_t started = static_cast<std::uint32_t>(
+                atomic_get(&friend_clear_started_ms));
+            atomic_set(&friend_clear_latency_ms,
+                       static_cast<atomic_val_t>(k_uptime_get_32() - started));
+            atomic_set(&friendship_terminated, 1);
+        }
+        atomic_set(&friendship_established, 0);
+        next_friend_poll_ms = 0;
+    }
+
+    BT_MESH_LPN_CB_DEFINE(m32_lpn_callbacks) = {
+        .established = lpnEstablished,
+        .terminated = lpnTerminated,
+    };
+#endif
 
     /** @brief 결과 record에 nonce와 exact Core revision을 결합합니다. */
     void printSuffix()
@@ -258,11 +361,15 @@ namespace
         else if (record.event == Event::model_status && message_outstanding)
         {
             if (record.model != Model::generic_on_off ||
-                record.address != expected_source || record.payload_size < 1U ||
-                (record.payload[0] != 0U) != expected_state)
+                record.payload_size < 1U || record.payload[0] > 1U)
             {
                 payload_integrity = false;
                 fail("status_payload");
+                return;
+            }
+            if (record.address != expected_source ||
+                (record.payload[0] != 0U) != expected_state)
+            {
                 return;
             }
             const std::uint32_t latency = static_cast<std::uint32_t>(
@@ -272,6 +379,7 @@ namespace
                 maximum_latency_ms = latency;
             }
             ++acknowledged_messages;
+            ++expected_transaction_id;
             message_outstanding = false;
             message_retry_count = 0U;
             next_message_ms = k_uptime_get() + message_response_drain_ms;
@@ -290,9 +398,14 @@ namespace
                 fail("set_payload");
                 return;
             }
-            if (received_messages < node_message_target)
+            const std::uint8_t transaction_id = record.payload[1];
+            if ((!received_transaction_id_valid ||
+                 transaction_id != last_received_transaction_id) &&
+                received_messages < node_message_target)
             {
                 ++received_messages;
+                received_transaction_id_valid = true;
+                last_received_transaction_id = transaction_id;
             }
         }
 #endif
@@ -301,14 +414,39 @@ namespace
     /** @brief 저장 상태를 지우고 동일 image에서 새 bounded session을 준비합니다. */
     void clearMeshState()
     {
+        const bool resumed = mesh_suspended;
+        if (mesh_suspended)
+        {
+            const int resume_error = bt_mesh_resume();
+            if (resume_error != 0)
+            {
+                fail("resume", resume_error);
+                return;
+            }
+            mesh_suspended = false;
+        }
         if (!NUCODEMesh.reset())
         {
             fail("clear", NUCODEMesh.lastDriverError());
             return;
         }
+#if defined(NUCODE_M32_MESH_PROVISIONER)
+        if (!NUCODEMesh.provisioned())
+        {
+            fail("clear_lost_local_provisioning");
+            return;
+        }
+#else
+        if (NUCODEMesh.provisioned())
+        {
+            fail("clear_still_provisioned");
+            return;
+        }
+#endif
         cleared = true;
         started = false;
         session_complete = false;
+        atomic_set(&stop_requested, 0);
 #if defined(NUCODE_M32_MESH_PROVISIONER)
         node_a_discovered = false;
         node_b_discovered = false;
@@ -329,13 +467,27 @@ namespace
         sent_messages = 0U;
         acknowledged_messages = 0U;
         message_outstanding = false;
+        expected_transaction_id = 0U;
         message_retry_count = 0U;
         message_retries = 0U;
         next_message_ms = 0;
 #else
         provisioned_event = false;
         received_messages = 0U;
+        received_transaction_id_valid = false;
+        last_received_transaction_id = 0U;
+#if defined(NUCODE_M32_MESH_NODE_B)
+        next_friend_poll_ms = 0;
+#endif
         feature_enabled = false;
+        atomic_set(&friendship_established, 0);
+        atomic_set(&friendship_terminated, 0);
+        atomic_set(&feature_disable_requested, 0);
+        atomic_set(&friendship_peer_address, 0);
+        atomic_set(&friend_clear_started_ms, 0);
+        atomic_set(&friend_clear_latency_ms, 0);
+        atomic_set(&friend_clear_peer_acknowledged, 0);
+        friend_clear_callback_reported = false;
         checkUnprovisionedBoundary();
 #endif
         Serial.print(protocol);
@@ -343,6 +495,10 @@ namespace
         Serial.print(roleName());
         Serial.print("|unprovisioned_rejected=");
         Serial.print(unprovisioned_rejected ? 1 : 0);
+        Serial.print("|provisioned=");
+        Serial.print(NUCODEMesh.provisioned() ? 1 : 0);
+        Serial.print("|settings_reset=pass|resumed=");
+        Serial.print(resumed ? 1 : 0);
         printSuffix();
         Serial.println();
     }
@@ -486,6 +642,8 @@ namespace
             }
             node_b_configured = true;
             configuration_retry_count = 0U;
+            next_message_ms =
+                k_uptime_get() + friendship_establishment_grace_ms;
         }
         if (!invalid_destination_rejected)
         {
@@ -524,7 +682,8 @@ namespace
             Destination retry_destination{};
             retry_destination.address = expected_source;
             send_started_ms = k_uptime_get();
-            if (!NUCODEMesh.sendOnOff(retry_destination, expected_state, true))
+            if (!NUCODEMesh.sendOnOff(retry_destination, expected_state, true,
+                                      expected_transaction_id))
             {
                 fail("model_retry", NUCODEMesh.lastDriverError());
                 return;
@@ -543,7 +702,8 @@ namespace
         expected_source = destination.address;
         expected_state = (sent_messages & 2U) != 0U;
         send_started_ms = k_uptime_get();
-        if (!NUCODEMesh.sendOnOff(destination, expected_state, true))
+        if (!NUCODEMesh.sendOnOff(destination, expected_state, true,
+                                  expected_transaction_id))
         {
             fail("model_send", NUCODEMesh.lastDriverError());
             return;
@@ -590,7 +750,7 @@ namespace
     void driveNodeFeature()
     {
         if (!started || feature_enabled || !provisioned_event ||
-            !NUCODEMesh.provisioned())
+            !NUCODEMesh.provisioned() || !nucode_mesh_onoff_server_bound())
         {
             return;
         }
@@ -598,14 +758,31 @@ namespace
         feature_enabled = NUCODEMesh.setFeature(Feature::relay, true) &&
                           NUCODEMesh.setFeature(Feature::friend_node, true);
 #else
-        feature_enabled = NUCODEMesh.setFeature(Feature::low_power_node, true) &&
-                          NUCODEMesh.setFeature(Feature::gatt_proxy, true);
+        feature_enabled = NUCODEMesh.setFeature(Feature::low_power_node, true);
 #endif
         if (!feature_enabled)
         {
             fail("feature_enable", NUCODEMesh.lastDriverError());
         }
     }
+
+#if defined(NUCODE_M32_MESH_NODE_B)
+    /** @brief LPN traffic 동안 bounded 주기로 Friend Queue 수신을 촉진합니다. */
+    void driveFriendPoll()
+    {
+        const std::int64_t now = k_uptime_get();
+        if (!feature_enabled || atomic_get(&friendship_established) == 0 ||
+            now < next_friend_poll_ms)
+        {
+            return;
+        }
+        next_friend_poll_ms = now + friend_poll_interval_ms;
+        if (!NUCODEMesh.pollFriend() && NUCODEMesh.lastDriverError() != -EAGAIN)
+        {
+            fail("friend_poll", NUCODEMesh.lastDriverError());
+        }
+    }
+#endif
 
     /** @brief node의 수신 분모·보안 payload·feature를 출력합니다. */
     void finishNode()
@@ -614,7 +791,8 @@ namespace
         {
             return;
         }
-        if (!feature_enabled || !unprovisioned_rejected || !payload_integrity)
+        if (!feature_enabled || atomic_get(&friendship_established) == 0 ||
+            !unprovisioned_rejected || !payload_integrity)
         {
             fail("result_boundary");
             return;
@@ -624,7 +802,8 @@ namespace
         Serial.print(roleName());
         Serial.print("|received=");
         Serial.print(received_messages);
-        Serial.print("|unprovisioned_rejected=1|feature=pass|payload_integrity=pass");
+        Serial.print("|unprovisioned_rejected=1|feature=pass|friendship=pass");
+        Serial.print("|payload_integrity=pass");
         printSuffix();
         Serial.println();
         Serial.print(protocol);
@@ -667,6 +846,8 @@ namespace
         Serial.print(NUCODEMesh.provisioned() ? 1 : 0);
         Serial.print("|feature=");
         Serial.print(feature_enabled ? 1 : 0);
+        Serial.print("|friendship=");
+        Serial.print(atomic_get(&friendship_established) != 0 ? 1 : 0);
         Serial.print("|received=");
         Serial.print(received_messages);
 #endif
@@ -674,31 +855,132 @@ namespace
         Serial.println();
     }
 
-    /** @brief 역할 feature와 Mesh bearer를 정지하고 cleanup을 기록합니다. */
-    void stopSession()
+    /** @brief 역할 feature 종료를 시작하며 LPN은 Friend Clear Confirm을 기다립니다. */
+    void beginStopSession()
     {
-        bool cleanup = NUCODEMesh.cancelProvisioning();
-#if defined(NUCODE_M32_MESH_NODE_A)
-        cleanup = NUCODEMesh.setFeature(Feature::friend_node, false) && cleanup;
-        cleanup = NUCODEMesh.setFeature(Feature::relay, false) && cleanup;
-#elif defined(NUCODE_M32_MESH_NODE_B)
-        cleanup = NUCODEMesh.setFeature(Feature::low_power_node, false) && cleanup;
-        cleanup = NUCODEMesh.setFeature(Feature::gatt_proxy, false) && cleanup;
-#endif
-        const int suspend_error = bt_mesh_suspend();
-        if (!cleanup || suspend_error != 0)
+#if defined(NUCODE_M32_MESH_PROVISIONER)
+        if (!NUCODEMesh.cancelProvisioning())
         {
-            fail("stop", suspend_error != 0 ? suspend_error :
-                 NUCODEMesh.lastDriverError());
+            fail("stop", NUCODEMesh.lastDriverError());
             return;
         }
+        const int suspend_error = bt_mesh_suspend();
+        if (suspend_error != 0)
+        {
+            fail("stop", suspend_error);
+            return;
+        }
+        mesh_suspended = true;
         Serial.print(protocol);
         Serial.print("|STOPPED|role=");
         Serial.print(roleName());
-        Serial.print("|cleanup=pass");
+        Serial.print("|cleanup=pass|friend_clear=not_applicable|friend_clear_ms=0");
         printSuffix();
         Serial.println();
-        stop_requested = false;
+        atomic_set(&stop_requested, 0);
+#elif defined(NUCODE_M32_MESH_NODE_A)
+        if (atomic_get(&friendship_established) == 0)
+        {
+            fail("friendship_missing");
+            return;
+        }
+        atomic_set(&friend_clear_started_ms, k_uptime_get_32());
+        atomic_set(&feature_disable_requested, 1);
+#elif defined(NUCODE_M32_MESH_NODE_B)
+        if (atomic_get(&friendship_established) == 0)
+        {
+            fail("friendship_missing");
+            return;
+        }
+        atomic_set(&friend_clear_started_ms, k_uptime_get_32());
+        if (!NUCODEMesh.cancelProvisioning() ||
+            !NUCODEMesh.setFeature(Feature::low_power_node, false))
+        {
+            fail("stop", NUCODEMesh.lastDriverError());
+            return;
+        }
+        atomic_set(&feature_disable_requested, 1);
+#endif
+    }
+
+    /** @brief 양쪽 종료 callback이 첫 retry 전에 도착한 뒤 Mesh bearer를 정지합니다. */
+    void driveStopSession()
+    {
+#if !defined(NUCODE_M32_MESH_PROVISIONER)
+        if (atomic_get(&stop_requested) == 0 ||
+            atomic_get(&feature_disable_requested) == 0)
+        {
+            return;
+        }
+        const std::uint32_t elapsed = k_uptime_get_32() -
+                                      static_cast<std::uint32_t>(
+                                          atomic_get(&friend_clear_started_ms));
+        if (atomic_get(&friendship_terminated) == 0)
+        {
+            if (elapsed > static_cast<std::uint32_t>(
+                              friend_clear_confirm_timeout_ms))
+            {
+                fail("friend_clear_confirm_timeout");
+            }
+            return;
+        }
+        const std::uint32_t clear_latency = static_cast<std::uint32_t>(
+            atomic_get(&friend_clear_latency_ms));
+        if (clear_latency >
+            static_cast<std::uint32_t>(friend_clear_confirm_timeout_ms))
+        {
+            fail("friend_clear_confirm_late");
+            return;
+        }
+        if (!friend_clear_callback_reported)
+        {
+            Serial.print(protocol);
+#if defined(NUCODE_M32_MESH_NODE_A)
+            Serial.print("|FRIEND_CLEAR_LOCAL|role=node_a|friend_clear_ms=");
+#else
+            Serial.print("|FRIEND_CLEAR_PEER|role=node_b|friend_clear_ms=");
+#endif
+            Serial.print(clear_latency);
+            printSuffix();
+            Serial.println();
+            friend_clear_callback_reported = true;
+        }
+#if defined(NUCODE_M32_MESH_NODE_A)
+        if (atomic_get(&friend_clear_peer_acknowledged) == 0)
+        {
+            if (elapsed > static_cast<std::uint32_t>(
+                              friend_clear_confirm_timeout_ms))
+            {
+                fail("friend_clear_peer_ack_timeout");
+            }
+            return;
+        }
+        if (!NUCODEMesh.cancelProvisioning() ||
+            !NUCODEMesh.setFeature(Feature::relay, false) ||
+            !NUCODEMesh.setFeature(Feature::friend_node, false))
+        {
+            fail("friend_cleanup", NUCODEMesh.lastDriverError());
+            return;
+        }
+#endif
+        const int suspend_error = bt_mesh_suspend();
+        if (suspend_error != 0)
+        {
+            fail("stop", suspend_error);
+            return;
+        }
+        mesh_suspended = true;
+        Serial.print(protocol);
+        Serial.print("|STOPPED|role=");
+        Serial.print(roleName());
+        Serial.print("|cleanup=pass|friend_clear=pass|friend_clear_peer_ack=pass");
+        Serial.print("|friend_clear_ms=");
+        Serial.print(clear_latency);
+        printSuffix();
+        Serial.println();
+        atomic_set(&feature_disable_requested, 0);
+        atomic_set(&stop_requested, 0);
+#endif
     }
 
     /** @brief PROBE·CLEAR·START·STOP 명령을 처리합니다. */
@@ -737,12 +1019,25 @@ namespace
             startSession();
             return;
         }
+#if defined(NUCODE_M32_MESH_NODE_A)
+        if (acceptRevisionCommand(peer_ack_prefix))
+        {
+            if (atomic_get(&stop_requested) == 0 ||
+                atomic_get(&friendship_terminated) == 0)
+            {
+                fail("friend_clear_peer_ack_order");
+                return;
+            }
+            atomic_set(&friend_clear_peer_acknowledged, 1);
+            return;
+        }
+#endif
         if (session_complete &&
             ::strncmp(command, stop_prefix, sizeof(stop_prefix) - 1U) == 0 &&
             ::strcmp(command + sizeof(stop_prefix) - 1U, nonce) == 0)
         {
-            stop_requested = true;
-            stopSession();
+            atomic_set(&stop_requested, 1);
+            beginStopSession();
             return;
         }
         fail("command");
@@ -822,6 +1117,9 @@ void loop()
         finishProvisioner();
 #else
         driveNodeFeature();
+#if defined(NUCODE_M32_MESH_NODE_B)
+        driveFriendPoll();
+#endif
         finishNode();
 #endif
         if (k_uptime_get() >= progress_deadline_ms)
@@ -834,5 +1132,6 @@ void loop()
             fail("timeout");
         }
     }
+    driveStopSession();
     delay(1);
 }

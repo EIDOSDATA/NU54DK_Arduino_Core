@@ -1,0 +1,3938 @@
+{
+  "core": "4ebd49521d4a6578beac91ebddbd1bf39d679db4",
+  "records": [
+    {
+      "library": "NUCODE_BLE",
+      "example": "BeaconAdvertiser",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 18344,
+          "headroom_bytes": 1124128,
+          "region_bytes": 1490944,
+          "text_bytes": 348472,
+          "used_bytes": 366816,
+          "used_percent": 24.6029
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/84/8449fc29d6976709ab8aeffbe0a8b544/build/zephyr/.config",
+            "sha256": "bce66dfd621ac4cf8873fa61226afd935b846d06a8d2ae7481e4d4130fb16cdb"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/84/8449fc29d6976709ab8aeffbe0a8b544/build/zephyr/zephyr.dts",
+            "sha256": "52cb16c79a9d06cbf00ce5f7d592fdcebfbfd44b986f0d87bc5a96325e1b1220"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/84/8449fc29d6976709ab8aeffbe0a8b544/build/zephyr/zephyr.elf",
+            "sha256": "67488b6e91c83092aa87f55faf7354c7098ea753d38d3e4ab53fde9af540a3a2"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/84/8449fc29d6976709ab8aeffbe0a8b544/build/zephyr/zephyr.map",
+            "sha256": "ef6009e1e2666ab121e86abc0581e19d53f07d44055b7b9b1f027cfe5333b80c"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/84/8449fc29d6976709ab8aeffbe0a8b544/app/sources.cmake",
+            "sha256": "f861b3fa8bee4a917f3d0b783bdab8b08378cbc806adc372555d04be71bad324"
+          }
+        },
+        "ram": {
+          "bss_bytes": 138312,
+          "data_bytes": 18344,
+          "headroom_bytes": 105488,
+          "region_bytes": 262144,
+          "used_bytes": 156656,
+          "used_percent": 59.7595
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 328932
+          },
+          {
+            "address": 330084,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 330092,
+            "name": "initlevel",
+            "size": 280
+          },
+          {
+            "address": 330372,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 330852,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 333020,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 333032,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 333040,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 333064,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 333100,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 333124,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 333132,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 333140,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 333168,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 333244,
+            "name": "init_array",
+            "size": 28
+          },
+          {
+            "address": 333272,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 333296,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 333568,
+            "name": "bt_gatt_service_static_area",
+            "size": 24
+          },
+          {
+            "address": 333592,
+            "name": "settings_handler_static_area",
+            "size": 144
+          },
+          {
+            "address": 333736,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 333744,
+            "name": "rodata",
+            "size": 14768
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 16774
+          },
+          {
+            "address": 536887782,
+            "name": "device_states",
+            "size": 34
+          },
+          {
+            "address": 536887816,
+            "name": "k_mem_slab_area",
+            "size": 96
+          },
+          {
+            "address": 536887912,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536887936,
+            "name": "k_mutex_area",
+            "size": 420
+          },
+          {
+            "address": 536888356,
+            "name": "k_msgq_area",
+            "size": 440
+          },
+          {
+            "address": 536888796,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536888828,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536888860,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536888880,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 366824,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536889320,
+            "name": "bss",
+            "size": 82648
+          },
+          {
+            "address": 536971968,
+            "name": "noinit",
+            "size": 55560
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536930272,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536897472,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536919048,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536979480,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536973120,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537000976,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537012880,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536911000,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537023736,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537007284,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536990680,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537005140,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536987672,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537009524,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537018380,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536998928,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536994512,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536996880,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883656,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537022084,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536978176,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536971968,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537011776,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537020684,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536993488,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536896424,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 536989776,
+            "name": "bt_tx_processor_stack",
+            "size": 904,
+            "type": "b"
+          },
+          {
+            "address": 537016600,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          },
+          {
+            "address": 536967836,
+            "name": "(anonymous namespace)::pin_runtime_states",
+            "size": 768,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "67488b6e91c83092aa87f55faf7354c7098ea753d38d3e4ab53fde9af540a3a2"
+    },
+    {
+      "library": "NUCODE_BLE",
+      "example": "BeaconObserver",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 18236,
+          "headroom_bytes": 1126416,
+          "region_bytes": 1490944,
+          "text_bytes": 346292,
+          "used_bytes": 364528,
+          "used_percent": 24.4495
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/35/352c8b1323c79876e61083306b515329/build/zephyr/.config",
+            "sha256": "bce66dfd621ac4cf8873fa61226afd935b846d06a8d2ae7481e4d4130fb16cdb"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/35/352c8b1323c79876e61083306b515329/build/zephyr/zephyr.dts",
+            "sha256": "1331dc74c9ee3d15dea9e2ec60c82dc8f3570c977889f7ec740acec2b6ffbdb5"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/35/352c8b1323c79876e61083306b515329/build/zephyr/zephyr.elf",
+            "sha256": "61e85ebaba48e7bb4465ea979e1de46019eabf971752eb99e916fbdf4b30706a"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/35/352c8b1323c79876e61083306b515329/build/zephyr/zephyr.map",
+            "sha256": "3e7593866a930711f3c889bc7343b3c69ed69dca210bfd053dd201d2ce5933da"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/35/352c8b1323c79876e61083306b515329/app/sources.cmake",
+            "sha256": "a084bfef72496359f2670e405706c31c0bd868a519bb103da75e99f49d4a5008"
+          }
+        },
+        "ram": {
+          "bss_bytes": 138306,
+          "data_bytes": 18236,
+          "headroom_bytes": 105602,
+          "region_bytes": 262144,
+          "used_bytes": 156542,
+          "used_percent": 59.716
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 326488
+          },
+          {
+            "address": 327640,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 327648,
+            "name": "initlevel",
+            "size": 280
+          },
+          {
+            "address": 327928,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 328408,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 330576,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 330588,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 330596,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 330620,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 330656,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 330680,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 330688,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 330696,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 330724,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 330800,
+            "name": "init_array",
+            "size": 28
+          },
+          {
+            "address": 330828,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 330852,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 331124,
+            "name": "bt_gatt_service_static_area",
+            "size": 24
+          },
+          {
+            "address": 331148,
+            "name": "settings_handler_static_area",
+            "size": 144
+          },
+          {
+            "address": 331292,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 331296,
+            "name": "rodata",
+            "size": 15032
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 16666
+          },
+          {
+            "address": 536887674,
+            "name": "device_states",
+            "size": 34
+          },
+          {
+            "address": 536887708,
+            "name": "k_mem_slab_area",
+            "size": 96
+          },
+          {
+            "address": 536887804,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536887828,
+            "name": "k_mutex_area",
+            "size": 420
+          },
+          {
+            "address": 536888248,
+            "name": "k_msgq_area",
+            "size": 440
+          },
+          {
+            "address": 536888688,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536888720,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536888752,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536888772,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 364532,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536889216,
+            "name": "bss",
+            "size": 82642
+          },
+          {
+            "address": 536971864,
+            "name": "noinit",
+            "size": 55560
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536930164,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536897368,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536918940,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536979376,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536973016,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537000872,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537012776,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536910896,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537023632,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537007180,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536990576,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537005036,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536987568,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537009420,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537018276,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536998824,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536994408,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536996776,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883656,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537021980,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536978072,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536971864,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537011672,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537020580,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536993384,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536896320,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 536989672,
+            "name": "bt_tx_processor_stack",
+            "size": 904,
+            "type": "b"
+          },
+          {
+            "address": 537016496,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          },
+          {
+            "address": 536967728,
+            "name": "(anonymous namespace)::pin_runtime_states",
+            "size": 768,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "61e85ebaba48e7bb4465ea979e1de46019eabf971752eb99e916fbdf4b30706a"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "AlertSensor",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 19400,
+          "headroom_bytes": 1110168,
+          "region_bytes": 1490944,
+          "text_bytes": 361376,
+          "used_bytes": 380776,
+          "used_percent": 25.5393
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/f5/f5ee880d404e9c80d69f66a653434597/build/zephyr/.config",
+            "sha256": "b5b81c2072628c048b9aa3612748f406f004337d21f7a44d5822d52af3ef9e93"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/f5/f5ee880d404e9c80d69f66a653434597/build/zephyr/zephyr.dts",
+            "sha256": "779a4c2f81b1e99439cb327ccc9961dbca436a1185787d366f80ba40981ca640"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/f5/f5ee880d404e9c80d69f66a653434597/build/zephyr/zephyr.elf",
+            "sha256": "20fd84bff81d91add95b98db9702cb57dd349a8019ffec85cf0f488c56a267d1"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/f5/f5ee880d404e9c80d69f66a653434597/build/zephyr/zephyr.map",
+            "sha256": "40d19b62195968458c510fbd29b2783d9774bf00d6701b7c9bece908ad34f47e"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/f5/f5ee880d404e9c80d69f66a653434597/app/sources.cmake",
+            "sha256": "fe78b902cb5ba39ac84de51e5c2674ce057d85fa386b6fdad4d37b03e8b8696c"
+          }
+        },
+        "ram": {
+          "bss_bytes": 144461,
+          "data_bytes": 19400,
+          "headroom_bytes": 98283,
+          "region_bytes": 262144,
+          "used_bytes": 163861,
+          "used_percent": 62.508
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 340908
+          },
+          {
+            "address": 342060,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 342068,
+            "name": "initlevel",
+            "size": 296
+          },
+          {
+            "address": 342364,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 342844,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 345012,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 345024,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 345032,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 345056,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 345092,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 345116,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 345124,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 345132,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 345160,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 345236,
+            "name": "init_array",
+            "size": 32
+          },
+          {
+            "address": 345268,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 345292,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 345564,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 345620,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 345788,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 345792,
+            "name": "rodata",
+            "size": 15624
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 17709
+          },
+          {
+            "address": 536888717,
+            "name": "device_states",
+            "size": 35
+          },
+          {
+            "address": 536888752,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536888880,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536888904,
+            "name": "k_mutex_area",
+            "size": 460
+          },
+          {
+            "address": 536889364,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536889848,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536889880,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536889912,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536889932,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 380780,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536890376,
+            "name": "bss",
+            "size": 86849
+          },
+          {
+            "address": 536977232,
+            "name": "noinit",
+            "size": 57508
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536934696,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536901880,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536923472,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536985512,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536978384,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537008152,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537020092,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536915408,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536895424,
+            "name": "alerts",
+            "size": 3248,
+            "type": "B"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537030948,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537014460,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536997856,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537012316,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536993704,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537016700,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537025592,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536995808,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537006104,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537001688,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537004056,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883800,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537029296,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536984208,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536977232,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537018952,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537027896,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 537000664,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536900832,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 537023812,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "20fd84bff81d91add95b98db9702cb57dd349a8019ffec85cf0f488c56a267d1"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "BondManagement",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 19788,
+          "headroom_bytes": 1106096,
+          "region_bytes": 1490944,
+          "text_bytes": 365060,
+          "used_bytes": 384848,
+          "used_percent": 25.8124
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/39/3944ee3596224671aafa07713eb812c1/build/zephyr/.config",
+            "sha256": "b5b81c2072628c048b9aa3612748f406f004337d21f7a44d5822d52af3ef9e93"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/39/3944ee3596224671aafa07713eb812c1/build/zephyr/zephyr.dts",
+            "sha256": "d8022a269996264c5e62569ec154a8a03623a97b983973bab2f4f5dcabada2e6"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/39/3944ee3596224671aafa07713eb812c1/build/zephyr/zephyr.elf",
+            "sha256": "35ce13d7bac992765a29d2e4cbc81fad3652ea497c0b33f07db2a1b9e34289ed"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/39/3944ee3596224671aafa07713eb812c1/build/zephyr/zephyr.map",
+            "sha256": "4914ca12c9bd3a3eeab244914c9e1e58a5590a4e23c346cc3d9d6e0d5144b3db"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/39/3944ee3596224671aafa07713eb812c1/app/sources.cmake",
+            "sha256": "eeb3ee947899253cb18139c6b0fb08f3d03137f234dfff70acc0b51d9f10808d"
+          }
+        },
+        "ram": {
+          "bss_bytes": 142462,
+          "data_bytes": 19788,
+          "headroom_bytes": 99894,
+          "region_bytes": 262144,
+          "used_bytes": 162250,
+          "used_percent": 61.8935
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 344444
+          },
+          {
+            "address": 345596,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 345604,
+            "name": "initlevel",
+            "size": 296
+          },
+          {
+            "address": 345900,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 346380,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 348548,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 348560,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 348568,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 348592,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 348628,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 348652,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 348660,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 348668,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 348696,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 348772,
+            "name": "init_array",
+            "size": 32
+          },
+          {
+            "address": 348804,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 348828,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 349100,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 349156,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 349324,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 349328,
+            "name": "rodata",
+            "size": 15772
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 18100
+          },
+          {
+            "address": 536889108,
+            "name": "device_states",
+            "size": 32
+          },
+          {
+            "address": 536889140,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536889268,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536889292,
+            "name": "k_mutex_area",
+            "size": 460
+          },
+          {
+            "address": 536889752,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536890236,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536890268,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536890300,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536890320,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 384852,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536890760,
+            "name": "bss",
+            "size": 84850
+          },
+          {
+            "address": 536975616,
+            "name": "noinit",
+            "size": 57508
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536933080,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536899016,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536921856,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536983896,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536976768,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537006536,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537018476,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536912544,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537029332,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537012844,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536996240,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537010700,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536992088,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537015084,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537023976,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536994192,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537004488,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537000072,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537002440,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883800,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537027680,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536982592,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536920056,
+            "name": "bonds",
+            "size": 1248,
+            "type": "B"
+          },
+          {
+            "address": 536975616,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537017336,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537026280,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536999048,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536897968,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 537022196,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "35ce13d7bac992765a29d2e4cbc81fad3652ea497c0b33f07db2a1b9e34289ed"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "GlucoseSensor",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 18200,
+          "headroom_bytes": 1105328,
+          "region_bytes": 1490944,
+          "text_bytes": 367416,
+          "used_bytes": 385616,
+          "used_percent": 25.8639
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/a3/a3b0cf39dfd65390c62eb49e7070ee5a/build/zephyr/.config",
+            "sha256": "cd5d3d327094a21ae62d26d8f960c63b4f710e46d2f486a8f6b167a6c0fb031c"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/a3/a3b0cf39dfd65390c62eb49e7070ee5a/build/zephyr/zephyr.dts",
+            "sha256": "4ff74cf646b9d31ac7fb4f7c6c603a302de5ea4cabfefce1a31543c3f20fabb3"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/a3/a3b0cf39dfd65390c62eb49e7070ee5a/build/zephyr/zephyr.elf",
+            "sha256": "84b6134a9468f350c16ccd838f0bbd4f64ef994923f04e2d84e467284543a5da"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/a3/a3b0cf39dfd65390c62eb49e7070ee5a/build/zephyr/zephyr.map",
+            "sha256": "7d5459aaf13041d43837c54ba3646b85b254faa3dd010a5128bc641be6d609b5"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/a3/a3b0cf39dfd65390c62eb49e7070ee5a/app/sources.cmake",
+            "sha256": "95a7d563052a371c12e37b8e084124847a463cb2907d6e57d690a4f9ade7cac8"
+          }
+        },
+        "ram": {
+          "bss_bytes": 141872,
+          "data_bytes": 18200,
+          "headroom_bytes": 102072,
+          "region_bytes": 262144,
+          "used_bytes": 160072,
+          "used_percent": 61.0626
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 345932
+          },
+          {
+            "address": 347084,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 347092,
+            "name": "initlevel",
+            "size": 296
+          },
+          {
+            "address": 347388,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 347868,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 350036,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 350048,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 350056,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 350080,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 350116,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 350140,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 350148,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 350156,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 350184,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 350260,
+            "name": "init_array",
+            "size": 28
+          },
+          {
+            "address": 350288,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 350312,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 350584,
+            "name": "bt_gatt_service_static_area",
+            "size": 64
+          },
+          {
+            "address": 350648,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 350816,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 350816,
+            "name": "rodata",
+            "size": 16632
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 16516
+          },
+          {
+            "address": 536887524,
+            "name": "device_states",
+            "size": 32
+          },
+          {
+            "address": 536887556,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536887684,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536887708,
+            "name": "k_mutex_area",
+            "size": 460
+          },
+          {
+            "address": 536888168,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536888652,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536888684,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536888716,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536888736,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 385616,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536889176,
+            "name": "bss",
+            "size": 82892
+          },
+          {
+            "address": 536972072,
+            "name": "noinit",
+            "size": 58876
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536929200,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536896760,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536918360,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 10816,
+            "type": "b"
+          },
+          {
+            "address": 536982400,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536973224,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537004736,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 536910288,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 537016676,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3096,
+            "type": "b"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537027156,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537011044,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536994744,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537008900,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536990592,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537013284,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537021848,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536992696,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536980352,
+            "name": "racp_q_stack_area",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537002688,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536998272,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537000640,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536882224,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 1576,
+            "type": "d"
+          },
+          {
+            "address": 537025504,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536979048,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536972072,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537015536,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537024152,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536997248,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 537020108,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          },
+          {
+            "address": 536967924,
+            "name": "(anonymous namespace)::pin_runtime_states",
+            "size": 768,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "84b6134a9468f350c16ccd838f0bbd4f64ef994923f04e2d84e467284543a5da"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "ObjectClient",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 17888,
+          "headroom_bytes": 1141236,
+          "region_bytes": 1490944,
+          "text_bytes": 331820,
+          "used_bytes": 349708,
+          "used_percent": 23.4555
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/ee/ee4bb52a2a350db628db5c9ce3e697af/build/zephyr/.config",
+            "sha256": "26a6577d37b3f3e7f584bb7831ba5606661a0d8ae15c8376cd798119af22dbd2"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/ee/ee4bb52a2a350db628db5c9ce3e697af/build/zephyr/zephyr.dts",
+            "sha256": "ed49f610764d3b488c08240cde39e878b7fcebaa229d12a00071202277a4a2a7"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/ee/ee4bb52a2a350db628db5c9ce3e697af/build/zephyr/zephyr.elf",
+            "sha256": "aaa52a541f519b804650499e0aa02595c9ed9d2ac8327bd069890b9121d34cae"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/ee/ee4bb52a2a350db628db5c9ce3e697af/build/zephyr/zephyr.map",
+            "sha256": "a57a333671434ef28f8e8b8a8875a76ab09d6495ea26205911d3c16242357729"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/ee/ee4bb52a2a350db628db5c9ce3e697af/app/sources.cmake",
+            "sha256": "4fbee8ae4bc17bf443a397a4debfa1aa9cc2eaf9e848d1ee4095a43871841c2c"
+          }
+        },
+        "ram": {
+          "bss_bytes": 136594,
+          "data_bytes": 17888,
+          "headroom_bytes": 107662,
+          "region_bytes": 262144,
+          "used_bytes": 154482,
+          "used_percent": 58.9302
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 309408
+          },
+          {
+            "address": 310560,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 310568,
+            "name": "initlevel",
+            "size": 304
+          },
+          {
+            "address": 310872,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 311352,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 313520,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 313532,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 313540,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 313564,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 313600,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 313624,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 313632,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 313640,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 313668,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 313744,
+            "name": "init_array",
+            "size": 28
+          },
+          {
+            "address": 313772,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 313796,
+            "name": "bt_conn_cb_area",
+            "size": 340
+          },
+          {
+            "address": 314136,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 314192,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 314360,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 314368,
+            "name": "rodata",
+            "size": 17492
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 16104
+          },
+          {
+            "address": 536887112,
+            "name": "device_states",
+            "size": 32
+          },
+          {
+            "address": 536887144,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536887272,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536887296,
+            "name": "k_mutex_area",
+            "size": 480
+          },
+          {
+            "address": 536887776,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536888260,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536888292,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536888324,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536888344,
+            "name": "net_buf_pool_area",
+            "size": 520
+          },
+          {
+            "address": 349716,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536888864,
+            "name": "bss",
+            "size": 76235
+          },
+          {
+            "address": 536965104,
+            "name": "noinit",
+            "size": 60255
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536922108,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536911268,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 10816,
+            "type": "b"
+          },
+          {
+            "address": 536973384,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536896600,
+            "name": "sdc_mempool",
+            "size": 6354,
+            "type": "b"
+          },
+          {
+            "address": 536873920,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536999884,
+            "name": "nucode::ble::profiles::(anonymous namespace)::_k_fifo_buf_client_events",
+            "size": 4672,
+            "type": "b"
+          },
+          {
+            "address": 536966256,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 536995720,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 536903128,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 537010780,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3096,
+            "type": "b"
+          },
+          {
+            "address": 537021544,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537004556,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536985728,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 536981576,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537006796,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537016236,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536983680,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536993672,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536989256,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536991624,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536882032,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 536878600,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 1600,
+            "type": "d"
+          },
+          {
+            "address": 536872416,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 1504,
+            "type": "d"
+          },
+          {
+            "address": 537019892,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536972080,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536965104,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537009048,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537018540,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536988232,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 537015344,
+            "name": "net_buf_data_hci_cmd_pool",
+            "size": 777,
+            "type": "b"
+          },
+          {
+            "address": 537014212,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          },
+          {
+            "address": 536960432,
+            "name": "(anonymous namespace)::pin_runtime_states",
+            "size": 768,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "aaa52a541f519b804650499e0aa02595c9ed9d2ac8327bd069890b9121d34cae"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "ObjectServer",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 18680,
+          "headroom_bytes": 1101832,
+          "region_bytes": 1490944,
+          "text_bytes": 370432,
+          "used_bytes": 389112,
+          "used_percent": 26.0984
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/9a/9a1bfb509f38bde0eab461497a9d077f/build/zephyr/.config",
+            "sha256": "0facf16c88ce45083ee84a970661b312951c6642139f82c7733de25c42648ed1"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/9a/9a1bfb509f38bde0eab461497a9d077f/build/zephyr/zephyr.dts",
+            "sha256": "f5d64c523ad91295ee4fc74d5d826befb9f4b8d666cb73d176a602e587817e16"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/9a/9a1bfb509f38bde0eab461497a9d077f/build/zephyr/zephyr.elf",
+            "sha256": "7216d7493c5367c401b6db5e314a48dfff96c9af3961c329c217c05461f2848f"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/9a/9a1bfb509f38bde0eab461497a9d077f/build/zephyr/zephyr.map",
+            "sha256": "32b647660e1449e928463b38522ea6c658ce8e77bd61185122e363612ba0ba30"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/9a/9a1bfb509f38bde0eab461497a9d077f/app/sources.cmake",
+            "sha256": "057e9b14021d06313153c7768a2103f74a1141cf182a0f763bf033885c70ccd6"
+          }
+        },
+        "ram": {
+          "bss_bytes": 147510,
+          "data_bytes": 18680,
+          "headroom_bytes": 95954,
+          "region_bytes": 262144,
+          "used_bytes": 166190,
+          "used_percent": 63.3965
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 348268
+          },
+          {
+            "address": 349420,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 349428,
+            "name": "initlevel",
+            "size": 312
+          },
+          {
+            "address": 349740,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 350220,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 352388,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 352400,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 352408,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 352432,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 352468,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 352492,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 352500,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 352508,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 352536,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 352612,
+            "name": "init_array",
+            "size": 28
+          },
+          {
+            "address": 352640,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 352664,
+            "name": "bt_conn_cb_area",
+            "size": 340
+          },
+          {
+            "address": 353004,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 353060,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 353228,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 353232,
+            "name": "rodata",
+            "size": 17236
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 16852
+          },
+          {
+            "address": 536887860,
+            "name": "device_states",
+            "size": 32
+          },
+          {
+            "address": 536887892,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536888020,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536888044,
+            "name": "k_mutex_area",
+            "size": 480
+          },
+          {
+            "address": 536888524,
+            "name": "k_msgq_area",
+            "size": 528
+          },
+          {
+            "address": 536889052,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536889084,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536889116,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536889136,
+            "name": "net_buf_pool_area",
+            "size": 520
+          },
+          {
+            "address": 389116,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536889656,
+            "name": "bss",
+            "size": 85314
+          },
+          {
+            "address": 536974976,
+            "name": "noinit",
+            "size": 62092
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536932512,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536900040,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536921672,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 10816,
+            "type": "b"
+          },
+          {
+            "address": 536983256,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 537009756,
+            "name": "nucode::ble::profiles::(anonymous namespace)::_k_fifo_buf_server_events",
+            "size": 4672,
+            "type": "b"
+          },
+          {
+            "address": 536976128,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537005592,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 536913568,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 537022796,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3096,
+            "type": "b"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537033276,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 536894712,
+            "name": "nucode::ble::profiles::(anonymous namespace)::objects",
+            "size": 2272,
+            "type": "b"
+          },
+          {
+            "address": 537016572,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536995600,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537014428,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536991448,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537018812,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537027968,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536993552,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537003544,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536999128,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537001496,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536882224,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 1576,
+            "type": "d"
+          },
+          {
+            "address": 537031624,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536981952,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536974976,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537021064,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537030272,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536998104,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 537026228,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "7216d7493c5367c401b6db5e314a48dfff96c9af3961c329c217c05461f2848f"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "StandardCollector",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 19292,
+          "headroom_bytes": 1106852,
+          "region_bytes": 1490944,
+          "text_bytes": 364800,
+          "used_bytes": 384092,
+          "used_percent": 25.7617
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/a7/a7bf97592105a66083f9eb8eb2d94d91/build/zephyr/.config",
+            "sha256": "b5b81c2072628c048b9aa3612748f406f004337d21f7a44d5822d52af3ef9e93"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/a7/a7bf97592105a66083f9eb8eb2d94d91/build/zephyr/zephyr.dts",
+            "sha256": "b7d1c04eb4a39b0fd480de75603296475607b505f64c34cfc6545f0f0c893801"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/a7/a7bf97592105a66083f9eb8eb2d94d91/build/zephyr/zephyr.elf",
+            "sha256": "0d56306e513a609d53c8b8f2555b5d3d7e512a46e5f027f0ec602a5353eeae17"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/a7/a7bf97592105a66083f9eb8eb2d94d91/build/zephyr/zephyr.map",
+            "sha256": "3acb7ca68e7d3acb738454e47da6cd9cf094867458e17849d4636f2d4ec2a3ff"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/a7/a7bf97592105a66083f9eb8eb2d94d91/app/sources.cmake",
+            "sha256": "1503e962df7fc80181290c7429083f196f7c7c9bffcb424526fd8568d426fe35"
+          }
+        },
+        "ram": {
+          "bss_bytes": 141247,
+          "data_bytes": 19292,
+          "headroom_bytes": 101605,
+          "region_bytes": 262144,
+          "used_bytes": 160539,
+          "used_percent": 61.2408
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 343444
+          },
+          {
+            "address": 344596,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 344604,
+            "name": "initlevel",
+            "size": 296
+          },
+          {
+            "address": 344900,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 345380,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 347548,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 347560,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347568,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 347592,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 347628,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 347652,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347660,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347668,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 347696,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 347772,
+            "name": "init_array",
+            "size": 32
+          },
+          {
+            "address": 347804,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 347828,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 348100,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 348156,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 348324,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 348336,
+            "name": "rodata",
+            "size": 16512
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 17601
+          },
+          {
+            "address": 536888609,
+            "name": "device_states",
+            "size": 35
+          },
+          {
+            "address": 536888644,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536888772,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536888796,
+            "name": "k_mutex_area",
+            "size": 460
+          },
+          {
+            "address": 536889256,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536889740,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536889772,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536889804,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536889824,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 384104,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536890264,
+            "name": "bss",
+            "size": 83635
+          },
+          {
+            "address": 536973904,
+            "name": "noinit",
+            "size": 57508
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536931348,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536898536,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536920124,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536982184,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536975056,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537004824,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537016764,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536912064,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537027620,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537011132,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536994528,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537008988,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536990376,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537013372,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537022264,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536992480,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537002776,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536998360,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537000728,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883800,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537025968,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536980880,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536973904,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537015624,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537024568,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536997336,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536897488,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 537020484,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          },
+          {
+            "address": 536969716,
+            "name": "(anonymous namespace)::pin_runtime_states",
+            "size": 768,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "0d56306e513a609d53c8b8f2555b5d3d7e512a46e5f027f0ec602a5353eeae17"
+    },
+    {
+      "library": "NUCODE_BLE_Profiles",
+      "example": "StandardSensor",
+      "status": "PASS",
+      "resource_audit": {
+        "budget": {
+          "enforced": false,
+          "failure_percent": 85.0,
+          "status": "pass",
+          "warning_percent": 75.0
+        },
+        "flash": {
+          "data_bytes": 19400,
+          "headroom_bytes": 1107832,
+          "region_bytes": 1490944,
+          "text_bytes": 363712,
+          "used_bytes": 383112,
+          "used_percent": 25.6959
+        },
+        "forbidden_symbols": [],
+        "inputs": {
+          "config": {
+            "path": "C:/n54w02e-arduino/cache/v1/ea/eac15036002c756deba0165067364c20/build/zephyr/.config",
+            "sha256": "b5b81c2072628c048b9aa3612748f406f004337d21f7a44d5822d52af3ef9e93"
+          },
+          "devicetree": {
+            "path": "C:/n54w02e-arduino/cache/v1/ea/eac15036002c756deba0165067364c20/build/zephyr/zephyr.dts",
+            "sha256": "3ceb019b24580038bdb643fc6ed0f6f935603a79100cd850d96e6f64b553cd36"
+          },
+          "elf": {
+            "path": "C:/n54w02e-arduino/cache/v1/ea/eac15036002c756deba0165067364c20/build/zephyr/zephyr.elf",
+            "sha256": "ec44dcf785739b9d7a19a7c9783a39b89db0ff1a227654ab3617323f0ec67a3c"
+          },
+          "map": {
+            "path": "C:/n54w02e-arduino/cache/v1/ea/eac15036002c756deba0165067364c20/build/zephyr/zephyr.map",
+            "sha256": "9ade3996e8492daf4fa29f46e23789d764fbbdd769b9ed5888c805e090bd39a1"
+          },
+          "source_manifest": {
+            "path": "C:/n54w02e-arduino/cache/v1/ea/eac15036002c756deba0165067364c20/app/sources.cmake",
+            "sha256": "cd80182e4657441c9bad95dc21125b8974bba971a3db4060f83189926d9bb4c6"
+          }
+        },
+        "ram": {
+          "bss_bytes": 142451,
+          "data_bytes": 19400,
+          "headroom_bytes": 100293,
+          "region_bytes": 262144,
+          "used_bytes": 161851,
+          "used_percent": 61.7413
+        },
+        "regions": {
+          "flash": {
+            "end": 1490944,
+            "origin": 0,
+            "size": 1490944
+          },
+          "ram": {
+            "end": 537133056,
+            "origin": 536870912,
+            "size": 262144
+          }
+        },
+        "schema_version": 1,
+        "sections": [
+          {
+            "address": 1152,
+            "name": "text",
+            "size": 342896
+          },
+          {
+            "address": 344048,
+            "name": ".ARM.exidx",
+            "size": 8
+          },
+          {
+            "address": 344056,
+            "name": "initlevel",
+            "size": 296
+          },
+          {
+            "address": 344352,
+            "name": "device_area",
+            "size": 480
+          },
+          {
+            "address": 344832,
+            "name": "sw_isr_table",
+            "size": 2168
+          },
+          {
+            "address": 347000,
+            "name": "adc_driver_api_area",
+            "size": 12
+          },
+          {
+            "address": 347012,
+            "name": "entropy_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347020,
+            "name": "flash_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 347044,
+            "name": "gpio_driver_api_area",
+            "size": 36
+          },
+          {
+            "address": 347080,
+            "name": "i2c_driver_api_area",
+            "size": 24
+          },
+          {
+            "address": 347104,
+            "name": "pwm_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347112,
+            "name": "spi_driver_api_area",
+            "size": 8
+          },
+          {
+            "address": 347120,
+            "name": "clock_control_driver_api_area",
+            "size": 28
+          },
+          {
+            "address": 347148,
+            "name": "uart_driver_api_area",
+            "size": 76
+          },
+          {
+            "address": 347224,
+            "name": "init_array",
+            "size": 32
+          },
+          {
+            "address": 347256,
+            "name": "bt_l2cap_fixed_chan_area",
+            "size": 24
+          },
+          {
+            "address": 347280,
+            "name": "bt_conn_cb_area",
+            "size": 272
+          },
+          {
+            "address": 347552,
+            "name": "bt_gatt_service_static_area",
+            "size": 56
+          },
+          {
+            "address": 347608,
+            "name": "settings_handler_static_area",
+            "size": 168
+          },
+          {
+            "address": 347776,
+            "name": "tbss",
+            "size": 8
+          },
+          {
+            "address": 347776,
+            "name": "rodata",
+            "size": 15972
+          },
+          {
+            "address": 536870912,
+            "name": "NRF_KMU_RESERVED_PUSH_SECTION",
+            "size": 96
+          },
+          {
+            "address": 536871008,
+            "name": "datas",
+            "size": 17709
+          },
+          {
+            "address": 536888717,
+            "name": "device_states",
+            "size": 35
+          },
+          {
+            "address": 536888752,
+            "name": "k_mem_slab_area",
+            "size": 128
+          },
+          {
+            "address": 536888880,
+            "name": "k_heap_area",
+            "size": 24
+          },
+          {
+            "address": 536888904,
+            "name": "k_mutex_area",
+            "size": 460
+          },
+          {
+            "address": 536889364,
+            "name": "k_msgq_area",
+            "size": 484
+          },
+          {
+            "address": 536889848,
+            "name": "k_sem_area",
+            "size": 32
+          },
+          {
+            "address": 536889880,
+            "name": "k_event_area",
+            "size": 32
+          },
+          {
+            "address": 536889912,
+            "name": "k_fifo_area",
+            "size": 20
+          },
+          {
+            "address": 536889932,
+            "name": "net_buf_pool_area",
+            "size": 440
+          },
+          {
+            "address": 383112,
+            "name": ".last_section",
+            "size": 4
+          },
+          {
+            "address": 536890376,
+            "name": "bss",
+            "size": 84839
+          },
+          {
+            "address": 536975216,
+            "name": "noinit",
+            "size": 57508
+          }
+        ],
+        "top_ram_symbols": [
+          {
+            "address": 536932684,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::state",
+            "size": 35620,
+            "type": "b"
+          },
+          {
+            "address": 536898632,
+            "name": "sdc_mempool",
+            "size": 13353,
+            "type": "b"
+          },
+          {
+            "address": 536921460,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::slots",
+            "size": 11200,
+            "type": "b"
+          },
+          {
+            "address": 536983496,
+            "name": "malloc_arena",
+            "size": 8192,
+            "type": "b"
+          },
+          {
+            "address": 536874136,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::context",
+            "size": 4680,
+            "type": "d"
+          },
+          {
+            "address": 536976368,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::_k_fifo_buf_gatt_event_queue",
+            "size": 4416,
+            "type": "b"
+          },
+          {
+            "address": 537006136,
+            "name": "kheap__system_heap",
+            "size": 4164,
+            "type": "B"
+          },
+          {
+            "address": 537018076,
+            "name": "net_buf_data_hci_rx_pool",
+            "size": 3354,
+            "type": "b"
+          },
+          {
+            "address": 536912160,
+            "name": "(anonymous namespace)::interrupt_slots",
+            "size": 3328,
+            "type": "b"
+          },
+          {
+            "address": 536878816,
+            "name": "nucode::ble::internal::gatt::(anonymous namespace)::states",
+            "size": 3152,
+            "type": "d"
+          },
+          {
+            "address": 536871320,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::context",
+            "size": 2816,
+            "type": "d"
+          },
+          {
+            "address": 537028932,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_scan_result_queue",
+            "size": 2496,
+            "type": "b"
+          },
+          {
+            "address": 537012444,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_periodic_report_queue",
+            "size": 2240,
+            "type": "b"
+          },
+          {
+            "address": 536995840,
+            "name": "rx_thread_stack",
+            "size": 2200,
+            "type": "b"
+          },
+          {
+            "address": 537010300,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_pawr_response_queue",
+            "size": 2144,
+            "type": "b"
+          },
+          {
+            "address": 536991688,
+            "name": "bt_lw_stack_area",
+            "size": 2104,
+            "type": "B"
+          },
+          {
+            "address": 537014684,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_tx_pool",
+            "size": 2092,
+            "type": "b"
+          },
+          {
+            "address": 537023576,
+            "name": "net_buf_data_acl_tx_pool",
+            "size": 2084,
+            "type": "b"
+          },
+          {
+            "address": 536993792,
+            "name": "bt_tx_processor_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 537004088,
+            "name": "sys_work_q_stack",
+            "size": 2048,
+            "type": "b"
+          },
+          {
+            "address": 536999672,
+            "name": "z_interrupt_stacks",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 537002040,
+            "name": "z_main_stack",
+            "size": 2048,
+            "type": "B"
+          },
+          {
+            "address": 536883800,
+            "name": "nucode::arduino::internal::(anonymous namespace)::table",
+            "size": 1936,
+            "type": "d"
+          },
+          {
+            "address": 537027280,
+            "name": "net_buf_data_prep_pool",
+            "size": 1482,
+            "type": "b"
+          },
+          {
+            "address": 536982192,
+            "name": "bt_gatt_dm_wq_stack_area",
+            "size": 1304,
+            "type": "B"
+          },
+          {
+            "address": 536919672,
+            "name": "sensor",
+            "size": 1236,
+            "type": "B"
+          },
+          {
+            "address": 536975216,
+            "name": "nucode::ble::internal::gap::(anonymous namespace)::_k_fifo_buf_gap_event_queue",
+            "size": 1152,
+            "type": "b"
+          },
+          {
+            "address": 537016936,
+            "name": "nucode::ble::internal::l2cap::(anonymous namespace)::net_buf_data_rx_pool",
+            "size": 1046,
+            "type": "b"
+          },
+          {
+            "address": 537025880,
+            "name": "net_buf_data_att_pool",
+            "size": 1032,
+            "type": "b"
+          },
+          {
+            "address": 536998648,
+            "name": "mpsl_work_stack",
+            "size": 1024,
+            "type": "b"
+          },
+          {
+            "address": 536897584,
+            "name": "bt_smp_pool",
+            "size": 1008,
+            "type": "b"
+          },
+          {
+            "address": 537021796,
+            "name": "net_buf_data_discardable_pool",
+            "size": 774,
+            "type": "b"
+          }
+        ]
+      },
+      "elf_sha256": "ec44dcf785739b9d7a19a7c9783a39b89db0ff1a227654ab3617323f0ec67a3c"
+    }
+  ]
+}

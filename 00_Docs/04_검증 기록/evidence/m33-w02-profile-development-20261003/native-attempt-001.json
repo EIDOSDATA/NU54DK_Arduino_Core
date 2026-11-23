@@ -1,0 +1,66 @@
+{
+  "schema": "nucode-m33-profile-hil-v1",
+  "family": "native",
+  "status": "FAIL",
+  "reason": "client: object-step",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "development": true,
+  "failure_details": {
+    "role": "client",
+    "reason": "object-step"
+  },
+  "observed_utc": "2026-10-03T13:58:12.164081+00:00",
+  "transcript_sha256": "bcec6d1b5881e335d7def7c7cef68c522e9923be3a6a55794e09342aa589704c",
+  "results": {},
+  "server": {
+    "role": "server",
+    "nonce": "38903a360cb3086ce9da756f5907cf66",
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "max_links": "1",
+    "email_deliveries": "0",
+    "bond_deletions": "0",
+    "object_writes": "0",
+    "single_link": "1",
+    "cgms_session": "1"
+  },
+  "excluded": [
+    "BMS positive persistent delete",
+    "native second-peer rejection",
+    "Apple/Google interoperability"
+  ],
+  "boards": {
+    "server": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "b36578fb1a29d9132e162e66ca73703fcc2304876f9b5c4129f611213c48d63c",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "290816"
+    },
+    "client": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "0c47ff8227e6dec78dedec7eb5fbffc1cacc608ab13db61502fa668332d7eb14",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "249856"
+    }
+  }
+}

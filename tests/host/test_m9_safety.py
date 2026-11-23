@@ -327,6 +327,7 @@ class M9SafetyContractTests(unittest.TestCase):
         )
         tools: dict[str, object] = {
             "ncs_root": self.root / "ncs",
+            "zephyr_base": self.root / "ncs" / "zephyr",
             "toolchain_root": self.root / "toolchain",
             "compiler": self.root / "toolchain" / "g++.exe",
             "size": self.root / "toolchain" / "size.exe",
@@ -335,6 +336,15 @@ class M9SafetyContractTests(unittest.TestCase):
             "environment": {},
         }
         return args, workspace, cache_key, tools
+
+    def test_sdk_patch_rejects_foreign_platform_before_patch_access(self) -> None:
+        """! @brief 실제 설치 경계가 다른 Core를 patch 파일 접근 전에 거부하는지 확인합니다. """
+
+        support = MODULE.implementation.sdk_patch_support
+        with mock.patch.object(support.sdk_patches, "approved_zephyr_patches") as approved:
+            with self.assertRaisesRegex(MODULE.AdapterError, "E_SDK_PATCH"):
+                support.patch_environment(self.root / "foreign-platform")
+        approved.assert_not_called()
 
     def test_west_build_working_directory_rejects_split_cache_volumes(self) -> None:
         """! @brief application과 build가 서로 다른 Windows volume이면 명시적으로 거부합니다. """
@@ -350,9 +360,20 @@ class M9SafetyContractTests(unittest.TestCase):
         """! @brief NCS와 cache drive가 달라도 configure의 cwd는 application 쪽을 사용합니다. """
 
         args, workspace, _, tools = self.prepare_fixture()
-        tools["ncs_root"] = Path("D:/ncs/v3.4.0")
+        workspace_drive = PureWindowsPath(str(workspace)).drive.casefold()
+        sdk_drive = "C:" if workspace_drive == "d:" else "D:"
+        tools["ncs_root"] = Path(sdk_drive + "/ncs/v3.4.0")
+        tools["zephyr_base"] = tools["ncs_root"] / "zephyr"
         with (
             mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
+            mock.patch.object(
+                MODULE.implementation.build, "patch_environment",
+                return_value={"NUCODE_ZEPHYR_PATCHSET_SHA256": "0" * 64},
+            ),
+            mock.patch.object(
+                MODULE.implementation.build, "applied_sdk_patches",
+                side_effect=lambda *_args: contextlib.nullcontext(()),
+            ),
             mock.patch.object(
                 MODULE.implementation.build,
                 "cache_input_manifest",
@@ -383,6 +404,14 @@ class M9SafetyContractTests(unittest.TestCase):
         args, workspace, cache_key, tools = self.prepare_fixture()
         with (
             mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
+            mock.patch.object(
+                MODULE.implementation.build, "patch_environment",
+                return_value={"NUCODE_ZEPHYR_PATCHSET_SHA256": "0" * 64},
+            ),
+            mock.patch.object(
+                MODULE.implementation.build, "applied_sdk_patches",
+                side_effect=lambda *_args: contextlib.nullcontext(()),
+            ),
             mock.patch.object(
                 MODULE.implementation.build,
                 "cache_input_manifest",
@@ -415,6 +444,14 @@ class M9SafetyContractTests(unittest.TestCase):
         args, workspace, _, tools = self.prepare_fixture()
         with (
             mock.patch.object(MODULE.implementation.build, "tool_environment", return_value=tools),
+            mock.patch.object(
+                MODULE.implementation.build, "patch_environment",
+                return_value={"NUCODE_ZEPHYR_PATCHSET_SHA256": "0" * 64},
+            ),
+            mock.patch.object(
+                MODULE.implementation.build, "applied_sdk_patches",
+                side_effect=lambda *_args: contextlib.nullcontext(()),
+            ),
             mock.patch.object(
                 MODULE.implementation.build,
                 "cache_input_manifest",

@@ -82,6 +82,9 @@ namespace
     bool disconnect_pending = false;
     bool restart_pending = false;
     [[maybe_unused]] bool rpa_restart_pending = false;
+    [[maybe_unused]] bool rpa_start_pending = false;
+    [[maybe_unused]] bool rpa_retry_error_pending = false;
+    [[maybe_unused]] int rpa_retry_driver_error = 0;
     [[maybe_unused]] bool rpa_reported = false;
     bool reboot_pending = false;
     bool stale_rejected = false;
@@ -91,6 +94,7 @@ namespace
     [[maybe_unused]] std::uint32_t rotation_baseline = 0U;
     [[maybe_unused]] nucode::ble::BLEAdvertisingSetHandle advertising_set;
     std::int64_t action_due_ms = 0;
+    [[maybe_unused]] std::int64_t rpa_restart_deadline_ms = 0;
     std::int64_t protocol_deadline_ms = 0;
 
     /** @brief compile-time image 역할 이름을 반환합니다. */
@@ -499,10 +503,12 @@ namespace
 #if !defined(NUCODE_M30_BOND_CENTRAL)
         if (information.event == nucode::ble::BLEEvent::rpa_expired &&
             phase == Phase::resume && reconnects == 0U &&
-            information.advertising_set == advertising_set)
+            information.advertising_set == advertising_set &&
+            !rpa_restart_pending && !rpa_start_pending)
         {
             rpa_restart_pending = true;
             action_due_ms = k_uptime_get() + 50;
+            rpa_restart_deadline_ms = k_uptime_get() + 2000;
             return;
         }
 #endif
@@ -587,6 +593,19 @@ namespace
         else if (information.event == nucode::ble::BLEEvent::error &&
                  phase != Phase::stale)
         {
+#if !defined(NUCODE_M30_BOND_CENTRAL)
+            if (rpa_retry_error_pending &&
+                BLEDevice.lastDriverError() == rpa_retry_driver_error &&
+                ((rpa_retry_driver_error == -ENOMEM &&
+                  BLEDevice.lastError() == nucode::ble::BLEError::driver_error) ||
+                 (rpa_retry_driver_error == -EALREADY &&
+                  BLEDevice.lastError() == nucode::ble::BLEError::already_started)))
+            {
+                rpa_retry_error_pending = false;
+                rpa_retry_driver_error = 0;
+                return;
+            }
+#endif
             fail("gap-error");
         }
     }
@@ -957,15 +976,20 @@ namespace
             rpa_restart_pending = false;
             const std::uint32_t rotations =
                 BLEPrivacy.expirationCount() - rotation_baseline;
-            if ((BLEExtendedAdvertising.running(advertising_set) &&
-                 !BLEExtendedAdvertising.stop(advertising_set)) ||
-                (rotations >= required_rpa_rotations &&
-                 !BLEPrivacy.setRotationTimeout(60U)) ||
-                !BLEExtendedAdvertising.start(advertising_set))
+            if (BLEExtendedAdvertising.running(advertising_set) &&
+                !BLEExtendedAdvertising.stop(advertising_set))
             {
                 fail("privacy-rpa-restart");
                 return;
             }
+            if (rotations >= required_rpa_rotations &&
+                !BLEPrivacy.setRotationTimeout(60U))
+            {
+                fail("privacy-rpa-timeout-restore");
+                return;
+            }
+            rpa_start_pending = true;
+            action_due_ms = now + 100;
             if (rotations >= required_rpa_rotations && !rpa_reported)
             {
                 rpa_reported = true;
@@ -973,6 +997,32 @@ namespace
                 Serial.print("|RPA|role=peripheral|rotations=3");
                 printSuffix();
                 Serial.println();
+            }
+        }
+        if (rpa_start_pending && now >= action_due_ms)
+        {
+            if (BLEExtendedAdvertising.start(advertising_set))
+            {
+                rpa_start_pending = false;
+            }
+            else if (BLEDevice.lastDriverError() == -ENOMEM &&
+                     now < rpa_restart_deadline_ms)
+            {
+                rpa_retry_error_pending = true;
+                rpa_retry_driver_error = -ENOMEM;
+                action_due_ms = now + 100;
+            }
+            else if (BLEDevice.lastError() == nucode::ble::BLEError::already_started &&
+                     BLEDevice.lastDriverError() == -EALREADY &&
+                     BLEExtendedAdvertising.running(advertising_set))
+            {
+                rpa_retry_error_pending = true;
+                rpa_retry_driver_error = -EALREADY;
+                rpa_start_pending = false;
+            }
+            else
+            {
+                fail("privacy-rpa-restart");
             }
         }
 #endif

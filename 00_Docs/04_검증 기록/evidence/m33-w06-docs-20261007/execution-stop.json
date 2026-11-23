@@ -1,0 +1,139 @@
+{
+  "observed_at_utc": "2026-10-07T07:26:17.5243098Z",
+  "board_observed_at_utc": "2026-10-07T07:08:07.645Z",
+  "source_revision": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1",
+  "board_status": "PASS",
+  "boards": [
+    {
+      "slot": "board_1",
+      "pre_state": "HALTED",
+      "post_state": "HALTED",
+      "restored": true,
+      "reset_seen": false,
+      "radio_audit": "IDLE_OBSERVED",
+      "radio_state": 0
+    },
+    {
+      "slot": "board_2",
+      "pre_state": "HALTED",
+      "post_state": "HALTED",
+      "restored": true,
+      "reset_seen": false,
+      "radio_audit": "IDLE_OBSERVED",
+      "radio_state": 0
+    },
+    {
+      "slot": "board_3",
+      "pre_state": "HALTED",
+      "post_state": "HALTED",
+      "restored": true,
+      "reset_seen": false,
+      "radio_audit": "IDLE_OBSERVED",
+      "radio_state": 0
+    }
+  ],
+  "board_record_sha256": "9cafd7966dbf81c98dc8b4d98777db9bf2cbfcd95485aa4827d13c4dfb95f8c1",
+  "host_status": "PASS",
+  "host_source_clean": true,
+  "host_source_revision": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1",
+  "host_suite_count": 63,
+  "host_record_sha256": "f01ba915943233ba078ea77750eddd8dcefee4baf10c74daadc8dec959f72f5c",
+  "local_receipts": [
+    "m33-w06-build-shard-1-37581357663-attempt-1.download.json",
+    "m33-w06-build-shard-3-37581357663-attempt-1.download.json",
+    "m33-w06-plan-37581357663-attempt-1.download.json"
+  ],
+  "active_execution_processes": [],
+  "kind": "m33_w06_documentation_transition",
+  "completion_eligible": false,
+  "reason": "User requested execution cleanup and documentation/design work before implementation.",
+  "actions": {
+    "run": "37581357663",
+    "source_revision": "f9f1cd283ee39bcf0609e047473e0e8c5c9930c1",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "jobs": [
+      {
+        "name": "Freeze exact W06 plan and shard contract",
+        "status": "completed",
+        "conclusion": "success",
+        "active_steps": []
+      },
+      {
+        "name": "Build-only shard 0 of 4",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "active_steps": []
+      },
+      {
+        "name": "Build-only shard 1 of 4",
+        "status": "completed",
+        "conclusion": "success",
+        "active_steps": []
+      },
+      {
+        "name": "Build-only shard 3 of 4",
+        "status": "completed",
+        "conclusion": "success",
+        "active_steps": []
+      },
+      {
+        "name": "Build-only shard 2 of 4",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "active_steps": []
+      },
+      {
+        "name": "Aggregate exact W06 build-only evidence",
+        "status": "completed",
+        "conclusion": "failure",
+        "active_steps": [
+          {
+            "name": "Reject incomplete upstream jobs before setup",
+            "status": "completed",
+            "conclusion": "failure"
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 11466302260,
+        "name": "m33-w06-build-shard-1-37581357663-attempt-1",
+        "expired": false,
+        "size_in_bytes": 1864165427,
+        "digest": "sha256:1062e28d4083635ac33abdf544c2e57e46cd452cba1a6aeea2988dbc88227ba1"
+      },
+      {
+        "id": 11466089900,
+        "name": "m33-w06-build-shard-2-37581357663-attempt-1",
+        "expired": false,
+        "size_in_bytes": 1366486201,
+        "digest": "sha256:5b136acd54c89ff1194e7dca1a43791e7466cd2b3123dd7a576398cd598d8395"
+      },
+      {
+        "id": 11465849099,
+        "name": "m33-w06-build-shard-3-37581357663-attempt-1",
+        "expired": false,
+        "size_in_bytes": 1383966121,
+        "digest": "sha256:2fae0b3498e87a83244b452448a10ac94c0c81ca364ea520debd32758e2f6926"
+      },
+      {
+        "id": 11465579054,
+        "name": "m33-w06-build-shard-0-37581357663-attempt-1",
+        "expired": false,
+        "size_in_bytes": 1355144065,
+        "digest": "sha256:fcbbff25789088950831ffba4e6433be4d69c597541bb9c96f37ecbf837647a2"
+      },
+      {
+        "id": 11464992131,
+        "name": "m33-w06-plan-37581357663-attempt-1",
+        "expired": false,
+        "size_in_bytes": 22400,
+        "digest": "sha256:800f1ec88366a41b7a7b37dd33e41f07750801f127e119bf367a98218eacd9f0"
+      }
+    ]
+  },
+  "runtime_matrix_soak_closure": "NOT_RUN_FOR_F9"
+}

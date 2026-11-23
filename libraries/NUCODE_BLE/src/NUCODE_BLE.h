@@ -9,6 +9,7 @@
 #define NUCODE_BLE_H_
 
 #include <Arduino.h>
+#include <NUCODE_BLE_Beacon.h>
 #include <NUCODE_BLE_GAP.h>
 #include <NUCODE_BLE_GATT.h>
 #include <NUCODE_BLE_L2CAP.h>

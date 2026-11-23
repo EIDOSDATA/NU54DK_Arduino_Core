@@ -1,0 +1,57 @@
+{
+  "source_revision": "e3a663d629bcc22fb3222b99c456fda6c8e2c312",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "toolchain_bundle": "dcbdc366a1",
+  "route_build": {
+    "passed": 10,
+    "total": 10,
+    "manifest_sha256": "4ab12485261182f92d615ff1c8bf2605f4ef11193f456e490d5ea9315431b5f9"
+  },
+  "host": {
+    "diagnostics_passed": 46,
+    "diagnostics_total": 46,
+    "readiness_passed": 15,
+    "readiness_total": 15,
+    "contract_check": "PASS",
+    "clang_format": "PASS"
+  },
+  "runtime": [
+    {
+      "transport": "twowire",
+      "status": "PASS",
+      "cases_passed": 12,
+      "cases_total": 12,
+      "minimum_received_packets": 1590,
+      "negative_roles_passed": 2,
+      "stop_passed": 2,
+      "third_audit_checks": 1018,
+      "preflight_sha256": "20211d1f836bc4b46e904755b7c3fe6593bf4d451e257a3d21f9cc37d829824e",
+      "fixture_sha256": "a86f6eb3cb8735256a4d99cfd3081d1446b836e75ab4bed98c27b1e8cf9f2aa7",
+      "result_sha256": "99a7801b39e797870c2d619dea491ca23d935fe6e1f1f3f63736e783ef090d65"
+    },
+    {
+      "transport": "h4",
+      "status": "PASS",
+      "cases_passed": 12,
+      "cases_total": 12,
+      "minimum_received_packets": 1884,
+      "negative_roles_passed": 2,
+      "stop_passed": 2,
+      "third_audit_checks": 457,
+      "preflight_sha256": "847e6887172b64b84e0dcfaa754c5927ae650b27336fbe02eb41aab41bc665dc",
+      "fixture_sha256": "e7cbdb8dc9684e6f25ef61ef825c54c67c9a43d667f54877a45da5333b240ab1",
+      "result_sha256": "fa304cb9708c1d7c0f5dd09a8c0d9ba446e8dfe4f8a25512908af90f005bd941"
+    }
+  ],
+  "not_run": [
+    "rf_tester_precision_measurement",
+    "hci_uart_external_host_physical",
+    "hci_async_uart_external_host_physical",
+    "hci_threewire_external_host_physical",
+    "hci_lpuart_external_host_physical",
+    "hci_spi_external_host_physical"
+  ],
+  "remote_ci_queried": false
+}

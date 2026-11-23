@@ -30,6 +30,21 @@ namespace nucode::ble::internal::gap
             return true;
         }
     } // namespace
+
+    void legacyAdvertisingStarted() noexcept
+    {
+        atomic_set(&gapState().advertising_active, 1);
+        nucode::ble::internal::recordError(BLEError::none, 0, false);
+        queueEvent(BLEEvent::advertising_started);
+    }
+
+    void legacyAdvertisingStopped() noexcept
+    {
+        if (atomic_cas(&gapState().advertising_active, 1, 0))
+        {
+            queueEvent(BLEEvent::advertising_stopped);
+        }
+    }
 } // namespace nucode::ble::internal::gap
 namespace nucode::ble
 {
@@ -394,9 +409,7 @@ namespace nucode::ble
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
-        atomic_set(&gapState().advertising_active, 1);
-        internal::recordError(BLEError::none, 0, false);
-        queueEvent(BLEEvent::advertising_started);
+        legacyAdvertisingStarted();
         return true;
     }
 
@@ -417,8 +430,7 @@ namespace nucode::ble
             internal::recordError(BLEError::driver_error, result, true);
             return false;
         }
-        atomic_set(&gapState().advertising_active, 0);
-        queueEvent(BLEEvent::advertising_stopped);
+        legacyAdvertisingStopped();
         return true;
     }
 

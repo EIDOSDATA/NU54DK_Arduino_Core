@@ -1,7 +1,8 @@
 # Secure BLE DFU 예제
 
-이 예제는 정식 `v0.5.0`에 포함된 secure BLE DFU 예제다. Windows 10/11 x64 설치 방법은
-[v0.5.0 안내](<../../../00_Docs/05_릴리스/v0.5.0/README.md>)를 따른다.
+이 예제는 정식 `v0.5.0`에 포함된 secure BLE DFU 예제다.
+
+v0.6.0 후보에서도 이 예제를 사용할 수 있습니다. 설치본 안에서 보드와 Feature set은 [예제 색인](<../../EXAMPLES.md>)에서 확인하세요. [검증한 후보와 OS](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/7324c43de96bcc7cc8bc49949827e3099d313fa2/00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md)
 Build 성공과 인증 BLE DFU·rollback의 실제 보드 판정은 구분한다.
 
 `SecureDfuPeripheral`은 `secure_ble_dfu` Arduino board profile에서 빌드한다. 이 profile은

@@ -1,0 +1,281 @@
+{
+  "schema": "nucode-m33-profile-hil-v1",
+  "family": "standard",
+  "status": "FAIL",
+  "reason": "server: unexpected-gap-error",
+  "revisions": {
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "board": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "ncs": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+    "zephyr": "bf801e4e3d19e1ffa76164346480cb7734dd2800"
+  },
+  "development": true,
+  "failure_details": {
+    "role": "server",
+    "reason": "unexpected-gap-error",
+    "ble_driver": "0",
+    "profile_index": "0",
+    "phase": "0",
+    "count": "0",
+    "measurements": "0",
+    "rejected": "0",
+    "quiet_since": "0",
+    "last_gatt": "255",
+    "last_gatt_at": "0",
+    "last_gatt_status": "0",
+    "last_att_error": "0",
+    "level": "2",
+    "peer_valid": "1",
+    "connected": "1",
+    "gap_event": "7",
+    "link_role": "2",
+    "hci_reason": "0",
+    "same_peer": "0",
+    "event_handle_valid": "1",
+    "security_event": "14"
+  },
+  "late_failures": [
+    {
+      "role": "client",
+      "reason": "unexpected-gap-error",
+      "ble_driver": "0",
+      "profile_index": "5",
+      "phase": "3",
+      "count": "0",
+      "measurements": "25",
+      "rejected": "1",
+      "quiet_since": "0",
+      "last_gatt": "8",
+      "last_gatt_at": "39214",
+      "last_gatt_status": "0",
+      "last_att_error": "0",
+      "level": "1",
+      "peer_valid": "1",
+      "connected": "0",
+      "gap_event": "7",
+      "link_role": "1",
+      "hci_reason": "0",
+      "same_peer": "1",
+      "event_handle_valid": "1",
+      "security_event": "14"
+    },
+    {
+      "role": "watcher",
+      "reason": "early-disconnect",
+      "ble_driver": "-5",
+      "profile_index": "5",
+      "phase": "3",
+      "count": "0",
+      "measurements": "25",
+      "rejected": "1",
+      "quiet_since": "11542",
+      "last_gatt": "4",
+      "last_gatt_at": "11542",
+      "last_gatt_status": "0",
+      "last_att_error": "0",
+      "level": "2",
+      "peer_valid": "1",
+      "connected": "0",
+      "gap_event": "8",
+      "link_role": "2",
+      "hci_reason": "19",
+      "same_peer": "1",
+      "event_handle_valid": "1",
+      "security_event": "14"
+    }
+  ],
+  "cleanup": {
+    "server": {
+      "role": "server",
+      "nonce": "b543e5d7138da01b339523c27cbdac88",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "client": {
+      "role": "client",
+      "nonce": "b543e5d7138da01b339523c27cbdac88",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    },
+    "watcher": {
+      "role": "watcher",
+      "nonce": "b543e5d7138da01b339523c27cbdac88",
+      "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+      "native_links": "0",
+      "links": "0",
+      "pending": "0",
+      "scan": "0",
+      "advertising": "0",
+      "watchdog": "0"
+    }
+  },
+  "observed_utc": "2026-10-03T15:07:06.516838+00:00",
+  "transcript_sha256": "4a57c9f2cc6f613535b5ea3fdffd92d5ef4bdc06b58d5a1bebbb2dac4a4902ad",
+  "results": {},
+  "server": {
+    "role": "server",
+    "nonce": "b543e5d7138da01b339523c27cbdac88",
+    "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+    "max_links": "2",
+    "email_deliveries": "0",
+    "bond_deletions": "0",
+    "bms_positive": "0",
+    "bms_skipped": "0",
+    "send_stats": {
+      "0:0": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "0",
+        "profile": "0",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "0:1": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "0",
+        "profile": "1",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "0:2": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "0",
+        "profile": "2",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "0:3": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "0",
+        "profile": "3",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "0:4": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "0",
+        "profile": "4",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "1:0": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "1",
+        "profile": "0",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "1:1": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "1",
+        "profile": "1",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "1:2": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "1",
+        "profile": "2",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "1:3": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "1",
+        "profile": "3",
+        "sent": "5",
+        "no_ccc": "1"
+      },
+      "1:4": {
+        "role": "server",
+        "nonce": "b543e5d7138da01b339523c27cbdac88",
+        "core": "ccc7de7dc80cf227eaa8df7ecc7787ff525157c8",
+        "slot": "1",
+        "profile": "4",
+        "sent": "5",
+        "no_ccc": "1"
+      }
+    },
+    "no_ccc_errors": "10",
+    "pending_errors": "0",
+    "dropped_events": "0"
+  },
+  "bms_evidence": {},
+  "not_run": [],
+  "excluded": [
+    "BMS reboot persistence",
+    "native second-peer rejection",
+    "Apple/Google interoperability"
+  ],
+  "boards": {
+    "server": {
+      "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d",
+      "image_sha256": "df2162b10cf96d838c92c518530f9e245d205007c175f32910c38c0ca953ff9e",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "290816"
+    },
+    "client": {
+      "probe_sha256": "e44e2ba24dbcbdd3c41e05192773a058ed7dbbca2354dda703a004646ea9a334",
+      "image_sha256": "f7e8479ef7cb2c617d571eb32e1df2499a5c6f9b96c2e529e7cc8786008637a1",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "282624"
+    },
+    "watcher": {
+      "probe_sha256": "32f71533ff6ba27fd38ed32a17bf6d80a90d4f4980221051ed5c5a2e7fdb63a9",
+      "image_sha256": "5d1ae9e6d6a13685c4ebac8983fab092dd30ae227e5d6cdc652bb47c6321d927",
+      "registers": {
+        "dp_idcode": "0x6ba02477",
+        "dp_targetid_observed": "0x201c0289",
+        "ahb_ap_idr": "0x84770001",
+        "ahb_ap_csw": "0x03800052",
+        "ctrl_ap_idr": "0x32880000",
+        "approtect_status": "0x00000000"
+      },
+      "flash_mode": "pyocd-sector-sw-reset",
+      "flash_bytes": "282624"
+    }
+  }
+}

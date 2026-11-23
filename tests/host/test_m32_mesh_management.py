@@ -20,7 +20,8 @@ class M32MeshManagementContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         required = (
-            "startRemoteScan", "stopRemoteScan", "closeRemoteLink", "provisionRemote",
+            "enableRemoteProvisioningServer", "startRemoteScan", "stopRemoteScan",
+            "closeRemoteLink", "provisionRemote",
             "getSarTransmitter", "setSarTransmitter", "getSarReceiver", "setSarReceiver",
             "beginOpcodeSequence", "opcodeSequenceTailroom", "sendOpcodeSequence",
             "abortOpcodeSequence", "readLargeComposition", "readModelsMetadata",
@@ -45,6 +46,7 @@ class M32MeshManagementContractTests(unittest.TestCase):
         required = (
             "K_MSGQ_DEFINE(management_event_queue", "bt_mesh_rpr_scan_start",
             "bt_mesh_rpr_scan_stop", "bt_mesh_rpr_link_close",
+            "bt_mesh_prov_enable(BT_MESH_PROV_REMOTE)",
             "bt_mesh_provision_remote", "bt_mesh_sar_cfg_cli_transmitter_set",
             "bt_mesh_sar_cfg_cli_receiver_set", "bt_mesh_op_agg_cli_seq_start",
             "bt_mesh_op_agg_cli_seq_send", "bt_mesh_op_agg_cli_seq_abort",
@@ -59,6 +61,14 @@ class M32MeshManagementContractTests(unittest.TestCase):
         for token in required:
             with self.subTest(token=token):
                 self.assertIn(token, backend)
+        self.assertIn("status.status != BT_MESH_RPR_SUCCESS", backend)
+        self.assertIn("status.scan == BT_MESH_RPR_SCAN_IDLE", backend)
+        self.assertIn("status.scan != BT_MESH_RPR_SCAN_IDLE", backend)
+        self.assertIn("-EREMOTE", backend)
+        self.assertIn("-EAGAIN", backend)
+        self.assertIn("-EBUSY", backend)
+        self.assertIn("-EALREADY", backend)
+        self.assertIn("-ENOMEM", backend)
         self.assertNotIn("new ", backend)
         self.assertNotIn("malloc(", backend)
 
@@ -70,6 +80,7 @@ class M32MeshManagementContractTests(unittest.TestCase):
         for setting in (
             "CONFIG_BT_MESH_RPR_CLI=y", "CONFIG_BT_MESH_RPR_SRV=y",
             "CONFIG_BT_MESH_RPR_SRV_SCANNED_ITEMS_MAX=4",
+            "CONFIG_BT_MESH_MSG_CACHE_SIZE=64",
             "CONFIG_BT_MESH_SAR_CFG_CLI=y", "CONFIG_BT_MESH_SAR_CFG_SRV=y",
             "CONFIG_BT_MESH_OP_AGG_CLI=y", "CONFIG_BT_MESH_OP_AGG_SRV=y",
             "CONFIG_BT_MESH_LARGE_COMP_DATA_CLI=y",

@@ -31,6 +31,12 @@ public static class FixtureNrfutil
             new UTF8Encoding(false));
         if (args.Length == 1 && args[0] == "--version")
         {
+            string core = Environment.GetEnvironmentVariable("NRFUTIL_BOOTSTRAP_TARBALL_PATH");
+            if (String.IsNullOrEmpty(core) || !File.Exists(core))
+            {
+                Console.Error.WriteLine("고정 core archive 입력이 없습니다.");
+                return 43;
+            }
             Console.WriteLine("nrfutil 8.2.1");
             return 0;
         }
@@ -207,6 +213,21 @@ class M10InstallerLoggingTests(unittest.TestCase):
         pins["nrfutil"]["url"] = (self.root / "download-not-allowed.exe").as_uri()
         (self.package_tools / "pins.json").write_text(
             json.dumps(pins) + "\n", encoding="utf-8"
+        )
+        core_archive = self.nrfutil.parent / "nrfutil-core-8.2.1.tar.gz"
+        core_archive.write_bytes(b"fixed-core-archive-fixture")
+        platform_pins = {
+            "schema_version": 1,
+            "platforms": {"windows-x86_64": {"nrfutil": {
+                "version": "8.2.1",
+                "core": {
+                    "url": (self.root / "download-not-allowed.tar.gz").as_uri(),
+                    "sha256": hashlib.sha256(core_archive.read_bytes()).hexdigest(),
+                },
+            }}},
+        }
+        (self.package_tools / "platform-pins.json").write_text(
+            json.dumps(platform_pins) + "\n", encoding="utf-8"
         )
         (self.package_tools / "verify-nordic.ps1").write_text(
             FAKE_VERIFIER_SOURCE, encoding="utf-8-sig"

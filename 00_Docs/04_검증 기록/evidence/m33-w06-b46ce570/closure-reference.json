@@ -1,0 +1,25 @@
+{
+  "accepted_group_count": 49,
+  "bundle_manifest": {
+    "path": "bundle-files.json",
+    "sha256": "6e36124029ffad3f8e493ae87191991974bf2521c969ce2072f1c76021b66a04"
+  },
+  "closure": {
+    "path": "user-accepted-closure.json",
+    "sha256": "401f9aa228610fb3e18af98dde7371cd23c45e1125e5fc6b7d2629b39e4e594d"
+  },
+  "kind": "m33_w06_user_accepted_external_closure",
+  "original_strict_closure_status": "REJECTED_MANUAL_EXCEPTION_NOT_TECHNICAL_PASS",
+  "publication": "hash-index-only",
+  "schema_version": 1,
+  "source_clean": true,
+  "source_revision": "b46ce5708a17da788644d3e87021b5ab54a6e4c6",
+  "status": "USER_ACCEPTED_COMPLETE",
+  "technical_group_pass_count": 46,
+  "user_accepted_ordinals": [
+    29,
+    40,
+    44
+  ],
+  "whole49_technical_pass_claimed": false
+}

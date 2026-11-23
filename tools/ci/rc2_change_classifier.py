@@ -83,7 +83,7 @@ def classify(paths: Sequence[str]) -> dict[str, object]:
     for value in normalized:
         parts = PurePosixPath(value).parts
         suffix = PurePosixPath(value).suffix.casefold()
-        if value.startswith("00_Docs/") or value in {"README.md", "AGENTS.md"}:
+        if value.startswith("00_Docs/") or suffix == ".md" or value == "variants/nu54dk/host-readiness.json":
             categories.add("documentation")
             continue
         if value.startswith(("tests/", "tools/ci/", ".github/workflows/")):
@@ -107,6 +107,10 @@ def classify(paths: Sequence[str]) -> dict[str, object]:
             categories.add("core")
             profiles.update(ALL_PROFILES)
             run_all_examples = True
+            release_sensitive = True
+            continue
+        if value == "tools/nu54-builder/src/nu54_builder_impl/owned_process.py":
+            categories.add("host")
             release_sensitive = True
             continue
         if value.startswith("tools/nu54-builder/") or value in {"platform.txt", "boards.txt"}:

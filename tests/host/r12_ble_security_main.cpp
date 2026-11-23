@@ -6,6 +6,7 @@
 #include <zephyr/settings/settings.h>
 #include <zephyr/sys/byteorder.h>
 #include <array>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 using namespace nucode::ble;
@@ -160,6 +161,25 @@ void primeBondMetadata(std::uint16_t schema, std::size_t stored_length)
     }
     assert(settings_save_one("nucode/security/bond/0", record, stored_length) == 0);
 }
+/** @brief 고정 SDK처럼 명시 peer unpair만 orphan GATT 저장값을 제거합니다. */
+void removeOrphanGattSettings(std::uint8_t id, const bt_addr_le_t *peer)
+{
+    assert(!mock_settings_enumerating && id == BT_ID_DEFAULT);
+    if (peer == BT_ADDR_LE_ANY)
+    {
+        return;
+    }
+    constexpr const char *subtrees[] = {"cf", "ccc", "sc"};
+    for (const char *subtree : subtrees)
+    {
+        char key[64] = {};
+        std::snprintf(key, sizeof(key), "bt/%s/%02x%02x%02x%02x%02x%02x%u", subtree,
+                      peer->a.val[5], peer->a.val[4], peer->a.val[3],
+                      peer->a.val[2], peer->a.val[1], peer->a.val[0], peer->type);
+        assert(settings_delete(key) == 0);
+    }
+}
+
 int main(int argc, char **argv)
 {
     assert(argc == 2);
@@ -241,7 +261,82 @@ int main(int argc, char **argv)
     assert(BLEDevice.begin("security"));
     connect();
     auto *connection = &mock_connections[0];
-    if (std::strcmp(scenario, "bond_legacy_migration") == 0)
+    if (std::strncmp(scenario, "orphan_gatt_", 12U) == 0)
+    {
+        disconnect();
+        mock_bond_exists = false;
+        assert(BLESecurity.bondCount() == 0U);
+        const std::uint8_t value = 1U;
+        const char *first = "bt/cf/0605040302010";
+        assert(settings_save_one(first, &value, 1U) == 0);
+        mock_unpair_calls = 0U;
+        mock_unpair_observer = removeOrphanGattSettings;
+        if (std::strcmp(scenario, "orphan_gatt_success") == 0)
+        {
+            assert(settings_save_one("bt/ccc/0605040302010", &value, 1U) == 0);
+            assert(settings_save_one("bt/sc/0605040302010", &value, 1U) == 0);
+            assert(settings_save_one("bt/cf/c605040302011", &value, 1U) == 0);
+            assert(settings_save_one("bt/cf/0605040302010/1", &value, 1U) == 0);
+            assert(settings_save_one("application/keep", &value, 1U) == 0);
+            assert(BLESecurity.eraseAllBonds());
+            assert(mock_unpair_calls == 3U);
+            std::uint8_t observed = 0U;
+            assert(settings_load_one(first, &observed, 1U) == -ENOENT);
+            assert(settings_load_one("bt/ccc/0605040302010", &observed, 1U) == -ENOENT);
+            assert(settings_load_one("bt/sc/0605040302010", &observed, 1U) == -ENOENT);
+            assert(settings_load_one("bt/cf/c605040302011", &observed, 1U) == -ENOENT);
+            assert(settings_load_one("bt/cf/0605040302010/1", &observed, 1U) == 1);
+            assert(settings_load_one("application/keep", &observed, 1U) == 1);
+        }
+        else
+        {
+            if (std::strcmp(scenario, "orphan_gatt_invalid") == 0)
+            {
+                constexpr const char *invalid_keys[] = {
+                    "bt/cf/06050403zz010", "bt/cf/0605040302010/0",
+                    "bt/cf/0605040302010/01", "bt/cf/0605040302010/256",
+                    "bt/cf/0605040302010/1/2", "bt/cf/0605040302012",
+                    "bt/cf/06050403020A0", "bt/cf/060504030201",
+                };
+                for (const char *key : invalid_keys)
+                {
+                    assert(settings_save_one(key, &value, 1U) == 0);
+                    assert(!BLESecurity.eraseAllBonds());
+                    assert(mock_unpair_calls == 0U);
+                    std::uint8_t observed = 0U;
+                    assert(settings_load_one(first, &observed, 1U) == 1);
+                    assert(settings_delete(key) == 0);
+                }
+                return 0;
+            }
+            else if (std::strcmp(scenario, "orphan_gatt_overflow") == 0)
+            {
+                for (unsigned int index = 0U; index < 19U; ++index)
+                {
+                    char key[64] = {};
+                    std::snprintf(key, sizeof(key), "bt/ccc/0605040302%02x0", index);
+                    assert(settings_save_one(key, &value, 1U) == 0);
+                }
+            }
+            else if (std::strcmp(scenario, "orphan_gatt_load_error") == 0)
+            {
+                mock_settings_load_error = -EIO;
+            }
+            else if (std::strcmp(scenario, "orphan_gatt_unpair_error") == 0)
+            {
+                mock_unpair_fail_call = 2U;
+            }
+            else
+            {
+                assert(false);
+            }
+            assert(!BLESecurity.eraseAllBonds());
+            assert(mock_unpair_calls == (mock_unpair_fail_call == 2U ? 2U : 0U));
+            std::uint8_t observed = 0U;
+            assert(settings_load_one(first, &observed, 1U) == 1);
+        }
+    }
+    else if (std::strcmp(scenario, "bond_legacy_migration") == 0)
     {
         assert(BLESecurity.bondMigrationCount() == 1U);
         assert(BLESecurity.rejectedBondCount() == 0U);

@@ -1,5 +1,6 @@
 """! @brief 압축 해제 entry의 -I 로딩과 내부 모듈 경계를 검증합니다. """
 from pathlib import Path
+import json
 import os
 import subprocess
 import sys
@@ -53,6 +54,35 @@ class BuilderPackageTests(unittest.TestCase):
         self.assertIn('source_inputs', implementation.build.ArtifactManifest.__required_keys__)
         for path in (SOURCE / 'nu54_builder_impl').glob('*.py'):
             self.assertTrue(PACKAGE.include_core_path(path.relative_to(ROOT).as_posix()))
+        patch = (
+            ROOT / 'tools/nu54-builder/sdk-patches/zephyr/'
+            '3564414a3b27-friend-clear-confirm.patch'
+        )
+        self.assertTrue(patch.is_file())
+        self.assertTrue(PACKAGE.include_core_path(patch.relative_to(ROOT).as_posix()))
+        lock = json.loads(
+            (ROOT / 'tools/ci/ncs-3.4.0.lock.json').read_text(encoding='utf-8')
+        )
+        self.assertEqual(
+            lock['zephyr'],
+            implementation.sdk_patches.RUNTIME_ZEPHYR_LOCK,
+        )
+        self.assertEqual(
+            implementation.cache.patchset_sha256(ROOT),
+            '0e4474e2600229354ba8a55c6529fa88217e79b63eb44684a2f6cd3bb99049bf',
+        )
+        with tempfile.TemporaryDirectory() as unrelated:
+            with self.assertRaises(implementation.AdapterError):
+                implementation.cache.patchset_sha256(Path(unrelated))
+        with tempfile.TemporaryDirectory() as folder:
+            checkout = Path(folder)
+            source = checkout / 'source.c'
+            source.write_bytes(b'int value;\r\n')
+            implementation.sdk_patches._restore_original_bytes(
+                checkout,
+                {'source.c': b'int value;\n'},
+            )
+            self.assertEqual(source.read_bytes(), b'int value;\n')
         launcher = (ROOT / 'tools/nu54-builder/nu54-builder.cmd').read_text(encoding='utf-8')
         self.assertIn('-I "%~dp0src\\nu54_builder.py"', launcher)
 

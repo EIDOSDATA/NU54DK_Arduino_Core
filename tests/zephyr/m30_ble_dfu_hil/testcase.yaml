@@ -9,6 +9,16 @@ tests:
       - EXTRA_CONF_FILE=peripheral.conf
     platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
     integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+  nucode.m30.dfu.unconfirmed:
+    tags: [nucode, arduino, m30, bluetooth, dfu, hil]
+    build_only: true
+    sysbuild: true
+    extra_args:
+      - M30_DFU_ROLE=peripheral
+      - M30_DFU_AUTO_CONFIRM=0
+      - EXTRA_CONF_FILE=peripheral.conf
+    platform_allow: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
+    integration_platforms: [nrf54l15dk/nrf54l15/cpuapp/nu54dk]
   nucode.m30.dfu.central:
     tags: [nucode, arduino, m30, bluetooth, dfu, hil]
     build_only: true

@@ -1,0 +1,109 @@
+{
+  "source_revision": "e3a663d629bcc22fb3222b99c456fda6c8e2c312",
+  "dtm_identity": "e3a663d629bcc22fb3222b99c456fda6c8e2c312840649d9d6dec3da9402e05bcfc1cc60e6c6a177c05b7c534f3089006f1459ed",
+  "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+  "ncs_revision": "99553055607b2e9885fbc80ccd11fa9da81c2df0",
+  "zephyr_revision": "bf801e4e3d19e1ffa76164346480cb7734dd2800",
+  "results": [
+    {
+      "route": "dtm_twowire",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": "e3a663d629bcc22fb3222b99c456fda6c8e2c312840649d9d6dec3da9402e05bcfc1cc60e6c6a177c05b7c534f3089006f1459ed",
+      "log_sha256": "6b55b604b8a9e075c8ccc248d257dbcea4dde463096d7c317f70f81af640149c",
+      "image_sha256": "41839006ae21dd48638c4f8ae6e5db50028dc607d5418b1c19e34f0a62576579",
+      "config_sha256": "705befc260dcd5a6211303d2f8f15aff3d13c74a263d5ee5b635c8a29dd12f0c",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "dtm_hci",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": "e3a663d629bcc22fb3222b99c456fda6c8e2c312840649d9d6dec3da9402e05bcfc1cc60e6c6a177c05b7c534f3089006f1459ed",
+      "log_sha256": "c9b48f8e7245b6b345166f879969279f845f64f90a368af5d0d95c7a86450ff4",
+      "image_sha256": "0f0aa05b955e91008e4cd64c7339e1a4d4c8db389d8c3eecdd69edf643f4cd24",
+      "config_sha256": "eb65549a0f860846d1556f3036660086117bc49c60d9ceb38d6543f01e853fcc",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "uart",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "5d4cb3099ab3a7571ef921920333e7c074f4d79369824b6fe650ce1a65656bb6",
+      "image_sha256": "98bb7748e180d5c31a26cc51b69f2c48ee5417748c880506e36dd7ed083ec208",
+      "config_sha256": "d02c1be04eb8472b52d39f58706664847af82a80819d7372a0a3de60a89ce4b6",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "async",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "6a58c2c27fed7ce5a89a246ffd5dc8ed44fcb7ff9f2ff29d81a0df09a4ddc30d",
+      "image_sha256": "9095a62966bc33b4b4167fdda3f36ffe9d08459d42e300144f0ef0d7c5ecd8f6",
+      "config_sha256": "20cb9b610db5c68f5b697a66e333278789b39067f674fd71e92a7ed894ea6e10",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "threewire",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "f9c5ee631d477d07d691ec3a4810239e159b2e6661d46ad1b36b40fb6001a76d",
+      "image_sha256": "f8d11cc17e4cb434c4f36fdcb114bde5ba7df7a5eb7681bca6da58fd017ea0e0",
+      "config_sha256": "59472019da5733e8d16d52b29f9f86f99bbef6ef257178f3a0a69dfa777e4287",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "lpuart",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "91e1e97f77bd0feba36f9d1fdb4dfa9f14d9fffb159b6906e8a15913f1cd40a0",
+      "image_sha256": "1d187fbdd08d80ba36f7e1c9d09b9a3085c0e41317d6bbbdcd667b850ffe282e",
+      "config_sha256": "02162fa5b0e5ce064b6a0911dbfb7b826fa5c1442475d89921473ec5ba374477",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "spi",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "d993a911512f71834d0f2a0b8901cd9c23118b87655894b27088f68531f7ffc5",
+      "image_sha256": "644e4c8de2517046bc3dfdae873da0e2e6fbfc87d1f1b10ed28d2c105401c18a",
+      "config_sha256": "0a44c4504aa1c87ae57dff7b1b2a122c4e13a9f7f8c487daff5d87d9c24631cd",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "power_control",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "54450b7727d58344f3a79641a09c44b2ff5a745a438189b028bb19b804ec33d1",
+      "image_sha256": "1c3c0be33eb4b47fbc80ec3ecfe7e48afcbae695fec210706a6d1cff619ecebb",
+      "config_sha256": "96a519069cd9c5bd0ea154cb6a1d43839f59e5b96beb9c0d91d0547d7c134cbd",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "scan_request",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "b8bc892ccc7cd7effd4796e7ec22829a3bb9e8c660900660e88dc2d19e92508d",
+      "image_sha256": "dd02d279ec85ced0a0ace80f5e2c2458cf1a0de75d251430697da3be1124eb0b",
+      "config_sha256": "291467c883544dca1c643cd59dca37a84dd08788f58d9856aa0a0231d27e7818",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "route": "power_profiling",
+      "status": "PASS",
+      "exit_code": 0,
+      "dtm_identity": null,
+      "log_sha256": "6519ca1ae824711be0ce3c3fdafda22e90570150715604a78571a76e15f3d953",
+      "image_sha256": "220ee46b12c2f347c4bd4dc2efeb9800da48d6bc9d41058ad0d22b350e767ea4",
+      "config_sha256": "db41ec48429d22261323f1a28a713651b2e404db1797d781520c0004df8cee12",
+      "runtime": "NOT_RUN"
+    }
+  ]
+}

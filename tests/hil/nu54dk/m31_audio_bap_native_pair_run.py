@@ -18,6 +18,13 @@ from m31_cs_ras_pair_run import hardware_reset
 from v04_protocol import ProbeLocks
 
 
+def reset_pair(client_probe_sha256: str, server_probe_sha256: str) -> None:
+    """! @brief 익명화된 probe identity로 server와 client를 순서대로 재시작합니다. """
+
+    hardware_reset(server_probe_sha256)
+    hardware_reset(client_probe_sha256)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--client-probe-sha256", required=True)
@@ -195,8 +202,10 @@ def main():
                         return 0
                 client.reset_input_buffer()
                 server.reset_input_buffer()
-                hardware_reset(server_uid)
-                hardware_reset(client_uid)
+                reset_pair(
+                    args.client_probe_sha256,
+                    args.server_probe_sha256,
+                )
                 started = time.monotonic()
                 deadline = started + args.timeout_seconds
                 while time.monotonic() < deadline:

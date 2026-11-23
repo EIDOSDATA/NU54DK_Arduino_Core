@@ -41,12 +41,12 @@ def release_channel(version: str) -> str:
 
 ## @brief Arduino package version을 최신 순으로 정렬할 key를 만듭니다.
 def version_sort_key(version: str) -> tuple[int, int, int, int, int]:
-    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-rc\.(\d+))?", version)
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:-(rc|host)\.(\d+))?", version)
     if not match or version not in model.PACKAGE_VERSIONS:
         raise PackageError(f"지원하지 않는 패키지 버전입니다: {version}")
-    major, minor, patch, rc = match.groups()
-    ## @note 같은 기본 버전에서는 stable을 RC보다 최신으로 정렬합니다.
-    return (int(major), int(minor), int(patch), 1 if rc is None else 0, int(rc or 0))
+    major, minor, patch, phase, sequence = match.groups()
+    ## @note 같은 기본 버전에서는 명시 등록한 Host 시험 후보·RC·stable 순으로 정렬합니다.
+    return (int(major), int(minor), int(patch), {'host': -1, 'rc': 0, None: 1}[phase], int(sequence or 0))
 
 
 ## @brief preview와 공개 버전의 tag 이름을 서로 분리해 고정합니다.

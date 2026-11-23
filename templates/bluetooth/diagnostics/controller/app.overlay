@@ -1,0 +1,27 @@
+/** @brief controller 전용 image의 로그 경로와 통신 peripheral 소유권을 분리한다. */
+/ {
+    chosen {
+        /delete-property/ zephyr,console;
+        /delete-property/ zephyr,shell-uart;
+        /delete-property/ zephyr,uart-mcumgr;
+        /delete-property/ zephyr,bt-mon-uart;
+        zephyr,bt-c2h-uart = &uart30;
+    };
+};
+
+&uart20 { status = "disabled"; };
+&uart30
+{
+    status = "okay";
+    current-speed = <1000000>;
+    pinctrl-0 = <&uart30_default>;
+    pinctrl-1 = <&uart30_sleep>;
+    pinctrl-names = "default", "sleep";
+    hw-flow-control;
+};
+&wdt31 { status = "okay"; };
+&lfxo
+{
+    load-capacitors = "external";
+    /delete-property/ load-capacitance-femtofarad;
+};

@@ -1,0 +1,12 @@
+server: M33PROFILE|1|READY|role=server|nonce=|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+client: M33PROFILE|1|READY|role=client|nonce=|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+watcher: M33PROFILE|1|READY|role=watcher|nonce=|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+server: M33PROFILE|1|FAIL|role=server|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|reason=command-or-start
+server: M33PROFILE|1|SERVER_STATS|role=server|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|max_links=0|email_deliveries=0|bond_deletions=0
+server: M33PROFILE|1|STOPPED|role=server|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+client: M33PROFILE|1|BEGIN|role=client|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+client: M33PROFILE|1|SERVER_STATS|role=client|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|max_links=0|email_deliveries=0|bond_deletions=0
+client: M33PROFILE|1|STOPPED|role=client|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+watcher: M33PROFILE|1|BEGIN|role=watcher|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8
+watcher: M33PROFILE|1|SERVER_STATS|role=watcher|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8|max_links=0|email_deliveries=0|bond_deletions=0
+watcher: M33PROFILE|1|STOPPED|role=watcher|nonce=2181c0f64ce99282f16e6d5fa6110f71|core=ccc7de7dc80cf227eaa8df7ecc7787ff525157c8

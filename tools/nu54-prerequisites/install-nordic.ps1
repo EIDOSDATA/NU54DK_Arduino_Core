@@ -170,15 +170,17 @@ function Receive-File {
 }
 
 ## @brief SHA-256 값이 pin과 다르면 변경된 upstream byte를 거부합니다.
-function Assert-FileHash {
+function Assert-FileHash
+{
     param(
         [Parameter(Mandatory)][string]$Path,
         [Parameter(Mandatory)][string]$Expected
     )
 
     $actual = Get-Sha256 $Path
-    if ($actual -ne $Expected.ToLowerInvariant()) {
-        throw "SHA-256 불일치: $Path; expected=$Expected actual=$actual. 공식 URL은 unversioned이므로 upstream byte가 변경되었다면 검토 후 pins.json을 명시적으로 갱신하십시오."
+    if ($actual -ne $Expected.ToLowerInvariant())
+    {
+        throw "SHA-256 불일치: $Path; expected=$Expected actual=$actual. 고정된 공식 배포 byte와 일치하지 않습니다. 다운로드 경로와 파일 손상 여부를 확인하십시오."
     }
 }
 
@@ -206,9 +208,10 @@ try {
     $platformRoot = [IO.Path]::GetFullPath($PlatformRoot).TrimEnd('\', '/')
     $ncsRoot = [IO.Path]::GetFullPath($NcsRoot).TrimEnd('\', '/')
     $pinsPath = Join-Path $PSScriptRoot 'pins.json'
+    $platformPinsPath = Join-Path $PSScriptRoot 'platform-pins.json'
     $requirementsPath = Join-Path $PSScriptRoot 'nrfutil-requirements.json'
     $verifyScript = Join-Path $PSScriptRoot 'verify-nordic.ps1'
-    foreach ($requiredPackageFile in @($pinsPath, $requirementsPath, $verifyScript)) {
+    foreach ($requiredPackageFile in @($pinsPath, $platformPinsPath, $requirementsPath, $verifyScript)) {
         if (-not (Test-Path -LiteralPath $requiredPackageFile -PathType Leaf)) {
             throw "설치 package file이 없습니다: $requiredPackageFile"
         }
@@ -279,6 +282,21 @@ try {
 
     $env:NRFUTIL_HOME = Join-Path $applicationRoot 'nrfutil'
     New-Item -ItemType Directory -Path $env:NRFUTIL_HOME -Force | Out-Null
+
+    ## @brief 고정 launcher가 최신 core를 선택하지 않도록 공식 core archive를 먼저 검증합니다.
+    $platformPins = Get-Content -LiteralPath $platformPinsPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $windowsUtil = $platformPins.platforms.'windows-x86_64'.nrfutil
+    if ([int]$platformPins.schema_version -ne 1 -or [string]$windowsUtil.version -cne [string]$pins.nrfutil.version)
+    {
+        throw 'Windows core pin과 기존 prerequisite version이 다릅니다.'
+    }
+    $coreArchive = Join-Path $toolsRoot 'nrfutil-core-8.2.1.tar.gz'
+    if (-not (Test-Path -LiteralPath $coreArchive -PathType Leaf))
+    {
+        Receive-File ([string]$windowsUtil.core.url) $coreArchive
+    }
+    Assert-FileHash $coreArchive ([string]$windowsUtil.core.sha256)
+    $env:NRFUTIL_BOOTSTRAP_TARBALL_PATH = $coreArchive
 
     $nrfutilVersionOutput = (& $nrfutilPath --version 2>&1) -join "`n"
     if ($LASTEXITCODE -ne 0 -or

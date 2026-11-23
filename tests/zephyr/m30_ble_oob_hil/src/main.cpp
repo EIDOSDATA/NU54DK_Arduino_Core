@@ -14,6 +14,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -38,6 +39,7 @@ namespace
     bool protocol_started = false;
     bool protocol_failed = false;
     bool clearing = false;
+    bool clear_ack_pending = false;
     bool connection_attempted = false;
     bool security_request_pending = false;
     bool local_ready = false;
@@ -180,6 +182,7 @@ namespace
         protocol_started = false;
         protocol_failed = false;
         clearing = false;
+        clear_ack_pending = false;
         connection_attempted = false;
         security_request_pending = false;
         local_ready = false;
@@ -194,6 +197,34 @@ namespace
         failure_reason = nullptr;
         authentication_reason = 0U;
         security_request_due_ms = 0;
+    }
+
+    /** @brief 실제 link 종료 뒤 bond·OOB를 지우고 CLEAR ACK를 완료합니다. */
+    void completeClearRound()
+    {
+        clear_ack_pending = false;
+        if (!BLESecurity.eraseAllBonds() || !BLESecurity.clearOob(localRole()))
+        {
+            clearing = false;
+            fail("clear");
+            return;
+        }
+        resetRoundState();
+        Serial.print("M30OOB|1|CLEARED|role=");
+        Serial.print(roleName());
+        Serial.print("|round=");
+        Serial.print(current_round);
+        Serial.print("|bond_count=");
+        Serial.print(BLESecurity.bondCount());
+        Serial.print("|nonce=");
+        Serial.println(nonce);
+    }
+
+    /** @brief peer가 먼저 종료한 link를 멱등 cleanup 완료 상태로 판정합니다. */
+    bool disconnectAlreadyComplete()
+    {
+        return BLEDevice.lastError() == nucode::ble::BLEError::not_connected &&
+               BLEDevice.lastDriverError() == -ENOTCONN;
     }
 
     /** @brief local OOB 생성과 frame/NDEF round-trip 뒤 raw frame을 Host에 전달합니다. */
@@ -412,11 +443,14 @@ namespace
         {
             connection_handle = {};
             security_request_pending = false;
-            if (protocol_started && !clearing && !pass_reported)
+            if (clearing && clear_ack_pending)
+            {
+                completeClearRound();
+            }
+            else if (protocol_started && !clearing && !pass_reported)
             {
                 fail("disconnected");
             }
-            clearing = false;
         }
         else if (information.event == nucode::ble::BLEEvent::error && protocol_started &&
                  !clearing)
@@ -482,6 +516,11 @@ namespace
     /** @brief 현재 역할의 광고 또는 scan을 시작합니다. */
     void startRound()
     {
+        if (clearing || clear_ack_pending)
+        {
+            fail("clear-pending");
+            return;
+        }
         if (!local_ready || !remote_ready)
         {
             fail("oob-not-ready");
@@ -515,6 +554,7 @@ namespace
     {
         protocol_started = false;
         clearing = true;
+        clear_ack_pending = false;
 #if defined(NUCODE_M30_OOB_CENTRAL)
         if (BLEScan.running())
         {
@@ -528,22 +568,23 @@ namespace
 #endif
         if (connection_handle.valid())
         {
-            static_cast<void>(BLEConnection.disconnect(connection_handle));
-        }
-        if (!BLESecurity.eraseAllBonds() || !BLESecurity.clearOob(localRole()))
-        {
-            fail("clear");
+            clear_ack_pending = true;
+            if (!BLEConnection.disconnect(connection_handle))
+            {
+                if (disconnectAlreadyComplete())
+                {
+                    completeClearRound();
+                }
+                else
+                {
+                    clear_ack_pending = false;
+                    clearing = false;
+                    fail("clear-disconnect");
+                }
+            }
             return;
         }
-        resetRoundState();
-        Serial.print("M30OOB|1|CLEARED|role=");
-        Serial.print(roleName());
-        Serial.print("|round=");
-        Serial.print(current_round);
-        Serial.print("|bond_count=");
-        Serial.print(BLESecurity.bondCount());
-        Serial.print("|nonce=");
-        Serial.println(nonce);
+        completeClearRound();
     }
 
     /** @brief Host command의 protocol·round·nonce·선택 인자를 분리합니다. */
