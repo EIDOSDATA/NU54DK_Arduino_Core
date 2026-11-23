@@ -10,25 +10,59 @@
       "platforms": [
         {
           "architecture": "zephyr",
-          "archiveFileName": "nucode-nu54dk-zephyr-0.5.0.zip",
+          "archiveFileName": "nucode-nu54dk-zephyr-0.6.0.zip",
           "boards": [
             {
               "name": "NU54DK (nRF54L15, Zephyr)"
             }
           ],
           "category": "Contributed",
-          "checksum": "SHA-256:0a7b72de5772c9d710e521552a6197a8164d5da924f78b64efa6c595fb93c972",
+          "checksum": "SHA-256:574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a",
           "help": {
-            "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tree/v0.5.0"
+            "online": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/tree/v0.6.0"
           },
           "name": "NUCODE NU54DK Zephyr Boards",
-          "size": "8712498",
-          "toolsDependencies": [],
-          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.5.0/nucode-nu54dk-zephyr-0.5.0.zip",
-          "version": "0.5.0"
+          "size": "12999042",
+          "toolsDependencies": [
+            {
+              "name": "nu54-python",
+              "packager": "nucode",
+              "version": "3.12.16-20261026.nu54.1"
+            }
+          ],
+          "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/v0.6.0/nucode-nu54dk-zephyr-0.6.0.zip",
+          "version": "0.6.0"
         }
       ],
-      "tools": [],
+      "tools": [
+        {
+          "name": "nu54-python",
+          "systems": [
+            {
+              "archiveFileName": "nu54-python-3.12.16-20261026.nu54.1-linux-x86_64.tar.bz2",
+              "checksum": "SHA-256:8afcd33bc77a094b678905eae791bce1a5b7672a3ba03e40c1eb9771b6279595",
+              "host": "x86_64-linux-gnu",
+              "size": "30937948",
+              "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-linux-x86_64.tar.bz2"
+            },
+            {
+              "archiveFileName": "nu54-python-3.12.16-20261026.nu54.1-macos-arm64.tar.bz2",
+              "checksum": "SHA-256:a671849578714176940ffcac2de852474c20301f6a5cc3d53e4f12d1ff9b902e",
+              "host": "arm64-apple-darwin",
+              "size": "22300814",
+              "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-macos-arm64.tar.bz2"
+            },
+            {
+              "archiveFileName": "nu54-python-3.12.16-20261026.nu54.1-windows-x86_64.tar.bz2",
+              "checksum": "SHA-256:d6e1a280b2a743ca03323c603ed7ed2612941318c4b36bddb2a7f0bb913d38a4",
+              "host": "x86_64-mingw32",
+              "size": "18977684",
+              "url": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core/releases/download/tools-nu54-python-3.12.16-20261026.nu54.1/nu54-python-3.12.16-20261026.nu54.1-windows-x86_64.tar.bz2"
+            }
+          ],
+          "version": "3.12.16-20261026.nu54.1"
+        }
+      ],
       "websiteURL": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core"
     }
   ]
