@@ -9,7 +9,13 @@ v0.6.0의 SDK는 NCS 3.4.0입니다. OS별 도구와 체크섬은 [고정 설치
 [Windows 개발환경 설정](<../../00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md>)을 따른다.
 이 문서는 그중 Nordic prerequisite 설치기의 exact-pin 계약만 설명한다.
 
-`post_install.bat`은 관리자 권한과 PATH 변경 없이 다음 고정 환경을 설치한다.
+## Windows 공개 v0.6.0 설치본
+
+Boards Manager가 설치한 `post_install.bat`은 동봉된 `nu54-python`으로 `nordic.py install`을 실행합니다. 기본 SDK 경로는 `%USERPROFILE%\ncs`입니다. 설치기가 SDK와 도구 검증을 끝내면 현재 계정의 `%LOCALAPPDATA%\NUCODE\NU54DK_Arduino_Core\prerequisites\ready.json`에 결과를 기록합니다. 파일이 없을 때 실행할 PowerShell 명령은 [Windows SDK 설치 복구](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/main/00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md#windows-sdk-설치-복구)에 있습니다.
+
+## 소스 checkout의 Windows PowerShell 설치기
+
+저장소 루트의 `post_install.bat`은 `install-nordic.ps1`을 호출합니다. 아래 경로와 로그, 수동 검증 명령은 이 PowerShell 설치기를 사용하는 경우에 해당합니다.
 
 - `%USERPROFILE%\ncs\v3.4.0`
 - `%USERPROFILE%\ncs\toolchains\dcbdc366a1`

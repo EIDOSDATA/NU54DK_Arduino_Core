@@ -2,9 +2,33 @@
 
 | IDE에서 보이는 증상 | 먼저 확인할 항목 |
 | --- | --- |
+| Windows에서 Verify가 1/5에서 멈추고 `ready.json` 파일이 없다고 표시됨 | 아래의 [Windows SDK 설치 복구](#windows-sdk-설치-복구)를 따르세요. |
 | Verify는 성공했는데 LED가 그대로임 | **Upload**까지 끝났는지 확인하세요. 보드 한 대만 연결하고 Blink의 두 지연 값을 바꿔 보면 새 코드가 올라갔는지 구별할 수 있습니다. [Blink 따라 하기](EXAMPLE_WALKTHROUGH.md) |
 | 포트가 두 개 보이거나 직렬 모니터에 응답이 없음 | SerialEcho를 올리고 **115200 baud**, **Newline**으로 `test`를 보내세요. 두 포트 중 `NUCODE_M6_ECHO:test`를 돌려주는 쪽이 이 스케치의 콘솔입니다. [SerialEcho 실행 절차](EXAMPLE_WALKTHROUGH.md#2-serialecho로-한-줄-주고받기) |
 | 예제의 BLE 또는 주변장치 초기화가 실패함 | 열린 IDE 창에서 권장 Feature set과 보드 역할을 확인하세요. 예제를 복사했다면 같은 폴더의 설정 파일도 있어야 합니다. [메뉴별 준비물](FEATURE_SETS.md) |
+
+## Windows SDK 설치 복구
+
+`[NU54:E_PREREQUISITE_READY]`와 `[Errno 2] No such file or directory`가 함께 나오고 경로가 `prerequisites\ready.json`으로 끝난다면, 빌더가 현재 Windows 계정에서 SDK 설치 완료 기록을 찾지 못한 것입니다. 이 단계는 스케치 컴파일 전에 실행됩니다. NCS 3.4.0이 디스크에 있어도 설치본에 포함된 도구가 검증을 끝내야 이 기록이 생깁니다.
+
+1. Arduino IDE와 같은 Windows 계정으로 일반 PowerShell을 엽니다. 아래는 Boards Manager의 기본 데이터 폴더를 사용하는 v0.6.0 설치본 기준입니다. 데이터 경로를 바꿨다면 첫 줄의 `Arduino15`까지를 실제 경로로 바꾸세요.
+
+   ```powershell
+   $core = "$env:LOCALAPPDATA\Arduino15\packages\nucode\hardware\zephyr\0.6.0"
+   $hook = Join-Path $core 'post_install.bat'
+   Test-Path -LiteralPath $hook
+   ```
+
+2. 결과가 `True`이면 아래 두 줄을 실행하고 설치가 끝날 때까지 기다립니다. 설치본의 배치 파일은 패키지 전용 Python으로 SDK와 도구를 준비하고 검증한 뒤 `ready.json`을 기록합니다.
+
+   ```powershell
+   & $hook
+   $LASTEXITCODE
+   ```
+
+3. 종료 코드가 **0**이면 IDE에서 Blink를 다시 **Verify**하세요. 다른 코드이면 설치 명령에서 처음 나온 `[NU54:...]`와 그 뒤의 메시지를 확인하세요. `E_BOOTSTRAP`은 패키지 전용 Python을 찾지 못했다는 뜻입니다. Boards Manager에서 **NUCODE NU54DK Zephyr Boards 0.6.0**과 해당 도구의 설치를 확인하세요.
+
+첫 단계가 `False`이면 IDE의 자세한 컴파일 출력에서 보드 플랫폼 경로를 찾아 그 폴더의 `post_install.bat`를 실행하세요. IDE가 v0.6.0 플랫폼을 찾지 못하면 [Boards Manager 설치 안내](README.md)를 따르세요. SDK 경로를 직접 지정한 설치에서는 IDE와 복구 명령이 같은 SDK 및 사용자 상태 폴더를 사용해야 합니다.
 
 ## Mac IDE에서 YAML 오류가 뜰 때
 

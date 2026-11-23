@@ -4,6 +4,28 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "V060_WINDOWS_READY_JSON_TROUBLESHOOTING_20261124",
+      "date": "2026-11-24",
+      "reviewed_parent": "8dfda14d917445a9487521c569afebde02dba52f",
+      "product_source": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+      "scope": "Windows build stopped at stage 1/5: missing per-user ready.json. Documentation distinguishes the published native package hook from the checkout PowerShell installer.",
+      "checks": {
+        "public_zip_sha256": "574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a",
+        "archive_inspection": "Public Windows post_install.bat uses bundled Python and nordic.py install. Marker write follows SDK verification.",
+        "affected_windows_pc": "Recovery result not yet reported."
+      },
+      "documents": [
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "4c54412bda93e7e14e99ad3f31173cb0bcada84947ab7f5d258bad85fc989e60"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "1267c371544bf5887c17589b242ba444586d892d02887c6abf982af8fff5583b"
+        }
+      ]
+    },
+    {
       "id": "V060_ARDUINO_IDE_USER_GUIDES_20261124",
       "date": "2026-11-24",
       "reviewed_parent": "348e062e7344033948dd75a6e62d7357bbbbe05e",
