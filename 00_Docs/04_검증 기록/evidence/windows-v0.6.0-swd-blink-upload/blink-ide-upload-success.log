@@ -1,0 +1,32 @@
+Arduino IDE 2.3.11 - Blink Upload
+FQBN: nucode:zephyr:nu54dk:upload_probe=pyocd,feature_set=standard
+Blink.ino SHA-256: ADC851EBD610DAEF90F4C2E68824A6BAC6D2DC1604A47D9C0260B383CFDB627D
+IDE output: NU54_UPLOAD_PASS runner=pyocd probe=5415…3306
+
+started_at_utc=2026-11-23T20:57:55.118464+00:00
+finished_at_utc=2026-11-23T20:58:02.551255+00:00
+runner=pyocd
+probe_id=5415…3306
+probe_id_sha256=41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d
+hex=C:/Users/<user>/AppData/Local/arduino/sketches/0F40A75E1D77E6D18B8DB62D33FBBDB6/Blink.ino.hex
+hex_sha256=fbab40838350c73fc8fdbefc96e49d25df97a752bd39ff788501fbb3605e0768
+dt_flash=false
+smart_flash=false
+mass_erase_requested=false
+recover_requested=false
+process_outcome=EXITED
+timeout_seconds=180.0
+cleanup={"active_processes_after": 0, "kill_on_last_handle_close": true, "strategy": "ATOMIC_WINDOWS_JOB_LIST"}
+exit_code=0
+command='C:\Users\<user>\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\<user>\ncs\v3.4.0\zephyr' flash -d 'C:\Users\<user>\AppData\Local\NU54\c\v1\c2\c2dc322a20c4f58be8d5612a1382133f\build' -r pyocd --no-rebuild --dev-id 5415…3306 --dt-flash=n --tool-opt=-Osmart_flash=false --tool-opt=-Oauto_unlock=false --tool-opt=-Ojlink.non_interactive=false --tool-opt=-Ojlink.power=false '--tool-opt=-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py'
+--- child output ---
+-- west flash: using runner pyocd
+-- runners.pyocd: Flashing file: C:\Users\<user>\AppData\Local\NU54\c\v1\c2\c2dc322a20c4f58be8d5612a1382133f\build\zephyr\zephyr.hex
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+0001139 W Board ID 5415 is not recognized [mbed_board]
+0001264 W NRF54L15 is not in a secure state [target_nRF54L]
+0001548 I Loading C:\Users\<user>\AppData\Local\NU54\c\v1\c2\c2dc322a20c4f58be8d5612a1382133f\build\zephyr\zephyr.hex [load_cmd]
+[---|---|---|---|---|---|---|---|---|----]
+[========================================]
+0005776 I Erased 81920 bytes (20 sectors), programmed 81920 bytes (20 pages), skipped 0 bytes (0 pages) at 19.30 kB/s [loader]
+--- end ---

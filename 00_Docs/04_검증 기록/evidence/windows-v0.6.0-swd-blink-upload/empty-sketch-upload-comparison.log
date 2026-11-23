@@ -1,0 +1,80 @@
+started_at_utc=2026-11-23T20:50:20.857731+00:00
+finished_at_utc=2026-11-23T20:50:23.707985+00:00
+runner=pyocd
+probe_id=5415…3306
+probe_id_sha256=41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d
+hex=C:/Users/<user>/AppData/Local/arduino/sketches/5D16B72015F60CEF648ACF2526069940/sketch_nov24a.ino.hex
+hex_sha256=4ff94c0a35f312fbb74562a8d30a031cc1027786c779c3a0448da6944e8d2d1d
+dt_flash=false
+smart_flash=false
+mass_erase_requested=false
+recover_requested=false
+process_outcome=EXITED
+timeout_seconds=180.0
+cleanup={"active_processes_after": 0, "kill_on_last_handle_close": true, "strategy": "ATOMIC_WINDOWS_JOB_LIST"}
+exit_code=1
+command='C:\Users\<user>\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\<user>\ncs\v3.4.0\zephyr' flash -d 'C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build' -r pyocd --no-rebuild --dev-id 5415…3306 --dt-flash=n --tool-opt=-Osmart_flash=false --tool-opt=-Oauto_unlock=false --tool-opt=-Ojlink.non_interactive=false --tool-opt=-Ojlink.power=false '--tool-opt=-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py'
+--- child output ---
+-- west flash: using runner pyocd
+-- runners.pyocd: Flashing file: C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+0001174 W Board ID 5415 is not recognized [mbed_board]
+0001302 E Error reading AP#1 IDR: SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [discovery]
+0001302 E Error reading AP#2 IDR: SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [discovery]
+0001447 C Error: 2 [__main__]
+FATAL ERROR: command exited with status 1: pyocd flash -e sector -t nrf54l -u 5415…3306 -Osmart_flash=false -Oauto_unlock=false -Ojlink.non_interactive=false -Ojlink.power=false '-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py' 'C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex'
+--- end ---
+started_at_utc=2026-11-23T20:51:02.721571+00:00
+finished_at_utc=2026-11-23T20:51:05.381346+00:00
+runner=pyocd
+probe_id=5415…3306
+probe_id_sha256=41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d
+hex=C:/Users/<user>/AppData/Local/arduino/sketches/5D16B72015F60CEF648ACF2526069940/sketch_nov24a.ino.hex
+hex_sha256=4ff94c0a35f312fbb74562a8d30a031cc1027786c779c3a0448da6944e8d2d1d
+dt_flash=false
+smart_flash=false
+mass_erase_requested=false
+recover_requested=false
+process_outcome=EXITED
+timeout_seconds=180.0
+cleanup={"active_processes_after": 0, "kill_on_last_handle_close": true, "strategy": "ATOMIC_WINDOWS_JOB_LIST"}
+exit_code=1
+command='C:\Users\<user>\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\<user>\ncs\v3.4.0\zephyr' flash -d 'C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build' -r pyocd --no-rebuild --dev-id 5415…3306 --dt-flash=n --tool-opt=-Osmart_flash=false --tool-opt=-Oauto_unlock=false --tool-opt=-Ojlink.non_interactive=false --tool-opt=-Ojlink.power=false '--tool-opt=-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py'
+--- child output ---
+-- west flash: using runner pyocd
+-- runners.pyocd: Flashing file: C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+0001080 W Board ID 5415 is not recognized [mbed_board]
+0001197 E Error reading AP#0 IDR: SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [discovery]
+0001197 E Error reading AP#1 IDR: SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [discovery]
+0001242 E Error reading AP#2 IDR: SWD/JTAG communication failure (No ACK); check USB cable, reduce debugger clock [discovery]
+0001331 C Error: 0 [__main__]
+FATAL ERROR: command exited with status 1: pyocd flash -e sector -t nrf54l -u 5415…3306 -Osmart_flash=false -Oauto_unlock=false -Ojlink.non_interactive=false -Ojlink.power=false '-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py' 'C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex'
+--- end ---
+started_at_utc=2026-11-23T20:54:05.383839+00:00
+finished_at_utc=2026-11-23T20:54:11.888249+00:00
+runner=pyocd
+probe_id=5415…3306
+probe_id_sha256=41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d
+hex=C:/Users/<user>/AppData/Local/arduino/sketches/5D16B72015F60CEF648ACF2526069940/sketch_nov24a.ino.hex
+hex_sha256=4ff94c0a35f312fbb74562a8d30a031cc1027786c779c3a0448da6944e8d2d1d
+dt_flash=false
+smart_flash=false
+mass_erase_requested=false
+recover_requested=false
+process_outcome=EXITED
+timeout_seconds=180.0
+cleanup={"active_processes_after": 0, "kill_on_last_handle_close": true, "strategy": "ATOMIC_WINDOWS_JOB_LIST"}
+exit_code=0
+command='C:\Users\<user>\ncs\toolchains\dcbdc366a1\opt\bin\Scripts\west.exe' -z 'C:\Users\<user>\ncs\v3.4.0\zephyr' flash -d 'C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build' -r pyocd --no-rebuild --dev-id 5415…3306 --dt-flash=n --tool-opt=-Osmart_flash=false --tool-opt=-Oauto_unlock=false --tool-opt=-Ojlink.non_interactive=false --tool-opt=-Ojlink.power=false '--tool-opt=-Ouser_script=C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\tools\nu54-builder\src\nu54_pyocd_guard.py'
+--- child output ---
+-- west flash: using runner pyocd
+-- runners.pyocd: Flashing file: C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+0001067 W Board ID 5415 is not recognized [mbed_board]
+0001181 W NRF54L15 is not in a secure state [target_nRF54L]
+0001475 I Loading C:\Users\<user>\AppData\Local\NU54\c\v1\00\0027a6709f5719f7e6075c0d105e03be\build\zephyr\zephyr.hex [load_cmd]
+[---|---|---|---|---|---|---|---|---|----]
+[========================================]
+0004900 I Erased 81920 bytes (20 sectors), programmed 81920 bytes (20 pages), skipped 0 bytes (0 pages) at 23.94 kB/s [loader]
+--- end ---

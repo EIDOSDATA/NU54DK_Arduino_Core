@@ -1,5 +1,7 @@
 # 검증 기록
 
+- [342. v0.6.0 Windows SWD 오류와 Blink Upload](<342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md>)
+- [341. v0.6.0 Windows SDK 복구와 Blink Verify](<341_v0.6.0_Windows_SDK_복구와_Blink_Verify.md>)
 - [340. v0.6.0 게시와 공개 설치 검증](<340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 - [339. v0.6.0 최종 후보와 배포 자산 준비](<339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>)
 - [338. macOS 27 일반 IDE Upload 수정과 Blink 확인](<338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)

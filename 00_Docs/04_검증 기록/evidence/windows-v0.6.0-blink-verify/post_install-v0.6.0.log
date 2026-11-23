@@ -1,0 +1,6 @@
+Start: 2026-11-24T05:30:54.4034925+09:00
+User: <host>\<user>
+Hook: C:\Users\<user>\AppData\Local\Arduino15\packages\nucode\hardware\zephyr\0.6.0\post_install.bat
+build lock 대기 시간이 초과되었습니다: C:\Users\<user>\AppData\Local\NUCODE\NU54DK_Arduino_Core\prerequisites\.adapter.lock; owner={"created_at_utc": "2026-11-23T20:19:39.676503+00:00", "host": "<host>", "operation": "host-prerequisites", "pid": 26172, "schema_version": 1, "token": "<redacted>"}
+End: 2026-11-24T05:31:25.5037776+09:00
+LASTEXITCODE: 1

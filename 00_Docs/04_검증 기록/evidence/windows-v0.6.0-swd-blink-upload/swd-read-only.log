@@ -1,0 +1,109 @@
+pyOCD 0.42.0; attach and read CPUID
+TEST default bulk: PyUSBv2, clock=1000000
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+WARNING pyocd.board.mbed_board: Board ID 5415 is not recognized
+INFO pyocd.board.board: Target type is nrf54l
+INFO pyocd.coresight.dap: DP IDR = 0x6ba02477 (v2 rev6)
+INFO pyocd.coresight.discovery: AHB-AP#0 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AHB-AP#1 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AP#2 IDR = 0x32880000 (AP var0 rev3)
+INFO pyocd.target.family.target_nRF54L: Checking CTRL-AP IDR
+WARNING pyocd.target.family.target_nRF54L: NRF54L15 is not in a secure state
+INFO pyocd.coresight.rom_table: AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00fe000 (designer=244 part=01c)
+INFO pyocd.coresight.rom_table: [0]<e00ff000:ROM class=1 designer=43b:Arm part=4c9>
+INFO pyocd.coresight.rom_table:   AHB-AP#0 Class 0x1 ROM table #1 @ 0xe00ff000 (designer=43b:Arm part=4c9)
+INFO pyocd.coresight.rom_table:   [0]<e000e000:SCS M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=2a04 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [1]<e0001000:DWT M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a02 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [2]<e0002000:BPU M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a03 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [3]<e0000000:ITM M33 class=9 designer=43b:Arm part=d21 devtype=43 archid=1a01 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [5]<e0041000:ETM M33 class=9 designer=43b:Arm part=d21 devtype=13 archid=4a13 devid=0:0:0>
+INFO pyocd.coresight.rom_table: [1]<e0040000:TPIU M33 class=9 designer=43b:Arm part=d21 devtype=11 archid=0000 devid=ca1:0:0>
+INFO pyocd.coresight.cortex_m: CPU core #0: Cortex-M33 r1p0, v8.0-M architecture
+INFO pyocd.coresight.cortex_m:   Extensions: [DSP, FPU, FPU_V5, MPU, SEC]
+INFO pyocd.coresight.cortex_m:   FPU present: FPv5-SP-D16-M
+INFO pyocd.coresight.dwt: 4 hardware watchpoints
+INFO pyocd.coresight.fpb: 8 hardware breakpoints, 1 literal comparators
+INFO pyocd.target.family.target_nRF54L: This appears to be an nRF54B15 0CAA
+INFO pyocd.target.family.target_nRF54L: BLE MAC: <redacted>
+RESULT default bulk: PASS CPUID=0x411fd210
+TEST bulk 100 kHz: PyUSBv2, clock=100000
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+WARNING pyocd.board.mbed_board: Board ID 5415 is not recognized
+INFO pyocd.board.board: Target type is nrf54l
+INFO pyocd.coresight.dap: DP IDR = 0x6ba02477 (v2 rev6)
+INFO pyocd.coresight.discovery: AHB-AP#0 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AHB-AP#1 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AP#2 IDR = 0x32880000 (AP var0 rev3)
+INFO pyocd.target.family.target_nRF54L: Checking CTRL-AP IDR
+WARNING pyocd.target.family.target_nRF54L: NRF54L15 is not in a secure state
+INFO pyocd.coresight.rom_table: AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00fe000 (designer=244 part=01c)
+INFO pyocd.coresight.rom_table: [0]<e00ff000:ROM class=1 designer=43b:Arm part=4c9>
+INFO pyocd.coresight.rom_table:   AHB-AP#0 Class 0x1 ROM table #1 @ 0xe00ff000 (designer=43b:Arm part=4c9)
+INFO pyocd.coresight.rom_table:   [0]<e000e000:SCS M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=2a04 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [1]<e0001000:DWT M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a02 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [2]<e0002000:BPU M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a03 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [3]<e0000000:ITM M33 class=9 designer=43b:Arm part=d21 devtype=43 archid=1a01 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [5]<e0041000:ETM M33 class=9 designer=43b:Arm part=d21 devtype=13 archid=4a13 devid=0:0:0>
+INFO pyocd.coresight.rom_table: [1]<e0040000:TPIU M33 class=9 designer=43b:Arm part=d21 devtype=11 archid=0000 devid=ca1:0:0>
+INFO pyocd.coresight.cortex_m: CPU core #0: Cortex-M33 r1p0, v8.0-M architecture
+INFO pyocd.coresight.cortex_m:   Extensions: [DSP, FPU, FPU_V5, MPU, SEC]
+INFO pyocd.coresight.cortex_m:   FPU present: FPv5-SP-D16-M
+INFO pyocd.coresight.dwt: 4 hardware watchpoints
+INFO pyocd.coresight.fpb: 8 hardware breakpoints, 1 literal comparators
+INFO pyocd.target.family.target_nRF54L: This appears to be an nRF54B15 0CAA
+INFO pyocd.target.family.target_nRF54L: BLE MAC: <redacted>
+RESULT bulk 100 kHz: PASS CPUID=0x411fd210
+TEST HID 1 MHz: HidApiUSB, clock=1000000
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+WARNING pyocd.board.mbed_board: Board ID 5415 is not recognized
+INFO pyocd.board.board: Target type is nrf54l
+INFO pyocd.coresight.dap: DP IDR = 0x6ba02477 (v2 rev6)
+INFO pyocd.coresight.discovery: AHB-AP#0 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AHB-AP#1 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AP#2 IDR = 0x32880000 (AP var0 rev3)
+INFO pyocd.target.family.target_nRF54L: Checking CTRL-AP IDR
+WARNING pyocd.target.family.target_nRF54L: NRF54L15 is not in a secure state
+INFO pyocd.coresight.rom_table: AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00fe000 (designer=244 part=01c)
+INFO pyocd.coresight.rom_table: [0]<e00ff000:ROM class=1 designer=43b:Arm part=4c9>
+INFO pyocd.coresight.rom_table:   AHB-AP#0 Class 0x1 ROM table #1 @ 0xe00ff000 (designer=43b:Arm part=4c9)
+INFO pyocd.coresight.rom_table:   [0]<e000e000:SCS M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=2a04 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [1]<e0001000:DWT M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a02 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [2]<e0002000:BPU M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a03 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [3]<e0000000:ITM M33 class=9 designer=43b:Arm part=d21 devtype=43 archid=1a01 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [5]<e0041000:ETM M33 class=9 designer=43b:Arm part=d21 devtype=13 archid=4a13 devid=0:0:0>
+INFO pyocd.coresight.rom_table: [1]<e0040000:TPIU M33 class=9 designer=43b:Arm part=d21 devtype=11 archid=0000 devid=ca1:0:0>
+INFO pyocd.coresight.cortex_m: CPU core #0: Cortex-M33 r1p0, v8.0-M architecture
+INFO pyocd.coresight.cortex_m:   Extensions: [DSP, FPU, FPU_V5, MPU, SEC]
+INFO pyocd.coresight.cortex_m:   FPU present: FPv5-SP-D16-M
+INFO pyocd.coresight.dwt: 4 hardware watchpoints
+INFO pyocd.coresight.fpb: 8 hardware breakpoints, 1 literal comparators
+INFO pyocd.target.family.target_nRF54L: This appears to be an nRF54B15 0CAA
+INFO pyocd.target.family.target_nRF54L: BLE MAC: <redacted>
+RESULT HID 1 MHz: PASS CPUID=0x411fd210
+TEST bulk single packet: PyUSBv2, clock=1000000
+NU54_PROBE_GUARD={"backend": "CMSIS-DAP", "firmware_update_commands_requested": 0, "probe_sha256": "41664f5f0f7313965ea1438bfa181a06ef666017b985fa9a088f2d821764468d"}
+WARNING pyocd.board.mbed_board: Board ID 5415 is not recognized
+INFO pyocd.board.board: Target type is nrf54l
+INFO pyocd.coresight.dap: DP IDR = 0x6ba02477 (v2 rev6)
+INFO pyocd.coresight.discovery: AHB-AP#0 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AHB-AP#1 IDR = 0x84770001 (AHB-AP var0 rev8)
+INFO pyocd.coresight.discovery: AP#2 IDR = 0x32880000 (AP var0 rev3)
+INFO pyocd.target.family.target_nRF54L: Checking CTRL-AP IDR
+WARNING pyocd.target.family.target_nRF54L: NRF54L15 is not in a secure state
+INFO pyocd.coresight.rom_table: AHB-AP#0 Class 0x1 ROM table #0 @ 0xe00fe000 (designer=244 part=01c)
+INFO pyocd.coresight.rom_table: [0]<e00ff000:ROM class=1 designer=43b:Arm part=4c9>
+INFO pyocd.coresight.rom_table:   AHB-AP#0 Class 0x1 ROM table #1 @ 0xe00ff000 (designer=43b:Arm part=4c9)
+INFO pyocd.coresight.rom_table:   [0]<e000e000:SCS M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=2a04 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [1]<e0001000:DWT M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a02 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [2]<e0002000:BPU M33 class=9 designer=43b:Arm part=d21 devtype=00 archid=1a03 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [3]<e0000000:ITM M33 class=9 designer=43b:Arm part=d21 devtype=43 archid=1a01 devid=0:0:0>
+INFO pyocd.coresight.rom_table:   [5]<e0041000:ETM M33 class=9 designer=43b:Arm part=d21 devtype=13 archid=4a13 devid=0:0:0>
+INFO pyocd.coresight.rom_table: [1]<e0040000:TPIU M33 class=9 designer=43b:Arm part=d21 devtype=11 archid=0000 devid=ca1:0:0>
+INFO pyocd.coresight.cortex_m: CPU core #0: Cortex-M33 r1p0, v8.0-M architecture
+INFO pyocd.coresight.cortex_m:   Extensions: [DSP, FPU, FPU_V5, MPU, SEC]
+INFO pyocd.coresight.cortex_m:   FPU present: FPv5-SP-D16-M
+INFO pyocd.coresight.dwt: 4 hardware watchpoints
+INFO pyocd.coresight.fpb: 8 hardware breakpoints, 1 literal comparators
+INFO pyocd.target.family.target_nRF54L: This appears to be an nRF54B15 0CAA
+INFO pyocd.target.family.target_nRF54L: BLE MAC: <redacted>
+RESULT bulk single packet: PASS CPUID=0x411fd210

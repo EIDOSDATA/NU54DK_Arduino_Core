@@ -20,6 +20,10 @@ C12는 Mac의 일반 IDE Upload에서 플래시 20개 섹터(81,920바이트)를
 
 macOS 27.2.1에서 공개 인덱스로 v0.6.0을 설치했습니다. 공개 ZIP의 설치 파일 960개와 예제 204개를 확인했습니다. Blink, BoardInfo 빌드와 제거 후 재설치가 통과했습니다. [340번 기록](<../../04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 
+Windows 11에서 공개 v0.6.0 설치본의 SDK 다운로드가 끝난 뒤 설치 훅을 다시 실행했습니다. NCS v3.4.0 준비 상태와 Arduino IDE 2.3.11의 `Standard peripherals` Blink Verify를 확인했습니다. [341번 기록과 로그](<../../04_검증 기록/341_v0.6.0_Windows_SDK_복구와_Blink_Verify.md>)
+
+같은 Windows 11에서 초기 SWD 통신 오류와 USB 장치 재인식을 관찰했습니다. 재인식 후 Arduino IDE의 `Standard peripherals` Blink Upload가 `NU54_UPLOAD_PASS`로 완료됐습니다. 최초 SWD 오류 원인은 미확정입니다. [342번 기록과 실패·성공 로그](<../../04_검증 기록/342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md>)
+
 ## 배포 결과를 확인하는 곳
 
 | 확인할 내용 | 공개 근거 |

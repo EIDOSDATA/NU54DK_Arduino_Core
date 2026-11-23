@@ -4,6 +4,66 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "V060_WINDOWS_SWD_BLINK_UPLOAD_20261124",
+      "date": "2026-11-24",
+      "reviewed_parent": "a216b38281d5fabb30cce628510b1039411003c9",
+      "product_source": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+      "scope": "v0.6.0 공개 후 Windows 지원. SWD 오류 시 USB 재연결 절차와 Arduino IDE Blink Upload 결과를 기록.",
+      "checks": {
+        "windows_swd_failure": "Blink Upload 실패 6회. 최초 SWD 오류 원인은 미확정.",
+        "windows_usb_reenumeration": "CMSIS-DAP v2와 COM17·COM18 재인식 후 앞서 실패한 동일 HEX 업로드 성공.",
+        "windows_ide_blink_upload": "Windows 11 x64, Arduino IDE 2.3.11, Standard peripherals, 종료 코드 0 및 NU54_UPLOAD_PASS."
+      },
+      "documents": [
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "496d78b635f6f57b64bf5555a4349d50e3bc3bb79562401983668ea26bcb402a"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "sha256_utf8_lf": "fb35495beac3bdc60b7d5db40939a4023e88cc83630d5f06546c0d3c8cb5fd4e"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "ffff6fc0c9325c2553a785cae96f539a2cf10611b3379d2d312825492e8be86f"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md",
+          "sha256_utf8_lf": "66e331632c525b52ad9f33c90387d2c8d089d89905b054727502ba55c5fba359"
+        }
+      ]
+    },
+    {
+      "id": "V060_WINDOWS_SDK_RECOVERY_BLINK_VERIFY_20261124",
+      "date": "2026-11-24",
+      "reviewed_parent": "a216b38281d5fabb30cce628510b1039411003c9",
+      "product_source": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+      "scope": "v0.6.0 공개 후 Windows 지원. SDK 다운로드 중 잠금 타임아웃 복구 절차와 Arduino IDE Blink Verify 결과를 기록.",
+      "checks": {
+        "windows_post_install": "기존 설치 중 잠금 타임아웃 1, 설치 완료 후 같은 훅 재실행 0.",
+        "windows_ready_marker": "status=ready, ncs_version=v3.4.0.",
+        "windows_ide_blink_verify": "Windows 11 x64, Arduino IDE 2.3.11, Standard peripherals, PASS."
+      },
+      "documents": [
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "14ec8b3957ce20799dc93e53b87868f8c857387ab82e40235dd4eb7c77e3680d"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "sha256_utf8_lf": "d0991cd71052e6f7c776f3a299ccf7b88c0fa4562750fec2d0d8d13d9deb951a"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "f356954b8cae04df455500775d32c064b70b67d530d3ee30b8e947b885de55cd"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/341_v0.6.0_Windows_SDK_복구와_Blink_Verify.md",
+          "sha256_utf8_lf": "5dbd6d88113caba1ef32c97fb43f6000f7441bad1f679b0a5408b1c3ac860ad0"
+        }
+      ]
+    },
+    {
       "id": "V060_WINDOWS_READY_JSON_TROUBLESHOOTING_20261124",
       "date": "2026-11-24",
       "reviewed_parent": "8dfda14d917445a9487521c569afebde02dba52f",
