@@ -10,6 +10,7 @@
 | C11 Mac software | `d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa` | [CI43760678488 attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/43760678488), 5/5 성공, [331번](<../../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>) |
 | C11 문서 후속 | `4d7dff44666b0ab1c01311bf6350dd675d6f8e9e` | [CI43763189943 attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/43763189943), 8건 통과, 범위 밖 1건 생략. 문서 커밋에서 실행 |
 | C12 IDE Upload 교정 | `97c7cd01ff59fb5ae3689e9de62b9c820b83fd5e` | macOS27 실제 IDE Upload·Blink 동작, C11 standard Blink BIN/HEX 동일. [C12 CI 9개 작업 통과](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/45207890683). [338번](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>) |
+| 최종 버전 후보 | `0a63c501ccd0d2e26298f1ad98a81a99cddc565f` | macOS 27 CLI 설치 전이와 설치 파일 960개 대조, 예제 204개 발견. Blink 이미지가 C12와 일치했고 BoardInfo에 새 버전이 들어 있다. [339번 기록](<../../04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>) |
 
 C11의 Mac CI는 각 OS에서 설치 파일 960개와 예제 204개를 확인하고 대표 예제 4개씩 cold/warm 빌드를 수행했습니다. 관련 단위 검사 결과는 OS별 PASS 67건, 조건부 SKIP 3건입니다. 두 Mac의 대표 BIN 및 HEX가 바이트 단위로 일치했습니다. 실제 기기의 USB 재연결과 UART 판정은 [336번 기록](<../../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>), [337번 기록](<../../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)에 있습니다.
 

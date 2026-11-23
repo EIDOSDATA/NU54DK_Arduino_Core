@@ -1896,5 +1896,27 @@
       "BIN_HEX_comparison": "4bb328924bfeb0427a6dfca1a869699611356563b2b3dc6beec7bb230fa29768",
       "STOP_cleanup": "3188805cf119825b4283efee8db7e7f24a220b65f9dccc2cbb200cb4625fc639"
     }
+  },
+  "final_packaging_candidate": {
+    "version": "0.6.0",
+    "core_revision": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+    "archive_sha256": "574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a",
+    "index_draft_sha256": "6c45d5526ce37b5a696a8a207eda6b399643b965c93e2e01223f926d380f3b22",
+    "plan_draft_sha256": "ed16dfd9e45811aa351f62f39614d6ba451a65611fc6a7bc60d0a067879b33e8",
+    "first_attempt_source": "84a77a2842cc8c42a23d79ae9064b3d89a1d2622",
+    "same_packaged_source_file_count": 955,
+    "archive_reproducible": true,
+    "native_macOS_27_lifecycle": "PASS",
+    "native_macOS_27_installed_examples_discovered": 204,
+    "native_macOS_27_Blink_and_BoardInfo_build": "PASS",
+    "Blink_BIN_HEX_match_C12": true,
+    "Mac_lifecycle_evidence_sha256": "3b7519d9750288e29d8ca63522bbe50088c7f8f41e474cbd7c42b89903734e76",
+    "Mac_compile_evidence_sha256": "3d79c269e0783642f70ef714d7ac92b462c45ba325dfaeb141bf28d907d82c9c",
+    "hardware_operations": 0,
+    "M12_exact_run": 45229102236,
+    "first_candidate_native_package_run": 45227270584,
+    "first_candidate_native_package_conclusion": "SUCCESS_5_PASS_2_SKIPPED",
+    "record": "00_Docs/04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md",
+    "final_gate_complete": false
   }
 }

@@ -14,4 +14,6 @@ Mac 두 행의 BLE 두 보드 검증은 배정 범위 밖으로 `NOT_RUN`입니�
 
 ## 후속 검증
 
+최종 버전 후보의 macOS 27 설치 전이와 대표 빌드 결과는 [339번 기록](<../../04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>)에 있습니다.
+
 macOS 26과 Ubuntu 24.04의 결과는 보존합니다. 앞으로 해당 계열의 변경 영향은 macOS 27과 Ubuntu 26.04 WSL2에서 필요한 범위만 확인합니다. 각 행의 소스와 실행 기록은 [검증 근거](TESTING.md), 기계 판독용 상태는 [Host 원장](../../../variants/nu54dk/host-readiness.json)의 `release_support_rows`와 `release_support_summary`에서 확인할 수 있습니다.
