@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import unittest
 
 
@@ -18,6 +19,7 @@ DESIGN_PATH = (
     / "15_M28_BLE_GAP_Link_Privacy_착수_계약.md"
 )
 TODO_PATH = REPOSITORY / "00_Docs" / "TODO_v0.5.0.md"
+PUBLISHED_V050_SOURCE = "0999b6a721b4579faa6a7a4d91d04da5e4960c07"
 CAPABILITY_CONFIG_PATH = (
     REPOSITORY / "tests" / "zephyr" / "m28_ble_capability" / "prj.conf"
 )
@@ -76,7 +78,14 @@ class M28ReadinessTests(unittest.TestCase):
         for assertion in self.readiness["baseline_assertions"]:
             path = REPOSITORY / assertion["path"]
             self.assertTrue(path.is_file(), path)
-            text = path.read_text(encoding="utf-8")
+            if assertion["path"] == "platform.txt":
+                # 과거 제품 버전은 공개 소스에서, BLE 기능 계약은 현재 checkout에서 검사합니다.
+                text = subprocess.check_output(
+                    ["git", "show", f"{PUBLISHED_V050_SOURCE}:platform.txt"],
+                    cwd=REPOSITORY, encoding="utf-8",
+                )
+            else:
+                text = path.read_text(encoding="utf-8")
             for token in assertion["contains"]:
                 self.assertIn(token, text, f"{path}: {token}")
         baseline = self.readiness["baseline"]
