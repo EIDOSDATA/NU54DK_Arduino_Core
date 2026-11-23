@@ -15,6 +15,7 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 from .artifacts import validate_flash_manifest
 from .build import load_context
 from .common import AdapterError, CONTEXT_DIRECTORY, ChildCommandError, canonical_path, path_key
@@ -171,6 +172,45 @@ def discover_pyocd_probe_ids() -> list[str]:
         {str(probe.unique_id) for probe in probes if getattr(probe, "unique_id", None)},
         key=str.casefold,
     )
+
+
+## @brief Boards Manager의 초기 runtime 대신 고정 SDK에서 upload 의존성을 사용합니다.
+def inspect_packaged_flash(
+    tools: dict[str, Any], runner_builds: Sequence[Path], runner: str, environment: dict[str, str]
+) -> list[str]:
+    sdk_python = resolve_toolchain_executable(tools["toolchain_root"], "python")
+    assert sdk_python is not None
+    entry = Path(__file__).resolve().parents[1] / "nu54_builder.py"
+    program = """\
+import contextlib, json, runpy, sys
+from pathlib import Path
+
+with contextlib.redirect_stdout(sys.stderr):
+    builder = runpy.run_path(sys.argv[1])
+    runner = sys.argv[2]
+    try:
+        for build in sys.argv[3:]:
+            builder["validate_runner_configuration"](Path(build), runner)
+        probes = builder["discover_pyocd_probe_ids"]() if runner == "pyocd" else []
+        result = {"probes": probes}
+    except builder["AdapterError"] as error:
+        result = {"error": str(error)}
+print(json.dumps(result))
+"""
+    try:
+        result = subprocess.run(
+            [str(sdk_python), "-I", "-B", "-X", "utf8", "-c", program, str(entry), runner,
+             *(str(build) for build in runner_builds)],
+            env=environment, capture_output=True, check=True, timeout=30,
+        )
+        receipt = json.loads(result.stdout)
+    except (OSError, subprocess.SubprocessError, ValueError) as error:
+        raise AdapterError(
+            "[NU54:E_UPLOAD_SDK_RUNTIME] 고정 Nordic SDK에서 runner·probe 사전 검사를 실행하지 못했습니다."
+        ) from error
+    if "error" in receipt:
+        raise AdapterError(receipt["error"])
+    return receipt["probes"]
 
 
 ## @brief exact SHA-256과 유일한 실제 CMSIS-DAP UID를 결합합니다.
@@ -491,7 +531,8 @@ def flash(args: argparse.Namespace) -> None:
     if getattr(args,"allow_jlink_backend",False) and (args.runner!="pyocd" or not (
             getattr(args,"probe_sha256",None) or getattr(args,"probe_id",None) or os.environ.get("NUCODE_PROBE_UID"))):
         raise AdapterError("[NU54:E_PROBE_BACKEND] J-Link backend는 pyOCD와 명시적인 probe identity가 필요합니다.")
-    tools = tool_environment(canonical_path(args.platform_root))
+    platform_root = canonical_path(args.platform_root)
+    tools = tool_environment(platform_root)
     environment = flash_environment(tools, args.runner)
     environment["NUCODE_ALLOW_JLINK_BACKEND"] = "1" if getattr(args,"allow_jlink_backend",False) else "0"
     session_paths = adapter_paths(args)
@@ -505,18 +546,23 @@ def flash(args: argparse.Namespace) -> None:
                 raise AdapterError(
                     "[NU54:E_FLASH_CONTEXT] session context가 artifact manifest와 다릅니다."
                 )
-            for runner_build in inputs.get("runner_builds", [inputs["zephyr_build"]]):
-                validate_runner_configuration(runner_build, args.runner)
+            runner_builds = inputs.get("runner_builds", [inputs["zephyr_build"]])
+            discovered_probes = None
+            if (platform_root / "release-manifest.json").is_file():
+                discovered_probes = inspect_packaged_flash(tools, runner_builds, args.runner, environment)
+            else:
+                for runner_build in runner_builds:
+                    validate_runner_configuration(runner_build, args.runner)
             digest_request = getattr(args, "probe_sha256", None)
             if digest_request is not None:
                 if args.runner != "pyocd" or not re.fullmatch(r"[0-9a-f]{64}", digest_request):
                     raise AdapterError("[NU54:E_PROBE_SHA256] pyOCD probe의 SHA-256이 필요합니다.")
-                probe_id = select_pyocd_probe_digest(digest_request)
+                probe_id = select_pyocd_probe_digest(digest_request, discovered_probes)
                 if os.environ.get("NUCODE_PROBE_UID") not in (None, "", probe_id):
                     raise AdapterError("[NU54:E_PROBE_SHA256] 환경 UID와 명시한 hash가 다릅니다.")
             elif args.runner == "pyocd":
                 requested = resolve_probe_request(args.probe_id, runner=args.runner)
-                probe_id = select_pyocd_probe(requested)
+                probe_id = select_pyocd_probe(requested, discovered_probes)
             else:
                 probe_id = validate_probe_id(
                     resolve_probe_request(args.probe_id, runner=args.runner), runner="jlink"

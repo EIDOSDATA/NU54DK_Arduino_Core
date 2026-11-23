@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest import mock
@@ -278,6 +280,16 @@ class M8FlashContractTests(unittest.TestCase):
 
         with self.assertRaisesRegex(MODULE.AdapterError, "E_RUNNER_UNAVAILABLE"):
             MODULE.validate_runner_configuration(self.zephyr_build, "openocd")
+
+    def test_packaged_upload_checks_runner_in_isolated_sdk_python(self) -> None:
+        """! @brief 격리 SDK child에서도 기존 YAML 검증과 오류 판정을 유지합니다. """
+        upload = MODULE.implementation.upload
+        tools = {"toolchain_root": self.root}
+        builds = [self.zephyr_build]
+        with mock.patch.object(upload, "resolve_toolchain_executable", return_value=Path(sys.executable)):
+            self.assertEqual(upload.inspect_packaged_flash(tools, builds, "jlink", dict(os.environ)), [])
+            with self.assertRaisesRegex(MODULE.AdapterError, "E_RUNNER_UNAVAILABLE"):
+                upload.inspect_packaged_flash(tools, builds, "openocd", dict(os.environ))
 
     def test_rejects_destructive_runner_metadata(self) -> None:
         """! @brief runners.yaml에 숨은 erase/recover option도 일반 upload에서 거부합니다. """
