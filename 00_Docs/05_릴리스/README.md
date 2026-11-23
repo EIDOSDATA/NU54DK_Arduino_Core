@@ -44,7 +44,7 @@ https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nuc
 
 M32 완료 근거는 [M32 TODO](../TODO_M32.md), 다음 개발 절차는 [HANDOFF](../HANDOFF.md)가
 관리합니다. M34-M37은 v0.8.0, M38-M41은 v0.9.0, M42-M45는 v0.10.0 계획입니다.
-현행 소스의 제품 식별자는 `0.5.0`이고 v0.6.0 개발은 NCS v3.4.0을 유지합니다. 개발 소스의
+현행 소스의 제품 식별자는 `0.6.0`이고 v0.6.0 개발은 NCS v3.4.0을 유지합니다. 개발 소스의
 M32 기능은 현재 stable 패키지에 포함되지 않으며, v0.6.0 공개는 M33의 검증·승인 경계를 따릅니다.
 
 ## 이전 버전 — 지원·공급 종료

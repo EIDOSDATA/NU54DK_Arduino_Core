@@ -15,7 +15,8 @@ import urllib.request
 from typing import Sequence
 
 ROOT = Path(__file__).resolve().parents[2]
-PRIVATE_VERSIONS = ('0.6.0-host.1', '0.6.0-rc.1')
+FINAL_VERSION = '0.6.0'
+PRIVATE_VERSIONS = ('0.6.0-host.1', '0.6.0-rc.1', FINAL_VERSION)
 
 
 def load_package(root: Path = ROOT):
@@ -24,6 +25,16 @@ def load_package(root: Path = ROOT):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def configure_private_package(package, version: str, source: str) -> None:
+    """! @brief 현재 프로세스에서만 exact 소스의 검증용 패키지 버전을 등록합니다. """
+    if version not in PRIVATE_VERSIONS or version in package.PACKAGE_VERSIONS:
+        raise ValueError('비공개 검증에 사용할 수 없는 package version입니다: ' + version)
+    if version == FINAL_VERSION:
+        package.configure_unpublished_stable(version, source)
+    else:
+        package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (version,))
 
 
 def sha(path: Path) -> str:
@@ -96,9 +107,7 @@ def build(root: Path, source: str, output: Path, version: str) -> dict:
     if output.exists() or output.is_relative_to(root):
         raise ValueError('기존 출력이나 source 내부에는 native package를 생성하지 않습니다.')
     package = load_package(root)
-    if version in package.PACKAGE_VERSIONS:
-        raise ValueError('native 시험 version이 이미 공개 allowlist에 있습니다.')
-    package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (version,))
+    configure_private_package(package, version, source)
     output.mkdir(parents=True)
     bootstrap_tools = build_bootstrap_tools(package, root, output)
     first = package.build_package(root, output / 'package', version, source)

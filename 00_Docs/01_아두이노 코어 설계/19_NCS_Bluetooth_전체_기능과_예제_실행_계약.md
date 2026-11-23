@@ -38,7 +38,7 @@ SDK/controller와 standard/full 기본값은 바꾸지 않았다.
 당시 버전 미정 후속이었던 M32·M33은 2026-09-28 `v0.6.0` 계획으로 배정했다. M33-W07~W08은
 다중 Host·RC·공개를 계속 소유하며 Host 순차 진행·OS별 최종 실물 검증 조건은 유지한다. 전체 parity 원장의 owner·미착수·NOT_RUN 행을 삭제하지
 않고 제품선별 적용 범위로 구분한다. 후속 기능을 v0.5.0 구현 누락으로 계산하지 않는다.
-공개 버전과 소스 기본 식별자는 `0.5.0`이다. M31은 8/8, M32는 12/12, M33은 수락 6/8 및 기술 완료 5/8이다. Host 근거는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
+공개 버전은 `0.5.0`이며 현행 소스 식별자는 `0.6.0`이다. M31은 8/8, M32는 12/12, M33은 수락 6/8 및 기술 완료 5/8이다. Host 근거는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
 M32 실행별 source·수치·실패/완료 근거는 [M32 TODO](../TODO_M32.md)와
 [M32 readiness](../../variants/nu54dk/m32-ble-readiness.json)가 소유한다. W08 BLOB·signed MDFU와
 W10 공존은 후속 exact HIL에서 완료했다. W11 clean `94f02544…`의 exact family 12/12·signed MDFU·

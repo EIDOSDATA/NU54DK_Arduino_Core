@@ -169,7 +169,7 @@ def aggregate(producer_dir: Path, results_dir: Path, source: str, mode: str) -> 
     records = [read_json(path) for path in paths]
     grouped = partition(records, source, producer['version'], mode)
     package = P.load_package()
-    package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (producer['version'],))
+    P.configure_private_package(package, producer['version'], source)
     archive = producer_dir / 'package' / producer['archive']['filename']
     require(P.sha(archive) == producer['archive']['sha256'], 'producer archive byte가 다릅니다.')
     manifest = package.validate_archive(archive, expected_version=producer['version'], expected_commit=source)

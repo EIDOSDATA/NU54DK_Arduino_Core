@@ -195,7 +195,7 @@ def setup(args, base: Path) -> tuple:
         write_json(base/'reports/source-preflight.json',preflight)
         raise ValueError('native consumer exact source 진입 거부: '+json.dumps(preflight,ensure_ascii=False))
     package = P.load_package()
-    package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS + (args.version,))
+    P.configure_private_package(package, args.version, source)
     producer = json.loads((args.producer / 'producer.json').read_text(encoding='utf-8'))
     if producer['source_revision'] != source or producer['version'] != args.version or not producer['reproducible_bytes']:
         raise ValueError('consumer와 producer source·version이 다릅니다.')

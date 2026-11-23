@@ -34,7 +34,7 @@ class ProductIdentityTests(unittest.TestCase):
                 ('platform.txt', PACKAGE.rewrite_platform_version(platform, version), 0o644)])
         self.assertEqual(digest('0.0.90', header), digest('0.4.0-rc.1', header))
         self.assertNotEqual(digest('0.0.90', header),
-                            digest('0.0.90', header.replace(b'0.5.0', b'0.5.1-dev')))
+                            digest('0.0.90', header.replace(b'0.6.0', b'0.6.1-dev')))
 
     def test_checkout_drift_is_detected_and_regenerated(self):
         with tempfile.TemporaryDirectory(prefix='NU54 drift ') as folder:
@@ -45,9 +45,9 @@ class ProductIdentityTests(unittest.TestCase):
             (root / 'platform.txt').write_text('name=N\nversion=0.3.0\nrecipe=unchanged\n', encoding='utf-8')
             with self.assertRaises(DRIFT.BUILDER.AdapterError):
                 DRIFT.verify(root)
-            self.assertEqual(DRIFT.verify(root, True)['package_version'], '0.5.0')
+            self.assertEqual(DRIFT.verify(root, True)['package_version'], '0.6.0')
             self.assertEqual((root / 'platform.txt').read_text(),
-                             'name=N\nversion=0.5.0\nrecipe=unchanged\n')
+                             'name=N\nversion=0.6.0\nrecipe=unchanged\n')
 
     def test_live_build_record_carries_both_versions(self):
         with tempfile.TemporaryDirectory(prefix='NU54 record ') as folder:
@@ -63,12 +63,12 @@ class ProductIdentityTests(unittest.TestCase):
                                       '-P', str(ROOT / 'zephyr/cmake/write_build_record.cmake')],
                                      capture_output=True, timeout=15)
             self.assertEqual(process.returncode, 0, process.stderr.decode(errors='replace'))
-            self.assertIn("source_version: '0.5.0'", output.read_text())
+            self.assertIn("source_version: '0.6.0'", output.read_text())
             self.assertIn("package_version: '0.0.90'", output.read_text())
 
     def test_checkout_identity_and_schema_independence(self):
         identity = BUILDER.load_product_identity(ROOT)
-        self.assertEqual(identity, {'source_version': '0.5.0', 'package_version': '0.5.0'})
+        self.assertEqual(identity, {'source_version': '0.6.0', 'package_version': '0.6.0'})
         self.assertEqual(BUILDER.ADAPTER_VERSION, '0.1.0-dev.m10')
         self.assertEqual((BUILDER.CACHE_SCHEMA_VERSION, BUILDER.ARTIFACT_MANIFEST_SCHEMA_VERSION,
                           BUILDER.SESSION_CONTEXT_SCHEMA_VERSION, BUILDER.SOURCE_RECORD_SCHEMA_VERSION),
@@ -83,10 +83,10 @@ class ProductIdentityTests(unittest.TestCase):
             (platform / 'platform.txt').write_bytes(PACKAGE.rewrite_platform_version(
                 (ROOT / 'platform.txt').read_bytes(), '0.0.90'))
             self.assertEqual(BUILDER.load_product_identity(platform),
-                             {'source_version': '0.5.0', 'package_version': '0.0.90'})
+                             {'source_version': '0.6.0', 'package_version': '0.0.90'})
             (platform / 'platform.txt').write_bytes(PACKAGE.rewrite_platform_version(
                 (platform / 'platform.txt').read_bytes(), '0.4.0-rc.1'))
-            self.assertEqual(BUILDER.load_product_identity(platform)['source_version'], '0.5.0')
+            self.assertEqual(BUILDER.load_product_identity(platform)['source_version'], '0.6.0')
             self.assertEqual(BUILDER.load_product_identity(platform)['package_version'], '0.4.0-rc.1')
 
     def test_cmake_matches_builder_and_rejects_invalid_identity(self):

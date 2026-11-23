@@ -68,7 +68,7 @@ v0.6.0은 M33-W07 최종 후보 심사 단계입니다. 작업 전 [현행 인�
   위치·hash와 새 채팅 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)를 따릅니다.
   원격 `Release-0.5.0`은 `4790e3fa…` 공개 마감 기준선으로 보존합니다.
   공개 tag·Release·asset은 불변이며, 과거 이력 정리와 기존 checkout 갱신은 [기여 안내](CONTRIBUTING.md)를 따릅니다.
-  소스의 `coreVersion()` 식별 문자열과 공개 stable은 **0.5.0**, 비공개 C11 검증 후보 패키지는 **0.6.0-rc.1**입니다. M32의 38개 지원 후보는 `not_published`입니다.
+  현재 소스의 `coreVersion()`은 **0.6.0**이고 공개 stable은 **0.5.0**입니다. C11과 C12는 비공개 **0.6.0-rc.1** 패키지입니다. M32의 38개 지원 후보는 `not_published`입니다.
 - W06 사용자 수락 마감으로 M33은 **수락 6/8·기술 5/8**이며 현재는 **HOST-W06 완료·HOST-W07 Windows 11 기준선·Ubuntu24.04/26.04 WSL2 검증 완료·C11 macOS26/27 software 및 배정 실기 완료**입니다. W05 exact `5f9b2257…`에서
   24개 library·204개 예제의 catalog·설치 발견·compile 204/204와 잘못된 profile 9/9를 PASS했습니다.
   문서화 role 372개는 물리 runtime과 분리했고 실제 Apple/Google·외장 ecosystem 실기는 사용자 후속

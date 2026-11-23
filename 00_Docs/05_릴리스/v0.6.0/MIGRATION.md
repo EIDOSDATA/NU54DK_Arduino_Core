@@ -1,6 +1,6 @@
 # v0.6.0 후보 설치와 버전 전환
 
-공개 v0.5.0과 비공개 검증 패키지는 별도 환경에서 유지합니다. Boards Manager의 표시 버전은 `0.6.0-rc.1`이고 개발 소스의 기본 `coreVersion()` 값은 `0.5.0`입니다. 정확한 설치본은 `release-manifest.json`의 `core_revision`으로 확인합니다. [후보별 소스](README.md)
+공개 v0.5.0과 비공개 검증 패키지는 별도 환경에서 유지합니다. Boards Manager의 표시 버전은 `0.6.0-rc.1`이고 C11과 C12의 `coreVersion()`은 `0.5.0`입니다. 최종 검증용 소스의 식별자와 패키지 버전은 `0.6.0`입니다. 정확한 설치본은 `release-manifest.json`의 `core_revision`으로 확인합니다. [후보별 소스](README.md)
 
 ## 검증한 설치 경로
 

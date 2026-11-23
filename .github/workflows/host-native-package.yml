@@ -26,8 +26,8 @@ on:
       version:
         description: Private validation version; does not publish a release or index
         type: choice
-        options: ['0.6.0-host.1', '0.6.0-rc.1']
-        default: '0.6.0-rc.1'
+        options: ['0.6.0-host.1', '0.6.0-rc.1', '0.6.0']
+        default: '0.6.0'
       full_examples:
         description: Explicit full regression after reviewed firmware, SDK or compiler impact
         type: boolean
@@ -44,7 +44,7 @@ env:
   PYTHONUTF8: '1'
   PYTHONIOENCODING: utf-8
   PYTHONDONTWRITEBYTECODE: '1'
-  HOST_PACKAGE_VERSION: ${{ inputs.version || '0.6.0-rc.1' }}
+  HOST_PACKAGE_VERSION: ${{ inputs.version || '0.6.0' }}
 
 jobs:
   producer:

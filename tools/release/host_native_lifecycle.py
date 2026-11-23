@@ -33,9 +33,9 @@ OWNED = __import__(BUILDER.implementation.__name__+'.owned_process',fromlist=['r
 
 
 def require_upgrade(previous,current):
-    """! @brief 명시한 시험 후보에서 RC1으로의 전이만 허용하고 암묵 downgrade는 거부합니다. """
-    if (previous,current) != ('0.6.0-host.1','0.6.0-rc.1'):
-        raise ValueError('E_HOST_DOWNGRADE_POLICY: 이 절차는 host.1에서 rc.1로의 갱신만 허용합니다.')
+    """! @brief RC1과 정식판 버전의 비공개 갱신 경로를 허용합니다. """
+    if (previous, current) not in (('0.6.0-host.1', '0.6.0-rc.1'), ('0.6.0-rc.1', P.FINAL_VERSION)):
+        raise ValueError('E_HOST_DOWNGRADE_POLICY: 허용 경로는 host.1에서 rc.1, rc.1에서 0.6.0입니다.')
 
 
 def verified_producer(directory,source,version):
@@ -48,7 +48,7 @@ def verified_producer(directory,source,version):
     if archive.stat().st_size != record['archive']['size'] or P.sha(archive) != record['archive']['sha256'] or P.sha(index) != record['index']['sha256']:
         raise ValueError('producer 원형 hash가 다릅니다.')
     package = P.load_package(ROOT)
-    package.configure_release_candidates(package.RELEASE_CANDIDATE_VERSIONS+(version,))
+    P.configure_private_package(package, version, source)
     package.validate_archive(archive,expected_version=version,expected_commit=source)
     package.validate_index(index,artifact_dir=directory/'package')
     return record,archive,json.loads(index.read_text(encoding='utf-8'))
@@ -61,6 +61,8 @@ def main(arguments=None):
     parser.add_argument('--source',required=True)
     parser.add_argument('--previous-producer',type=Path,required=True)
     parser.add_argument('--previous-source',required=True)
+    parser.add_argument('--previous-version', choices=P.PRIVATE_VERSIONS, default='0.6.0-host.1')
+    parser.add_argument('--current-version', choices=P.PRIVATE_VERSIONS, default='0.6.0-rc.1')
     parser.add_argument('--work-root',type=Path,required=True)
     parser.add_argument('--sdk-root',type=Path,required=True)
     parser.add_argument('--prerequisite-root',type=Path,required=True)
@@ -71,9 +73,10 @@ def main(arguments=None):
         raise ValueError('모든 root와 입력은 절대 경로여야 합니다.')
     if args.work_root.exists() or args.work_root.resolve().is_relative_to(ROOT):
         raise ValueError('source 밖의 새 attempt directory가 필요합니다.')
-    require_upgrade('0.6.0-host.1','0.6.0-rc.1')
-    old,old_archive,old_index = verified_producer(args.previous_producer,args.previous_source,'0.6.0-host.1')
-    current,archive,index = verified_producer(args.current_producer,args.source,'0.6.0-rc.1')
+    previous_version, current_version = args.previous_version, args.current_version
+    require_upgrade(previous_version, current_version)
+    old,old_archive,old_index = verified_producer(args.previous_producer,args.previous_source,previous_version)
+    current,archive,index = verified_producer(args.current_producer,args.source,current_version)
     descriptor = BUILDER.require_supported_host(BUILDER.describe_host())
     key = descriptor['os']+'-'+descriptor['architecture']
     pins = json.loads((ROOT/'tools/nu54-prerequisites/platform-pins.json').read_text(encoding='utf-8'))
@@ -128,13 +131,17 @@ def main(arguments=None):
     url = address+'/'+index_name
     thread = threading.Thread(target=server.serve_forever,daemon=True)
     thread.start()
+    post_install_status = 'NOT_RUN_PREVERIFIED_SHARED_SDK_POLICY'
+    if args.run_post_install:
+        post_install_status = ('FINAL_VERSION_UPGRADE_AND_REINSTALL' if current_version == P.FINAL_VERSION
+                               else 'CURRENT_RC_UPGRADE_AND_REINSTALL')
     receipt = dict(kind=('NATIVE_PRIVATE_LIFECYCLE' if descriptor['native'] else 'WSL2_PRIVATE_LIFECYCLE'),
         status='FAIL',source_revision=args.source,
         previous_source_revision=args.previous_source,host=descriptor,
+        previous_version=previous_version,current_version=current_version,
         prior_source_build_credit_transferred=False,hardware_operations=0,
         physical_USB_gate='NOT_RUN',public_stable_migration='NOT_RUN_SEPARATE_WINDOWS_ROW',
-        post_install_execution=('CURRENT_RC_UPGRADE_AND_REINSTALL' if args.run_post_install else
-            'NOT_RUN_PREVERIFIED_SHARED_SDK_POLICY'),previous_candidate_post_install='SKIPPED',steps=[])
+        post_install_execution=post_install_status,previous_candidate_post_install='SKIPPED',steps=[])
 
     def run(name,command,timeout=180):
         """! @brief 실제 exit·부분 출력·자식 정리를 단계별 새 파일로 남깁니다. """
@@ -157,7 +164,7 @@ def main(arguments=None):
         if version:
             command += ['nucode:zephyr@'+version] if operation=='install' else ['nucode:zephyr']
         if operation=='install':
-            command += ['--run-post-install' if args.run_post_install and version=='0.6.0-rc.1' else '--skip-post-install']
+            command += ['--run-post-install' if args.run_post_install and version==current_version else '--skip-post-install']
         return run(name,[*command,'--config-file',config,'--additional-urls',url],900 if operation=='install' else 180)
 
     def snapshot(name,version,source,source_archive):
@@ -172,10 +179,10 @@ def main(arguments=None):
         if identity['VersionString'] != '1.5.1' or identity['Application'] != 'arduino-cli':
             raise ValueError('CLI actual version이 다릅니다.')
         core('index','update-index')
-        core('install-previous','install','0.6.0-host.1')
-        old_platform,_ = snapshot('previous','0.6.0-host.1',args.previous_source,old_archive)
-        core('upgrade','install','0.6.0-rc.1')
-        platform,first = snapshot('upgraded','0.6.0-rc.1',args.source,archive)
+        core('install-previous','install',previous_version)
+        old_platform,_ = snapshot('previous',previous_version,args.previous_source,old_archive)
+        core('upgrade','install',current_version)
+        platform,first = snapshot('upgraded',current_version,args.source,archive)
         actual_ready = json.loads(ready.read_text(encoding='utf-8'))
         actual_ready.pop('SDK_archive_extracted',None)
         if actual_ready != ready_identity:
@@ -183,21 +190,21 @@ def main(arguments=None):
         ready_sha = P.sha(ready)
         if old_platform.exists():
             raise ValueError('갱신 후 이전 package directory가 남았습니다.')
-        core('same-version-install','install','0.6.0-rc.1')
-        _,same = snapshot('same-version','0.6.0-rc.1',args.source,archive)
+        core('same-version-install','install',current_version)
+        _,same = snapshot('same-version',current_version,args.source,archive)
         if first != same:
             raise ValueError('동일 version install 뒤 설치 byte가 다릅니다.')
         try:
-            require_upgrade('0.6.0-rc.1','0.6.0-host.1')
+            require_upgrade(current_version, previous_version)
         except ValueError:
             receipt['downgrade_policy'] = 'EXPECTED_REJECTION_BEFORE_CLI_OR_SDK_MUTATION'
         else:
             raise ValueError('downgrade를 거부하지 않았습니다.')
-        core('uninstall','uninstall','0.6.0-rc.1')
+        core('uninstall','uninstall',current_version)
         if platform.exists() or not marker.is_file() or P.sha(marker) != marker_sha or P.sha(ready) != ready_sha:
             raise ValueError('제거 후 package 잔여 또는 사용자 데이터·공유 SDK marker 변경입니다.')
-        core('reinstall','install','0.6.0-rc.1')
-        platform,installed = snapshot('reinstalled','0.6.0-rc.1',args.source,archive)
+        core('reinstall','install',current_version)
+        platform,installed = snapshot('reinstalled',current_version,args.source,archive)
         bootstrap = json.loads((platform/'tools/nu54-prerequisites/bootstrap-pins.json').read_text(encoding='utf-8'))
         runtime = data/'packages/nucode/tools/nu54-python'/bootstrap['runtime']['tool_version']/bootstrap['platforms'][key]['executable']
         runtime_identity = json.loads(run('managed-python',[runtime,'-I','-B','-c',
