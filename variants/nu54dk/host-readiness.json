@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "scope": "v0.6.0_native_host_portability",
-  "updated_date": "2026-11-16",
-  "status": "HOST_W08_DOCUMENTATION_PREPARED_MAC_PHYSICAL_NOT_RUN",
+  "updated_date": "2026-11-23",
+  "status": "HOST_W08_DOCUMENTATION_PREPARED_MAC26_PREFLIGHT_BLOCKED",
   "current_work_package": "HOST-W08",
   "implementation_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
   "completed_work_packages": 6,
@@ -52,7 +52,8 @@
       "id": "HOST-W07",
       "status": "physical_validation_pending_mac_hardware",
       "title": "physical_upload_debug_serial",
-      "physical_OS_gate": "HOST_W07_WINDOWS11_BASELINE_UBUNTU24_26_WSL2_COMPLETE_MACOS2_PENDING"
+      "physical_OS_gate": "HOST_W07_WINDOWS11_BASELINE_UBUNTU24_26_WSL2_COMPLETE_MACOS2_PENDING",
+      "macOS_26_latest_preflight": "FAIL_GATEKEEPER_BOOTSTRAP_PYTHON"
     },
     {
       "id": "HOST-W08",
@@ -1647,6 +1648,33 @@
       "approved tag/Release/assets/index",
       "public URL installation and M33-W08 handoff"
     ]
+  },
+  "macOS_26_local_preflight": {
+    "date": "2026-11-23",
+    "status": "PLAN_FAIL_GATEKEEPER_BOOTSTRAP_PYTHON",
+    "record": "00_Docs/04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md",
+    "source_revision": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
+    "checkout_head_at_takeover": "dfdfb1834ecabcf703eef71eaf3d24db2e490a3d",
+    "windows_writer_release_sha256": "6a0f7e737cc00cee8174cfc0478686bac593ebddaae720934a3cd2fbd63b4b2d",
+    "windows_document_CI_run": 43817305059,
+    "kit_sha256": "c1792818979453ce3150d7b19abf960f3d14a31f970c4578f5f41afcf5cf8208",
+    "attempt": "mac26-c11-a001.r3nEa6",
+    "OS_version": "26.7.3",
+    "OS_build": "25G342",
+    "architecture": "arm64",
+    "native": true,
+    "SDK_root_writable": true,
+    "plan_exit_signal": 9,
+    "gatekeeper_raw_log_sha256": "482cc2018aed4897ae6c635c0136724f86c4975163fda801a037981554c4f96b",
+    "bootstrap_python_codesign": "VALID_AD_HOC",
+    "gatekeeper_assessment_exit": 3,
+    "OS_USB_descriptor_devices": 2,
+    "kit_inventory": "NOT_RUN",
+    "hardware_operations": 0,
+    "physical_gate": "NOT_RUN",
+    "BLE_pair": "NOT_RUN",
+    "IDE_version_installed": "2.3.11",
+    "IDE_GUI_gate": "NOT_RUN"
   },
   "Mac_resume_handoff": {
     "status": "WAITING_FOR_MAC_PHYSICAL_NOT_RUN",

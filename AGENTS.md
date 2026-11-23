@@ -1,5 +1,7 @@
 # 저장소 작업 안내
 
+2026-11-23 macOS26.7.3 실기 준비에서 C11 관리형 Python 실행을 Gatekeeper가 차단했다. Mac 실기 두 행은 `NOT_RUN`이다. SDK 경로 준비와 실패 근거는 [334번](<00_Docs/04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>)에 남겼다.
+
 현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증3/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존하며 Mac 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
 
 **Mac에서 재개:** [Mac 인계](00_Docs/MAC_HANDOFF.md)와 [복사용 작업지시문](00_Docs/MAC_START_PROMPT.txt)을 먼저 확인한다. Windows의 D드라이브 경로는 보존 위치이며 Mac의 필수 경로가 아니다.

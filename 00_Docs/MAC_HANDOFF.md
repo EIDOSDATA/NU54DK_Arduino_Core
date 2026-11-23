@@ -1,5 +1,7 @@
 # Mac에서 HOST-W07 실기 재개하기
 
+2026-11-23 macOS26.7.3 실기 준비에서 C11 관리형 Python 실행을 Gatekeeper가 차단했다. Mac 실기 두 행은 `NOT_RUN`이다. SDK 경로 준비와 실패 근거는 [334번](<04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>)에 남겼다.
+
 기준일: 2026-11-16. 다음 작업은 **사용자가 준비한 Mac에서 수행**한다.
 현재는 M33-W07 안에서 HOST-W08 문서 준비를 마쳤고 실제 Mac26·27 검증은 `NOT_RUN`이다.
 이 문서는 Windows의 `D:/w06/control/continuation.json`을 Mac에 요구하지 않는 재개 진입점이다.

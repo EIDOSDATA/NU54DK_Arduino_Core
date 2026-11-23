@@ -11,7 +11,7 @@ Git commit·push만으로 v0.6.0 패키지가 배포되지는 않는다.
 | SDK | NCS 3.4.0 고정; 3.4.1 전환은 v0.7.0 |
 | 개발 단계 | M33-W07, HOST-W08 문서 준비 완료·최종 gate 미완료 |
 | 완료 분모 | M33 수락6/8·기술5/8, Host6/8, 지원 목표 검증3/5 |
-| Mac 실기 | macOS26·27 모두 `NOT_RUN`; software CI PASS와 분리 |
+| Mac 실기 | macOS26.7.3 준비 중 Gatekeeper에서 차단. macOS26·27 실기 `NOT_RUN`, software CI PASS. [334번](<../../04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>) |
 
 ## 읽는 순서
 

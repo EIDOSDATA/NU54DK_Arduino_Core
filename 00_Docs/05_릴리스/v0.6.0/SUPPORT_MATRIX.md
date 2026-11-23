@@ -8,7 +8,7 @@ v0.6.0 목표 다섯 행 중 완료 근거가 있는 행은3개이며 Mac2개는
 | Windows11 x64 | 사용자 Windows11; 제한 영향 검사는 Windows Server2025 CI | C5 설치·USB upload/runtime·serial·debug·재연결·IDE, C10/C11 공통 도구 영향 | 배정 검증 완료. CI를 새 Windows11 실기로 표시하지 않음 |
 | Ubuntu24.04 LTS AMD64 | C5 native CI + C10 WSL2 사용자 환경 | C5 전체 빌드, C10 설치·대표4cold/4warm·USB/serial/debug·BLE·재연결·IDE | WSL2 기준선·변경 영향 완료. native 사용자 실기 `NOT_RUN` |
 | Ubuntu26.04 LTS AMD64 | C10 WSL2 | 24.04 기준선에 연결한 설치·대표4cold/4warm·lifecycle·USB/serial/debug·IDE | WSL2 버전 호환성 완료. native 사용자 실기 `NOT_RUN`; 전체204·BLE·재연결 반복 없음 |
-| macOS26 Apple Silicon | C11 native CI, 실제26.7.2 ARM64 | C5 전체 빌드 보존, C11 새 SDK 설치·lifecycle·대표4cold/4warm·관련 Host unit | software PASS. USB·serial·debug·물리 재연결·IDE `NOT_RUN` |
+| macOS26 Apple Silicon | C11 CI 26.7.2 및 실기 준비 Mac 26.7.3 (25G342) ARM64 | C5 전체 빌드 보존, C11 CI 새 SDK 설치·lifecycle·대표4cold/4warm·관련 Host unit | software PASS. 실기 준비 `plan` Gatekeeper 차단. USB·serial·debug·물리 재연결·IDE `NOT_RUN`. [334번](<../../04_검증 기록/334_HOST_W07_C11_macOS_26_실기_시작과_Gatekeeper_차단.md>) |
 | macOS27 Apple Silicon | C11 native CI, 실제27.0.1 ARM64 | C11 새 SDK 설치·lifecycle·대표4cold/4warm·관련 Host unit | software PASS. USB·serial·debug·물리 재연결·IDE `NOT_RUN` |
 
 지원표 정본은 [host-readiness.json](../../../variants/nu54dk/host-readiness.json)의
