@@ -6,7 +6,8 @@
 | --- | --- | --- |
 | C10 macOS process 정리 FAIL | C11 fresh software 검증으로 교정 확인 | [331번](<../../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>). 원형 실패 순간의 zombie-only 상태까지 입증한 것은 아님 |
 | macOS26 USB 재연결 첫 UART timeout | 기본 옵션 FAIL 보존, 명시적 줄 동기화 옵션으로 실제 재연결 재검증 PASS | 원인 byte는 확정하지 않았다. [336번](<../../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>) |
-| macOS27 USB·serial·debug·재연결·IDE | 실기 `NOT_RUN` | [지원표](SUPPORT_MATRIX.md)의 후속 실기 |
+| macOS27 첫 물리 재연결 관찰 | 분리 미감지로 관찰 타임아웃. 사용자 준비 후 새 관찰에서 분리·복원, 첫 UART 6/6 확인 | [337번](<../../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>) |
+| C11 RC1 macOS27 Arduino IDE Upload | `E_RUNNER_UNAVAILABLE`, `No module named 'yaml'`. 보드 선택 전에 중단 | C11 kit의 명시 probe 업로드와 IDE Verify는 통과했다. 최종 후보에서 업로드 의존성과 IDE Upload를 검증한다. [337번](<../../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>) |
 | Ubuntu native 사용자 실기 | `NOT_RUN` | 완료한 환경은 WSL2; native CI와 사용자 실기는 별도 |
 | W06 #29·40·44 | 사용자 명시 수락, 기술 PASS 아님 | 실제46PASS와 구분. #29 분석 유예. [310번 집계 원형](<../../04_검증 기록/310_M33_W06_사용자_수락_마감_완료.md>)·[311번 별도 명시 수락·정정](<../../04_검증 기록/311_M33_W06_명시_수락_정정과_HOST_W04_착수.md>) |
 | Apple/Google·외부 제품·외장 장치 interop | 사용자 후속 `NOT_RUN` | scripted peer와 실제 제품 인증/interop 구분; 이 후속 실기만으로 개발·릴리스 차단하지 않음 |

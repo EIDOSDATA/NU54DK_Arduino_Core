@@ -1,6 +1,6 @@
 # v0.6.0 검증 근거와 재실행 범위
 
-2026-11-23 실제 macOS26.7.3에서 원본 C11 kit의 SDK·수명주기·대표 4cold/4warm과 장치 inventory를 통과했다. Blink·ELF debug·기본 SerialEcho가 PASS했고 재연결 직후 첫 UART 실패를 보존했다. 명시적 줄 동기화 재연결·IDE Verify PASS. macOS27 실기 `NOT_RUN`. [335번](<../../04_검증 기록/335_HOST_W07_C11_macOS_26_SDK_설치와_대표_빌드.md>) · [336번](<../../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
+2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<../../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>) macOS26.7.3의 기본 재연결 첫 UART FAIL과 후속 LF 동기화 PASS는 [336번](<../../04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)에 보존했다.
 
 | 증거 단위 | exact source | 범위·색인 |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ C11 Mac26·27 각각 설치960파일·204예제 발견, 대표4cold/4warm, 관�
 | 계약 case | 지금 연결할 수 있는 근거 | 최종 잔여 |
 | --- | --- | --- |
 | `M33-PACKAGE-01` | C5 package 재현·설치 발견·전체 기준선, C11 kit/producer 원본과222파일 hash 감사 | 정식 배포 source·version·plan·archive hash와 재현 결과 고정 |
-| `M33-INSTALL-01` | Windows11 C5, WSL2 C10, Mac software C11을 [지원표](SUPPORT_MATRIX.md) 범위로 연결 | Mac 실제 장치·IDE와 최종 package의 설치 전이 영향 확인 |
+| `M33-INSTALL-01` | Windows11 C5, WSL2 C10, Mac software·실기 C11의 배정 PASS를 [지원표](SUPPORT_MATRIX.md)에 연결 | 최종 package의 설치 전이와 변경 영향 확인 |
 | `M33-RELEASE-01` | [공개 전 체크리스트](RELEASE_CHECKLIST.md) 준비 | exact plan 승인·게시·공개 URL 설치 모두 미실행 |
 
 [m33-release-readiness.json](../../../variants/nu54dk/m33-release-readiness.json)은 생성된 strict 기능/원형 case 원장이다.

@@ -1,8 +1,8 @@
 # Mac에서 HOST-W07 실기 재개하기
 
-2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
+2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
 
-기준일: 2026-11-16. 다음 작업은 **사용자가 준비한 Mac에서 수행**한다.
+아래 명령은 2026-11-16 Windows→Mac 전달 절차와 배정 실기의 재현 근거다. 후속 검증이 필요한 경우 현행 인계의 범위를 먼저 확인한다.
 이번 전달 자료는 M33-W07에서 HOST-W08 문서 준비를 마치고 Mac 실기를 시작하기 전의 인계 기준선을 보존한다.
 이 문서는 Windows의 `D:/w06/control/continuation.json`을 Mac에 요구하지 않는 재개 진입점이다.
 
@@ -49,7 +49,7 @@ Windows/WSL 원인이 필요하면329·330번의 해당 부분만 확인한다. 
 | 항목 | 값 |
 | --- | --- |
 | 현재 단계 | M33-W07, HOST-W08 문서 준비 완료·최종 gate 미완료 |
-| 완료 수 | M33 수락6/8·기술5/8, Host6/8, 지원 목표 검증4/5 |
+| 완료 수 | M33 수락6/8·기술5/8, Host7/8, 지원 목표 검증5/5 |
 | Windows·Linux | C5 Windows11 기준선, C10 Ubuntu24.04/26.04 WSL2 완료 보존 |
 | 제품 C11 | `d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa` |
 | 문서 인계의 부모 | `09da4d740fb751904e939ca0f1ef944cdf1b720b`; 새 인계 문서 commit은 Git과 전달 receipt로 확인 |
@@ -217,5 +217,5 @@ CLI PASS를 IDE GUI PASS로 바꾸지 않는다.
 
 Mac26/27은 **각각 실제 완료한 범위만** 지원표에 반영한다. 하나만 확보했으면 나머지 행은 NOT_RUN이다.
 문서·원장을 갱신하고 변경 범위에 맞는 검사·commit/push·exact CI를 확인한다. 코드 변경이 있으면 새 source로 분리한다.
-이후 최종 배포 후보 정합화 → HOST-W07/W08·M33-W07 마감 → 별도 공개 승인 → 게시·공개 설치 검증으로 진행한다.
+이후 최종 배포 후보 정합화 → HOST-W08·M33-W07 마감 → 별도 공개 승인 → 게시·공개 설치 검증으로 진행한다.
 공개 tag·Release·asset·stable index와 main 통합은 현재 승인 범위가 아니다.

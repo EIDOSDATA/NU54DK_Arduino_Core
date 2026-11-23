@@ -1,6 +1,6 @@
 # NU54DK Arduino Core
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. [macOS26 실기](<00_Docs/04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)를 완료했으며 macOS27 실기는 `NOT_RUN`이다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<00_Docs/04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다. [337번](<00_Docs/04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
 
 NU54DK의 **nRF54L15를 Arduino IDE에서 개발하는 오픈소스 Core**입니다.
 `setup()`/`loop()`와 Arduino API로 시작하고, BLE·LE Audio·Channel Sounding과
@@ -17,7 +17,7 @@ firmware로 빌드하고 온보드 CMSIS-DAP으로 업로드합니다.
 | --- | --- | --- | --- |
 | NU54DK · nRF54L15 CPUAPP | Windows 10/11 x64 · Arduino IDE 2.x / CLI | NCS v3.4.0 · Zephyr 4.4.0 | CMSIS-DAP V2 + pyOCD |
 
-개발 작업을 Mac에서 이어가려면 [Mac 재개 문서](00_Docs/MAC_HANDOFF.md)와 [작업지시문](00_Docs/MAC_START_PROMPT.txt)을 사용합니다. macOS26 실기를 완료했고 macOS27 실기가 남았습니다.
+개발 작업을 Mac에서 이어가려면 [Mac 재개 문서](00_Docs/MAC_HANDOFF.md)와 [작업지시문](00_Docs/MAC_START_PROMPT.txt)을 사용합니다. macOS26·27 배정 실기를 완료했습니다.
 
 ## 버전 선택
 
@@ -173,7 +173,7 @@ M32 브랜치는 사용자 요청으로 로컬·원격에서 삭제했고 원본
 현재 작업 위치·백업 위치·전체 순서와 새 채팅용 지시는 [M33 인계](00_Docs/M33_HANDOFF.md)에 있습니다.
 
 v0.6.0은 미공개이며 NCS v3.4.0을 유지합니다. [v0.7.0](00_Docs/TODO_v0.7.0.md)은 NCS 3.4.1 전체
-전환 전용입니다. Host는 6/8이며 HOST-W07의 Windows 11 비공개 RC1 검증까지 완료했습니다. 이후 제품선·지원 경계는
+전환 전용입니다. Host는 7/8이며 HOST-W07의 다섯 OS 배정 검증을 완료했습니다. 이후 제품선·지원 경계는
 [v0.6.0 계획](00_Docs/TODO_v0.6.0.md)을 따릅니다.
 
 `NU54DK.coreVersion()`의 `0.5.0`은 소스 식별 문자열입니다. 실제 설치 버전은

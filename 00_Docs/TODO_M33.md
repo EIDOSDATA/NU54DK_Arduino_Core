@@ -1,15 +1,15 @@
 # M33 실행 TODO — NCS Bluetooth 예제 완성과 v0.6.0 릴리스
 
-2026-11-23 실제 macOS26.7.3의 C11 준비·Blink·ELF debug·SerialEcho와 명시적 줄 동기화 재연결·Arduino IDE Verify를 완료했다. 최초 재연결 UART 실패를 보존했다. macOS27 실기는 `NOT_RUN`이다. [336번](<04_검증 기록/336_HOST_W07_C11_macOS_26_실기_검증과_재연결.md>)
+2026-11-24 실제 macOS 27.2.1 ARM64에서 C11 배정 실기를 완료했다. Blink·ELF debug·SerialEcho, 물리 USB 재연결 뒤 명시적 줄 동기화 UART와 Arduino IDE 2.3.11 Blink Verify가 PASS다. [337번](<04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
 
-현행 위치는 **M33-W07 / HOST-W08 문서 준비 완료·최종 gate 미완료**다. Host6/8·지원 목표 검증4/5를 유지한다. Windows11 기준선과 Ubuntu24.04·26.04/WSL2 완료, C11 macOS26·27 software PASS를 보존한다. 문서 선행 정리와 릴리스 잔여 순서는 [332번](<04_검증 기록/332_HOST_W08_문서_지원표_선행_정리.md>)을 따른다. 전체204를 반복하지 않는다.
+현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다.
 
 | 항목 | 내용 |
 | --- | --- |
 | 대상 제품선 | **v0.6.0** — M32의 기능 확장과 예제·배포 완성 |
 | 현재 구현 상태 | **W01~W05 기술 완료 5/8; W06 사용자 수락 마감으로 6/8** |
 | 선행 결과 | M28~M32 적용 기능·profile·예제·제한·시험 원장 |
-| 순차 Host 계획 | M33-W06 수락 마감. Host 6/8, M33-W07의 HOST-W07 C5 Windows 11 기준선·C10 영향 검사와 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료 |
+| 순차 Host 계획 | M33-W06 수락 마감. Host 7/8. HOST-W07에서 Windows11·Ubuntu24.04/26.04 WSL2·macOS26/27 배정 검증 완료 |
 | 기준 | NCS `v3.4.0`, [고정 CI lock](../tools/ci/ncs-3.4.0.lock.json) |
 | 현재 공개·개발 | stable 지원 `v0.5.0`; M33은 미공개 `v0.6.0` 계획 |
 | 최종 갱신일 | 2026-11-16 |
@@ -76,7 +76,7 @@ M33도 NCS v3.4.0 기준을 유지한다. [제품 v0.7.0](TODO_v0.7.0.md)은 NCS
 | M33-W04 | DTM/HCI와 특수 진단 application template | **완료** — exact `e3a663d6…`, [300번](<04_검증 기록/300_M33_W04_DTM_HCI_진단_template_완료.md>) |
 | M33-W05 | 역할별 예제·설치/compile·사용자 문서 수명주기 | **완료** — exact `5f9b2257…`, [301번](<04_검증 기록/301_M33_W05_전체_예제와_설치_경로_완료.md>) |
 | M33-W06 | 교차 기능 자원·회귀·peer별 검증/지원 분류 | **사용자 수락 마감 완료** — 실제 PASS 46 + 승인 3, 원형 strict 미충족 |
-| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | C5 RC1 준비 완료, HOST-W07 C5 Windows 11 기준선·C10 영향 검사와 Ubuntu24.04/WSL2 마감·26.04/WSL2 호환성 완료, HOST-W08 문서 준비 완료·최종 gate 미완료 |
+| M33-W07 | 후속 Host 확대·HOST-W08·재현 package·release candidate | HOST-W07 배정 검증 5/5 및 HOST-W08 문서 준비 완료. 최종 배포 후보와 HOST-W08 최종 gate 미완료 |
 | M33-W08 | v0.6.0 exact 결과 공개 승인·publish·공개 설치·인계 | 미착수 |
 
 W02~W05는 완료했고 W06은 수락 마감했다. 현재는 W07 안에서 HOST-W08 문서 준비를 마쳤고 Mac26 실기를 완료했다. #29 분석은 유예한다. 이번에 허용한 병렬
@@ -89,8 +89,8 @@ HOST-W08은 M33의 8개 작업에 합산하지 않는다.
 2. HOST-W04~W06과 HOST-W07 도구·검증 절차를 준비한다.
 3. M33-W07에서 exact source·hash를 고정한 시험용 RC1 package를 만든다.
 4. 해당 RC로 HOST-W07의 배정 검증을 진행한다. 2026-11-16 사용자 지시로 Mac 실기를 NOT_RUN으로 두고
-   HOST-W08 문서·지원표 준비를 먼저 완료했다. 남은 Mac 실기와 최종 후보의 변경 영향 증거를 모아
-   HOST-W07/W08 최종 gate와 M33-W07을 마감한다.
+   HOST-W08 문서·지원표를 먼저 준비했고 Mac26·27 배정 실기를 완료했다. 최종 후보의 변경 영향과 재현 근거를 확보해
+   HOST-W08 최종 gate와 M33-W07을 마감한다.
 5. M33-W08에서 별도 공개 승인·게시·공개 설치 검증을 수행한다.
 
 W01~W06의 Host regression·설치 예제 검사는 기존 Windows 개발환경과 공통 단위 검사를 뜻한다.

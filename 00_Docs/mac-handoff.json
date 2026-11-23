@@ -5,7 +5,7 @@
   "repository": "https://github.com/EIDOSDATA/NU54DK_Arduino_Core.git",
   "branch": "Dev-0.6.0-M33",
   "document_parent": "09da4d740fb751904e939ca0f1ef944cdf1b720b",
-  "document_commit_resolution": "Current Git checkout and windows-writer-release.json in the transfer bundle; not the product source",
+  "document_commit_resolution": "Compare current Git and the latest writer receipt; the transfer receipt and status below describe the historical Windows handoff.",
   "product_source": "d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa",
   "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
   "ncs_version": "3.4.0",
@@ -13,6 +13,16 @@
   "macos_sdk_root": "/opt/nordic/ncs",
   "entry_document": "00_Docs/MAC_HANDOFF.md",
   "start_prompt": "00_Docs/MAC_START_PROMPT.txt",
+  "latest_validation": {
+    "date": "2026-11-24",
+    "record": "00_Docs/04_\uac80\uc99d \uae30\ub85d/337_HOST_W07_C11_macOS_27_\uc2e4\uae30_\uac80\uc99d\uacfc_\ub9c8\uac10.md",
+    "HOST_W07": "COMPLETE",
+    "Host_work_packages": "7/8",
+    "support_validation_rows": "5/5",
+    "macOS_26_physical": "PASS_PRESERVED",
+    "macOS_27_physical": "PASS_ASSIGNED_MACOS27",
+    "next": "FINAL_CANDIDATE_IDENTITY_PACKAGE_AND_SCOPED_IMPACT"
+  },
   "status": {
     "M33_stage": "W07",
     "M33_accepted": "6/8",

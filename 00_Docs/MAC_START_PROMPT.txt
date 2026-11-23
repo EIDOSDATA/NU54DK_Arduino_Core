@@ -1,3 +1,5 @@
+이하는 2026-11-16 Windows→Mac 전달 당시의 재현 지시문이다. 현재 macOS26·27 배정 검증은 완료됐다. 새 작업은 MAC_HANDOFF.md와 HANDOFF.md에서 현재 범위와 writer를 먼저 확인한다.
+
 NU54DK Arduino Core의 Mac 실기 검증을 이 Mac에서 이어서 진행하라.
 
 먼저 실제 저장소와 Dev-0.6.0-M33 브랜치, HEAD, 미커밋 변경, board submodule을 확인하라.
