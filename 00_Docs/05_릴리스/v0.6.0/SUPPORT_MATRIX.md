@@ -15,6 +15,7 @@ v0.6.0 목표 다섯 행에서 각각 배정된 검증을 완료했다.
 `release_support_rows`와 `release_support_summary`다. C5·C10·C11은 서로 다른 source다.
 위 연결은 기준선과 변경 영향의 검토이며 C11 동일-source 전체 시험 PASS가 아니다.
 실제 source·run·attempt·artifact는 [Testing](TESTING.md)의 색인을 따른다.
+macOS27 C12의 일반 IDE Upload 교정은 새 source의 별도 영향 검증으로 기록했다. [338번](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
 
 ## 후속 검증과 지원 확정
 

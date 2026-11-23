@@ -9,6 +9,7 @@
 | C10 WSL2 | `4890f697ab80dfed3cff62bd42acc42b0f3e1a34` | Ubuntu24 기준선·변경 영향,26 버전 호환성, [330번](<../../04_검증 기록/330_HOST_W07_C6_WSL2_지원과_Ubuntu24.04_검증.md>) |
 | C11 Mac software | `d304f369c0d3ebbac35c3bf0ef3b7b2887f40dfa` | [CI43760678488 attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/43760678488),5/5SUCCESS, [331번](<../../04_검증 기록/331_HOST_W07_C11_macOS_26_27_호환성.md>) |
 | C11 문서 후속 | `4d7dff44666b0ab1c01311bf6350dd675d6f8e9e` | [CI43763189943 attempt1](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/actions/runs/43763189943),8PASS+범위SKIP1; 제품 검증 source와 분리 |
+| C12 IDE Upload 교정 | `97c7cd01ff59fb5ae3689e9de62b9c820b83fd5e` | macOS27 실제 IDE Upload·Blink 동작, C11 standard Blink BIN/HEX 동일. [338번](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>) |
 
 C11 Mac26·27 각각 설치960파일·204예제 발견, 대표4cold/4warm, 관련 unit67PASS·조건부SKIP3이다.
 204예제 발견을204개 compile로 세지 않는다. 같은 C11의 두 Mac 대표 BIN·HEX 실제 byte는 일치했다.

@@ -1862,5 +1862,39 @@
     },
     "record": "00_Docs/04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md",
     "closure_receipt_sha256": "a4113a5d2cb711fec46f65db82d9dbea9cf93327ae53c7c1dec43800c5629dd1"
+  },
+  "macOS_27_IDE_upload_correction": {
+    "source_revision": "97c7cd01ff59fb5ae3689e9de62b9c820b83fd5e",
+    "board_revision": "fe65f2f0880bd05b32e562d9bf1ee59142b4f4d3",
+    "record": "00_Docs/04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md",
+    "report_date": "2026-11-24",
+    "OS": "macOS 27.2.1 (26B131)",
+    "architecture": "arm64",
+    "native": true,
+    "previous_C11_failure": "PRESERVED_MISSING_PYYAML_BEFORE_PROBE_SELECTION",
+    "scope": "EXACT_C12_PRIVATE_RC1_MAC27_STANDARD_BLINK_IDE_UPLOAD_AND_RUNTIME",
+    "version": "0.6.0-rc.1",
+    "archive_sha256": "df37b6fde6471398de8f597dbf0e01f7de0db0b0f30cf686f8e7b3d8c34d85a8",
+    "kit_sha256": "db339b02d308e74e13c5ee98b3185ca11d341c9ac6ebc3fc7e06cc5cc80d727e",
+    "native_IDE": "2.3.11",
+    "verified_archive_files": 960,
+    "SDK": "NCS 3.4.0, ccc010f809",
+    "GUI_upload": "PASS",
+    "normal_sector_programmed_bytes": 81920,
+    "Blink_GPIO_transitions": 9,
+    "C11_Blink_BIN_HEX": "IDENTICAL",
+    "STOP_cleanup": "PASS",
+    "M12_exact_run_id": 45207890683,
+    "final_release_candidate": false,
+    "evidence_sha256": {
+      "producer": "0e65b40e2ebec3a5c4d5d03ed6cc838b269e3292a3789ee966ed19a772a5fd84",
+      "kit_manifest": "5c3bdb43cd846b5484bbfd63c8de0542c7fa8597a7aebdeabe768e6be4a37a5b",
+      "IDE_console": "f0d99d650c74e97bb05a12f6b39cf4de124db4da9f774aa2f505fbd1a779ac1b",
+      "IDE_install_audit": "b30c4875e10dd8d4cf1f24635efe1a1bd583aafddf537f3374c6537cc0c65a03",
+      "IDE_flash_log": "004cf42af36e263b393036f2a349e6ba585cde557aaa8989c97152bed4b17bff",
+      "Blink_runtime": "d6a7fcfc366c034ed99bd924624a8e40f25a4c6945573c672229555126eab717",
+      "BIN_HEX_comparison": "4bb328924bfeb0427a6dfca1a869699611356563b2b3dc6beec7bb230fa29768",
+      "STOP_cleanup": "3188805cf119825b4283efee8db7e7f24a220b65f9dccc2cbb200cb4625fc639"
+    }
   }
 }

@@ -13,7 +13,7 @@
 | Mac 설치·실행 권한 오류 | 실제 OS/ARM64·고정 kit hash·설치 권한과 quarantine/Gatekeeper 메시지를 기록한다. 보안 우회나 전역 권한 완화를 하지 않는다 |
 | Mac process 정리 EPERM | C10 원형과 C11을 구분한다. C11에서도 실패하면 같은 PGID·시각·원래 오류를 새 attempt에 보존한다. 그룹 부재 확인 없이 PASS로 처리하지 않는다 |
 | IDE Verify와 CLI 결과가 다름 | 사용한 후보 package·board·feature set·예제와 IDE log를 확인한다. 다른 source 설치본이나 IDE 창의 동시 빌드 혼입을 확인한다 |
-| C11 RC1 IDE Upload에서 `No module named 'yaml'` | IDE package의 격리 Python에서 runners.yaml을 읽을 PyYAML이 빠져 있다. C11 kit로 빌드한 대표 예제는 `START.sh --work-root <경로> upload --example blink --probe-sha256 <현재 inventory의 probe hash>`로 업로드한다. [337번](<../../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>) |
+| C11 RC1 IDE Upload에서 `No module named 'yaml'` | C12 이후 교정된 비공개 패키지를 사용한다. 수정본은 고정 Nordic SDK Python의 PyYAML을 사용한다. 기존 C11을 유지하는 실험에서는 kit로 빌드한 Blink를 `START.sh --work-root <경로> upload --example blink --probe-sha256 <현재 inventory의 probe hash>`로 업로드할 수 있다. [338번](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>) |
 | compile/runtime 실패 | 설치·경로·build/cache·USB/probe·target/runtime 단계로 분리한다. compile PASS와 실제 보드 동작은 별도 판정이다 |
 
 구체적인 명령과 기대 출력은 [Host RC1 절차](<../../02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md>),
