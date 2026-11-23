@@ -23,7 +23,8 @@
         "local_ci_contract": "46 passed",
         "guidance_unit_tests": "5 passed",
         "mesh_update_unit_tests": "6 passed",
-        "mac_m33_strict_readiness": "On starting main and edited tree, 21 of 31 tests passed. The 204 catalog records match by path but 15 list positions differ from the committed ordering on macOS."
+        "mac_m33_strict_readiness": "On starting main and edited tree, 21 of 31 tests passed. The 204 catalog records match by path but 15 list positions differ from the committed ordering on macOS.",
+        "generated_peripheral_contracts": "M12 inventory PASS after synchronizing the M24 documentation generator. Initial CI run 45253024581 detected a one-sentence drift."
       },
       "preservation": "Published v0.6.0 and bootstrap assets, immutable tag, stable index, source sketches, and original hardware evidence retain their existing identities.",
       "documents": [
