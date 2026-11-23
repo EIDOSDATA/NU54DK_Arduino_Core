@@ -3,8 +3,7 @@
 NU54DK 기본 보드 정의에는 검증된 외부 flash 부품이 없으므로 기본 Mesh update 경로는 내부
 `slot1_partition`을 사용한다. 내부 저장소 경로는 BLOB 10/10회와 signed Mesh DFU 5회·두 target
 10/10 배포, confirm/rollback·negative·STOP 검증을 완료했다. 결과와 적용 범위는
-[M32 TODO](<../../../00_Docs/TODO_M32.md>)를 따른다. 이 기능은 미공개 v0.6.0 개발 범위이며
-현재 stable v0.5.0에 포함되지 않는다.
+[M32 TODO](<../../../00_Docs/TODO_M32.md>)를 따른다. 내부 저장소를 사용하는 Mesh 업데이트 예제는 v0.6.0에 포함됩니다.
 
 동봉한 overlay는 외부 flash용 시작 template다. 부품과 배선을 지정하기 전에는 그대로 빌드하거나
 flash하지 않는다. 외부 저장소의 실물 운용은 사용자 후속 `NOT_RUN`이며 내부 저장소의 PASS와 구분한다.

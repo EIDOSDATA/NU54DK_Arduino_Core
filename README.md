@@ -13,30 +13,16 @@ NU54DK의 nRF54L15 애플리케이션 코어(CPUAPP)에서 Arduino 스케치를 
 3. `File > Examples > NUCODE NU54DK > Blink`에서 **Verify**를 누른 뒤 **Upload**를 누릅니다. 출력 창에 `Done uploading.`이 표시되고 온보드 LED가 250 ms마다 바뀌면 동작을 확인한 것입니다. [Blink 소스](libraries/NUCODE_NU54DK/examples/Blink/Blink.ino)
 4. UART를 확인하려면 같은 설정으로 `SerialEcho`를 업로드합니다. 보드의 DAP UART 포트를 115200 8N1로 열고 Serial Monitor의 줄 끝을 `Newline`으로 설정하세요. `test`를 보내면 `NUCODE_M6_ECHO:test`가 돌아옵니다. 여러 보드를 연결했다면 현재 열거한 probe와 포트의 대응을 확인합니다. [SerialEcho](libraries/NUCODE_NU54DK/examples/SerialEcho/SerialEcho.ino), [업로드와 디버그](<00_Docs/02_빌드 설계/05_업로드와_디버그.md>)
 
-**Mac에서 `No module named 'yaml'`가 뜨면** IDE가 사용한 설치본부터 확인하세요. 이전 C11 후보의 오류는 probe 선택 전에 발생했습니다. 정식 v0.6.0에는 runner 설정을 고정 Nordic SDK의 Python으로 읽는 C12 수정이 포함됩니다. macOS 27.2.1, Arduino IDE 2.3.11에서 일반 Upload와 LED 점멸을 확인했습니다. [문제 해결](<00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md>)
+**Mac에서 업로드 중 YAML 오류가 뜨면** Boards Manager의 설치 버전을 먼저 확인하세요. [일반 Upload 문제 해결](<00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md>)
 
-## 지원 기능
+## 내 스케치에 맞는 예제 찾기
 
-| 사용할 기능 | IDE의 Feature set 또는 선택 기준 |
+| 하고 싶은 일 | 어디서 시작하나요? |
 | --- | --- |
-| GPIO, Serial, Wire, SPI, ADC, PWM, Servo, 내부 저장소 | `standard`가 기본입니다. `fabric`은 인스턴스 및 DMA 직접 제어용이며 DAP UART 연결을 해제합니다. |
-| BLE NUS, GAP/GATT, 보안, 프로필, ISO, LE Audio, CTE 송신, Channel Sounding | 예제에 지정한 구성을 선택합니다. 기본 BLE는 `ble`, 서명된 DFU는 `secure_ble_dfu`, 외장 오디오 I/O는 `ble_audio_io`입니다. |
-| Bluetooth Mesh, BLOB 전송, Mesh 펌웨어 업데이트 | 각 역할의 설정과 상대 보드를 준비합니다. BLE와 Mesh의 공존 예제는 `coexistence_ble_mesh`를 사용합니다. |
-| IEEE 802.15.4, Enhanced ShockBurst(ESB) | 단독 무선은 `radio_ieee802154` 또는 `radio_esb`, BLE와 병행하는 예제는 `coexistence_ble_154` 또는 후보 구성 `coexistence_ble_esb`를 사용합니다. |
-| 외부 무선 공존, 자동 기능 선택 | 외부 1-wire 공존은 `external_coexistence`, 실험적 자동 선택은 `adaptive`입니다. |
-
-`Serial`은 CMSIS-DAP의 UART 브리지를 사용합니다. Peripheral Fabric과 외장 오디오 예제에서는 UART 공유 핀과 결선을 먼저 확인하세요. 제품 SDC의 Direction Finding IQ 수신 및 AoD는 지원 범위 밖입니다. Apple/Google 서비스와 외부 상용 장치의 상호운용은 사용자 후속 검증 항목입니다. [핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>), [API 범위](<00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md>), [알려진 제한](<00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md>)
-
-## 예제
-
-각 스케치의 첫 주석에서 권장 Feature set, 보드 수와 역할, 필요한 설정 파일을 확인할 수 있습니다. 예제 폴더를 복사할 때는 설정 파일도 함께 가져오세요. [전체 예제 색인](libraries/EXAMPLES.md)
-
-| 해볼 작업 | 시작할 예제 |
-| --- | --- |
-| LED와 직렬 통신 | [Blink](libraries/NUCODE_NU54DK/examples/Blink), [SerialEcho](libraries/NUCODE_NU54DK/examples/SerialEcho) |
-| Mesh 네트워크 구성 | [MeshProvisioner](libraries/NUCODE_BLE_Mesh/examples/MeshProvisioner), [MeshNode](libraries/NUCODE_BLE_Mesh/examples/MeshNode) |
-| IEEE 802.15.4 송수신 | [Radio154Transmitter](libraries/NUCODE_Radio_IEEE802154/examples/Radio154Transmitter), [Radio154Receiver](libraries/NUCODE_Radio_IEEE802154/examples/Radio154Receiver) |
-| 외부 BLE 서비스 연동 | [Companion 예제와 준비 조건](libraries/NUCODE_BLE_Companion/README.md) |
+| 보드 한 대로 LED를 켜고 PC와 문자 주고받기 | [Blink와 SerialEcho 코드 따라 하기](<00_Docs/05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md>) |
+| 보드 두 대로 BLE 메시지 보내기 | [NUSPeripheral과 NUSCentral 연결하기](<00_Docs/05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md#3-보드-두-대로-ble-메시지-보내기>) |
+| Tools 메뉴에서 내 기능에 맞는 설정 고르기 | [Feature set 12개 비교와 대표 예제](<00_Docs/05_릴리스/v0.6.0/FEATURE_SETS.md>) |
+| Mesh, 센서, 오디오 등 다른 예제 찾기 | [204개 예제 색인](libraries/EXAMPLES.md), [커넥터 핀맵](<00_Docs/01_아두이노 코어 설계/13_NU54DK_P2_P4_커넥터_핀맵.md>), [알려진 제한](<00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md>) |
 
 ## 문서
 

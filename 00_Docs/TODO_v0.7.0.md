@@ -9,13 +9,13 @@
 | 계획 | SDK-W01~SDK-W06 **0/6, 모두 미착수** |
 | 실제 개발 환경 | NCS **3.4.0 유지**. 설치·checkout·lock·toolchain·board·firmware 미전환 |
 | 목표 환경 | NCS **3.4.1 전체 manifest**와 검증된 대응 toolchain·board 조합 |
-| 현재 설치·지원 배포 | **v0.5.0 stable**. 이 계획은 공개·지원 버전 변경이 아님 |
-| 현재 v0.6.0 작업 | [v0.6.0 TODO](TODO_v0.6.0.md)가 현재 진행·완료 근거를 관리 |
+| 현재 설치·지원 배포 | [v0.6.0 stable](05_릴리스/v0.6.0/README.md), NCS 3.4.0 |
+| 전환 전 기준선 | [v0.6.0 검증 근거](05_릴리스/v0.6.0/TESTING.md) |
 | Host | [현행 인계](HANDOFF.md)의 승인된 순차 작업. SDK 전환과 실적 분리 |
 
 계획 작성은 SDK 전환·실기 재개·새 Host 지원이나 공개 실행 승인이 아니다. M32 BLOB은 고정
 NCS 3.4.0에서 후속 exact 시험을 통과했고 과거 FAIL은 보존한다. 다음 작업은 [HANDOFF](HANDOFF.md),
-v0.6.0 잔여 작업은 [v0.6.0 TODO](TODO_v0.6.0.md)에서 관리한다.
+v0.6.0의 완료 범위는 [v0.6.0 TODO](TODO_v0.6.0.md)에서 관리한다.
 
 ## 1. 제품선과 범위
 
@@ -53,7 +53,7 @@ Matter, 새 보드·Host 지원은 **v0.7.0 범위 밖**이다. SDK가 새로 �
 ### SDK-W01 — 비교 가능한 전환 기준선
 
 - [ ] v0.6.0에서 수용·마감한 exact source와 기능/예제/role/profile 목록을 전환 기준선으로 고정한다.
-  M32의 완료 근거를 보존하며, 미완료 M33을 SDK 전환으로 대체하거나 완료 처리하지 않는다.
+  M32의 완료 근거를 보존하며, M33-W06의 명시 수락과 당시 FAIL은 별도의 검증 기록으로 보존한다.
 - [ ] 3.4.0의 manifest·module SHA·toolchain·board gitlink·지원 계약과 공개 자산을 보존한다.
   3.4.1은 별도 환경에서 전체 manifest와 대응 toolchain을 확인하고 새 exact lock을 만든다.
 - [ ] 공식 release note·보안 권고·module 이력을 다시 확인하고 Kconfig/API/binding·board 호환성을

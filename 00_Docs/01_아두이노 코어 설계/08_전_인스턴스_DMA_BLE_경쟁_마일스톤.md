@@ -13,7 +13,7 @@ S 정상·동시성·복구 결과와 U 실기를 포함한 합의 범위를 종
 | 문서 ID | COMPETITIVE-PARITY-001 |
 | 문서 개정 | 5.6 |
 | 문서 상태 | M23부터 M32까지 및 M33-W01부터 W05까지 기술 완료. M33-W06은 명시 수락으로 마감했다. 후속 범위는 [M33 인계](../M33_HANDOFF.md)에 있다. |
-| 현재 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
+| 계약 작성 당시 공개 기준 | NU54DK Arduino Core `v0.5.0` stable / exact source는 정식 release tag·기록이 소유 |
 | 비교 기준 | `lolren/nrf54-arduino-core` `v1.0.17` / commit `a6bb99879aa14cbff362a5478d5f1189848b4200` |
 | SoC·SDK 기준 | nRF54L15 / NCS v3.4.0 / Zephyr 4.4.0 |
 | 최종 갱신일 | 2026-10-04 |

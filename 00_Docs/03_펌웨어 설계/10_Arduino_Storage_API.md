@@ -5,7 +5,7 @@
 | 문서 ID | FW-STORAGE-001 |
 | 문서 개정 | 1.7 |
 | 적용 버전 | `v0.3.0`·`v0.4.0`·`v0.4.1` stable 호환 계약 |
-| 현재 정식 버전 | `v0.5.0` (v0.4.x Storage 계약 유지) |
+| 이 계약의 기준 버전 | `v0.5.0` (v0.4.x Storage 계약 유지) |
 | 구현 | `EEPROM`, `LittleFS` bundled library |
 | 검증 상태 | AC-03 host/target/package와 exact 두 보드 영속성·복구 HIL PASS |
 | 최종 갱신일 | 2026-10-01 |

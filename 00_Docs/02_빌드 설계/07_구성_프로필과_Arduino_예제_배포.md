@@ -1,19 +1,6 @@
 # 구성 프로필과 Arduino 예제 배포 — 정식 지원과 개발 경로
 
-| 항목 | 현재 계약 |
-| --- | --- |
-| `v0.5.0` 정식 profile | `standard`, `ble`, `adaptive`, `fabric`, `secure_ble_dfu`, `ble_audio_io` |
-| `v0.5.0` 정식 사용자 예제 | 16개 library, 총 113개 |
-| 이전 `v0.3.0` | `standard`, `ble`; 8개 library·예제 29개 |
-| 기본 profile | `standard` |
-| BLE feature ID | `nucode.ble.nus` |
-| BLE config | `ble-nus.conf` |
-
-위 수치는 현재 stable `v0.5.0`의 Windows 설치본 계약이다. W08/RC2의 설치본 113/113 compile과
-정식 공개 후 설치·Blink cold compile은 서로 다른 검증 실행이다. [stable 설치 안내](../05_릴리스/v0.5.0/README.md),
-[W08 증거](<../04_검증 기록/267_M31_W08_Windows_RC_준비와_M31_완료.md>) 및
-[274번 공개 smoke](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)를 따르며 compile을 전체 물리 HIL로 해석하지 않는다.
-v0.6.0 후보에는 라이브러리 24개와 예제 204개가 있다. [현재 예제 색인](../../libraries/EXAMPLES.md)에서 Feature set과 보드 수를 확인한다. OS별 컴파일과 장치 검증의 범위는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)에 있다.
+v0.6.0은 보드 메뉴 12개와 라이브러리 24개의 예제 204개를 제공합니다. IDE에서 고를 이름과 필요한 장비는 [Feature set 안내](../05_릴리스/v0.6.0/FEATURE_SETS.md), 스케치 실행과 결과는 [첫 예제 따라 하기](../05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md)에서 확인하세요.
 
 Profile은 사용자가 먼저 선택하는 보드 수준 구성이고 feature는 Arduino가 실제 선택한 bundled
 library에서 자동 해석하는 추가 구성이다. 실행 결과와 실기 증거는
@@ -62,31 +49,7 @@ Zephyr 직접 호출은 library 구현 내부가 소유하며 개발 마일스�
 
 ## 2. Profile 계약
 
-| ID | 메뉴 표시 | 기능 집합 | 용도 |
-| --- | --- | --- | --- |
-| `standard` | Standard peripherals | GPIO, Serial, Wire, SPI, ADC, PWM | 일반 Arduino sketch |
-| `adaptive` | Adaptive capabilities (experimental) | compiler probe·library manifest·role declaration의 합집합 | 기능별 최소 설정·소스 개발 경로 |
-| `ble` | BLE NUS | standard 기능 + BLE | NUS, GAP/GATT, 보안·표준 profile |
-| `fabric` | Peripheral Fabric (DAP UART disconnected) | GPIO, time, 직접 Fabric | v0.4.0에서 도입해 v0.5.0에도 유지한 고급 주변장치 API |
-| `secure_ble_dfu` | Secure BLE DFU (MCUboot) | sysbuild·서명·고정 dual-slot layout | v0.5.0의 인증 BLE DFU; 외부 signing key 필수 |
-| `ble_audio_io` | BLE Audio external I/O (DAP UART disconnected) | BLE Audio와 외장 I/O 설정 | v0.5.0의 연결 경로; 외장 실물 검증은 사용자 후속 NOT RUN |
-
-`adaptive`·`secure_ble_dfu`·`ble_audio_io`는 v0.5.0에 포함되며 v0.4.1 stable에는 없다. 현재 `boards.txt`의
-기본값은 `standard`이고 `adaptive`는 명시적으로 선택하는 실험적 최소 구성 경로다.
-`secure_ble_dfu`와 `ble_audio_io`는 각 DFU·Audio 계약을 따르는 별도 구성이다.
-
-모든 profile은 board `nrf54l15dk/nrf54l15/cpuapp/nu54dk`, NCS `v3.4.0`과 각 profile의
-`prj.conf`, `app.overlay`를 고정한다. `boards.txt`의 `도구 → Feature set` 메뉴가
-`build.nu54_profile`을 다음처럼 설정한다.
-
-~~~text
-feature_set=standard → standard
-feature_set=adaptive → adaptive
-feature_set=ble      → ble
-feature_set=fabric   → fabric
-feature_set=secure_ble_dfu → secure_ble_dfu
-feature_set=ble_audio_io   → ble_audio_io
-~~~
+메뉴의 표시 이름과 `build.nu54_profile` 매핑은 [boards.txt](../../boards.txt)에 있습니다. 기본값은 `standard`입니다. 사용자가 선택한 profile과 스케치가 가져온 라이브러리 설정을 조합해 고정 NCS 3.4.0용 이미지를 만듭니다. 실험적 `adaptive`의 역할 선언, 서명 키가 필요한 DFU, DAP UART를 분리하는 두 구성의 차이는 [메뉴별 예제](../05_릴리스/v0.6.0/FEATURE_SETS.md)를 참고하세요.
 
 `fabric`은 v0.4.0에서 도입해 v0.5.0에도 유지한 정식 profile입니다. 직접 nrfx IRQ와 peripheral block을 소유하므로 standard
 singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려면 보드의 DAP UART가 물리적으로
@@ -96,10 +59,10 @@ singleton을 함께 활성화하지 않습니다. P1.4~P1.7을 route로 쓰려�
 
 ## 3. Bundled library feature 계약
 
-현재 v0.5.0의 16개 library별 feature·호환 profile의 단일 원본은 각 `libraries/<library>/zephyr/feature.yml`이다.
+배포 library별 feature·호환 profile의 단일 원본은 각 `libraries/<library>/zephyr/feature.yml`이다.
 아래 아홉 행과 JSON 예시는 v0.4.1 당시 기준선이다. 이후 추가한 DFU·LegacySigning·EATT·ISO·Audio·
 DirectionFinding·ChannelSounding 및 확장 profile은 현재 manifest와 [예제 metadata](../../libraries/example-metadata.json)를 따른다.
-과거 표의 `ble` 단독 호환 값을 현재 16개 library 전체에 적용하지 않는다.
+과거 표의 `ble` 단독 호환 값을 후속 버전의 library 전체에 적용하지 않는다.
 
 | Library | feature ID | 추가 conf/overlay | 호환 profile |
 | --- | --- | --- | --- |
@@ -314,7 +277,7 @@ Initiator/Reflector는 BLE NUS를 기본으로 하고 Adaptive를 실험적 대�
 이전 2026-09-15 검토한 `8c311d9a…`의 `0.4.1-dev` 소스 트리에는 12개 library와 60개 `.ino`가 있었다.
 정식 v0.4.1 예제 30개에 M28 11개, M29 15개, M30 profile 예제 4개가 추가된 snapshot이다.
 `NUCODE_BLE_DFU`는 별도 library이며 새 `.ino`를 더하지 않는다. 이 수를 v0.4.1 설치본의 제공 수로
-표시하지 않는다. 현재 v0.5.0의 최종 상태를 이 과거 snapshot으로 판단하지 않는다.
+표시하지 않는다. v0.5.0의 최종 상태를 이 과거 snapshot으로 판단하지 않는다.
 
 | 개발 추가 범위 | Library와 선택 방식 | 검증 진입점 |
 | --- | --- | --- |
@@ -343,9 +306,7 @@ W10 공존, W11 exact 회귀·soak와 W12 정합성 감사·인계를 완료했�
 [전체 Bluetooth 기능·예제 계약](<../01_아두이노 코어 설계/19_NCS_Bluetooth_전체_기능과_예제_실행_계약.md>)과
 [M31](../TODO_M31.md)·[M32](../TODO_M32.md)·[M33](../TODO_M33.md) TODO에서 추적한다.
 M31-W08까지의 예제 정합화와 Windows package·설치·RC 공개 gate는 마감했다.
-M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배정했다. Ubuntu/macOS의
-기존 세 Host 계획·M33-W07~W08 최종 gate는 유지하며, Host 순차 구현과 최종 실물 검증을 마치기 전에는
-새 OS 지원을 확정하지 않는다. 이 배정은 기능 구현·검증 완료를 뜻하지 않는다.
+M32·M33에서 추가한 예제를 v0.6.0에 포함했습니다. 배정된 OS별 실기와 공개 설치 검증은 [지원표](../05_릴리스/v0.6.0/SUPPORT_MATRIX.md)와 [배포 기록](../05_릴리스/v0.6.0/RELEASE_CHECKLIST.md)에 있습니다.
 
 | 소유 단계 | 반드시 제공/판정할 예제 묶음 |
 | --- | --- |
@@ -353,13 +314,13 @@ M32·M33의 추가 기능·예제는 [v0.6.0 계획](../TODO_v0.6.0.md)에 배�
 | M31-W03 — 완료 | BAP unicast/broadcast·PACS/ASCS, BASS assistant/delegator, CAP·CSIP·PBP, volume/input/microphone/media/call 제어, TMAP/GMAP/HAP; [11/11 완료 감사](<../04_검증 기록/214_M31_W03_LE_Audio_Profile_완료.md>) |
 | M31-W04~W05 — 완료 | AoA CTE 송신 예제와 controller 경계, 제품 SDC IQ RX 미지원 표시, CS initiator/reflector·RAS·복구 |
 | M31-W08 및 정식 공개 — 완료 | W07 설치 role 예제·제공 경로/제한, Windows package·설치·RC smoke와 별도 stable 승격·공개 완료 |
-| M32-W02~W05 — 완료·미공개 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
-| M32-W06~W10 — 완료·미공개 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
-| M33-W02 — 완료·미공개 | iBeacon/Eddystone UID/BTHome와 OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, 공개 예제 9/9 build와 두/세 보드 exact HIL PASS; 외부 peer는 후속 `NOT_RUN` |
-| M33-W03 — 완료·미공개 | Fast Pair input/locator·ANCS/AMS·EnOcean/MDS template와 scripted-peer HIL PASS; 실제 외부 제품은 후속 `NOT_RUN` |
-| M33-W04 — 완료·미공개 | HCI/DTM profile/template와 two-wire/H4 실제 12/12씩 PASS |
-| M33-W05 — 완료·미공개 | 12개 Start Here·29개 Recipe·204개 Reference, clean 설치 발견·compile 204/204와 negative 9/9 PASS |
-| M33-W06~W08 — v0.6.0 계획 | 후속 기능 회귀·자원·상호운용·설치·지원표 마감 |
+| M32-W02~W05 — 개발 검증 완료 | power/path loss·subrate/SCA/timing, multi-set/identity/filter/EAD/coding, LLPM/QoS/event/time sync·확장 역할 budget; 고정 Host 미지원 경계 유지 |
+| M32-W06~W10 — 개발 검증 완료 | Mesh node/provisioner·model·Mesh 1.1·BLOB/DFU, 802.15.4/ESB 단독 peer와 검증한 세 내부 공존 조합 |
+| M33-W02 — 개발 검증 완료 | iBeacon/Eddystone UID/BTHome와 OTS/OTC·ANS·CTS·HTS·CSC/RSCS·CGMS·BMS, 공개 예제 9/9 build와 두/세 보드 exact HIL PASS; 외부 peer는 후속 `NOT_RUN` |
+| M33-W03 — 개발 검증 완료 | Fast Pair input/locator·ANCS/AMS·EnOcean/MDS template와 scripted-peer HIL PASS; 실제 외부 제품은 후속 `NOT_RUN` |
+| M33-W04 — 개발 검증 완료 | HCI/DTM profile/template와 two-wire/H4 실제 12/12씩 PASS |
+| M33-W05 — 개발 검증 완료 | 12개 Start Here·29개 Recipe·204개 Reference, clean 설치 발견·compile 204/204와 negative 9/9 PASS |
+| M33-W06 수락 마감, W07·W08 공개 완료 | 후속 기능 회귀·자원·상호운용·설치·지원표 마감 |
 
 다음은 모든 예제 owner에 적용하는 반복 검증 계약이다. 완료율 체크리스트가 아니며 M31의 완료
 증거와 M32/M33의 현재 진행 상태는 위 TODO에서 각각 관리한다.

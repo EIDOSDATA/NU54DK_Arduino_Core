@@ -4,6 +4,256 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "V060_ARDUINO_IDE_USER_GUIDES_20261124",
+      "date": "2026-11-24",
+      "reviewed_parent": "348e062e7344033948dd75a6e62d7357bbbbe05e",
+      "product_source": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+      "scope": "Repository-wide documentation review. New release-specific IDE guides, example catalog navigation, current support and historical source boundaries.",
+      "checks": {
+        "reviewed_before_edit": {
+          "tracked_markdown": 556,
+          "mac_prompt_text": 1,
+          "board_submodule_markdown": 6
+        },
+        "markdown_utf8_and_local_paths": 558,
+        "ordered_feature_set_menu_entries": 12,
+        "release_tag_sketch_links": "PASS",
+        "example_guidance": 204,
+        "library_example_audit": "24 libraries, 204 examples, zero issues",
+        "local_ci_contract": "46 passed",
+        "guidance_unit_tests": "5 passed",
+        "mesh_update_unit_tests": "6 passed",
+        "mac_m33_strict_readiness": "On starting main and edited tree, 21 of 31 tests passed. The 204 catalog records match by path but 15 list positions differ from the committed ordering on macOS."
+      },
+      "preservation": "Published v0.6.0 and bootstrap assets, immutable tag, stable index, source sketches, and original hardware evidence retain their existing identities.",
+      "documents": [
+        {
+          "path": "00_Docs/00_사전 리서치/01_개발_방식_비교_및_아키텍처_결정.md",
+          "sha256_utf8_lf": "de3b4c066cfc78e26ed7aa283da511d1f831af54b982b09573aad9784f0f69de"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/01_저장소_폴더_구조.md",
+          "sha256_utf8_lf": "cbca36d5c159761e6b7c00d7ac190752c78cb535fea4c31fec5334144a73ab4f"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/02_구현_로드맵.md",
+          "sha256_utf8_lf": "99adb43cf2f25f2f537ca315a2d42ebca9b2e771f23f38030e6dc5e668b6858d"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/04_Arduino_API_지원_범위.md",
+          "sha256_utf8_lf": "0f0c7f45aef7a049dfceb636f587c1a14f14163d052100dbe6ae5e4c79d6b45e"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/06_NCS_3.4.0_기능과_예제_지원_매트릭스.md",
+          "sha256_utf8_lf": "93fa34d7d76359a113eb736aa4ce0c1a008bb634e73f68be1cf57cd328bfa0e9"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/07_v0.3.0_구현_마일스톤.md",
+          "sha256_utf8_lf": "cde916716010e0838c2a9617a2ccb14effd96ab3b7e3324346978272e373e18b"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/08_전_인스턴스_DMA_BLE_경쟁_마일스톤.md",
+          "sha256_utf8_lf": "77d49b91d7e3cc0178de4b572c3e1dc828cd5ed54f8f083264b99bba8b9f780b"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/10_M24_Serial_Fabric_경로와_API_계약.md",
+          "sha256_utf8_lf": "26d6c87a7900ea6b98e9a0e27e7c211dd54f5b5a556f9372e4676b270d2e4b4a"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/14_리팩토링/README.md",
+          "sha256_utf8_lf": "c93bf019fba75ef93c4fc727087f284dade0caaa21e0a7b3dd1f76c9688199e4"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/15_M28_BLE_GAP_Link_Privacy_착수_계약.md",
+          "sha256_utf8_lf": "f7ccbf6b439a5a235b44086996da7cb6a1cb9b1b4eaf43b8dc475bdba570e15d"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/16_M29_ATT_GATT_L2CAP_착수_계약.md",
+          "sha256_utf8_lf": "42a180bc3b2b0c5612403e403096bec4fd83dcb127dd354270b0ed9925764f7c"
+        },
+        {
+          "path": "00_Docs/01_아두이노 코어 설계/17_M30_BLE_Security_Profile_DFU_착수_계약.md",
+          "sha256_utf8_lf": "ab0f8c6603fcfba8165a6dfc6e212eb6f29f088499457e49aad97eeeea96e6c3"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/02_Build_Adapter_설계.md",
+          "sha256_utf8_lf": "98e0c9c26137202c0af755896dc4d2c24014819bbbf59e88b59caca0cd74149b"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/03_Arduino_CLI_통합.md",
+          "sha256_utf8_lf": "809ca458e5c85343dd15ba93fd97f3746b397433f0dc57f443626f7a7a84fff2"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/04_빌드_캐시와_산출물.md",
+          "sha256_utf8_lf": "b69def75b042a2f5542d5cce6359d00dfca68ee94e2585646748a127935afacf"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/06_Boards_Manager_설치와_패키징.md",
+          "sha256_utf8_lf": "962a5e6fc57372919d652f20ed15e7f0449f119392d063190df4c37a5376365c"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/07_구성_프로필과_Arduino_예제_배포.md",
+          "sha256_utf8_lf": "6b249ec8ee3fcfb76546c393ba53ec7fe2fc421293e4422c6a39ca5cae5a157b"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/09_Windows_개발환경_설정.md",
+          "sha256_utf8_lf": "a6aeb24de7bc0ab0b9de62d8ffcf93a89e29deaf4ab7567830bb60c84c076072"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/10_v0.5.0_다중_Host_지원_착수_계약.md",
+          "sha256_utf8_lf": "6dd60d8d2f52e6c4539d6e5eb0b32422607cd02e5d8f07953de8101a51b32e6c"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md",
+          "sha256_utf8_lf": "ed51be534caaba22c11c1e782c9169fa8fcce4bcb1e9c6dc930d34a60a0e96ae"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/14_native_Boards_Manager_package와_CI.md",
+          "sha256_utf8_lf": "8c3dda9b40d4d1d0617cc85c04d12a478066f2fd2ffa918ad9266ad1bab4f5e6"
+        },
+        {
+          "path": "00_Docs/02_빌드 설계/15_Host_RC1_실기_도구와_증거_절차.md",
+          "sha256_utf8_lf": "8d4f178aa6274a7fd421961d972004aadf10d697d08ddcb0214a81f4de3d0c15"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/04_테스트와_검증.md",
+          "sha256_utf8_lf": "6df2296c0c9699dd098e1e174763c0860366172969cef4a5aeabe37c4907ed61"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/05_NU54DK_Board_System_API.md",
+          "sha256_utf8_lf": "20488c125b8723594a98a4c13636a91df42a274e62716b7f75feb4a644a1044b"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/07_BLE_Core_GAP_API.md",
+          "sha256_utf8_lf": "84c9a5c8072bcb1cda181864225206e71076249400ec735b31d954b907e7d0d7"
+        },
+        {
+          "path": "00_Docs/03_펌웨어 설계/10_Arduino_Storage_API.md",
+          "sha256_utf8_lf": "0f02a401a163c7a1a5ab3914e2fa72e5852d2711f062d96726619118a51b5eae"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "e211971c7afb256b09ab9a35ac35e99db8db8fc13b1ffbad736d9f6ea42b2acf"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md",
+          "sha256_utf8_lf": "70707f4cef2379df57ef9fa1054ec7e846525d69f2e5441aed313cdaa0bb878e"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/FEATURE_SETS.md",
+          "sha256_utf8_lf": "08eb70aca718c896aaa2ae09ea7c7e7dfd40e5336ebf6779bd23fcf98c040e98"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+          "sha256_utf8_lf": "f27bd165f4088c0d0a1d38ae0ac80f722fb9fc5814f1fef18e388097cec71d21"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/MIGRATION.md",
+          "sha256_utf8_lf": "a35672ad44e19f288d3ee94914b01901aa2dffaab29fdbedbdf82056620c1829"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/README.md",
+          "sha256_utf8_lf": "55476f52b19c5539ebbfdec69270f6134c421b4bf4c0719f35fd4d43847b4ac9"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/RELEASE_NOTES.md",
+          "sha256_utf8_lf": "2e5b99d0e7ec193d87e154798fd63e451056cbdefe408b4ec82ee454faecf6fb"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "sha256_utf8_lf": "365856eef0e389bd6411147221988d96a43b28e0782cc68e90332b147ce9c166"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "bec0b9bfa4711c9b953d210e0be60f05be9fc92b558baf9ec646956763f16d8b"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "c8f5e0e5379ac64c09bc2e41ad3e705a865d17c808b33b9d77564c7e454ed454"
+        },
+        {
+          "path": "00_Docs/README.md",
+          "sha256_utf8_lf": "74fbd30d43da2bdc9ff84b921268df937092ee62c25f1cd5808c2bdf312fb1a2"
+        },
+        {
+          "path": "00_Docs/TODO_M33.md",
+          "sha256_utf8_lf": "0ba547059885a7469e3c548ed99daad848b6de62686286c6209dea5e6171a29e"
+        },
+        {
+          "path": "00_Docs/TODO_v0.7.0.md",
+          "sha256_utf8_lf": "ce54ae837bcc623fe604f11ec94f6537a9aa9f2ba7323a6e3c0cf1932bb78775"
+        },
+        {
+          "path": "README.md",
+          "sha256_utf8_lf": "979fc4fe4d73bdc97af503fbe72e09d5683e18dc63c75e1dbba53cdc104efd8e"
+        },
+        {
+          "path": "libraries/EXAMPLES.md",
+          "sha256_utf8_lf": "b3100690285e3d205c3c8e27842fc0e19803561150b03886ec06b5016adc6ce7"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_Audio/examples/README.md",
+          "sha256_utf8_lf": "ddcd55f111ecc3c043548e3131b53576b230d32ef6cad5fd7e5df795579fbac3"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasInitiator/README.md",
+          "sha256_utf8_lf": "ac1a60e508d94b82fe273c75e5e71d834849e6e9a472f52508578780bba4d54f"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_ChannelSounding/examples/RasReflector/README.md",
+          "sha256_utf8_lf": "4c62bf88fd81a0dfe3fc780eccc6af288bf2f7683aea3094fefe6fcd355db876"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_DFU/examples/README.md",
+          "sha256_utf8_lf": "7ce39ac35c21d8ac742125f47d31139df6d8ba148b8649609ed2eb4d548a9871"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_DirectionFinding/examples/ConnectedCteResponder/README.md",
+          "sha256_utf8_lf": "2b74baaaf6c7f1bfaac3e323f19532a7b7fd78a1fff21a05ec7ea19629625c5b"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_DirectionFinding/examples/README.md",
+          "sha256_utf8_lf": "9e6c604dc4f84272b9b654b8ebcee8e3653c41335f8402fbfcc24bc834e67e3f"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_ISO/examples/README.md",
+          "sha256_utf8_lf": "8defb701fd3c97bbcbe2348a61229a88eb8668dbda2bfc08ee74c8fc53349f7b"
+        },
+        {
+          "path": "libraries/NUCODE_BLE_Mesh_Update/extras/외부_flash_적용_안내.md",
+          "sha256_utf8_lf": "fd55cf76478a7eacc4288291ed7b15b48968e8143f7d7494c868d51e093d8ae9"
+        },
+        {
+          "path": "packaging/boards-manager/README.md",
+          "sha256_utf8_lf": "9d573bbc27a0456ff380d43c8d371bcacb69fbe52ad834a43d06c5aac4a168c3"
+        },
+        {
+          "path": "tests/hil/nu54dk/README.md",
+          "sha256_utf8_lf": "061b12256f50a1414c11db0f7f9032a261f49952e1dd3532e9f30bc25e223d0d"
+        },
+        {
+          "path": "tools/nu54-prerequisites/README.md",
+          "sha256_utf8_lf": "343a4143527910473c7f17ddb00eee03891a154de6ad0e6fc37ef7cc838e580f"
+        },
+        {
+          "path": "tools/peripheral/README.md",
+          "sha256_utf8_lf": "ae9d9f82e322e659ae3d95927cd488733fc0697719bf7748c71857d58322ab3d"
+        },
+        {
+          "path": "tools/release/M18_README.md",
+          "sha256_utf8_lf": "ba08f51f6ec594b52aa0aa4bf3fcf1fe945680a30e5654203025db12b903926a"
+        },
+        {
+          "path": "tools/release/M22_README.md",
+          "sha256_utf8_lf": "52e3175dffa911afe4ee0ef596dfb0e552ce77f615b9e6c4360a8c424623375c"
+        },
+        {
+          "path": "tools/release/README.md",
+          "sha256_utf8_lf": "81b9cc42fc864922aa7cb59194fc9951e602fc0176eb7e8b6ea4562dfb964e55"
+        }
+      ]
+    },
+    {
       "id": "V060_USER_DOCS_MAC_C12_20261124",
       "date": "2026-11-24",
       "reviewed_parent": "7324c43de96bcc7cc8bc49949827e3099d313fa2",

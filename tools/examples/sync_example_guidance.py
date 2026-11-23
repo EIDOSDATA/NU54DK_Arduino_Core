@@ -635,8 +635,14 @@ def render_example_guide(
     lines = [
         "# NU54DK 예제 안내",
         "",
-        "공개 예제는 모두 보존하되, 처음부터 204개를 읽지 않아도 되도록 `Start Here → Functional Recipe → Reference` 순서로 찾습니다.",
-        "Build 결과와 실제 보드 runtime, 외부 제품 상호운용은 서로 다른 판정입니다. 각 Sketch 맨 위의 생성 안내에서 profile·역할·성공 조건을 먼저 확인하십시오.",
+        "Arduino IDE에서 보드를 선택한 뒤 `File > Examples`에서 라이브러리와 스케치를 여세요.",
+        "처음에는 [Blink와 SerialEcho 따라 하기](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/main/"
+        "00_Docs/05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md)를 읽고, 다른 기능을 사용할 때는 "
+        "[Feature set 12개 선택 안내](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/main/"
+        "00_Docs/05_릴리스/v0.6.0/FEATURE_SETS.md)에서 IDE 메뉴 이름과 준비물을 확인하세요.",
+        "",
+        "아래에서 해 보고 싶은 작업을 고르세요. 기능별로 비교할 때는 Functional Recipe를, "
+        "이름으로 찾을 때는 Reference를 사용하세요.",
         "",
         "## Start Here — 12개 사용 시나리오",
         "",
@@ -675,8 +681,12 @@ def render_example_guide(
     lines.extend((
         "## Reference — 전체 204개",
         "",
-        "| 예제 | Recipe | 권장 profile | 보드/역할 | runtime 판정 |",
-        "| --- | --- | --- | --- | --- |",
+        "권장 profile은 IDE의 Feature set에 대응하는 CLI 값입니다. 보드 수와 역할은 각 예제의 실행 조건입니다.",
+        "전체 표의 runtime 분류는 `procedure_documented_not_physical_pass`입니다. "
+        "실제 보드에서 확인한 결과는 버전별 검증 기록에서 찾을 수 있습니다.",
+        "",
+        "| 예제 | 기능군 | 권장 profile | 보드 수와 역할 |",
+        "| --- | --- | --- | --- |",
     ))
     for identity, record in sorted(records.items(), key=lambda item: item[0].casefold()):
         relative = Path(record["path"]).relative_to("libraries").as_posix()
@@ -684,7 +694,7 @@ def render_example_guide(
         lines.append(
             f"| [{identity}](<{relative}>) | `{record['recipe_group']}` | "
             f"`{record['recommended_profile']}` | {record['board_count']}대 — "
-            f"{_markdown_text(roles)} | `{record['runtime_classification']}` |"
+            f"{_markdown_text(roles)} |"
         )
     lines.extend((
         "",

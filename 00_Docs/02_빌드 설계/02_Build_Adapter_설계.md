@@ -2,9 +2,9 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | **현재 구현 계약** |
-| 현재 정식 버전 | `v0.5.0` |
-| 다음 목표 버전 | `v0.6.0` — M32·M33 계획, 현재 구현·지원과 구분 |
+| 문서 상태 | v0.5.0 구현 계약 |
+| 설계 당시 정식 버전 | `v0.5.0` |
+| 당시 후속 버전 | `v0.6.0` — M32·M33 계획, 현재 구현·지원과 구분 |
 | 기준 SDK | nRF Connect SDK v3.4.0 / Zephyr 4.4.0 |
 | 공식 호스트 | Windows 10/11 x64 |
 | v0.5.0 Host 목표 | M31 완료 뒤 Windows 10/11 x64 우선; Ubuntu/macOS는 후속 제품선 |
@@ -14,7 +14,7 @@ Build Adapter는 Arduino의 전처리·library discovery lifecycle을 보존하�
 링크를 Zephyr CMake/Ninja에 맡기는 중계 도구다. 현재 구현의 단일 원본은 다음 파일이다.
 
 본문의 기본 계약은 stable v0.5.0이며 §4.1·§4.2의 확장을 포함한다.
-패키지별 현재 상태와 설치 경로는 [v0.5.0 stable 안내](../05_릴리스/v0.5.0/README.md)를 따른다.
+패키지별 현재 상태와 설치 경로는 [v0.6.0 설치 안내](../05_릴리스/v0.6.0/README.md)를 따른다.
 
 후속 [v0.7.0](../TODO_v0.7.0.md)은 NCS 3.4.1 전체 SDK 전환 전용이다. 기존 recipe·profile·예제의
 호환성과 build/cache/package 정합화를 검증하며 신규 기능이나 M36의 layout·transport 확장은 포함하지 않는다.
@@ -263,7 +263,7 @@ image·layout·서명 정책을 식별하는 별도 manifest·cache·upload 검�
 hardening하는 후속 계획이다. 검증된 memory-layout 선택과 sysbuild/multi-image 경로를
 제공하려면 cache·package identity, 산출물 검증과 upload 계약도 함께 확장해야 한다.
 M30은 W01~W08 8/8·test ID 10/10과 실제 전원 차단 12/12를 완료했고 M36은 미착수다.
-현재 `v0.5.0`의 기본 loaderless layout은 유지한다. 완료 근거와 후속 경계는
+`v0.5.0`의 기본 loaderless layout은 유지한다. 완료 근거와 후속 경계는
 [161번 기록](<../04_검증 기록/161_M30_W08_실제_전원_HIL과_M30_완료.md>)과
 [v0.5.0 착수 계획](../TODO_v0.5.0.md)과
 [문서 전면검토·개선 마일스톤](<../01_아두이노 코어 설계/18_문서_전면검토와_개선_마일스톤.md>)을 따른다.

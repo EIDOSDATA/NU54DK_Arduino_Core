@@ -1,9 +1,9 @@
 # Host별 고정 Nordic 환경 설치
 
-현행 위치는 **M33-W07 / HOST-W07 실기 완료·HOST-W08 최종 gate 미완료**다. Host7/8·지원 목표 검증5/5다. C5 Windows11, C10 Ubuntu24.04·26.04/WSL2와 C11 macOS26 기존 근거를 보존한다. 사용자 지시에 따라 macOS26·Ubuntu24.04는 재실행하지 않으며 후속 해당 계열 검증은 macOS27·Ubuntu26.04를 사용한다. 최종 배포 후보의 정합화와 변경 영향 검증이 남았다. [337번](<../04_검증 기록/337_HOST_W07_C11_macOS_27_실기_검증과_마감.md>)
+v0.6.0의 Host 작업 8개와 지원 목표 5개의 검증을 마쳤습니다. macOS 26 및 Ubuntu 24.04의 기존 근거를 유지하며 후속 해당 계열 검증에는 macOS 27 및 Ubuntu 26.04를 사용합니다. [OS별 결과](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>), [공개 설치 기록](<../04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 
 HOST-W04~W07을 완료했다. macOS 27.2.1은 고정 macOS bundle을 재검증했고 C11 native CI 27.0.1의 새 설치 근거를 보존한다.
-현재 Windows stable 지원과 후속 OS 지원 판정은 구분한다.
+Windows, WSL2와 macOS의 장치별 실기 범위는 지원표에 기록한다.
 순서는 [다중 Host 계약](10_v0.5.0_다중_Host_지원_착수_계약.md), 진행은
 [Host 원장](../../variants/nu54dk/host-readiness.json)이 소유한다.
 

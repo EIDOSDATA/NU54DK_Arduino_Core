@@ -1,10 +1,10 @@
 # Native Boards Manager package와 CI
 
-이 문서는 비공개 v0.6.0 후보의 native 패키지와 CI 계약을 정의한다. 세 OS의 전체 예제 빌드 기준선은 C5이다. 각 OS의 후속 장치 검증과 최종 후보 조건은 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)와 [최종 후보 체크리스트](<../05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)를 따른다.
+v0.6.0은 Windows, Linux, macOS용 초기 Python으로 SDK를 준비하고 같은 Core ZIP을 설치합니다. 이 문서는 그 패키지를 검증한 CI와 후보 구성의 설계를 설명합니다. 세 OS의 전체 예제 빌드 기준선은 C5입니다. [지원표](../05_릴리스/v0.6.0/SUPPORT_MATRIX.md), [공개 설치 결과](../05_릴리스/v0.6.0/RELEASE_CHECKLIST.md)
 
 ## 초기 실행 환경
 
-기존 Windows stable 0.5.0의 package·index·설치 계약은 유지한다. Native 0.6.0 시험 package는
+기존 Windows stable 0.5.0의 package·index·설치 계약은 유지한다. v0.6.0 패키지는
 Python이 없는 초기 설치를 위해 Boards Manager tool dependency `nu54-python`을 사용한다.
 공식 [python-build-standalone 20261026](https://github.com/astral-sh/python-build-standalone/releases/tag/20261026)의
 CPython 3.12.16을 사용하며 Windows x86-64·Linux x86-64·macOS ARM64 자산의 URL·size·SHA-256은

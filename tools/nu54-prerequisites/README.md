@@ -1,6 +1,6 @@
 # Nordic prerequisite 설치 계약
 
-v0.6.0 후보의 SDK는 NCS 3.4.0입니다. OS별 도구와 체크섬은 [고정 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와 [설치 입력](platform-pins.json)에서 확인합니다. Mac은 ARM64 bundle `ccc010f809`와 `/opt/nordic/ncs`를 사용합니다. [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
+v0.6.0의 SDK는 NCS 3.4.0입니다. OS별 도구와 체크섬은 [고정 설치 안내](<../../00_Docs/02_빌드 설계/12_Host별_고정_Nordic_환경_설치.md>)와 [설치 입력](platform-pins.json)에서 확인합니다. Mac은 ARM64 bundle `ccc010f809`와 `/opt/nordic/ncs`를 사용합니다. [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
 새 공통 설치기는 SDK archive를 안전하게 추출하고 원형 VERSION을 바꾸지 않은 채 명시 version으로 등록한다.
 읽기 전용 `host-doctor.py`는 시스템 의존 패키지와 비식별 serial·선택적 CMSIS-DAP 열거 결과를 기록한다.
 처음 실패·원인·교정 검증은 [312번](<../../00_Docs/04_검증 기록/312_HOST_W04_최초_CI_실패와_교정_검증.md>)을 따른다.
@@ -53,8 +53,7 @@ Native 0.6.0 시험 package의 초기 Python·notice와 실제 Boards Manager CI
   검증하지 않은 환경을 `ready`로 승인하지 않는다.
 - 아래 수동 `verify-nordic.ps1` 검증은 실패 시 기존대로 stderr와 실패 종료 code를 반환한다.
 
-이 출력 구분은 `v0.4.1`에서 처음 반영했으며 현재 지원 버전인
-[v0.5.0](<../../00_Docs/05_릴리스/v0.5.0/README.md>)에도 유지한다. 지원 종료된 이전 package와
+이 출력 구분은 `v0.4.1`에서 처음 반영했으며 v0.5.0에도 적용했다. 현재 설치 절차는 [v0.6.0 설치 안내](<../../00_Docs/05_릴리스/v0.6.0/README.md>)에서 확인한다. 지원 종료된 이전 package와
 사용자 설치본을 교체하지 않으며, 이전 설치에 변경이 자동 적용됐다고 보지 않는다.
 
 ## 수동 검증

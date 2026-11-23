@@ -9,6 +9,8 @@ W06은 실제 PASS 46개와 사용자 승인 3개(#29·40·44)를 구분하여 �
 [M33 TODO의 W06 절](TODO_M33.md#m33-w06--자원회귀상호운용)이 소유한다.
 실제 작업본·source·진행 항목·종료 증거와 과거 자료의 위치는 [M33 인계](M33_HANDOFF.md)에서 찾는다.
 
+공개 후 사용자 문서에는 [Arduino IDE의 Feature set 선택](05_릴리스/v0.6.0/FEATURE_SETS.md)과 [첫 예제 실행 안내](05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md)가 있습니다.
+
 ## 현재 상태
 
 | 범위 | 상태·정본 |

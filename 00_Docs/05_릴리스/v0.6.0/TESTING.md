@@ -20,18 +20,15 @@ C12는 Mac의 일반 IDE Upload에서 플래시 20개 섹터(81,920바이트)를
 
 macOS 27.2.1에서 공개 인덱스로 v0.6.0을 설치했습니다. 공개 ZIP의 설치 파일 960개와 예제 204개를 확인했습니다. Blink, BoardInfo 빌드와 제거 후 재설치가 통과했습니다. [340번 기록](<../../04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 
-## 최종 배포 검증
+## 배포 결과를 확인하는 곳
 
-| 계약 case | 지금 연결할 수 있는 근거 | 최종 잔여 |
-| --- | --- | --- |
-| `M33-PACKAGE-01` | C5 package 재현·설치 발견·전체 기준선, C11 kit/producer 원본과 222개 파일 hash 감사 | 정식 배포 source·version·plan·archive hash와 재현 결과 고정 |
-| `M33-INSTALL-01` | Windows11 C5, WSL2 C10, Mac software·실기 C11의 배정 PASS를 [지원표](SUPPORT_MATRIX.md)에 연결 | 최종 package의 설치 전이와 변경 영향 확인 |
-| `M33-RELEASE-01` | [공개 전 체크리스트](RELEASE_CHECKLIST.md) 준비 | exact plan 승인·게시·공개 URL 설치 모두 미실행 |
+| 확인할 내용 | 공개 근거 |
+| --- | --- |
+| 최종 패키지의 소스, 버전, 파일 대조 | [339번 최종 후보 기록](<../../04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>) |
+| 공개 자산 해시, stable 인덱스, macOS 27 설치 및 재설치 | [340번 공개 설치 기록](<../../04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>), [릴리스 체크리스트](RELEASE_CHECKLIST.md) |
+| OS별로 실행한 USB, UART, IDE 시험 | [지원표](SUPPORT_MATRIX.md), [Host 원장](../../../variants/nu54dk/host-readiness.json) |
 
-[m33-release-readiness.json](../../../variants/nu54dk/m33-release-readiness.json)은 생성된 strict 기능/원형 case 원장이다.
-그 안의 W07 미착수·package/install `NOT_RUN`을 현재 Host 준비가 없다는 뜻으로 읽지 않는다.
-현행 진행은 [host-readiness.json](../../../variants/nu54dk/host-readiness.json)이 소유하며, 최종 case 판정은
-실제 종료 근거를 갖춘 뒤 생성원본과 함께 갱신한다. 이번 문서 작업은 strict 원장을 소급 승격하지 않는다.
+[기능 검증 원장](../../../variants/nu54dk/m33-release-readiness.json)의 `M33-PACKAGE-01`, `M33-INSTALL-01`, `M33-RELEASE-01`은 원래 시험 계약의 판정을 보존합니다. 현재 배포 상태와 설치한 환경은 위 공개 기록에서 확인하세요.
 
 ## 필요한 때에만 확대
 

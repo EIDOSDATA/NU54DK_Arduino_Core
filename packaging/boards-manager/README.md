@@ -1,23 +1,8 @@
 # NU54DK Boards Manager 패키징
 
-v0.6.0 개발 후보는 검증용 kit와 로컬 인덱스로 공급합니다. 공개 stable 인덱스는 Windows용 v0.5.0을 제공합니다. [후보별 버전과 설치 안내](<../../00_Docs/05_릴리스/v0.6.0/README.md>), [최종 후보 체크리스트](<../../00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
+공개 stable 인덱스는 **v0.6.0**을 제공합니다. 설치본의 `release-manifest.json`에서 제품 소스를, 공개 기록에서 ZIP 및 초기 Python 자산의 SHA-256을 확인할 수 있습니다. [설치 안내](<../../00_Docs/05_릴리스/v0.6.0/README.md>), [340번 공개 기록](<../../00_Docs/04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>)
 
-| 항목 | 내용 |
-| --- | --- |
-| 현재 stable | `v0.5.0`만 제공 |
-| Stable index | `package_nucode_nu54dk_index.json` |
-| Stable source·ZIP | [274번 공개 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)의 exact identity |
-| 이전 RC2 | `v0.5.0-rc.2`; 공개 tag·asset 보존, 지원·catalog 공급 종료 |
-
-최종 검증용 소스의 버전 문자열은 `0.6.0`이며 C11과 C12의 검증 패키지 버전은 `0.6.0-rc.1`입니다. 설치본의 소스는 `release-manifest.json`의 `core_revision`으로 확인합니다. 공개용 버전과 자산은 최종 후보에서 확정합니다.
-v0.6.0 동안 NCS v3.4.0 pin을 유지하고, SDK 3.4.1 전환은 별도 [v0.7.0 계획](../../00_Docs/TODO_v0.7.0.md)의
-`SDK-W01~W06`에서 수행합니다. Host 재개·OS 지원·제품 version·패키지 공개는 각각의 gate로 판정합니다.
-완료한 공개 절차는 [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md), 후속 배포 조건은
-[M33 TODO](../../00_Docs/TODO_M33.md)를 따릅니다.
-
-RC1/RC2 게시 입력과 자산 identity는 각 tag와 역사 문서에 고정합니다. 정식 package는 최종
-v0.5.0 exact commit에서 이중 생성하고 RC2 이후 runtime 차이를 명시합니다. 공개된 같은 version을
-다른 byte로 다시 포장하지 않습니다.
+NCS 3.4.0을 사용합니다. C11과 C12는 시험용 패키지 `0.6.0-rc.1`입니다. 아래 버전별 재현 도구와 해시는 해당 릴리스 당시의 입력을 가리킵니다. [후보별 검증](<../../00_Docs/05_릴리스/v0.6.0/TESTING.md>)
 
 이 디렉터리의 도구는 지정한 Git commit과 board submodule을 입력으로 사용해 Arduino
 Boards Manager ZIP, index, checksum, release manifest, SPDX SBOM, license inventory와
@@ -59,6 +44,7 @@ R13의 본문·CLI·산출물 byte 비교는
 | `0.4.0` | `ad829439e570c7510fce2f8cc7252e5b9ef32b04` | 2,630,374 | `6629963fc618419135b4fc0c1240fa84fa1db95fad03b92add798bbacf0c9189` |
 | `0.4.1` | `bbc2dc1fc5823ca465fc1d1ff2170512282b9313` | 2,633,005 | `90c4993d11fd6fadbc70d32659bd1608a8dfb14264e43cc5faed60c5aa6f4d2d` |
 | `0.5.0` | `0999b6a721b4579faa6a7a4d91d04da5e4960c07` | 8,712,498 | `0a7b72de5772c9d710e521552a6197a8164d5da924f78b64efa6c595fb93c972` |
+| `0.6.0` | `0a63c501ccd0d2e26298f1ad98a81a99cddc565f` | 12,999,042 | `574e9ca574ab28ebd3d0226af67c88694330eece55e089f708b007b4cb5ecb9a` |
 
 `STABLE_RELEASE_COMMITS`는 source와 packaging tool이 모두 해당 exact commit에 있을 때만 같은
 stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`는 통합 index에 넣는
@@ -68,6 +54,7 @@ stable 이름의 build를 허용합니다. `PUBLISHED_STABLE_ARCHIVE_IDENTITIES`
 
 | 대상 | 사용할 절차 |
 | --- | --- |
+| 정식 `v0.6.0` | [최종 후보 준비](<../../00_Docs/04_검증 기록/339_HOST_W08_v0.6.0_최종_후보와_배포_자산_준비.md>), [공개 설치 결과](<../../00_Docs/04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>) |
 | 정식 `v0.5.0` | [`v050_release.py`](../../tools/release/v050_release.py)와 [274번 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>) |
 | 정식 `v0.4.1` | [`v041_release.py`](../../tools/release/v041_release.py)와 [129번 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>) |
 | `v0.5.0-rc.2` | exact `b2e7a587`의 Full RC artifact를 재사용; [`m31_release.py`](../../tools/release/m31_release.py)와 [RC2 문서](<../../00_Docs/05_릴리스/v0.5.0-rc.2/README.md>) |
@@ -84,7 +71,7 @@ source에서만 감사 가능한 공개 이력입니다. 생성기는 산출물�
 외장 Audio 경로를 M31, Apple/Google 신규 기능을 후속 M33에 배정합니다. 각 담당 제품선의
 채택 기능은 사용 가능한 구현·예제·설정/연결 안내·자동 검사가 필수이며, 실제
 운용·실물 검증은 사용자 후속 NOT RUN·개발/릴리스 비차단으로 분리합니다. 이 미검증을 실제
-상호운용 PASS로 표시하지 않습니다. v0.6.0 후보의 실제 OS별 결과와 남은 범위는 [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)를 따릅니다.
+상호운용 PASS로 표시하지 않습니다. v0.6.0에서 검증한 OS별 범위는 [v0.6.0 지원표](<../../00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)를 따릅니다.
 이 후속 gate는 M31 v0.5.0 Windows 릴리스의 선행조건이 아닙니다. M31 후속 실물 항목은
 [M31 readiness](../../variants/nu54dk/m31-ble-readiness.json)의 `follow_up_cases`에서 검증 책임·단계·
 차단 여부를 분리합니다. M33의 잔여 미완료 범위까지 완료한 것으로 간주하지 않습니다.
@@ -124,7 +111,7 @@ git submodule update --init --recursive
 - channel별 index 파일명, URL, version 순서, archive 크기와 SHA-256
 - 공개 stable의 exact commit 및 immutable ZIP identity
 
-현재 정식 공개 절차와 결과는 [v0.5.0 공개 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을
+v0.5.0 당시의 공개 절차와 결과는 [v0.5.0 공개 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)을
 기준으로 합니다. v0.4.1 유지보수는 [129번 기록](<../../00_Docs/04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>), 이전 v0.3.0 공개 결과는
 [32번 기록](<../../00_Docs/04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.
 

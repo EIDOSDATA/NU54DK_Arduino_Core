@@ -1,8 +1,8 @@
-# Arduino CLI 및 IDE 통합 설계 — stable v0.5.0
+# Arduino CLI 및 IDE 통합 설계 (v0.5.0 기준)
 
 | 항목 | 내용 |
 | --- | --- |
-| 문서 상태 | **현재 구현 계약** |
+| 문서 상태 | v0.5.0 구현 당시의 계약 |
 | 대상 | Arduino CLI 1.5.1 / Arduino IDE 2.x |
 | FQBN | `nucode:zephyr:nu54dk` |
 | Zephyr target | `nrf54l15dk/nrf54l15/cpuapp/nu54dk` |
@@ -15,7 +15,7 @@
 
 아래 메뉴와 사용자 출력은 stable `v0.5.0` 구현 기준이다. 이전 stable `v0.4.1`의 profile 세 개와
 v0.5.0의 adaptive·DFU·Audio I/O 선택은 [프로필 계약](07_구성_프로필과_Arduino_예제_배포.md)에서
-구분한다. 설치 경로와 GUI 절차는 [v0.5.0 설치 안내](../05_릴리스/v0.5.0/README.md)를 따른다.
+구분한다. 현재 IDE의 메뉴와 실행 절차는 [v0.6.0 Feature set](../05_릴리스/v0.6.0/FEATURE_SETS.md)과 [예제 따라 하기](../05_릴리스/v0.6.0/EXAMPLE_WALKTHROUGH.md)에서 확인한다.
 
 ## 1. 사용자에게 보이는 흐름
 

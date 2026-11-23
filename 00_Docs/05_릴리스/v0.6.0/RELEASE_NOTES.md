@@ -12,7 +12,7 @@
 
 C11에서는 macOS 26과 27에서 CMSIS-DAP 업로드, ELF 디버그, SerialEcho, USB 케이블 재연결, Arduino IDE의 Blink Verify를 검증했습니다. macOS 27에서 IDE의 일반 Upload는 runner 설정을 읽다가 PyYAML을 찾지 못해 중단됐습니다.
 
-C12는 runner 설정 확인과 probe 열거에 고정된 Nordic SDK Python을 사용합니다. macOS 27.2.1과 IDE 2.3.11에서 일반 Upload가 완료됐고 온보드 LED 점멸도 확인했습니다. 두 후보의 표시 버전은 같습니다. [후보 구분](README.md), [338번 기록](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
+C12는 runner 설정 확인과 probe 열거에 고정된 Nordic SDK Python을 사용합니다. macOS 27.2.1과 IDE 2.3.11에서 일반 Upload가 완료됐고 온보드 LED 점멸도 확인했습니다. 두 후보의 표시 버전은 같습니다. [후보별 소스와 검증 결과](TESTING.md), [338번 기록](<../../04_검증 기록/338_HOST_W07_macOS_27_Arduino_IDE_Upload_교정.md>)
 
 ## 사용자에게 알려야 할 경계
 

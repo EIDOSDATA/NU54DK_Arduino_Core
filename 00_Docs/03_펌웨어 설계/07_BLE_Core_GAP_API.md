@@ -129,7 +129,7 @@ v0.4.1 stable의 연결 1개·legacy 31-byte 계약은 역사 기준선으로 �
 
 M32-W03 구현 commit `30258a57…`은 기존 generation handle과 main-thread callback 규칙을 유지하면서
 다음 per-link 제어·조회 API를 추가했다. W03 exact HIL은 완료했으며 이 v0.6.0 개발 결과를
-현재 v0.5.0 stable 지원 범위로 소급하지 않는다.
+v0.5.0 당시의 지원 범위로 소급하지 않는다.
 
 | 범위 | 공개 API와 경계 |
 | --- | --- |
@@ -202,7 +202,7 @@ CMSIS-DAP v2 두 보드 HIL에서 역할별 QoS 200·survey 20·anchor 1,000·ev
 LLPM 1,000 us를 확인했다. 최대 anchor gap 3,999 us·event gap 1 ms, overflow와 negative,
 disable 뒤 callback 0·STOP을 PASS해 W05를 완료했다. Flushable ACL만 고정 Host TX 경로 부재로
 unsupported/HOLD이며 지원 기능 수에 넣지 않는다. [280번 기록](<../04_검증 기록/280_M32_W05_Nordic_확장_software와_HIL_blocker.md>)과
-exact JSON이 판정을 소유한다. 이 v0.6.0 개발 결과를 현재 v0.5.0 stable 지원으로 소급하지 않는다.
+exact JSON이 판정을 소유한다. 이 v0.6.0 개발 결과를 v0.5.0 당시의 지원으로 소급하지 않는다.
 
 ## v0.6.0 공통 ACL 흐름 제어 변경 후보 — 2026-10-29
 

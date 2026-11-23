@@ -17,7 +17,7 @@ v0.4.0 완료 상태·검증 범위는 [v0.4.0 완료 TODO](<../TODO_v0.4.0.md>)
 작성하려는 사용자는 저장소 개발 도구를 모두 설치할 필요가 없으며, 최상위
 [빠른 시작](../../README.md#빠른-시작)을 따르면 된다.
 
-이 절차는 현재 `v0.5.0`과 후속 개발 소스의 Windows 환경 기준이다. M30은 W01~W08 8/8·test ID
+이 절차는 v0.5.0 당시의 Windows 개발 환경을 설명한다. 현재 보드 설치는 [v0.6.0 설치 안내](../05_릴리스/v0.6.0/README.md)를 따른다. M30은 W01~W08 8/8·test ID
 10/10·실제 전원 차단 12/12를 완료했고 HOST-W01~HOST-W03도 완료했다. `v0.5.0`은 M31 완료 뒤
 Windows 10/11 x64 지원 릴리스다. 공개 RC와 stable v0.5.0 승격을 완료했다.
 v0.6.0 후보에서 Windows 11 및 각 OS에 배정한 검증을 완료했다. Ubuntu 사용자 실기는 WSL2에서 수행했다. [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)
@@ -449,7 +449,7 @@ Evidence 경로는 실행 전에 없어야 한다.
 M28 예제 11개는 `--tests m28`로 따로 실행한다. `m30secure` 단독 또는 이를 포함하는 v0.5.0 group은
 `NUCODE_DFU_SIGNING_KEY`로 저장소 밖 signing key 파일을 지정해야 한다. 위 개별 `--tests` 명령에는
 키를 요구하는 `m30secure`를 포함하지 않았으므로 secure profile 검증 완료로 해석하지 않는다.
-현재 `v0.5.0` group에는 `m31`도 추가되어 ISO 11예제와 LC3 loopback·CTE beacon을 검사한다.
+`v0.5.0` group에는 `m31`도 추가되어 ISO 11예제와 LC3 loopback·CTE beacon을 검사한다.
 위 2026-09-15 snapshot의 build 조건 수를 현재 runner의 전체 수로 사용하지 않는다.
 
 Windows의 Zephyr build는 Nordic Toolchain Python으로 직접 runner를 시작한다. 현재 Twister

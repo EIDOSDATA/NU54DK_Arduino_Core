@@ -1,19 +1,6 @@
-# Boards Manager 설치와 패키징 — stable v0.5.0
+# v0.5.0 Boards Manager 패키징 기록
 
-| 항목 | 값 |
-| --- | --- |
-| Package | `nucode:zephyr` |
-| Board FQBN | `nucode:zephyr:nu54dk` |
-| 현재 stable | `0.5.0`만 지원·제공 |
-| 이전 버전 | `0.5.0` 미만 stable·RC·preview 모두 지원·catalog 공급 종료 |
-| 공식 사용자 OS | Windows 10/11 x64 |
-
-이 표와 아래 PowerShell·`.bat` 절차는 현재 stable `v0.5.0` 계약이다.
-RC1/RC2 다운로드·설치 결과는 해당 역사 문서에 보존한다. Ubuntu/macOS 확장은 v0.6.0의 M32·M33 계획과 연계하며
-[다중 Host 지원 착수 계약](10_v0.5.0_다중_Host_지원_착수_계약.md)을 따른다.
-v0.6.0 후보의 OS별 설치 결과와 공개 전 남은 심사는 [v0.6.0 지원표](<../05_릴리스/v0.6.0/SUPPORT_MATRIX.md>)를 따른다.
-SDK 설치, Boards Manager 초기 Python bootstrap, 전체 예제 compile과 실물 runtime은 각각 판정한다.
-H12·C5의 bootstrap·전체 예제 build 완료와 C5 Windows 11 실기는 [329번](<../04_검증 기록/329_M33_W07_v0.6.0_OS_지원_범위와_Windows11_진행.md>)에서 구분하며 추가 OS는 다중 Host 계약의 버전별 호환성·변경 영향 범위를 따른다.
+이 문서는 v0.5.0 당시 Windows용 패키지와 검증 방법을 기록합니다. 아래 버전 번호와 명령은 이력 재현용입니다. 현재 설치는 [v0.6.0 설치 안내](../05_릴리스/v0.6.0/README.md), 패키지 구조는 [다중 Host 패키징 설계](14_native_Boards_Manager_package와_CI.md), 실기 결과는 [지원표](../05_릴리스/v0.6.0/SUPPORT_MATRIX.md)에 있습니다.
 
 ## Stable index와 설치
 
@@ -23,7 +10,7 @@ Arduino IDE와 Arduino CLI의 일반 update channel은 다음 URL입니다.
 https://raw.githubusercontent.com/EIDOSDATA/NU54DK_Arduino_Core/main/package_nucode_nu54dk_index.json
 ```
 
-Stable index는 `0.5.0` 하나만 제공합니다. 이전 stable·RC·preview의 tag·Release·자산과
+v0.5.0 공개 당시 stable 인덱스는 `0.5.0` 하나를 제공했습니다. 이전 stable·RC·preview의 tag·Release·자산과
 검증 기록은 감사용으로 보존하지만 일반 설치·지원 목록에는 넣지 않습니다.
 
 Arduino CLI 설치 예시:
@@ -69,7 +56,7 @@ Package·CLI·HIL의 자동 PASS를 실제 IDE GUI PASS로 대체하지 않는�
 
 단일 원본은 [`pins.json`](../../tools/nu54-prerequisites/pins.json)과
 [`nrfutil-requirements.json`](../../tools/nu54-prerequisites/nrfutil-requirements.json)입니다.
-NCS/Toolchain은 Core ZIP에 넣지 않고 현재 v0.5.0의 `post_install.bat`이 Nordic 공식 배포 경로에서
+NCS/Toolchain은 Core ZIP에 넣지 않고 v0.5.0 당시의 `post_install.bat`이 Nordic 공식 배포 경로에서
 사용자 영역에 준비합니다. 같은 exact 설치는 Core version 간 공유하며 uninstall 때 자동
 삭제하지 않습니다.
 
@@ -106,7 +93,7 @@ checksum, release manifest, SPDX와 license inventory를 검증합니다. Index�
 source를 포장하거나 tag·asset을 이동·교체하지 않습니다. 이미 공개한 이전 stable은 해당 tag의
 별도 worktree에서 감사하고 현재 도구로 재생성하지 않습니다.
 
-현재 `v0.5.0` 생성·공개 절차는 [`v050_release.py`](../../tools/release/v050_release.py)와
+당시 `v0.5.0` 생성·공개 절차는 [`v050_release.py`](../../tools/release/v050_release.py)와
 [정식 릴리스 안내](../05_릴리스/v0.5.0/README.md)를 따른다. exact source, 11개 공개 자산,
 stable index의 `0.5.0` 단독 제공과 공개 URL 설치·Blink compile 결과는
 [274번 기록](<../04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에 고정한다.
@@ -125,6 +112,6 @@ stable index의 `0.5.0` 단독 제공과 공개 URL 설치·Blink compile 결과
 
 v0.4.1 결과와 공개 자산은 [129번 기록](<../04_검증 기록/129_v0.4.1_설치기_유지보수_릴리스.md>),
 당시 사용자 진단은 [v0.4.1 문제 해결](<../05_릴리스/v0.4.1/TROUBLESHOOTING.md>)에 보존합니다.
-현재 설치본 진단은 [v0.5.0 문제 해결](<../05_릴리스/v0.5.0/TROUBLESHOOTING.md>)을 따릅니다.
+v0.5.0 설치본 진단은 [v0.5.0 문제 해결](<../05_릴리스/v0.5.0/TROUBLESHOOTING.md>)을 따릅니다.
 이전 버전의 예제 29개·자산 7개 등 당시 기준은
 [v0.3.0 정식 공개 기록](<../04_검증 기록/32_M22_v0.3.0_정식_릴리스_공개_기록.md>)에 보존합니다.

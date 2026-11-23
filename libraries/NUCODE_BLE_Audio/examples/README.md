@@ -10,7 +10,7 @@ profile·역할 예제는 build와 합성 PCM/payload의 보드 간 데이터·�
 연결 예제이지만, 외장 PDM/I2S 장치의 실물 입출력·음질·전기적 호환성은
 사용자 후속 `NOT RUN`이다.
 
-v0.6.0 후보에서도 이 예제를 사용할 수 있습니다. 설치본 안에서 보드와 Feature set은 [예제 색인](<../../EXAMPLES.md>)에서 확인하세요. [검증한 후보와 OS](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/7324c43de96bcc7cc8bc49949827e3099d313fa2/00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md)
+v0.6.0에서 이 예제를 실행할 때는 [Feature set 선택 안내](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/main/00_Docs/05_릴리스/v0.6.0/FEATURE_SETS.md)에서 필요한 설정을 확인하세요. [설치본 예제 색인](<../../EXAMPLES.md>)
 
 세부 판정은
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.

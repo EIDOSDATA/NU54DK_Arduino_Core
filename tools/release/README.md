@@ -1,6 +1,6 @@
 # 릴리스 자동화 안내
 
-v0.6.0 개발 후보는 `host_rc_kit.py`로 준비하고 `host_rc_entry.py`로 검증합니다. C11과 C12는 패키지 표시 버전이 같으므로 kit와 설치 manifest에서 제품 SHA를 확인하세요. [후보 설치](<../../00_Docs/05_릴리스/v0.6.0/README.md>), [최종 후보 체크리스트](<../../00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>)
+v0.6.0은 공개 stable입니다. 당시 C11/C12 검증에는 `host_rc_kit.py`와 `host_rc_entry.py`를 사용했습니다. 공개 자산 및 설치 결과는 [릴리스 체크리스트](<../../00_Docs/05_릴리스/v0.6.0/RELEASE_CHECKLIST.md>), 후보별 소스는 [검증 근거](<../../00_Docs/05_릴리스/v0.6.0/TESTING.md>)에서 확인하세요.
 
 공개 v0.5.0의 도구는 `v050_release.py`입니다. 당시 정식 공개 자산과 재현 근거는 [274번 기록](<../../00_Docs/04_검증 기록/274_v0.5.0_정식_릴리스_승인과_공개.md>)에서 확인할 수 있습니다.
 
@@ -9,7 +9,7 @@ v0.6.0 개발 후보는 `host_rc_kit.py`로 준비하고 `host_rc_entry.py`로 �
 
 | 제품선 | 절차 문서 | 주 도구 | 상태 |
 | --- | --- | --- | --- |
-| `v0.6.0` / M32·M33 | [M33 TODO](../../00_Docs/TODO_M33.md) | 비공개 `0.6.0-rc.1`은 `host_rc_kit.py`·`host_rc_entry.py`; 공개 도구는 별도 확정 | 미공개; 기존 `v050_release.py`를 새 버전 게시 도구로 재사용하지 않음 |
+| `v0.6.0` / M32·M33 | [공개 기록](<../../00_Docs/04_검증 기록/340_v0.6.0_정식_게시와_공개_설치_검증.md>) | RC kit 준비 및 실행은 `host_rc_kit.py`, `host_rc_entry.py` | 정식 공개 및 공개 URL 설치 검증 완료 |
 | `v0.5.0` / M31 | [v0.5.0 TODO](../../00_Docs/TODO_v0.5.0.md) | `v050_release.py`, `m31_release.py`, `m31_windows_lifecycle.py`, `m31_windows_example_shard.py`, `m31_ci_aggregate.py` | 정식 공개·stable catalog·공개 smoke 완료 |
 | `v0.4.1` 유지보수 | [v0.4.1 TODO](../../00_Docs/TODO_v0.4.1.md) | `v041_release.py` | 역사적·지원 종료 |
 | `v0.4.0` / M27 | [M27_README.md](M27_README.md) | `m27_release.py`, `m27_stable_release.py` | 정식 공개·T24/T25 완료·동결 |
@@ -34,7 +34,7 @@ v0.6.0 개발 후보는 `host_rc_kit.py`로 준비하고 `host_rc_entry.py`로 �
 
 2026-09-08 소유자가 승인한 v0.3.0 미만 공급 종료와 이력 정리는
 [106번 기록](<../../00_Docs/04_검증 기록/106_Git_이력_정리와_구버전_패키지_공급_종료.md>)에 보존합니다.
-v0.5.0 stable catalog는 `0.5.0` 하나만 제공합니다. v0.4.1 이하와 RC package payload,
+v0.5.0 공개 당시 stable catalog는 `0.5.0` 하나를 제공했습니다. v0.4.1 이하와 RC package payload,
 tag와 Release 자산은 삭제하지 않지만 모두 지원 종료 상태입니다. M18/M22/M27의 과거 index
 identity와 역사 version 생성 allowlist는 재현·감사용이며 현재 공개 공급 목록을 뜻하지 않습니다.
 

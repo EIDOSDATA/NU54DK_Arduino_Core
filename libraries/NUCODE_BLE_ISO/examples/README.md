@@ -3,7 +3,7 @@
 이 11개 역할 예제는 정식 `v0.5.0`에 포함된다. 채택한 검증 증거에서 격리 설치본 build와 실제 보드
 실행을 완료했다.
 
-v0.6.0 후보에서도 이 예제를 사용할 수 있습니다. 설치본 안에서 보드와 Feature set은 [예제 색인](<../../EXAMPLES.md>)에서 확인하세요. [검증한 후보와 OS](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/7324c43de96bcc7cc8bc49949827e3099d313fa2/00_Docs/05_릴리스/v0.6.0/SUPPORT_MATRIX.md) 각 실행의 source·설치본 범위와 exact 증거는
+v0.6.0에서 이 예제를 실행할 때는 [Feature set 선택 안내](https://github.com/EIDOSDATA/NU54DK_Arduino_Core/blob/main/00_Docs/05_릴리스/v0.6.0/FEATURE_SETS.md)에서 필요한 설정을 확인하세요. [설치본 예제 색인](<../../EXAMPLES.md>) 각 실행의 source·설치본 범위와 exact 증거는
 [검증 기록 목차](<../../../00_Docs/04_검증 기록/README.md>)에서 확인한다.
 
 `CISCentral`과 `CISPeripheral`은 `RawCis` 공개 API로 `.ino`에서 8-byte payload를
