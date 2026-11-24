@@ -24,6 +24,8 @@ Windows 11에서 공개 v0.6.0 설치본의 SDK 다운로드가 끝난 뒤 설�
 
 같은 Windows 11에서 초기 SWD 통신 오류와 USB 장치 재인식을 관찰했습니다. 재인식 후 Arduino IDE의 `Standard peripherals` Blink Upload가 `NU54_UPLOAD_PASS`로 완료됐습니다. 최초 SWD 오류 원인은 미확정입니다. [342번 기록과 실패·성공 로그](<../../04_검증 기록/342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md>)
 
+Ubuntu 26.04.1 native에서는 공개 v0.6.0의 스케치 빌드, CMSIS-DAP USB 접근 실패와 udev 적용 후 프로브 인식, 권한 조정 후 업로드 잠금 획득까지 확인했습니다. 플래시 완료와 보드 동작은 미확인입니다. [343번 진단 기록](<../../04_검증 기록/343_v0.6.0_Ubuntu_USB와_업로드_잠금_권한.md>)
+
 ## 배포 결과를 확인하는 곳
 
 | 확인할 내용 | 공개 근거 |

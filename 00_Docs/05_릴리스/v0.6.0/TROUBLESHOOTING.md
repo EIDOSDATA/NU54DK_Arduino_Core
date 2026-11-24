@@ -4,6 +4,8 @@
 | --- | --- |
 | Windows에서 Verify가 1/5에서 멈추고 `ready.json` 파일이 없다고 표시됨 | 아래의 [Windows SDK 설치 복구](#windows-sdk-설치-복구)를 따르세요. |
 | Windows에서 Verify는 성공했지만 Upload 중 `No ACK`, `Unexpected ACK` 또는 `FAULT ACK`가 표시됨 | [Windows에서 SWD 통신 오류가 날 때](#windows에서-swd-통신-오류가-날-때)를 따르세요. |
+| Linux에서 Upload 중 `E_PROBE_NONE`이 표시됨 | [CMSIS-DAP USB 접근 권한](#cmsis-dap-usb-접근-권한)을 확인하세요. |
+| Linux에서 `NU54_UPLOAD_START`와 `E_LOCK_PERMISSION`이 함께 표시됨 | [업로드 잠금 디렉터리 권한](#업로드-잠금-디렉터리-권한)을 확인하세요. |
 | Verify는 성공했는데 LED가 그대로임 | **Upload**까지 끝났는지 확인하세요. 보드 한 대만 연결하고 Blink의 두 지연 값을 바꿔 보면 새 코드가 올라갔는지 구별할 수 있습니다. [Blink 따라 하기](EXAMPLE_WALKTHROUGH.md) |
 | 포트가 두 개 보이거나 직렬 모니터에 응답이 없음 | SerialEcho를 올리고 **115200 baud**, **Newline**으로 `test`를 보내세요. 두 포트 중 `NUCODE_M6_ECHO:test`를 돌려주는 쪽이 이 스케치의 콘솔입니다. [SerialEcho 실행 절차](EXAMPLE_WALKTHROUGH.md#2-serialecho로-한-줄-주고받기) |
 | 예제의 BLE 또는 주변장치 초기화가 실패함 | 열린 IDE 창에서 권장 Feature set과 보드 역할을 확인하세요. 예제를 복사했다면 같은 폴더의 설정 파일도 있어야 합니다. [메뉴별 준비물](FEATURE_SETS.md) |
@@ -51,6 +53,38 @@
 4. 다시 실패하면 IDE 출력의 첫 SWD 오류와 빌드 폴더의 `nu54-zephyr/logs/flash.log`를 보관하세요.
 
 Windows 11 검증에서는 USB 장치가 다시 인식된 뒤 이전에 실패했던 동일한 HEX를 업로드했습니다. **최초 SWD 오류 원인은 미확정입니다.** [Windows 11 SWD 오류 및 Blink Upload 검증 기록](<../../04_검증 기록/342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md>)
+
+## Linux에서 업로드 오류가 날 때
+
+### CMSIS-DAP USB 접근 권한
+
+`E_PROBE_NONE`은 업로드 도구가 사용할 수 있는 CMSIS-DAP 프로브를 찾지 못했다는 뜻입니다. `/dev/ttyACM0` 같은 시리얼 포트가 보여도 업로드에 쓰는 USB 장치에는 별도 접근 권한이 필요합니다.
+
+1. NU54DK 한 대를 연결한 상태에서 `lsusb -d 0d28:0204`를 실행하세요. 출력이 비어 있으면 데이터 통신용 USB 케이블, USB 포트, 보드 전원을 확인하세요. WSL2에서는 Windows의 `usbipd`로 보드가 Ubuntu에 연결돼 있는지 확인하세요.
+2. 장치가 보이면 `lsusb` 출력의 Bus와 Device 번호에 해당하는 `/dev/bus/usb/<Bus>/<Device>`의 권한을 확인하세요. Ubuntu에서 일반 계정에 읽기와 쓰기 권한이 없다면 아래 규칙을 추가합니다. `id -nG`에 `plugdev`가 없다면 `sudo usermod -aG plugdev "$(id -un)"`를 실행한 뒤 로그아웃하고 다시 로그인하세요.
+
+   ```bash
+   printf '%s\n' 'SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", GROUP="plugdev", MODE="0660"' |
+     sudo tee /etc/udev/rules.d/70-nu54dk-cmsis-dap.rules >/dev/null
+   sudo udevadm control --reload-rules
+   ```
+
+3. 보드 USB를 다시 연결하고 `lsusb`에서 현재 Bus와 Device 번호를 확인하세요. 해당 장치가 `root:plugdev`, 권한 `0660`으로 잡히면 일반 사용자로 연 IDE에서 다시 **Upload**하세요. 이 규칙은 재부팅 후에도 적용됩니다.
+
+### 업로드 잠금 디렉터리 권한
+
+`NU54_UPLOAD_START`와 함께 `[NU54:E_LOCK_PERMISSION] lock directory의 소유권·쓰기 권한을 확인하십시오.`가 표시되면, 프로브를 찾은 뒤 동시 업로드를 막는 잠금을 잡기 전에 멈춘 것입니다. v0.6.0은 `umask 0002` 환경에서 첫 업로드 때 `/tmp/n54`를 권한 `775`로 만들 수 있습니다. 업로드 도구는 그룹에 쓰기를 허용하는 디렉터리를 거부합니다.
+
+1. 진행 중인 업로드가 끝나면 아래 명령으로 `/tmp/n54`의 소유자와 권한을 확인하세요.
+
+   ```bash
+   stat -c '%a %U %F %n' /tmp/n54
+   ```
+
+2. 현재 계정이 소유한 실제 디렉터리이고 권한이 `775`이면 `chmod 700 /tmp/n54`를 실행하세요. 소유자가 다르거나 심볼릭 링크라면 경로와 소유권을 관리자에게 확인하세요.
+3. IDE에서 다시 **Upload**를 누르고 `NU54_UPLOAD_PASS`와 `Done uploading.`을 확인하세요.
+
+`/tmp`가 초기화되면 v0.6.0에서 이 오류가 다시 발생할 수 있습니다. `/tmp/n54`가 없는 상태라면 첫 업로드 전에 IDE와 같은 일반 계정으로 `mkdir -m 700 /tmp/n54`를 실행해 두세요. [Ubuntu 26.04.1 진단 기록](<../../04_검증 기록/343_v0.6.0_Ubuntu_USB와_업로드_잠금_권한.md>)
 
 ## Mac IDE에서 YAML 오류가 뜰 때
 

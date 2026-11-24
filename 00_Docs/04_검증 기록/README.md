@@ -1,5 +1,6 @@
 # 검증 기록
 
+- [343. v0.6.0 Ubuntu USB와 업로드 잠금 권한](<343_v0.6.0_Ubuntu_USB와_업로드_잠금_권한.md>)
 - [342. v0.6.0 Windows SWD 오류와 Blink Upload](<342_v0.6.0_Windows_SWD_오류와_Blink_Upload.md>)
 - [341. v0.6.0 Windows SDK 복구와 Blink Verify](<341_v0.6.0_Windows_SDK_복구와_Blink_Verify.md>)
 - [340. v0.6.0 게시와 공개 설치 검증](<340_v0.6.0_정식_게시와_공개_설치_검증.md>)

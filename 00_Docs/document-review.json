@@ -4,6 +4,49 @@
   "historical_snapshot_note": "기존 baseline·scope·current_state·preservation·checks·documents는 295번 M32 전수 감사 당시의 snapshot으로 보존한다. 그 이후 변경은 follow_up_reviews에 별도 기록하며 해당 범위의 최신 hash·상태가 우선한다. 후속 문서 정비는 전체 문서 재감사나 새로운 기능·실기 PASS가 아니다.",
   "follow_up_reviews": [
     {
+      "id": "V060_LINUX_USB_AND_UPLOAD_LOCK_20261124",
+      "date": "2026-11-24",
+      "reviewed_parent": "454e9a679c44ff716c744db58bd15fce7acc34e3",
+      "product_source": "0a63c501ccd0d2e26298f1ad98a81a99cddc565f",
+      "scope": "v0.6.0 공개 후 Linux 지원. CMSIS-DAP USB 접근 권한과 업로드 잠금 오류의 원인·복구 절차를 기록.",
+      "checks": {
+        "ubuntu_native_usb": "Ubuntu 26.04.1 LTS AMD64. pyOCD USB 접근 권한 오류와 udev 적용 후 IDE 프로브 인식 확인.",
+        "probe_lock": "설치본에서 umask 0002로 권한 오류 재현. chmod 700과 mkdir -m 700 복구 검증, 실제 프로브 잠금 획득 및 해제 확인.",
+        "flash_and_runtime": "권한 조정 후 플래시 완료 및 보드 동작은 미확인.",
+        "docs": "M12 docs 561개, 생성 계약 5개, M17 coverage, Linux 명령 구문과 udev 규칙 및 링크 앵커 검사 PASS."
+      },
+      "documents": [
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TROUBLESHOOTING.md",
+          "sha256_utf8_lf": "cfa243ae67b0d415c91e2850afdd3b3d7eabe24f0c53f612c90a0d20649106ce"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/README.md",
+          "sha256_utf8_lf": "db0857e26ff7d61414ceb841f1a062f5b7ad6545ff6b34ef0705158db885d8e4"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/KNOWN_ISSUES.md",
+          "sha256_utf8_lf": "b7fae0667d5a4b98f1fe71ffb91a1639554b60f1f5f8d2701358ee6e068bae22"
+        },
+        {
+          "path": "00_Docs/05_릴리스/v0.6.0/TESTING.md",
+          "sha256_utf8_lf": "549ba334ac49a0106401e4bd2b65bc360bbb9c0e8f4e01800f1775d5bbb058e6"
+        },
+        {
+          "path": "00_Docs/HANDOFF.md",
+          "sha256_utf8_lf": "7406fdd7d96350a8c978685e2f7e387caac0b49733f908cb327512cb36261fc5"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/README.md",
+          "sha256_utf8_lf": "f777ddc776424c4172c19c69fe7798113c99b9165e8b9db2cce10e7c394e887e"
+        },
+        {
+          "path": "00_Docs/04_검증 기록/343_v0.6.0_Ubuntu_USB와_업로드_잠금_권한.md",
+          "sha256_utf8_lf": "883b157b1998da789a969494f230476e407d312c4d05d6302b2136303b6bdc04"
+        }
+      ]
+    },
+    {
       "id": "V060_WINDOWS_SWD_BLINK_UPLOAD_20261124",
       "date": "2026-11-24",
       "reviewed_parent": "a216b38281d5fabb30cce628510b1039411003c9",

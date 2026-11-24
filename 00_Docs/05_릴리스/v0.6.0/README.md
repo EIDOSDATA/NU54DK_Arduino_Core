@@ -11,6 +11,8 @@
 2. Boards Manager에서 **NUCODE NU54DK Zephyr Boards 0.6.0**을 설치합니다. 초기 Python과 Nordic SDK가 설치되므로 첫 설치에는 다운로드 시간이 필요합니다.
 3. 데이터 통신용 USB 케이블로 보드 한 대를 연결합니다. 보드는 **NU54DK (nRF54L15, Zephyr)**, 포트는 연결한 보드의 직렬 포트를 선택합니다.
 
+Linux에서 첫 업로드에 `E_PROBE_NONE` 또는 `E_LOCK_PERMISSION`이 표시되면 USB 권한과 잠금 경로를 확인하세요. [Linux 업로드 문제 해결](TROUBLESHOOTING.md#linux에서-업로드-오류가-날-때)
+
 ## 설치한 다음
 
 1. LED를 켜 보고 싶으면 **Tools > Feature set > Standard peripherals**를 선택하세요. Blink 업로드, 점멸 속도 바꾸기, 직렬 모니터로 한 줄 주고받기를 순서대로 설명합니다. [첫 예제 따라 하기](EXAMPLE_WALKTHROUGH.md)
